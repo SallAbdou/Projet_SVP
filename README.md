@@ -1,2 +1,3 @@
 # Projet_SVP
-Repo du projet SVP  Team 42
+Repo du projet SVP  
+By Team 42
