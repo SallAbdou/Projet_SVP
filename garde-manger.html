@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le garde-manger · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FBF5EA}
+a{color:#8A4F1C}a:hover{color:#5E3412}
+</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg>
+</span>
+<span style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:#B5651D">AI</span>n quotidien</span>
+</div>
+<span style="font-size:13px;color:#6B5443">{{t.tagline}}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px">
+<a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v10H3z"></path><path d="M5 10l2-5h10l2 5"></path></svg>{{t.nav.counter}}</a>
+<a href="/fournee" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>{{t.nav.batch}}</a>
+<a href="/fournil" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"></rect><rect x="7" y="9" width="10" height="7" rx="2"></rect></svg>{{t.nav.kitchen}}</a>
+<a href="/garde-manger" aria-current="page" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;background:#FFFDF8;color:#5E3412;font-weight:700;text-decoration:none;box-shadow:inset 0 0 0 1px #E7D6B8">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>{{t.nav.pantry}}<span style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">4</span></a>
+<a href="/preferences" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"></path><circle cx="15" cy="7" r="2"></circle><circle cx="9" cy="17" r="2"></circle></svg>{{t.nav.prefs}}<span style="margin-left:auto;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></a>
+</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">
+<div role="group" aria-label="{{t.langLabel}}" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:#E9D8BA;align-self:flex-start">
+<button type="button" aria-pressed="{{frPressed}}" onClick="{{setFr}}" style="{{frStyle}}">FR</button>
+<button type="button" aria-pressed="{{enPressed}}" onClick="{{setEn}}" style="{{enStyle}}">EN</button>
+</div>
+<div style="border-top:1px solid #E7D6B8;padding-top:14px;display:flex;align-items:center;gap:10px">
+<span style="width:36px;height:36px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">L</span>
+<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">Léa Martin</span><span style="font-size:12px;color:#6B5443">{{t.role}}</span></div>
+</div>
+</div>
+</nav>
+<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:24px">
+<header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h1>
+<p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+</div>
+<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
+</header>
+<div role="group" aria-label="{{t.filterLabel}}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<button type="button" aria-pressed="true" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700">{{t.fAll}}</button>
+<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fHot}}</button>
+<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fKnead}}</button>
+<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fStale}}</button>
+</div>
+<section aria-label="{{t.listLabel}}" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;overflow:hidden">
+<sc-for list="{{items}}" as="i" hint-placeholder-count="4">
+<article style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding:18px 24px;border-bottom:1px solid #F0E5D2">
+<span style="{{i.bar}}" aria-hidden="true"></span>
+<div style="flex:999 1 380px;min-width:0;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:#6B5443">
+<span style="{{i.chip}}">{{i.state}}</span><span>{{i.source}}</span><span aria-hidden="true">·</span><span>{{i.saved}}</span>
+</div>
+<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:19px;line-height:1.3">{{i.title}}</h2>
+<p style="margin:0;font-size:14px;color:#5A4434">{{i.note}}</p>
+</div>
+<div style="flex:1 1 220px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end">
+<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none">{{t.knead}}</a>
+<button type="button" style="min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px">{{t.remove}}</button>
+</div>
+</article>
+</sc-for>
+</section>
+<div style="display:flex;gap:14px;align-items:flex-start;background:#2E1D12;color:#FBF5EA;border-radius:18px;padding:18px 22px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2C77A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1"></path><path d="M8 16a4 4 0 1 1 8 0v2H8z"></path><path d="M10 21h4"></path></svg>
+<div style="display:flex;flex-direction:column;gap:4px">
+<span style="font-family:Fraunces, Georgia, serif;font-size:18px;font-weight:700;color:#F2C77A">{{t.learnTitle}}</span>
+<span style="font-size:14px;color:#EADBC4">{{t.learnText}}</span>
+</div>
+</div>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var CHIP = {
+hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
+knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
+stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
+};
+var BAR = {
+hot: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #3F8A4A',
+knead: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #D98200',
+stale: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #C0392B'
+};
+var T = {
+fr: {
+navLabel: 'Navigation principale', langLabel: 'Langue', tagline: 'On pétrit l’actu IA pour toi.', role: 'Consultante IA · solopreneuse',
+nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
+eyebrow: 'Articles mis de côté', title: 'Le garde-manger',
+subtitle: 'Les sujets que tu gardes pour plus tard. Chaque article indique s’il est encore bon à publier.',
+sample: 'Données d’exemple', filterLabel: 'Filtrer par fraîcheur', listLabel: 'Articles mis de côté',
+fAll: 'Tout (4)', fHot: 'Encore chaud (2)', fKnead: 'À enfourner avant demain (1)', fStale: 'Rassis (1)',
+knead: 'Pétrir', remove: 'Retirer',
+items: [
+['hot', 'Encore chaud', 'The Decoder', 'Mis de côté aujourd’hui', 'Les agents IA gèrent désormais la facturation des petites entreprises', 'Monétisation 13/15 · cas d’usage direct pour tes clients PME.'],
+['hot', 'Encore chaud', 'MIT Technology Review', 'Mis de côté hier', 'Comment les PME mesurent le retour sur investissement de l’IA', 'Monétisation 12/15 · donne des chiffres pour ton offre d’audit.'],
+['knead', 'À enfourner avant demain', 'Hugging Face Blog', 'Mis de côté il y a 2 jours', 'Un modèle open source rivalise avec les leaders du marché', 'Monétisation 10/15 · le sujet commence à circuler, publie vite ou trouve un angle.'],
+['stale', 'Rassis', 'TechCrunch AI', 'Mis de côté il y a 6 jours', 'Une nouvelle réglementation européenne entre en application', 'Monétisation 6/15 · déjà largement commenté, à garder comme référence.']
+],
+learnTitle: 'Ta fournée s’affine', learnText: 'Ce que tu mets de côté, pétris ou ignores sert à mieux choisir les cinq sujets du lendemain.'
+},
+en: {
+navLabel: 'Main navigation', langLabel: 'Language', tagline: 'We knead the AI news for you.', role: 'AI consultant · solopreneur',
+nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
+eyebrow: 'Saved articles', title: 'The pantry',
+subtitle: 'Topics you keep for later. Each article shows whether it’s still good to post.',
+sample: 'Sample data', filterLabel: 'Filter by freshness', listLabel: 'Saved articles',
+fAll: 'All (4)', fHot: 'Still warm (2)', fKnead: 'Bake before tomorrow (1)', fStale: 'Gone stale (1)',
+knead: 'Knead', remove: 'Remove',
+items: [
+['hot', 'Still warm', 'The Decoder', 'Saved today', 'AI agents now handle invoicing for small businesses', 'Monetisation 13/15 · a direct use case for your small-business clients.'],
+['hot', 'Still warm', 'MIT Technology Review', 'Saved yesterday', 'How small businesses measure the return on AI', 'Monetisation 12/15 · gives you figures for your audit offer.'],
+['knead', 'Bake before tomorrow', 'Hugging Face Blog', 'Saved 2 days ago', 'An open-source model rivals the market leaders', 'Monetisation 10/15 · starting to spread, post fast or find an angle.'],
+['stale', 'Gone stale', 'TechCrunch AI', 'Saved 6 days ago', 'A new European regulation comes into force', 'Monetisation 6/15 · widely covered already, keep it as a reference.']
+],
+learnTitle: 'Your batch gets sharper', learnText: 'What you save, knead or skip helps pick tomorrow’s five topics.'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+var t = T[lang];
+var on = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: #8A4F1C; color: #FFFDF8; font: inherit; font-weight: 700; cursor: pointer';
+var off = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #5E3412; font: inherit; font-weight: 600; cursor: pointer';
+var self = this;
+return {
+t: t,
+setFr: function () { self.setState({ lang: 'fr' }); },
+setEn: function () { self.setState({ lang: 'en' }); },
+frPressed: String(lang === 'fr'), enPressed: String(lang === 'en'),
+frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off,
+items: t.items.map(function (i) {
+return { chip: CHIP[i[0]], bar: BAR[i[0]], state: i[1], source: i[2], saved: i[3], title: i[4], note: i[5] };
+})
+};
+}
+}
+</script><script src="/boot.js"></script></body></html>

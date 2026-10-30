@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La fournée du jour · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FBF5EA}
+a{color:#8A4F1C}a:hover{color:#5E3412}
+</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg>
+</span>
+<span style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:#B5651D">AI</span>n quotidien</span>
+</div>
+<span style="font-size:13px;color:#6B5443">{{t.tagline}}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px">
+<a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v10H3z"></path><path d="M5 10l2-5h10l2 5"></path></svg>{{t.nav.counter}}</a>
+<a href="/fournee" aria-current="page" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;background:#FFFDF8;color:#5E3412;font-weight:700;text-decoration:none;box-shadow:inset 0 0 0 1px #E7D6B8">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>{{t.nav.batch}}</a>
+<a href="/fournil" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"></rect><rect x="7" y="9" width="10" height="7" rx="2"></rect></svg>{{t.nav.kitchen}}</a>
+<a href="/garde-manger" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>{{t.nav.pantry}}<span style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">4</span></a>
+<a href="/preferences" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"></path><circle cx="15" cy="7" r="2"></circle><circle cx="9" cy="17" r="2"></circle></svg>{{t.nav.prefs}}<span style="margin-left:auto;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></a>
+</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">
+<div role="group" aria-label="{{t.langLabel}}" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:#E9D8BA;align-self:flex-start">
+<button type="button" aria-pressed="{{frPressed}}" onClick="{{setFr}}" style="{{frStyle}}">FR</button>
+<button type="button" aria-pressed="{{enPressed}}" onClick="{{setEn}}" style="{{enStyle}}">EN</button>
+</div>
+<div style="border-top:1px solid #E7D6B8;padding-top:14px;display:flex;align-items:center;gap:10px">
+<span style="width:36px;height:36px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">L</span>
+<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">Léa Martin</span><span style="font-size:12px;color:#6B5443">{{t.role}}</span></div>
+</div>
+</div>
+</nav>
+<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:24px">
+<header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#DCEBD6;color:#2F5E36;vertical-align:middle">MVP</span></h1>
+<p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+</div>
+<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
+</header>
+<section aria-label="{{t.summary}}" style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:14px">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+<div style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:16px;padding:14px 18px;display:flex;flex-direction:column;gap:2px">
+<span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4A3324"><span style="{{s.dot}}"></span>{{s.label}}</span>
+<span style="font-family:Fraunces, Georgia, serif;font-size:30px;font-weight:800">{{s.value}}</span>
+</div>
+</sc-for>
+</section>
+<div role="group" aria-label="{{t.filterLabel}}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<span style="font-size:13px;color:#6B5443">{{t.filter}}</span>
+<button type="button" aria-pressed="true" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700">{{t.fAll}}</button>
+<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fHot}}</button>
+<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fKnead}}</button>
+<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fStale}}</button>
+</div>
+<section aria-label="{{t.topics}}" style="display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+<article style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 24px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center">
+<div style="flex:999 1 380px;min-width:0;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:#4A3324">
+<span style="{{c.chip}}">{{c.state}}</span>
+<span style="font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;background:#F3E6CF">{{c.axis}}</span><span>{{c.source}}</span>
+</div>
+<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:21px;line-height:1.3">{{c.title}}</h2>
+<p style="margin:0;color:#5A4434;font-size:14px">{{c.summary}}</p>
+<p style="margin:0;font-size:13.5px;color:#8A4F1C;font-weight:600">{{c.forYou}}</p>
+</div>
+<dl style="flex:1 1 260px;margin:0;display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px">
+<div><dt style="font-size:12px;color:#6B5443">{{t.dur}}</dt><dd style="margin:2px 0 0;font-weight:700">{{c.d}}</dd></div>
+<div><dt style="font-size:12px;color:#6B5443">{{t.prop}}</dt><dd style="margin:2px 0 0;font-weight:700">{{c.p}}</dd></div>
+<div><dt style="font-size:12px;color:#6B5443">{{t.offer}}</dt><dd style="margin:2px 0 0;font-weight:700">{{c.o}}</dd></div>
+<div><dt style="font-size:12px;color:#6B5443">{{t.money}}</dt><dd style="margin:2px 0 0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800">{{c.m}}</dd></div>
+</dl>
+<div style="flex:1 1 240px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end">
+<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none">{{t.knead}}</a>
+<a href="#" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;color:#2E1D12;font-weight:700;font-size:14px;text-decoration:none">{{t.read}}</a>
+<button type="button" style="display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>{{t.save}} <span style="font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></button>
+<button type="button" style="min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px">{{t.skip}}</button>
+</div>
+</article>
+</sc-for>
+</section>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var CHIP = {
+hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
+knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
+stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
+};
+var DOT = {
+hot: 'width: 10px; height: 10px; border-radius: 50%; background: #3F8A4A',
+knead: 'width: 10px; height: 10px; border-radius: 50%; background: #D98200',
+stale: 'width: 10px; height: 10px; border-radius: 50%; background: #C0392B',
+draft: 'width: 10px; height: 10px; border-radius: 50%; background: #8A4F1C'
+};
+var T = {
+fr: {
+navLabel: 'Navigation principale', langLabel: 'Langue', tagline: 'On pétrit l’actu IA pour toi.', role: 'Consultante IA · solopreneuse',
+nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
+eyebrow: 'Vendredi 30 octobre · choisi pour toi par l’IA', title: 'La fournée du jour',
+subtitle: 'Cinq sujets tout juste sortis du four, triés selon ton métier et tes thématiques.',
+sample: 'Données d’exemple', summary: 'Résumé', filterLabel: 'Filtrer par état', filter: 'Trier :', topics: 'Sujets',
+fAll: 'Toute la fournée (5)', fHot: 'Tout chaud (2)', fKnead: 'À pétrir (2)', fStale: 'Rassis (1)',
+dur: 'Durabilité', prop: 'Propension', offer: 'Lien offre', money: 'Monétisation',
+knead: 'Pétrir un post LinkedIn', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
+stats: [['hot', 'Tout chaud · publie vite', '2'], ['knead', 'À pétrir · trouve un angle', '2'], ['stale', 'Rassis · déjà saturé', '1'], ['draft', 'Posts au four', '1']],
+cards: [
+['hot', 'Tout chaud', 'Axe 2', 'The Decoder', 'Les agents IA gèrent désormais la facturation des petites entreprises', 'Plusieurs éditeurs lancent des agents qui émettent et relancent les factures seuls. Le sujet est encore peu couvert en français.', 'Pour toi : un cas d’usage concret à montrer à tes clients PME.', '4/5', '5/5', '4/5', '13/15'],
+['knead', 'À pétrir', 'Axe 1', 'Hugging Face Blog', 'Un modèle open source rivalise avec les leaders du marché', 'Scores proches des modèles fermés sur les tests de raisonnement. Déjà repris par plusieurs médias tech.', 'Pour toi : angle possible, ce que ça change au coût d’un projet client.', '4/5', '3/5', '3/5', '10/15'],
+['stale', 'Rassis', 'Axe 2', 'TechCrunch AI', 'Les marchés réagissent aux résultats d’un grand fabricant de puces', 'Sujet repris partout depuis deux jours, peu d’angle neuf pour un solopreneur.', 'Pour toi : à garder en tête, pas à publier.', '2/5', '2/5', '1/5', '5/15']
+]
+},
+en: {
+navLabel: 'Main navigation', langLabel: 'Language', tagline: 'We knead the AI news for you.', role: 'AI consultant · solopreneur',
+nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
+eyebrow: 'Friday, October 30 · picked for you by AI', title: 'Today’s batch',
+subtitle: 'Five topics fresh out of the oven, sorted for your job and your topics.',
+sample: 'Sample data', summary: 'Summary', filterLabel: 'Filter by status', filter: 'Sort:', topics: 'Topics',
+fAll: 'Whole batch (5)', fHot: 'Piping hot (2)', fKnead: 'Needs kneading (2)', fStale: 'Gone stale (1)',
+dur: 'Shelf life', prop: 'Shareability', offer: 'Offer fit', money: 'Monetisation',
+knead: 'Knead a LinkedIn post', read: 'Read the source', save: 'Set aside', skip: 'Skip',
+stats: [['hot', 'Piping hot · post it fast', '2'], ['knead', 'Needs kneading · find an angle', '2'], ['stale', 'Gone stale · saturated', '1'], ['draft', 'Posts in the oven', '1']],
+cards: [
+['hot', 'Piping hot', 'Axis 2', 'The Decoder', 'AI agents now handle invoicing for small businesses', 'Several vendors launch agents that send and chase invoices on their own. Still barely covered in French.', 'For you: a concrete use case to show your small-business clients.', '4/5', '5/5', '4/5', '13/15'],
+['knead', 'Needs kneading', 'Axis 1', 'Hugging Face Blog', 'An open-source model rivals the market leaders', 'Scores close to closed models on reasoning benchmarks. Already picked up by several tech outlets.', 'For you: possible angle, what it changes for the cost of a client project.', '4/5', '3/5', '3/5', '10/15'],
+['stale', 'Gone stale', 'Axis 2', 'TechCrunch AI', 'Markets react to a major chipmaker’s earnings', 'Covered everywhere for two days, little fresh angle for a solopreneur.', 'For you: worth knowing, not worth posting.', '2/5', '2/5', '1/5', '5/15']
+]
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+var t = T[lang];
+var on = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: #8A4F1C; color: #FFFDF8; font: inherit; font-weight: 700; cursor: pointer';
+var off = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #5E3412; font: inherit; font-weight: 600; cursor: pointer';
+var self = this;
+return {
+t: t,
+setFr: function () { self.setState({ lang: 'fr' }); },
+setEn: function () { self.setState({ lang: 'en' }); },
+frPressed: String(lang === 'fr'), enPressed: String(lang === 'en'),
+frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off,
+stats: t.stats.map(function (s) { return { dot: DOT[s[0]], label: s[1], value: s[2] }; }),
+cards: t.cards.map(function (c) {
+return { chip: CHIP[c[0]], state: c[1], axis: c[2], source: c[3], title: c[4], summary: c[5], forYou: c[6], d: c[7], p: c[8], o: c[9], m: c[10] };
+})
+};
+}
+}
+</script><script src="/boot.js"></script></body></html>

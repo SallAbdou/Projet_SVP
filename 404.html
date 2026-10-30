@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attendez, on cook · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800;9..144,900&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FBF5EA}
+a{color:#8A4F1C}a:hover{color:#5E3412}
+@keyframes vapeur{0%{transform:translateY(6px);opacity:0}30%{opacity:.85}100%{transform:translateY(-22px);opacity:0}}
+@keyframes lueur{0%,100%{opacity:.55}50%{opacity:1}}
+.vapeur{animation:vapeur 2.6s ease-in-out infinite}
+.vapeur.v2{animation-delay:.8s}.vapeur.v3{animation-delay:1.6s}
+.lueur{animation:lueur 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.vapeur,.lueur{animation:none;opacity:.8}}
+</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div style="min-height:100vh;box-sizing:border-box;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5;display:flex;flex-direction:column;padding:24px 40px 40px">
+<header style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px">
+<a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#2E1D12">
+<span style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg>
+</span>
+<span style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px">Votre p<span style="color:#B5651D">AI</span>n quotidien</span>
+</a>
+<div role="group" aria-label="{{t.langLabel}}" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:#E9D8BA">
+<button type="button" aria-pressed="{{frPressed}}" onClick="{{setFr}}" style="{{frStyle}}">FR</button>
+<button type="button" aria-pressed="{{enPressed}}" onClick="{{setEn}}" style="{{enStyle}}">EN</button>
+</div>
+</header>
+<main style="flex:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:40px 72px;padding:32px 0">
+<svg width="340" height="340" viewBox="0 0 340 340" role="img" aria-label="{{t.ovenAlt}}" style="max-width:100%;height:auto;flex:0 1 340px">
+<g fill="none" stroke="#C9A97A" stroke-width="5" stroke-linecap="round">
+<path class="vapeur" d="M130 64c-10-12 10-20 0-34"></path>
+<path class="vapeur v2" d="M170 60c-10-12 10-20 0-34"></path>
+<path class="vapeur v3" d="M210 64c-10-12 10-20 0-34"></path>
+</g>
+<rect x="40" y="86" width="260" height="214" rx="26" fill="#8A4F1C"></rect>
+<rect x="40" y="86" width="260" height="44" rx="22" fill="#5E3412"></rect>
+<rect x="40" y="108" width="260" height="22" fill="#5E3412"></rect>
+<circle cx="78" cy="108" r="9" fill="#F2C77A"></circle>
+<circle cx="108" cy="108" r="9" fill="#E9D2A9"></circle>
+<rect x="196" y="100" width="76" height="16" rx="8" fill="#2E1D12"></rect>
+<rect x="196" y="100" width="66" height="16" rx="8" fill="#F2C77A"></rect>
+<rect x="66" y="150" width="208" height="124" rx="18" fill="#2E1D12"></rect>
+<rect class="lueur" x="76" y="160" width="188" height="104" rx="12" fill="#B5651D"></rect>
+<g>
+<path d="M108 238c0-30 28-50 62-50s62 20 62 50c0 8-6 12-14 12H122c-8 0-14-4-14-12z" fill="#E8B26A"></path>
+<path d="M108 238c0-30 28-50 62-50s62 20 62 50c0 8-6 12-14 12H122c-8 0-14-4-14-12z" fill="none" stroke="#9A5B23" stroke-width="3"></path>
+<path d="M140 206l10 16M166 200l10 16M192 206l10 16" stroke="#9A5B23" stroke-width="5" stroke-linecap="round"></path>
+</g>
+<rect x="96" y="276" width="148" height="10" rx="5" fill="#5E3412"></rect>
+<rect x="62" y="300" width="28" height="18" rx="6" fill="#5E3412"></rect>
+<rect x="250" y="300" width="28" height="18" rx="6" fill="#5E3412"></rect>
+</svg>
+<div style="flex:0 1 520px;min-width:0;display:flex;flex-direction:column;gap:18px">
+<p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:120px;line-height:0.9;font-weight:900;color:#8A4F1C;letter-spacing:-0.03em">404</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:46px;line-height:1.05;font-weight:800;text-wrap:balance">{{t.title}}</h1>
+<p style="margin:0;font-size:17px;color:#5A4434;max-width:46ch">{{t.text}}</p>
+<div style="display:flex;flex-direction:column;gap:8px;max-width:420px">
+<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#4A3324"><span>{{t.cook}}</span><span>87 %</span></div>
+<div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="87" aria-label="{{t.cook}}" style="height:14px;border-radius:999px;background:#EADBC1;overflow:hidden">
+<div style="width:87%;height:100%;border-radius:999px;background:linear-gradient(90deg, #E8B26A, #B5651D 70%, #8A4F1C)"></div>
+</div>
+<span style="font-size:13px;color:#6B5443">{{t.hint}}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px">
+<a href="/" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;text-decoration:none">{{t.back}}</a>
+<a href="/fournee" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font-weight:700;text-decoration:none">{{t.batch}}</a>
+</div>
+</div>
+</main>
+<footer style="text-align:center;font-size:13px;color:#8A7360">{{t.footer}}</footer>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var T = {
+fr: {
+langLabel: 'Langue', ovenAlt: 'Un four à pain avec une miche en train de cuire',
+title: 'Attendez, on cook.',
+text: 'Cette page est encore au four. Le boulanger la sort dès qu’elle est bien dorée. En attendant, ta fournée du jour est prête.',
+cook: 'Cuisson', hint: 'Encore quelques minutes. Pas la peine d’ouvrir la porte du four.',
+back: 'Retour au comptoir', batch: 'Voir la fournée du jour',
+footer: 'Erreur 404 · page introuvable'
+},
+en: {
+langLabel: 'Language', ovenAlt: 'A bread oven with a loaf baking inside',
+title: 'Hold on, we’re cooking.',
+text: 'This page is still in the oven. The baker will take it out once it’s golden. In the meantime, today’s batch is ready.',
+cook: 'Baking', hint: 'A few more minutes. No need to open the oven door.',
+back: 'Back to the counter', batch: 'See today’s batch',
+footer: 'Error 404 · page not found'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+var on = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: #8A4F1C; color: #FFFDF8; font: inherit; font-weight: 700; cursor: pointer';
+var off = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #5E3412; font: inherit; font-weight: 600; cursor: pointer';
+var self = this;
+return {
+t: T[lang],
+setFr: function () { self.setState({ lang: 'fr' }); },
+setEn: function () { self.setState({ lang: 'en' }); },
+frPressed: String(lang === 'fr'), enPressed: String(lang === 'en'),
+frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off
+};
+}
+}
+</script><script src="/boot.js"></script></body></html>
