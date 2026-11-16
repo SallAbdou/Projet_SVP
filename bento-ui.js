@@ -4,7 +4,8 @@
 
   // Replace les tuiles dans l'ordre de la disposition (l'ordre du DOM suit l'ordre visuel,
   // donc la tabulation aussi), applique la taille et la visibilité, synchronise les boutons bascules.
-  function applyLayout(rootEl, layout) {
+  // available : nombre de sujets du jour, les emplacements sans sujet restent cachés.
+  function applyLayout(rootEl, layout, available) {
     var grid = rootEl && rootEl.querySelector('[data-bento]');
     if (!grid || !layout) return;
     var sizes = {};
@@ -14,7 +15,7 @@
       if (!el) return;
       SIZE_CLASSES.forEach(function (c) { el.classList.remove(c); });
       el.classList.add('tile', 'tile-' + t.size);
-      el.hidden = !t.visible;
+      el.hidden = !root.Bento.isShown(layout, t.id, available);
       grid.appendChild(el);
     });
     rootEl.querySelectorAll('[data-id][data-size]').forEach(function (b) {
