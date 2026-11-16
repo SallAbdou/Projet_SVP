@@ -1,7 +1,8 @@
 /* Logique pure de la page News bento : disposition des tuiles et helpers de contenu.
    Aucun accès au DOM, utilisable dans le navigateur (window.Bento) et sous Node (tests). */
 (function (root) {
-  var TILE_IDS = ['news', 'top', 'graph', 'stats', 'profile', 'painperdu', 'pantry'];
+  // Ordre par défaut choisi pour que la grille de 4 colonnes se remplisse sans trou.
+  var TILE_IDS = ['news', 'top', 'graph', 'pantry', 'stats', 'profile', 'painperdu'];
   var DEFAULT_SIZES = { news: 'L', top: 'M', graph: 'M', stats: 'S', profile: 'S', painperdu: 'M', pantry: 'L' };
   var SIZES = ['S', 'M', 'L'];
   var COUNTS = [1, 3, 5, 7];

@@ -5,8 +5,25 @@
 <style>
 body{margin:0;background:#FBF5EA}
 a{color:#8A4F1C}a:hover{color:#5E3412}
+button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<style>
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:264px;grid-auto-flow:dense;gap:16px}
+.tile{min-width:0;min-height:0;overflow:hidden;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.tile-body{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px;margin-right:-10px;padding-right:10px}
+.tile-body:focus-visible{outline:2px solid #B5651D;outline-offset:2px;border-radius:8px}
+.tile[hidden]{display:none}
+.tile-S{grid-column:span 1;grid-row:span 1}
+.tile-M{grid-column:span 2;grid-row:span 1}
+.tile-L{grid-column:span 2;grid-row:span 2}
+.tile-dark{background:#2E1D12;color:#FBF5EA;border-color:#2E1D12}
+.tile-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.tile-title{margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;line-height:1.2}
+.muted{font-size:13px;color:#6B5443}
+@media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile-S{grid-column:span 1}.tile-M,.tile-L{grid-column:span 2}}
+@media (max-width:640px){.bento{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto}.tile-S,.tile-M,.tile-L{grid-column:auto;grid-row:auto}.tile,.tile-body{overflow:visible}}
+</style>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
@@ -43,123 +60,262 @@ a{color:#8A4F1C}a:hover{color:#5E3412}
 </div>
 </div>
 </nav>
-<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:24px">
+<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
-<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#DCEBD6;color:#2F5E36;vertical-align:middle">MVP</span></h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
 <span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
+<button type="button" data-act="edit" aria-pressed="{{editPressed}}" onClick="{{toggleEdit}}" style="{{editBtnStyle}}">{{editLabel}}</button>
+</div>
 </header>
-<section aria-label="{{t.summary}}" style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:14px">
-<sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
-<div style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:16px;padding:14px 18px;display:flex;flex-direction:column;gap:2px">
-<span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#4A3324"><span style="{{s.dot}}"></span>{{s.label}}</span>
-<span style="font-family:Fraunces, Georgia, serif;font-size:30px;font-weight:800">{{s.value}}</span>
-</div>
-</sc-for>
-</section>
-<div role="group" aria-label="{{t.filterLabel}}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-<span style="font-size:13px;color:#6B5443">{{t.filter}}</span>
-<button type="button" aria-pressed="true" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700">{{t.fAll}}</button>
-<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fHot}}</button>
-<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fKnead}}</button>
-<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fStale}}</button>
-</div>
-<section aria-label="{{t.topics}}" style="display:flex;flex-direction:column;gap:14px">
-<sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
-<article style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 24px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center">
-<div style="flex:999 1 380px;min-width:0;display:flex;flex-direction:column;gap:8px">
-<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:#4A3324">
+<p role="status" style="{{loadingStyle}}">{{t.loading}}</p>
+<p role="alert" style="{{errorStyle}}">{{t.loadError}}</p>
+<p style="{{emptyStyle}}">{{t.allHidden}}</p>
+<div data-bento class="bento" style="{{gridStyle}}">
+
+<section data-tile="news" class="tile" aria-labelledby="tt-news">
+<div class="tile-head"><h2 id="tt-news" class="tile-title">{{t.tiles.news}}</h2><span class="muted">{{newsCountLabel}}</span></div>
+<div class="tile-body" tabindex="0" role="region" aria-labelledby="tt-news" style="gap:0">
+<sc-for list="{{topics}}" as="c" hint-placeholder-count="5">
+<article style="flex:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:14px 0 12px;border-top:1px solid #F0E3CC">
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12.5px;color:#4A3324">
 <span style="{{c.chip}}">{{c.state}}</span>
 <span style="font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;background:#F3E6CF">{{c.axis}}</span><span>{{c.source}}</span>
 </div>
-<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:21px;line-height:1.3">{{c.title}}</h2>
+<h3 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:18px;line-height:1.3">{{c.title}}</h3>
 <p style="margin:0;color:#5A4434;font-size:14px">{{c.summary}}</p>
 <p style="margin:0;font-size:13.5px;color:#8A4F1C;font-weight:600">{{c.forYou}}</p>
+<div style="display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:12.5px;color:#6B5443">
+<span>{{c.scoreLine}}</span>
+<strong style="font-family:Fraunces, Georgia, serif;font-size:18px;color:#2E1D12">{{c.money}}</strong>
 </div>
-<dl style="flex:1 1 260px;margin:0;display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px">
-<div><dt style="font-size:12px;color:#6B5443">{{t.dur}}</dt><dd style="margin:2px 0 0;font-weight:700">{{c.d}}</dd></div>
-<div><dt style="font-size:12px;color:#6B5443">{{t.prop}}</dt><dd style="margin:2px 0 0;font-weight:700">{{c.p}}</dd></div>
-<div><dt style="font-size:12px;color:#6B5443">{{t.offer}}</dt><dd style="margin:2px 0 0;font-weight:700">{{c.o}}</dd></div>
-<div><dt style="font-size:12px;color:#6B5443">{{t.money}}</dt><dd style="margin:2px 0 0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800">{{c.m}}</dd></div>
-</dl>
-<div style="flex:1 1 240px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end">
-<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none">{{t.knead}}</a>
-<a href="#" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;color:#2E1D12;font-weight:700;font-size:14px;text-decoration:none">{{t.read}}</a>
-<button type="button" style="display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>{{t.save}} <span style="font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></button>
-<button type="button" style="min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px">{{t.skip}}</button>
+<div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:4px">
+<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none">{{c.knead}}</a>
+<a href="{{c.url}}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;color:#2E1D12;font-weight:700;font-size:14px;text-decoration:none">{{c.read}}</a>
 </div>
 </article>
 </sc-for>
+</div>
 </section>
+
+<section data-tile="top" class="tile tile-dark" aria-labelledby="tt-top">
+<div class="tile-head"><h2 id="tt-top" class="tile-title">{{t.tiles.top}}</h2></div>
+<div class="tile-body">
+<span style="align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#F2C77A;color:#3B2416">{{t.hotNow}}</span>
+<p style="margin:0;font-weight:700;font-size:17px;line-height:1.35">{{top.title}}</p>
+<p style="margin:0;font-size:13.5px;color:#E9D8BA">{{top.forYou}}</p>
+</div>
+<a href="/fournil" style="flex:0 0 auto;align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#F2C77A;color:#2E1D12;font-weight:700;text-decoration:none">{{t.kneadPost}}</a>
+</section>
+
+<section data-tile="graph" class="tile" aria-labelledby="tt-graph">
+<div class="tile-head"><h2 id="tt-graph" class="tile-title">{{t.tiles.graph}}</h2><span class="muted">{{t.graphSub}}</span></div>
+<div style="flex:1 1 auto;min-height:90px;display:flex;gap:10px;align-items:stretch;border-bottom:2px solid #E7D6B8;padding-bottom:4px">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+<div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px">
+<span style="font-size:12px;font-weight:700">{{b.value}}</span>
+<div style="{{b.barStyle}}" aria-hidden="true"></div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:10px;font-size:11.5px;color:#4A3324;text-align:center">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+<span style="flex:1 1 0;min-width:0;overflow-wrap:anywhere">{{b.label}}</span>
+</sc-for>
+</div>
+</section>
+
+<section data-tile="stats" class="tile" aria-labelledby="tt-stats">
+<div class="tile-head"><h2 id="tt-stats" class="tile-title">{{t.tiles.stats}}</h2></div>
+<div class="tile-body">
+<sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:10px;font-size:14px">
+<span style="{{s.dot}}" aria-hidden="true"></span>
+<span style="flex:1 1 auto;min-width:0">{{s.label}}</span>
+<strong style="font-family:Fraunces, Georgia, serif;font-size:24px">{{s.value}}</strong>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section data-tile="profile" class="tile" aria-labelledby="tt-profile">
+<div class="tile-head"><h2 id="tt-profile" class="tile-title">{{t.tiles.profile}}</h2></div>
+<div class="tile-body" style="gap:6px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">{{profile.initial}}</span>
+<div style="display:flex;flex-direction:column;min-width:0"><strong>{{profile.name}}</strong><span class="muted">{{profile.role}}</span></div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{axes}}" as="a" hint-placeholder-count="2">
+<span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#F3E6CF;color:#5E3412">{{a.label}}</span>
+</sc-for>
+</div>
+<p style="margin:0" class="muted">{{profile.sources}}</p>
+</div>
+</section>
+
+<section data-tile="painperdu" class="tile" aria-labelledby="tt-painperdu">
+<div class="tile-head"><h2 id="tt-painperdu" class="tile-title">{{t.tiles.painperdu}}</h2></div>
+<p style="{{left.emptyStyle}}" class="muted">{{t.noLeftover}}</p>
+<div class="tile-body" style="{{left.style}}">
+<span style="align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#F5DAD3;color:#8E2A1C">{{left.state}}</span>
+<p style="margin:0;font-weight:700;line-height:1.35">{{left.title}}</p>
+<p style="margin:0;font-size:14px;color:#8A4F1C;font-weight:600">{{left.angle}}</p>
+<a href="/fournil" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #8A4F1C;color:#8A4F1C;font-weight:700;font-size:14px;text-decoration:none">{{t.reknead}}</a>
+</div>
+</section>
+
+<section data-tile="pantry" class="tile" aria-labelledby="tt-pantry">
+<div class="tile-head"><h2 id="tt-pantry" class="tile-title">{{t.tiles.pantry}}</h2><a href="/garde-manger" style="font-weight:700;font-size:14px">{{t.pantryAll}}</a></div>
+<div class="tile-body" tabindex="0" role="region" aria-labelledby="tt-pantry" style="gap:0">
+<sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
+<div style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:10px 0;border-top:1px solid #F0E3CC">
+<div style="flex:999 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">{{p.title}}</span><span style="font-size:12px;color:#6B5443">{{p.meta}}</span></div>
+<span style="{{p.chip}}">{{p.state}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+</div>
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script>
+<script src="/dc.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script>
 var CHIP = {
 hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
 knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
 stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
 };
 var DOT = {
-hot: 'width: 10px; height: 10px; border-radius: 50%; background: #3F8A4A',
-knead: 'width: 10px; height: 10px; border-radius: 50%; background: #D98200',
-stale: 'width: 10px; height: 10px; border-radius: 50%; background: #C0392B',
-draft: 'width: 10px; height: 10px; border-radius: 50%; background: #8A4F1C'
+hot: 'flex: 0 0 auto; width: 12px; height: 12px; border-radius: 50%; background: #3F8A4A',
+knead: 'flex: 0 0 auto; width: 12px; height: 12px; border-radius: 50%; background: #D98200',
+stale: 'flex: 0 0 auto; width: 12px; height: 12px; border-radius: 50%; background: #C0392B'
 };
+var BAR_COLOR = { hot: '#B5651D', knead: '#E3B678', stale: '#EAD7B4' };
+var HIDE = 'display: none';
 var T = {
 fr: {
 navLabel: 'Navigation principale', langLabel: 'Langue', tagline: 'On pétrit l’actu IA pour toi.', role: 'Consultante IA · solopreneuse',
 nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
-eyebrow: 'Vendredi 30 octobre · choisi pour toi par l’IA', title: 'La fournée du jour',
-subtitle: 'Cinq sujets tout juste sortis du four, triés selon ton métier et tes thématiques.',
-sample: 'Données d’exemple', summary: 'Résumé', filterLabel: 'Filtrer par état', filter: 'Trier :', topics: 'Sujets',
-fAll: 'Toute la fournée (5)', fHot: 'Tout chaud (2)', fKnead: 'À pétrir (2)', fStale: 'Rassis (1)',
-dur: 'Durabilité', prop: 'Propension', offer: 'Lien offre', money: 'Monétisation',
-knead: 'Pétrir un post LinkedIn', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
-stats: [['hot', 'Tout chaud · publie vite', '2'], ['knead', 'À pétrir · trouve un angle', '2'], ['stale', 'Rassis · déjà saturé', '1'], ['draft', 'Posts au four', '1']],
-cards: [
-['hot', 'Tout chaud', 'Axe 2', 'The Decoder', 'Les agents IA gèrent désormais la facturation des petites entreprises', 'Plusieurs éditeurs lancent des agents qui émettent et relancent les factures seuls. Le sujet est encore peu couvert en français.', 'Pour toi : un cas d’usage concret à montrer à tes clients PME.', '4/5', '5/5', '4/5', '13/15'],
-['knead', 'À pétrir', 'Axe 1', 'Hugging Face Blog', 'Un modèle open source rivalise avec les leaders du marché', 'Scores proches des modèles fermés sur les tests de raisonnement. Déjà repris par plusieurs médias tech.', 'Pour toi : angle possible, ce que ça change au coût d’un projet client.', '4/5', '3/5', '3/5', '10/15'],
-['stale', 'Rassis', 'Axe 2', 'TechCrunch AI', 'Les marchés réagissent aux résultats d’un grand fabricant de puces', 'Sujet repris partout depuis deux jours, peu d’angle neuf pour un solopreneur.', 'Pour toi : à garder en tête, pas à publier.', '2/5', '2/5', '1/5', '5/15']
-]
+eyebrowTail: 'choisi pour toi par l’IA', title: 'La fournée du jour',
+subtitle: 'Les sujets tout juste sortis du four, triés selon ton métier. Arrange ta page comme tu veux.',
+sample: 'Données d’exemple', customize: 'Personnaliser', done: 'Terminer',
+loading: 'Mise au four…', loadError: 'Impossible de charger la fournée. Recharge la page.',
+allHidden: 'Toutes les tuiles sont masquées. Clique sur Personnaliser pour les remettre.',
+tiles: { news: 'Sujets du jour', top: 'Tout juste sorti du four', graph: 'Tes derniers posts', stats: 'État de la fournée', profile: 'Ton profil', painperdu: 'Pain perdu', pantry: 'Garde-manger' },
+states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
+statLabels: { hot: 'Tout chaud · publie vite', knead: 'À pétrir · trouve un angle', stale: 'Rassis · déjà saturé' },
+axis: 'Axe', topicsCount: '{n} sur {total} sujets',
+scoreLine: 'Durabilité {d}/5 · Propension {p}/5 · Lien offre {o}/5', money: 'Monétisation {m}/15',
+knead: 'Pétrir un post', read: 'Lire la source', hotNow: 'Tout chaud · publie vite', kneadPost: 'Pétrir le post',
+graphSub: 'impressions par post', noLeftover: 'Rien de rassis aujourd’hui.', reknead: 'Repétrir ce sujet',
+pantryAll: 'Tout voir →', today: 'mis de côté aujourd’hui', yesterday: 'mis de côté hier', daysAgo: 'mis de côté il y a {n} jours'
 },
 en: {
 navLabel: 'Main navigation', langLabel: 'Language', tagline: 'We knead the AI news for you.', role: 'AI consultant · solopreneur',
 nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
-eyebrow: 'Friday, October 30 · picked for you by AI', title: 'Today’s batch',
-subtitle: 'Five topics fresh out of the oven, sorted for your job and your topics.',
-sample: 'Sample data', summary: 'Summary', filterLabel: 'Filter by status', filter: 'Sort:', topics: 'Topics',
-fAll: 'Whole batch (5)', fHot: 'Piping hot (2)', fKnead: 'Needs kneading (2)', fStale: 'Gone stale (1)',
-dur: 'Shelf life', prop: 'Shareability', offer: 'Offer fit', money: 'Monetisation',
-knead: 'Knead a LinkedIn post', read: 'Read the source', save: 'Set aside', skip: 'Skip',
-stats: [['hot', 'Piping hot · post it fast', '2'], ['knead', 'Needs kneading · find an angle', '2'], ['stale', 'Gone stale · saturated', '1'], ['draft', 'Posts in the oven', '1']],
-cards: [
-['hot', 'Piping hot', 'Axis 2', 'The Decoder', 'AI agents now handle invoicing for small businesses', 'Several vendors launch agents that send and chase invoices on their own. Still barely covered in French.', 'For you: a concrete use case to show your small-business clients.', '4/5', '5/5', '4/5', '13/15'],
-['knead', 'Needs kneading', 'Axis 1', 'Hugging Face Blog', 'An open-source model rivals the market leaders', 'Scores close to closed models on reasoning benchmarks. Already picked up by several tech outlets.', 'For you: possible angle, what it changes for the cost of a client project.', '4/5', '3/5', '3/5', '10/15'],
-['stale', 'Gone stale', 'Axis 2', 'TechCrunch AI', 'Markets react to a major chipmaker’s earnings', 'Covered everywhere for two days, little fresh angle for a solopreneur.', 'For you: worth knowing, not worth posting.', '2/5', '2/5', '1/5', '5/15']
-]
+eyebrowTail: 'picked for you by AI', title: 'Today’s batch',
+subtitle: 'Topics fresh out of the oven, sorted for your job. Arrange your page the way you like.',
+sample: 'Sample data', customize: 'Customise', done: 'Done',
+loading: 'Baking…', loadError: 'Could not load the batch. Reload the page.',
+allHidden: 'All tiles are hidden. Click Customise to bring them back.',
+tiles: { news: 'Today’s topics', top: 'Fresh out of the oven', graph: 'Your latest posts', stats: 'Batch status', profile: 'Your profile', painperdu: 'French toast', pantry: 'Pantry' },
+states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
+statLabels: { hot: 'Piping hot · post it fast', knead: 'Needs kneading · find an angle', stale: 'Gone stale · saturated' },
+axis: 'Axis', topicsCount: '{n} of {total} topics',
+scoreLine: 'Shelf life {d}/5 · Shareability {p}/5 · Offer fit {o}/5', money: 'Monetisation {m}/15',
+knead: 'Knead a post', read: 'Read the source', hotNow: 'Piping hot · post it fast', kneadPost: 'Knead the post',
+graphSub: 'impressions per post', noLeftover: 'Nothing stale today.', reknead: 'Re-knead this topic',
+pantryAll: 'See all →', today: 'saved today', yesterday: 'saved yesterday', daysAgo: 'saved {n} days ago'
 }
 };
+function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
 class Component extends DCLogic {
-constructor(props) { super(props); this.state = { lang: 'fr' }; }
+constructor(props) {
+super(props);
+var layout;
+try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
+this.state = { lang: 'fr', editing: false, layout: layout, data: null, loadError: false };
+var self = this;
+fetch('/data/fournee.json')
+.then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+.then(function (data) { self.setState({ data: data }); })
+.catch(function () { self.setState({ loadError: true }); });
+}
+afterRender(root) { BentoUI.applyLayout(root, this.state.layout); }
 renderVals() {
-var lang = (this.state && this.state.lang) || 'fr';
+var st = this.state || {};
+var lang = st.lang || 'fr';
 var t = T[lang];
+var data = st.data;
+var layout = st.layout;
+var locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
+var L = function (v) { return v ? (v[lang] || v.fr || '') : ''; };
+var num = function (n) { return new Intl.NumberFormat(locale).format(n); };
 var on = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: #8A4F1C; color: #FFFDF8; font: inherit; font-weight: 700; cursor: pointer';
 var off = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #5E3412; font: inherit; font-weight: 600; cursor: pointer';
 var self = this;
+var topics = data ? data.topics : [];
+var allHidden = Bento.hiddenIds(layout).length === layout.tiles.length;
+var eyebrow = t.eyebrowTail;
+if (data) {
+var d = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(data.date + 'T12:00:00'));
+eyebrow = d.charAt(0).toUpperCase() + d.slice(1) + ' · ' + t.eyebrowTail;
+}
+var picked = Bento.pickTopics(topics, layout.newsCount);
+var top = Bento.topTopic(topics);
+var left = Bento.leftover(topics);
+var counts = Bento.countStates(topics);
+var maxImp = Math.max.apply(null, (data ? data.posts : []).map(function (p) { return p.impressions; }).concat([1]));
+var profile = data ? data.profile : { name: '', role: null, axes: [], sources: [] };
 return {
 t: t,
+eyebrow: eyebrow,
 setFr: function () { self.setState({ lang: 'fr' }); },
 setEn: function () { self.setState({ lang: 'en' }); },
 frPressed: String(lang === 'fr'), enPressed: String(lang === 'en'),
 frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off,
-stats: t.stats.map(function (s) { return { dot: DOT[s[0]], label: s[1], value: s[2] }; }),
-cards: t.cards.map(function (c) {
-return { chip: CHIP[c[0]], state: c[1], axis: c[2], source: c[3], title: c[4], summary: c[5], forYou: c[6], d: c[7], p: c[8], o: c[9], m: c[10] };
+toggleEdit: function () {},
+editPressed: String(!!st.editing),
+editLabel: st.editing ? t.done : t.customize,
+editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: ' + (st.editing ? '#8A4F1C; color: #FFFDF8' : '#FFFDF8; color: #8A4F1C') + '; font: inherit; font-weight: 700; cursor: pointer',
+loadingStyle: !data && !st.loadError ? 'margin: 0; color: #6B5443' : HIDE,
+errorStyle: st.loadError ? 'margin: 0; padding: 14px 18px; border-radius: 14px; background: #F5DAD3; color: #8E2A1C; font-weight: 600' : HIDE,
+emptyStyle: data && allHidden && !st.editing ? 'margin: 0; padding: 18px 20px; border-radius: 14px; border: 1.5px dashed #D9C29C; color: #6B5443' : HIDE,
+gridStyle: data ? '' : HIDE,
+newsCountLabel: fill(t.topicsCount, { n: picked.length, total: topics.length }),
+topics: picked.map(function (c) {
+return {
+chip: CHIP[c.state], state: t.states[c.state], axis: t.axis + ' ' + c.axis, source: c.source,
+title: L(c.title), summary: L(c.summary), forYou: L(c.forYou),
+scoreLine: fill(t.scoreLine, { d: c.scores.durability, p: c.scores.propensity, o: c.scores.offer }),
+money: fill(t.money, { m: Bento.totalScore(c) }),
+knead: t.knead, read: t.read, url: Bento.safeUrl(c.url)
+};
+}),
+top: { title: top ? L(top.title) : '', forYou: top ? L(top.forYou) : '' },
+bars: (data ? data.posts : []).map(function (p) {
+return {
+value: num(p.impressions), label: L(p.label),
+barStyle: 'width: 100%; max-width: 44px; height: ' + Math.round(p.impressions / maxImp * 100) + '%; background: ' + BAR_COLOR[p.state] + '; border-radius: 10px 10px 3px 3px'
+};
+}),
+stats: ['hot', 'knead', 'stale'].map(function (k) { return { dot: DOT[k], label: t.statLabels[k], value: counts[k] }; }),
+profile: { initial: (profile.name || '?').charAt(0), name: profile.name, role: L(profile.role), sources: profile.sources.join(' · ') },
+axes: profile.axes.map(function (a) { return { label: t.axis + ' ' + a.id + ' · ' + L(a.label) }; }),
+left: {
+emptyStyle: left ? HIDE : 'margin: 0',
+style: left ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
+state: t.states.stale, title: left ? L(left.title) : '', angle: left ? L(left.newAngle) : ''
+},
+pantry: (data ? data.pantry : []).slice(0, 3).map(function (p) {
+var age = p.savedDaysAgo === 0 ? t.today : (p.savedDaysAgo === 1 ? t.yesterday : fill(t.daysAgo, { n: p.savedDaysAgo }));
+return { title: L(p.title), meta: p.source + ' · ' + age, chip: CHIP[p.state], state: t.states[p.state] };
 })
 };
 }

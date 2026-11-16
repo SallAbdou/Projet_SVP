@@ -6,8 +6,8 @@ test('disposition par défaut', () => {
   const l = B.defaultLayout();
   assert.equal(l.version, 1);
   assert.equal(l.newsCount, 5);
-  assert.deepEqual(l.tiles.map(t => t.id), ['news', 'top', 'graph', 'stats', 'profile', 'painperdu', 'pantry']);
-  assert.deepEqual(l.tiles.map(t => t.size), ['L', 'M', 'M', 'S', 'S', 'M', 'L']);
+  assert.deepEqual(l.tiles.map(t => t.id), ['news', 'top', 'graph', 'pantry', 'stats', 'profile', 'painperdu']);
+  assert.deepEqual(l.tiles.map(t => t.size), ['L', 'M', 'M', 'L', 'S', 'S', 'M']);
   assert.ok(l.tiles.every(t => t.visible === true));
 });
 
@@ -43,7 +43,7 @@ test('moveTile et stepTile', () => {
 
 test('setSize, setVisible, setNewsCount, hiddenIds', () => {
   const l = B.defaultLayout();
-  assert.equal(B.setSize(l, 'stats', 'L').tiles[3].size, 'L');
+  assert.equal(B.setSize(l, 'stats', 'L').tiles[4].size, 'L');
   assert.deepEqual(B.setSize(l, 'stats', 'XXL'), l);
   const h = B.setVisible(B.setVisible(l, 'graph', false), 'top', false);
   assert.deepEqual(B.hiddenIds(h), ['top', 'graph']);
