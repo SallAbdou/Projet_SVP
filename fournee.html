@@ -30,6 +30,11 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tool[aria-pressed="true"]{background:#8A4F1C;border-color:#8A4F1C;color:#FFFDF8}
 .tool-drag{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:18px}
+.tile-tools{flex-wrap:nowrap;gap:4px;padding-bottom:0;border-bottom:0}
+.tile-tools .tool{min-height:28px;min-width:28px;height:28px;padding:0 7px;border-radius:8px;border-width:1px;font-size:12px}
+.tile-tools .tool-drag{font-size:14px}
+.tile-tools .tool-sizes{gap:2px}
+@media (pointer:coarse){.tile-tools{flex-wrap:wrap}.tile-tools .tool{min-height:44px;min-width:44px;height:auto;font-size:inherit}}
 .tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (min-width:641px){.tile-S .only-M,.tile-S .only-L,.tile-M .only-L{display:none!important}}
