@@ -27,7 +27,9 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .tool-sizes{display:inline-flex;gap:4px}
 .tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tool[aria-pressed="true"]{background:#8A4F1C;border-color:#8A4F1C;color:#FFFDF8}
-.tool-drag{cursor:grab;touch-action:none;user-select:none;font-size:18px}
+.tool-drag{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:18px}
+.tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
+html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 .tile-dark .tool{background:#FFFDF8}
 .tile-dark .tool[aria-pressed="true"]{background:#F2C77A;border-color:#F2C77A;color:#2E1D12}
 @media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile-S{grid-column:span 1}.tile-M,.tile-L{grid-column:span 2}}
@@ -356,6 +358,10 @@ var layout;
 try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
 this.state = { lang: 'fr', editing: false, layout: layout, data: null, loadError: false };
 var self = this;
+BentoUI.initDrag({
+isEditing: function () { return !!self.state.editing; },
+onDrop: function (id, index) { self.updateLayout(Bento.moveTile(self.state.layout, id, index)); }
+});
 fetch('/data/fournee.json')
 .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
 .then(function (data) { self.setState({ data: data }); })
