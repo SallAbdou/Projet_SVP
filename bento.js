@@ -1,45 +1,60 @@
-/* Logique pure de la page News bento : disposition des tuiles et helpers de contenu.
-   Aucun accès au DOM, utilisable dans le navigateur (window.Bento) et sous Node (tests). */
+/* Logique pure de la page News bento : disposition des emplacements et helpers de contenu.
+   Aucun accès au DOM, utilisable dans le navigateur (window.Bento) et sous Node (tests).
+   L'utilisatrice arrange des emplacements : n1 reçoit la news la mieux notée du jour, n2 la suivante, etc. */
 (function (root) {
-  // Ordre par défaut choisi pour que la grille de 4 colonnes se remplisse sans trou.
-  var TILE_IDS = ['news', 'top', 'graph', 'pantry', 'stats', 'profile', 'painperdu'];
-  var DEFAULT_SIZES = { news: 'L', top: 'M', graph: 'M', stats: 'S', profile: 'S', painperdu: 'M', pantry: 'L' };
+  // Ordre par défaut choisi pour qu'avec 5 news la grille de 4 colonnes se remplisse sans trou.
+  var TILE_IDS = ['n1', 'n2', 'n3', 'graph', 'n4', 'n5', 'n6', 'n7'];
+  var DEFAULT_SIZES = { n1: 'L', n2: 'M', n3: 'M', graph: 'M', n4: 'S', n5: 'S', n6: 'S', n7: 'S' };
   var SIZES = ['S', 'M', 'L'];
   var COUNTS = [1, 3, 5, 7];
   var DEFAULT_COUNT = 5;
+  var VERSION = 2;
   var STORAGE_KEY = 'pq-layout';
 
   function has(list, v) { return list.indexOf(v) !== -1; }
 
   function copy(layout) {
     return {
-      version: 1,
+      version: VERSION,
       newsCount: layout.newsCount,
-      tiles: layout.tiles.map(function (t) { return { id: t.id, size: t.size, visible: t.visible }; })
+      tiles: layout.tiles.map(function (t) { return { id: t.id, size: t.size }; })
     };
   }
 
   function defaultLayout() {
     return {
-      version: 1,
+      version: VERSION,
       newsCount: DEFAULT_COUNT,
-      tiles: TILE_IDS.map(function (id) { return { id: id, size: DEFAULT_SIZES[id], visible: true }; })
+      tiles: TILE_IDS.map(function (id) { return { id: id, size: DEFAULT_SIZES[id] }; })
     };
   }
 
   function normalizeLayout(raw) {
-    if (!raw || typeof raw !== 'object' || raw.version !== 1 || !Array.isArray(raw.tiles)) return defaultLayout();
+    if (!raw || typeof raw !== 'object' || raw.version !== VERSION || !Array.isArray(raw.tiles)) return defaultLayout();
     var seen = {};
     var tiles = [];
     raw.tiles.forEach(function (t) {
       if (!t || typeof t !== 'object' || !has(TILE_IDS, t.id) || seen[t.id]) return;
       seen[t.id] = true;
-      tiles.push({ id: t.id, size: has(SIZES, t.size) ? t.size : DEFAULT_SIZES[t.id], visible: t.visible !== false });
+      tiles.push({ id: t.id, size: has(SIZES, t.size) ? t.size : DEFAULT_SIZES[t.id] });
     });
     TILE_IDS.forEach(function (id) {
-      if (!seen[id]) tiles.push({ id: id, size: DEFAULT_SIZES[id], visible: true });
+      if (!seen[id]) tiles.push({ id: id, size: DEFAULT_SIZES[id] });
     });
-    return { version: 1, newsCount: has(COUNTS, raw.newsCount) ? raw.newsCount : DEFAULT_COUNT, tiles: tiles };
+    return { version: VERSION, newsCount: has(COUNTS, raw.newsCount) ? raw.newsCount : DEFAULT_COUNT, tiles: tiles };
+  }
+
+  function rankOf(id) {
+    var m = /^n(\d)$/.exec(id);
+    return m ? Number(m[1]) : null;
+  }
+
+  // graph est toujours affiché ; nK l'est si K <= nombre choisi et si la fournée a au moins K sujets.
+  function isShown(layout, id, available) {
+    var k = rankOf(id);
+    if (k === null) return true;
+    var max = available == null ? Infinity : available;
+    return k <= layout.newsCount && k <= max;
   }
 
   function indexOf(layout, id) {
@@ -57,35 +72,31 @@
     return next;
   }
 
-  function stepTile(layout, id, delta) {
+  // Passe juste devant (delta -1) ou juste après (delta 1) le plus proche emplacement affiché,
+  // en sautant les emplacements cachés pour que chaque clic ait un effet visible.
+  function stepTile(layout, id, delta, available) {
     var from = indexOf(layout, id);
     if (from === -1) return copy(layout);
-    return moveTile(layout, id, from + (delta < 0 ? -1 : 1));
-  }
-
-  function patchTile(layout, id, key, value) {
-    var next = copy(layout);
-    var i = indexOf(next, id);
-    if (i !== -1) next.tiles[i][key] = value;
-    return next;
+    var dir = delta < 0 ? -1 : 1;
+    for (var i = from + dir; i >= 0 && i < layout.tiles.length; i += dir) {
+      if (!isShown(layout, layout.tiles[i].id, available)) continue;
+      // moveTile retire d'abord la tuile : vers le bas, l'index cible i devient « juste après » la voisine.
+      return moveTile(layout, id, i);
+    }
+    return copy(layout);
   }
 
   function setSize(layout, id, size) {
-    return has(SIZES, size) ? patchTile(layout, id, 'size', size) : copy(layout);
-  }
-
-  function setVisible(layout, id, visible) {
-    return patchTile(layout, id, 'visible', visible !== false);
+    var next = copy(layout);
+    var i = indexOf(next, id);
+    if (has(SIZES, size) && i !== -1) next.tiles[i].size = size;
+    return next;
   }
 
   function setNewsCount(layout, n) {
     var next = copy(layout);
     if (has(COUNTS, n)) next.newsCount = n;
     return next;
-  }
-
-  function hiddenIds(layout) {
-    return layout.tiles.filter(function (t) { return !t.visible; }).map(function (t) { return t.id; });
   }
 
   function loadLayout(storage) {
@@ -158,8 +169,8 @@
   var Bento = {
     TILE_IDS: TILE_IDS, SIZES: SIZES, COUNTS: COUNTS, STORAGE_KEY: STORAGE_KEY,
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
-    moveTile: moveTile, stepTile: stepTile, setSize: setSize, setVisible: setVisible,
-    setNewsCount: setNewsCount, hiddenIds: hiddenIds, loadLayout: loadLayout, saveLayout: saveLayout,
+    moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,
+    setNewsCount: setNewsCount, loadLayout: loadLayout, saveLayout: saveLayout,
     totalScore: totalScore, pickTopics: pickTopics, topTopic: topTopic, countStates: countStates,
     leftover: leftover, safeUrl: safeUrl, isValidData: isValidData
   };
