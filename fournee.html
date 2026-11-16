@@ -23,6 +23,14 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .tile-L .news-title{font-size:24px}
 .rank{font-family:Fraunces, Georgia, serif;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;background:#2E1D12;color:#FBF5EA}
 .muted{font-size:13px;color:#6B5443}
+/* Emplacement n°1 : doré « Maillard », la croûte bien dorée, pour repérer d'un coup d'œil la news la mieux notée. */
+.tile[data-tile="n1"]{background:linear-gradient(140deg,#FBE3A8 0%,#F2C46D 55%,#E3A54A 100%);border:2px solid #B87420;box-shadow:0 8px 22px rgba(184,116,32,.30)}
+.bento.editing .tile[data-tile="n1"]{border:2px dashed #8A4F1C}
+.tile[data-tile="n1"] .rank{background:#8A4F1C;color:#FBE3A8;box-shadow:0 0 0 2px #FBE3A8}
+.tile[data-tile="n1"] .tile-body p{color:#3B2416!important}
+.tile[data-tile="n1"] .tile-body a[target]{background:#FFF6E3;border-color:#B87420!important}
+.tile[data-tile="n1"] .tile-tools .tool{background:#FFF6E3}
+.tile[data-tile="n1"] .tile-tools .tool[aria-pressed="true"]{background:#8A4F1C;color:#FFFDF8}
 .tile-tools{display:none;flex-wrap:wrap;gap:6px;padding-bottom:10px;border-bottom:1.5px dashed #D9C29C}
 .bento.editing .tile-tools{display:flex}
 .bento.editing .tile{border:1.5px dashed #B5651D;box-shadow:0 2px 0 #E7D6B8}
