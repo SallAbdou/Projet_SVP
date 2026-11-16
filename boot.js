@@ -7,4 +7,5 @@ s=s.replace(/on([A-Z][a-z]+)="\{\{(\w+)\}\}"/g,function(m,ev,fn){return 'data-ev
 s=s.replace(/\{\{([\w.]+)\}\}/g,function(m,p){return esc(get(v,p))});
 var root=document.getElementById('root');var ae=document.activeElement&&document.activeElement.textContent;root.innerHTML=s;
 root.querySelectorAll('[data-ev]').forEach(function(el){var x=el.getAttribute('data-ev').split(':');el.addEventListener(x[0],function(e){if(x[0]==='submit')e.preventDefault();v[x[1]](e)})});
-document.documentElement.lang=c.state.lang||'fr';};window.__render();})();
+document.documentElement.lang=c.state.lang||'fr';
+if(typeof c.afterRender==='function')c.afterRender(root);};window.__render();})();
