@@ -105,11 +105,53 @@
     }
   }
 
+  /* Helpers de contenu */
+
+  function totalScore(topic) {
+    var sc = (topic && topic.scores) || {};
+    return (sc.durability || 0) + (sc.propensity || 0) + (sc.offer || 0);
+  }
+
+  function sortedByScore(topics) {
+    return (topics || [])
+      .map(function (t, i) { return { t: t, i: i, s: totalScore(t) }; })
+      .sort(function (a, b) { return b.s - a.s || a.i - b.i; })
+      .map(function (x) { return x.t; });
+  }
+
+  function pickTopics(topics, n) {
+    return sortedByScore(topics).slice(0, n);
+  }
+
+  function topTopic(topics) {
+    var list = sortedByScore(topics);
+    for (var i = 0; i < list.length; i++) if (list[i].state === 'hot') return list[i];
+    return list.length ? list[0] : null;
+  }
+
+  function countStates(topics) {
+    var c = { hot: 0, knead: 0, stale: 0 };
+    (topics || []).forEach(function (t) { if (c.hasOwnProperty(t.state)) c[t.state]++; });
+    return c;
+  }
+
+  function leftover(topics) {
+    var list = topics || [];
+    for (var i = 0; i < list.length; i++) if (list[i].state === 'stale' && list[i].newAngle) return list[i];
+    return null;
+  }
+
+  function safeUrl(url) {
+    return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : '#';
+  }
+
   var Bento = {
     TILE_IDS: TILE_IDS, SIZES: SIZES, COUNTS: COUNTS, STORAGE_KEY: STORAGE_KEY,
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, setVisible: setVisible,
-    setNewsCount: setNewsCount, hiddenIds: hiddenIds, loadLayout: loadLayout, saveLayout: saveLayout
+    setNewsCount: setNewsCount, hiddenIds: hiddenIds, loadLayout: loadLayout, saveLayout: saveLayout,
+    totalScore: totalScore, pickTopics: pickTopics, topTopic: topTopic, countStates: countStates,
+    leftover: leftover, safeUrl: safeUrl
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Bento;
