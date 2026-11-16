@@ -142,6 +142,15 @@
     return null;
   }
 
+  // Vérifie la forme minimale du JSON de données avant le rendu (données venant plus tard de n8n).
+  function isValidData(d) {
+    if (!d || typeof d !== 'object' || Array.isArray(d)) return false;
+    if (typeof d.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(d.date)) return false;
+    if (!Array.isArray(d.topics) || !Array.isArray(d.posts) || !Array.isArray(d.pantry)) return false;
+    var p = d.profile;
+    return !!p && typeof p === 'object' && Array.isArray(p.axes) && Array.isArray(p.sources);
+  }
+
   function safeUrl(url) {
     return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : '#';
   }
@@ -152,7 +161,7 @@
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, setVisible: setVisible,
     setNewsCount: setNewsCount, hiddenIds: hiddenIds, loadLayout: loadLayout, saveLayout: saveLayout,
     totalScore: totalScore, pickTopics: pickTopics, topTopic: topTopic, countStates: countStates,
-    leftover: leftover, safeUrl: safeUrl
+    leftover: leftover, safeUrl: safeUrl, isValidData: isValidData
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Bento;

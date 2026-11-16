@@ -50,3 +50,13 @@ test('data/fournee.json respecte le contrat', () => {
   for (const p of data.pantry) assert.ok(both(p.title) && Number.isInteger(p.savedDaysAgo) && states.includes(p.state));
   assert.ok(both(data.profile.role) && data.profile.axes.length === 2 && data.profile.sources.length >= 3);
 });
+
+test('isValidData refuse un JSON valide mais incomplet', () => {
+  const ok = { version: 1, date: '2026-10-30', topics: [], posts: [], pantry: [], profile: { name: 'L', axes: [], sources: [] } };
+  assert.equal(B.isValidData(ok), true);
+  assert.equal(B.isValidData(null), false);
+  assert.equal(B.isValidData([]), false);
+  for (const k of ['topics', 'posts', 'pantry']) assert.equal(B.isValidData(Object.assign({}, ok, { [k]: undefined })), false, k);
+  assert.equal(B.isValidData(Object.assign({}, ok, { profile: { name: 'L' } })), false);
+  assert.equal(B.isValidData(Object.assign({}, ok, { date: 'hier' })), false);
+});

@@ -364,7 +364,7 @@ onDrop: function (id, index) { self.updateLayout(Bento.moveTile(self.state.layou
 });
 fetch('/data/fournee.json')
 .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-.then(function (data) { self.setState({ data: data }); })
+.then(function (data) { if (!Bento.isValidData(data)) throw new Error('données invalides'); self.setState({ data: data }); })
 .catch(function () { self.setState({ loadError: true }); });
 }
 // Enregistre la disposition puis re-rend la page. focus = { id, act } du bouton à refocaliser après le rendu.
