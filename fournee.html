@@ -21,6 +21,15 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .tile-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
 .tile-title{margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;line-height:1.2}
 .muted{font-size:13px;color:#6B5443}
+.tile-tools{display:none;flex-wrap:wrap;gap:6px;padding-bottom:10px;border-bottom:1.5px dashed #D9C29C}
+.bento.editing .tile-tools{display:flex}
+.bento.editing .tile{border:1.5px dashed #B5651D;box-shadow:0 2px 0 #E7D6B8}
+.tool-sizes{display:inline-flex;gap:4px}
+.tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.tool[aria-pressed="true"]{background:#8A4F1C;border-color:#8A4F1C;color:#FFFDF8}
+.tool-drag{cursor:grab;touch-action:none;user-select:none;font-size:18px}
+.tile-dark .tool{background:#FFFDF8}
+.tile-dark .tool[aria-pressed="true"]{background:#F2C77A;border-color:#F2C77A;color:#2E1D12}
 @media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile-S{grid-column:span 1}.tile-M,.tile-L{grid-column:span 2}}
 @media (max-width:640px){.bento{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto}.tile-S,.tile-M,.tile-L{grid-column:auto;grid-row:auto}.tile,.tile-body{overflow:visible}}
 </style>
@@ -75,10 +84,29 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 <p role="status" style="{{loadingStyle}}">{{t.loading}}</p>
 <p role="alert" style="{{errorStyle}}">{{t.loadError}}</p>
 <p style="{{emptyStyle}}">{{t.allHidden}}</p>
-<div data-bento class="bento" style="{{gridStyle}}">
+<p style="{{hintStyle}}">{{t.editHint}}</p>
+<div data-bento class="bento {{gridClass}}" style="{{gridStyle}}">
 
 <section data-tile="news" class="tile" aria-labelledby="tt-news">
 <div class="tile-head"><h2 id="tt-news" class="tile-title">{{t.tiles.news}}</h2><span class="muted">{{newsCountLabel}}</span></div>
+<div class="tile-tools" role="group" aria-label="{{a.news.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="news" data-act="up" onClick="{{tileUp}}" aria-label="{{a.news.up}}">↑</button>
+<button type="button" class="tool" data-id="news" data-act="down" onClick="{{tileDown}}" aria-label="{{a.news.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="news" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="news" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="news" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="news" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.news.hide}}">✕</button>
+</div>
+<div class="tile-tools" role="group" aria-label="{{t.countLabel}}">
+<span class="muted" style="align-self:center">{{t.countLabel}}</span>
+<button type="button" class="tool" data-id="news" data-count="1" data-act="count-1" onClick="{{setCount}}" aria-pressed="false">1</button>
+<button type="button" class="tool" data-id="news" data-count="3" data-act="count-3" onClick="{{setCount}}" aria-pressed="false">3</button>
+<button type="button" class="tool" data-id="news" data-count="5" data-act="count-5" onClick="{{setCount}}" aria-pressed="false">5</button>
+<button type="button" class="tool" data-id="news" data-count="7" data-act="count-7" onClick="{{setCount}}" aria-pressed="false">7</button>
+</div>
 <div class="tile-body" tabindex="0" role="region" aria-labelledby="tt-news" style="gap:0">
 <sc-for list="{{topics}}" as="c" hint-placeholder-count="5">
 <article style="flex:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:14px 0 12px;border-top:1px solid #F0E3CC">
@@ -104,6 +132,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 
 <section data-tile="top" class="tile tile-dark" aria-labelledby="tt-top">
 <div class="tile-head"><h2 id="tt-top" class="tile-title">{{t.tiles.top}}</h2></div>
+<div class="tile-tools" role="group" aria-label="{{a.top.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="top" data-act="up" onClick="{{tileUp}}" aria-label="{{a.top.up}}">↑</button>
+<button type="button" class="tool" data-id="top" data-act="down" onClick="{{tileDown}}" aria-label="{{a.top.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="top" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="top" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="top" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="top" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.top.hide}}">✕</button>
+</div>
 <div class="tile-body">
 <span style="align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#F2C77A;color:#3B2416">{{t.hotNow}}</span>
 <p style="margin:0;font-weight:700;font-size:17px;line-height:1.35">{{top.title}}</p>
@@ -114,6 +153,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 
 <section data-tile="graph" class="tile" aria-labelledby="tt-graph">
 <div class="tile-head"><h2 id="tt-graph" class="tile-title">{{t.tiles.graph}}</h2><span class="muted">{{t.graphSub}}</span></div>
+<div class="tile-tools" role="group" aria-label="{{a.graph.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="graph" data-act="up" onClick="{{tileUp}}" aria-label="{{a.graph.up}}">↑</button>
+<button type="button" class="tool" data-id="graph" data-act="down" onClick="{{tileDown}}" aria-label="{{a.graph.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="graph" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="graph" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="graph" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="graph" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.graph.hide}}">✕</button>
+</div>
 <div style="flex:1 1 auto;min-height:90px;display:flex;gap:10px;align-items:stretch;border-bottom:2px solid #E7D6B8;padding-bottom:4px">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px">
@@ -131,6 +181,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 
 <section data-tile="stats" class="tile" aria-labelledby="tt-stats">
 <div class="tile-head"><h2 id="tt-stats" class="tile-title">{{t.tiles.stats}}</h2></div>
+<div class="tile-tools" role="group" aria-label="{{a.stats.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="stats" data-act="up" onClick="{{tileUp}}" aria-label="{{a.stats.up}}">↑</button>
+<button type="button" class="tool" data-id="stats" data-act="down" onClick="{{tileDown}}" aria-label="{{a.stats.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="stats" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="stats" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="stats" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="stats" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.stats.hide}}">✕</button>
+</div>
 <div class="tile-body">
 <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
 <div style="display:flex;align-items:center;gap:10px;font-size:14px">
@@ -144,6 +205,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 
 <section data-tile="profile" class="tile" aria-labelledby="tt-profile">
 <div class="tile-head"><h2 id="tt-profile" class="tile-title">{{t.tiles.profile}}</h2></div>
+<div class="tile-tools" role="group" aria-label="{{a.profile.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="profile" data-act="up" onClick="{{tileUp}}" aria-label="{{a.profile.up}}">↑</button>
+<button type="button" class="tool" data-id="profile" data-act="down" onClick="{{tileDown}}" aria-label="{{a.profile.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="profile" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="profile" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="profile" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="profile" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.profile.hide}}">✕</button>
+</div>
 <div class="tile-body" style="gap:6px">
 <div style="display:flex;align-items:center;gap:10px">
 <span style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">{{profile.initial}}</span>
@@ -160,6 +232,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 
 <section data-tile="painperdu" class="tile" aria-labelledby="tt-painperdu">
 <div class="tile-head"><h2 id="tt-painperdu" class="tile-title">{{t.tiles.painperdu}}</h2></div>
+<div class="tile-tools" role="group" aria-label="{{a.painperdu.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="painperdu" data-act="up" onClick="{{tileUp}}" aria-label="{{a.painperdu.up}}">↑</button>
+<button type="button" class="tool" data-id="painperdu" data-act="down" onClick="{{tileDown}}" aria-label="{{a.painperdu.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="painperdu" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="painperdu" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="painperdu" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="painperdu" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.painperdu.hide}}">✕</button>
+</div>
 <p style="{{left.emptyStyle}}" class="muted">{{t.noLeftover}}</p>
 <div class="tile-body" style="{{left.style}}">
 <span style="align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#F5DAD3;color:#8E2A1C">{{left.state}}</span>
@@ -171,6 +254,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 
 <section data-tile="pantry" class="tile" aria-labelledby="tt-pantry">
 <div class="tile-head"><h2 id="tt-pantry" class="tile-title">{{t.tiles.pantry}}</h2><a href="/garde-manger" style="font-weight:700;font-size:14px">{{t.pantryAll}}</a></div>
+<div class="tile-tools" role="group" aria-label="{{a.pantry.group}}">
+<span class="tool tool-drag" data-drag title="{{t.drag}}" aria-hidden="true">⠿</span>
+<button type="button" class="tool" data-id="pantry" data-act="up" onClick="{{tileUp}}" aria-label="{{a.pantry.up}}">↑</button>
+<button type="button" class="tool" data-id="pantry" data-act="down" onClick="{{tileDown}}" aria-label="{{a.pantry.down}}">↓</button>
+<span class="tool-sizes" role="group" aria-label="{{t.sizeLabel}}">
+<button type="button" class="tool" data-id="pantry" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
+<button type="button" class="tool" data-id="pantry" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
+<button type="button" class="tool" data-id="pantry" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
+</span>
+<button type="button" class="tool" data-id="pantry" data-act="hide" onClick="{{tileHide}}" aria-label="{{a.pantry.hide}}">✕</button>
+</div>
 <div class="tile-body" tabindex="0" role="region" aria-labelledby="tt-pantry" style="gap:0">
 <sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
 <div style="flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:10px 0;border-top:1px solid #F0E3CC">
@@ -182,6 +276,18 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 </section>
 
 </div>
+<section aria-labelledby="tray-t" style="{{trayStyle}}">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px">
+<h2 id="tray-t" class="tile-title">{{t.trayTitle}}</h2>
+<button type="button" class="tool" data-act="reset" onClick="{{resetLayout}}">{{t.reset}}</button>
+</div>
+<p style="{{trayEmptyStyle}}" class="muted">{{t.trayEmpty}}</p>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{hiddenTiles}}" as="h" hint-placeholder-count="2">
+<button type="button" class="tool" data-id="{{h.id}}" data-act="show" onClick="{{tileShow}}" aria-label="{{h.aria}}">+ {{h.label}}</button>
+</sc-for>
+</div>
+</section>
 </main>
 </div>
 </script>
@@ -214,7 +320,11 @@ axis: 'Axe', topicsCount: '{n} sur {total} sujets',
 scoreLine: 'Durabilité {d}/5 · Propension {p}/5 · Lien offre {o}/5', money: 'Monétisation {m}/15',
 knead: 'Pétrir un post', read: 'Lire la source', hotNow: 'Tout chaud · publie vite', kneadPost: 'Pétrir le post',
 graphSub: 'impressions par post', noLeftover: 'Rien de rassis aujourd’hui.', reknead: 'Repétrir ce sujet',
-pantryAll: 'Tout voir →', today: 'mis de côté aujourd’hui', yesterday: 'mis de côté hier', daysAgo: 'mis de côté il y a {n} jours'
+pantryAll: 'Tout voir →', today: 'mis de côté aujourd’hui', yesterday: 'mis de côté hier', daysAgo: 'mis de côté il y a {n} jours',
+editHint: 'Glisse les tuiles par la poignée ⠿ ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
+drag: 'Glisser pour déplacer', sizeLabel: 'Taille', countLabel: 'Sujets affichés',
+toolsGroup: 'Outils de la tuile {name}', up: 'Monter la tuile {name}', down: 'Descendre la tuile {name}', hide: 'Masquer la tuile {name}', add: 'Ajouter la tuile {name}',
+trayTitle: 'Tuiles masquées', trayEmpty: 'Aucune tuile masquée.', reset: 'Disposition par défaut'
 },
 en: {
 navLabel: 'Main navigation', langLabel: 'Language', tagline: 'We knead the AI news for you.', role: 'AI consultant · solopreneur',
@@ -231,7 +341,11 @@ axis: 'Axis', topicsCount: '{n} of {total} topics',
 scoreLine: 'Shelf life {d}/5 · Shareability {p}/5 · Offer fit {o}/5', money: 'Monetisation {m}/15',
 knead: 'Knead a post', read: 'Read the source', hotNow: 'Piping hot · post it fast', kneadPost: 'Knead the post',
 graphSub: 'impressions per post', noLeftover: 'Nothing stale today.', reknead: 'Re-knead this topic',
-pantryAll: 'See all →', today: 'saved today', yesterday: 'saved yesterday', daysAgo: 'saved {n} days ago'
+pantryAll: 'See all →', today: 'saved today', yesterday: 'saved yesterday', daysAgo: 'saved {n} days ago',
+editHint: 'Drag tiles by the ⠿ handle or use the arrows. Your choices are saved on this device.',
+drag: 'Drag to move', sizeLabel: 'Size', countLabel: 'Topics shown',
+toolsGroup: '{name} tile tools', up: 'Move {name} tile up', down: 'Move {name} tile down', hide: 'Hide {name} tile', add: 'Add {name} tile',
+trayTitle: 'Hidden tiles', trayEmpty: 'No hidden tiles.', reset: 'Default layout'
 }
 };
 function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
@@ -247,7 +361,22 @@ fetch('/data/fournee.json')
 .then(function (data) { self.setState({ data: data }); })
 .catch(function () { self.setState({ loadError: true }); });
 }
-afterRender(root) { BentoUI.applyLayout(root, this.state.layout); }
+// Enregistre la disposition puis re-rend la page. focus = { id, act } du bouton à refocaliser après le rendu.
+updateLayout(layout, focus) {
+try { Bento.saveLayout(window.localStorage, layout); } catch (e) {}
+this.pendingFocus = focus || null;
+this.setState({ layout: layout });
+}
+afterRender(root) {
+BentoUI.applyLayout(root, this.state.layout);
+var f = this.pendingFocus;
+this.pendingFocus = null;
+if (!f) return;
+var sel = '[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : '');
+var el = root.querySelector(sel);
+if (!el || el.closest('[hidden]') || !el.offsetParent) el = root.querySelector('[data-act="edit"]');
+if (el) el.focus();
+}
 renderVals() {
 var st = this.state || {};
 var lang = st.lang || 'fr';
@@ -261,7 +390,9 @@ var on = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999
 var off = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #5E3412; font: inherit; font-weight: 600; cursor: pointer';
 var self = this;
 var topics = data ? data.topics : [];
-var allHidden = Bento.hiddenIds(layout).length === layout.tiles.length;
+var hidden = Bento.hiddenIds(layout);
+var allHidden = hidden.length === layout.tiles.length;
+var idOf = function (e) { return e.currentTarget.getAttribute('data-id'); };
 var eyebrow = t.eyebrowTail;
 if (data) {
 var d = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(data.date + 'T12:00:00'));
@@ -280,7 +411,24 @@ setFr: function () { self.setState({ lang: 'fr' }); },
 setEn: function () { self.setState({ lang: 'en' }); },
 frPressed: String(lang === 'fr'), enPressed: String(lang === 'en'),
 frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off,
-toggleEdit: function () {},
+toggleEdit: function () { self.pendingFocus = { act: 'edit' }; self.setState({ editing: !st.editing }); },
+tileUp: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, -1), { id: id, act: 'up' }); },
+tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, 1), { id: id, act: 'down' }); },
+tileSize: function (e) { var id = idOf(e), s = e.currentTarget.getAttribute('data-size'); self.updateLayout(Bento.setSize(layout, id, s), { id: id, act: 'size-' + s }); },
+tileHide: function (e) { var id = idOf(e); self.updateLayout(Bento.setVisible(layout, id, false), { id: id, act: 'hide' }); },
+tileShow: function (e) { var id = idOf(e); self.updateLayout(Bento.setVisible(layout, id, true), { id: id, act: 'up' }); },
+setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count')); self.updateLayout(Bento.setNewsCount(layout, n), { id: 'news', act: 'count-' + n }); },
+resetLayout: function () { self.updateLayout(Bento.defaultLayout(), { act: 'reset' }); },
+gridClass: st.editing ? 'editing' : '',
+hintStyle: data && st.editing ? 'margin: 0; font-size: 14px; color: #5E3412; padding: 10px 14px; border-radius: 12px; background: #F6E7CC' : HIDE,
+trayStyle: data && st.editing ? 'display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; border-radius: 18px; border: 1.5px dashed #D9C29C; background: #F3E6CF' : HIDE,
+trayEmptyStyle: hidden.length ? HIDE : 'margin: 0',
+hiddenTiles: hidden.map(function (id) { return { id: id, label: t.tiles[id], aria: fill(t.add, { name: t.tiles[id] }) }; }),
+a: Bento.TILE_IDS.reduce(function (acc, id) {
+var n = { name: t.tiles[id] };
+acc[id] = { group: fill(t.toolsGroup, n), up: fill(t.up, n), down: fill(t.down, n), hide: fill(t.hide, n) };
+return acc;
+}, {}),
 editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
 editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: ' + (st.editing ? '#8A4F1C; color: #FFFDF8' : '#FFFDF8; color: #8A4F1C') + '; font: inherit; font-weight: 700; cursor: pointer',
