@@ -4,9 +4,12 @@
 (function (root) {
   var DEFAUT = '/fournee';
 
-  // Seuls les chemins internes sont acceptés : « / » suivi d'autre chose que « / » ou « \ », et aucun « \ ».
+  // Seuls les chemins internes sont acceptés : « / » suivi d'autre chose que « / » ou « \ », aucun « \ »,
+  // et aucun espace ni caractère de contrôle (le navigateur retire tabulations et retours à la ligne :
+  // « /\t/pirate.fr » deviendrait « //pirate.fr »).
   function retourSur(valeur) {
     if (typeof valeur !== 'string' || valeur.charAt(0) !== '/') return DEFAUT;
+    if (/[\s\u0000-\u001f\u007f]/.test(valeur)) return DEFAUT;
     if (valeur.charAt(1) === '/' || valeur.indexOf('\\') !== -1) return DEFAUT;
     return valeur;
   }

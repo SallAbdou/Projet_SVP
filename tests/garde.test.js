@@ -8,7 +8,7 @@ test('retourSur garde les chemins internes', () => {
 });
 
 test('retourSur refuse toute sortie du site', () => {
-  for (const v of ['//pirate.fr', 'https://pirate.fr', '/\\pirate.fr', '', null, undefined, 'fournil', '/fournil\\x', 'javascript:alert(1)', 42]) {
+  for (const v of ['//pirate.fr', 'https://pirate.fr', '/\\pirate.fr', '', null, undefined, 'fournil', '/fournil\\x', 'javascript:alert(1)', 42, '/\t/pirate.fr', '/\n/pirate.fr', '/\r/pirate.fr', ' //pirate.fr']) {
     assert.equal(G.retourSur(v), '/fournee', String(v));
   }
 });
