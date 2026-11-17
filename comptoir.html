@@ -5,25 +5,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <style>
-body{margin:0;background:#FBF5EA}
+body{margin:0;background:var(--fond)}
 a{color:#8A4F1C}a:hover{color:#5E3412}
-a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
+a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .kpis{display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:14px}
-.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#F2C77A;color:#2E1D12;font-weight:700;text-decoration:none}
-.btn-plein:hover{background:#FFDDA0;color:#2E1D12}
-.btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #8A4F1C;color:#8A4F1C;font-weight:700;font-size:14px;text-decoration:none}
-.btn-ligne:hover{background:#8A4F1C;color:#FFFDF8}
+.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:var(--croute);color:#2E1D12;font-weight:700;text-decoration:none}
+.btn-plein:hover{background:#FFC85C;color:#2E1D12}
+.btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--braise);color:var(--braise);font-weight:700;font-size:14px;text-decoration:none}
+.btn-ligne:hover{background:var(--braise);color:#FFFFFF}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:1100px){.kpis{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}.kpis{grid-template-columns:repeat(2, minmax(0, 1fr))}.bars{gap:6px!important}}</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
-<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{eyebrow}}</p>
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
@@ -79,7 +79,7 @@ a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
 <section aria-labelledby="next-t" style="background:#2E1D12;color:#FBF5EA;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
 <h2 id="next-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.nextTitle}}</h2>
 <div style="{{nextStyle}}">
-<span style="{{next.chip}}">{{next.state}}</span>
+<span class="{{next.chip}}" style="align-self:flex-start">{{next.state}}</span>
 <p style="margin:0;font-weight:700;font-size:17px;line-height:1.35">{{next.titre}}</p>
 <p style="margin:0;font-size:13.5px;color:#E9D8BA">{{next.pourToi}}</p>
 <a href="{{next.href}}" class="btn-plein" style="align-self:flex-start">{{t.nextCta}}</a>
@@ -105,7 +105,7 @@ a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
 <sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
 <div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid #F0E3CC">
 <div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;overflow-wrap:anywhere">{{p.titre}}</span><span style="font-size:12px;color:#6B5443">{{p.meta}}</span></div>
-<span style="{{p.chip}}">{{p.state}}</span>
+<span class="{{p.chip}}">{{p.state}}</span>
 <a href="{{p.href}}" class="btn-ligne" aria-label="{{p.kneadLabel}}">{{t.knead}}</a>
 </div>
 </sc-for>
@@ -117,15 +117,11 @@ a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/garde-manger.js"></script><script src="/comptoir.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/garde-manger.js"></script><script src="/comptoir.js"></script><script src="/charte.js"></script><script>
 var HIDE = 'display: none';
-var PUCE = 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; align-self: flex-start; ';
-var CHIP = {
-vert: PUCE + 'background: #DCEBD6; color: #2F5E36', orange: PUCE + 'background: #FBE3C2; color: #8A4B00', rouge: PUCE + 'background: #F5DAD3; color: #8E2A1C',
-chaud: PUCE + 'background: #DCEBD6; color: #2F5E36', enfourner: PUCE + 'background: #FBE3C2; color: #8A4B00', rassis: PUCE + 'background: #F5DAD3; color: #8E2A1C'
-};
-var DOT = { vert: 'color: #3F8A4A', orange: 'color: #B36B00', rouge: 'color: #C0392B' };
-var BAR = { vert: '#B5651D', orange: '#E3B678', rouge: '#EAD7B4' };
+// Puces et barres : classes et variables de la charte (charte.css, charte.js).
+function CHIP(etat) { return Charte.puce(etat) || 'pq-cache'; }
+var DOT = { vert: 'color: var(--braise-vive)', orange: 'color: var(--barre-petrir)', rouge: 'color: var(--barre-rassis)' };
 var SENS = { hausse: '#2F5E36', baisse: '#8E2A1C', stable: '#6B5443', nouveau: '#2F5E36' };
 var T = {
 fr: {
@@ -239,9 +235,9 @@ var last = i === champs.length - 1;
 var e = k.ecarts[c];
 return {
 label: t.kpis[i], value: charge ? num(k.actuel[c]) : '…', sub: charge ? texteEcart(e, i === 0 ? 'nombre' : 'pourcent', t) : '',
-box: last ? 'background: #8A4F1C; color: #FFFDF8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
-labelStyle: last ? 'font-size: 13px; color: #F6E7CC' : 'font-size: 13px; color: #6B5443',
-subStyle: last ? 'font-size: 12px; color: #F6E7CC' : 'font-size: 12px; color: ' + SENS[e.sens]
+box: last ? 'background: var(--braise); color: #FFFFFF; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
+labelStyle: last ? 'font-size: 13px; color: #FFFFFF' : 'font-size: 13px; color: #6B5443',
+subStyle: last ? 'font-size: 12px; color: #FFFFFF' : 'font-size: 12px; color: ' + SENS[e.sens]
 };
 }),
 barsStyle: charge && barres.length ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
@@ -252,7 +248,7 @@ bars: barres.map(function (b) {
 return {
 value: num(b.impressions), label: b.label, dotStyle: DOT[b.feu],
 aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.feu] }),
-barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + BAR[b.feu] + '; border-radius: 14px 14px 4px 4px'
+barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; border-radius: 14px 14px 4px 4px'
 };
 }),
 legend: ['vert', 'orange', 'rouge'].map(function (f) { return { label: t.etats[f], dotStyle: DOT[f] }; }),
@@ -261,14 +257,14 @@ nextStyle: news ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
 nextEmptyStyle: news ? HIDE : 'display: flex; flex-direction: column; gap: 10px',
 nextEmpty: charge && !(data && data.etat === 'attente') ? t.nextEmpty : t.nextLoading,
 nextEmptyCtaStyle: charge && !(data && data.etat === 'attente') ? 'align-self: flex-start' : HIDE,
-next: news ? { chip: CHIP[news.feu], state: t.etats[news.feu], titre: news.titre, pourToi: news.pourToi || '', href: Bento.lienFournil(news.ref) } : { chip: HIDE, state: '', titre: '', pourToi: '', href: '/fournee' },
+next: news ? { chip: CHIP(news.feu), state: t.etats[news.feu], titre: news.titre, pourToi: news.pourToi || '', href: Bento.lienFournil(news.ref) } : { chip: 'pq-cache', state: '', titre: '', pourToi: '', href: '/fournee' },
 gainContacts: num(bilan.contacts),
 gainPosts: num(bilan.posts),
 pantry: sauves.map(function (a) {
 var f = GardeManger.fraicheur(a, maintenant);
 var age = GardeManger.libelleAnciennete(GardeManger.joursDepuis(a.savedAt, maintenant), lang);
 return {
-titre: a.titre, meta: [a.source, age].filter(Boolean).join(' · '), chip: CHIP[f], state: t.fraicheur[f],
+titre: a.titre, meta: [a.source, age].filter(Boolean).join(' · '), chip: CHIP(f), state: t.fraicheur[f],
 href: Bento.lienFournil(a.ref), kneadLabel: remplir(t.kneadLabel, { titre: a.titre })
 };
 }),

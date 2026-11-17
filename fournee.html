@@ -5,9 +5,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <style>
-body{margin:0;background:#FBF5EA}
+body{margin:0;background:var(--fond)}
 a{color:#8A4F1C}a:hover{color:#5E3412}
-button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
 <style>.four-pain-miche{transform-origin:48px 56px;animation:lever 1.6s ease-in-out infinite alternate}@keyframes lever{from{transform:scale(.86,.7)}to{transform:scale(1,1)}}@media (prefers-reduced-motion:reduce){.four-pain-miche{animation:none}}</style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
@@ -48,8 +48,8 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 @media (pointer:coarse){.tile-tools{flex-wrap:wrap}.tile-tools .tool{min-height:44px;min-width:44px;height:auto;font-size:inherit}}
 .tile-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;padding-top:4px}
 .bento.editing .tile-actions{display:none}
-.act-knead{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none}
-a.act-knead:hover{background:#5E3412;color:#FFFDF8}
+.act-knead{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;background:var(--braise);color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none}
+a.act-knead:hover{background:var(--braise-fonce);color:#FFFDF8}
 .act{position:relative;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .act:hover{border-color:#8A4F1C}
 a.act{text-decoration:none}a.act:hover{color:#2E1D12}
@@ -67,7 +67,7 @@ a.act{text-decoration:none}a.act:hover{color:#2E1D12}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
 .toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
-.toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
+.toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--croute);color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
 .mep-zone{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}
 .mep-titre{margin:0;font-weight:700;font-size:14px;color:#2E1D12}
@@ -90,12 +90,12 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </head><body><div id="root"></div>
 <div id="pq-toast" aria-live="polite"></div>
 <script type="text/plain" id="tpl">
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
-<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{eyebrow}}</p>
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </div>
@@ -127,7 +127,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 <button type="button" class="tool" data-act="reset" onClick="{{resetLayout}}">{{t.reset}}</button>
 </div>
-<div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:#2E1D12">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
+<div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:#2E1D12">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--braise);color:#FFFFFF;font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
 <div data-bento class="bento {{gridClass}}" style="{{gridStyle}}">
 
 <sc-for list="{{slots}}" as="s" hint-placeholder-count="7">
@@ -145,7 +145,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <div class="tile-body">
 <div style="display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:12.5px;color:#4A3324">
 <span class="rank" title="{{s.rankHint}}">{{s.rank}}</span>
-<span style="{{s.chip}}">{{s.state}}</span>
+<span class="{{s.chip}}">{{s.state}}</span>
 <span>{{s.source}}</span>
 </div>
 <h2 id="tt-{{s.id}}" class="news-title">{{s.title}}</h2>
@@ -195,13 +195,9 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/comptoir.js"></script><script>
-var CHIP = {
-hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
-knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
-stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
-};
-var BAR_COLOR = { hot: '#B5651D', knead: '#E3B678', stale: '#EAD7B4' };
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/comptoir.js"></script><script src="/charte.js"></script><script>
+// Puces et barres : classes et variables de la charte (charte.css, charte.js).
+function CHIP(etat) { return Charte.puce(etat) || 'pq-cache'; }
 // Feu tricolore de n8n vers les états de la boulangerie.
 var FEU = { vert: 'hot', orange: 'knead', rouge: 'stale' };
 var HIDE = 'display: none';
@@ -461,7 +457,7 @@ unskipAll: function () { self.toutFaireRevenir(); },
 emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
 editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
-editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: ' + (st.editing ? '#8A4F1C; color: #FFFDF8' : '#FFFDF8; color: #8A4F1C') + '; font: inherit; font-weight: 700; cursor: pointer',
+editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--braise); background: ' + (st.editing ? 'var(--braise); color: #FFFFFF' : '#FFFDF8; color: var(--braise)') + '; font: inherit; font-weight: 700; cursor: pointer',
 loadingStyle: !data && !st.loadError ? 'margin: 0; color: #6B5443' : HIDE,
 waitStyle: data && data.etat === 'attente' && !st.loadError ? 'display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 40px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
 waitTitle: fill(t.waitTitle, { prenom: prenomCourant() }),
@@ -476,12 +472,12 @@ var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: HIDE, state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, scoreLine: '', money: '', url: '#',
+chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, scoreLine: '', money: '', url: '#',
 knead: t.knead, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
 var etat = FEU[c.feu];
-s.chip = CHIP[etat]; s.state = t.states[etat]; s.source = c.source;
+s.chip = CHIP(etat); s.state = t.states[etat]; s.source = c.source;
 s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
 s.scoreLine = fill(t.scoreLine, { d: c.durabilite, p: c.propension, o: c.lienOffre });
 s.money = fill(t.money, { m: Bento.totalScore(c) });
@@ -496,7 +492,7 @@ g: toolLabels(t, t.graphName),
 bars: barres.map(function (b) {
 return {
 value: num(b.impressions), label: b.label,
-barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background: ' + BAR_COLOR[FEU[b.feu]] + '; border-radius: 10px 10px 3px 3px'
+barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; border-radius: 10px 10px 3px 3px'
 };
 })
 };

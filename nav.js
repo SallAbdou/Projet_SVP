@@ -24,8 +24,8 @@
   ];
 
   var LIEN = 'display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none';
-  var LIEN_ACTIF = 'display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;background:#FFFDF8;color:#5E3412;font-weight:700;text-decoration:none;box-shadow:inset 0 0 0 1px #E7D6B8';
-  var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700;cursor:pointer';
+  var LIEN_ACTIF = 'display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;background:#FFFDF8;color:#5E3412;font-weight:700;text-decoration:none;box-shadow:inset 3px 0 0 var(--braise),inset 0 0 0 1px #E7D6B8';
+  var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:var(--braise);color:#FFFFFF;font:inherit;font-weight:700;cursor:pointer';
   var LANG_OFF = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:transparent;color:#5E3412;font:inherit;font-weight:600;cursor:pointer';
 
   var DECO = 'min-height:44px;padding:0 14px;border-radius:10px;border:1px solid #D9C29C;background:transparent;color:#5E3412;font:inherit;font-weight:600;cursor:pointer;align-self:flex-start';
@@ -50,9 +50,9 @@
       '<div class="pq-nav-tete">' +
       '<div style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
       '<div style="display:flex;align-items:center;gap:10px">' +
-      '<span class="pq-nav-logo" style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center;flex:none">' +
+      '<span class="pq-nav-logo" style="width:38px;height:38px;border-radius:12px;background:var(--braise);color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;flex:none">' +
       '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg></span>' +
-      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:#B5651D">AI</span>n quotidien</span></div>' +
+      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:var(--braise)">AI</span>n quotidien</span></div>' +
       '<span class="pq-nav-tagline" style="font-size:13px;color:#6B5443">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
       '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
@@ -75,7 +75,7 @@
     '.pq-nav-tete{display:flex;align-items:center;gap:10px}' +
     '.pq-nav-menu,.pq-nav-prenom{display:none}' +
     '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
-    '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid #B5651D;outline-offset:2px}' +
+    '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
     '@media (max-width:899.98px){' +
     '[data-nav]{position:sticky;top:0;z-index:40;flex:1 1 100%!important;padding:10px 16px!important;border-right:0!important;border-bottom:1px solid #E7D6B8;gap:0!important}' +
     '.pq-nav{gap:0;position:relative}' +

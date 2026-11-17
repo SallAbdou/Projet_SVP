@@ -5,20 +5,20 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <style>
-body{margin:0;background:#FBF5EA}
+body{margin:0;background:var(--fond)}
 a{color:#8A4F1C}a:hover{color:#5E3412}
-button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="profil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
-<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{t.eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </div>
@@ -29,12 +29,12 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 <div style="display:flex;flex-direction:column"><h2 id="carte-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{p.prenom}}</h2><span style="color:#6B5443">{{p.metier}}</span></div>
 </div>
 <dl style="margin:0;display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px 24px">
-<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.themes}}</dt>
+<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--sur-titre)">{{t.themes}}</dt>
 <dd style="margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px">
 <sc-for list="{{p.themes}}" as="th" hint-placeholder-count="3"><span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F3E6CF;color:#5E3412">{{th.label}}</span></sc-for>
 </dd></div>
-<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.relation}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.relation}}</dd></div>
-<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.langue}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.langue}}</dd></div>
+<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--sur-titre)">{{t.relation}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.relation}}</dd></div>
+<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--sur-titre)">{{t.langue}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.langue}}</dd></div>
 </dl>
 <p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{t.source}}</p>
 <a href="/questionnaire" style="align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;color:#8A4F1C;font-weight:700;text-decoration:none">{{t.redo}}</a>

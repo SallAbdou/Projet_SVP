@@ -29,7 +29,7 @@
 </dl>
 <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
 <div class="mini-bento" role="img" aria-label="{{apercuLabel}}">
-<sc-for list="{{tuiles}}" as="tu"><div class="{{tu.classe}}"><span class="mini-rang">{{tu.rang}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div></sc-for>
+<sc-for list="{{tuiles}}" as="tu"><div class="{{tu.classe}}"><span class="mini-rang">{{tu.rang}}</span><span class="{{tu.puce}}">{{tu.chaud}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div></sc-for>
 </div>
 <figcaption class="aide">{{t.legende}}</figcaption>
 </figure>
@@ -56,7 +56,7 @@ fr: {
 eyebrow: 'Ta fournée type', titre: 'Voici ta fournée, {prenom}',
 chapo: 'Chaque matin, on choisira tes news d’après ces réponses. Tu pourras tout changer depuis ton profil.',
 metier: 'Ton métier', ton: 'Ton', langue: 'Langue', news: 'News par matin', thematiques: 'Tes thématiques',
-newsN: '{n} news', apercu: 'Aperçu de ta fournée : {n} news, la n°1 en doré', legende: 'La news la mieux notée du jour arrive toujours en doré.',
+newsN: '{n} news', chaud: 'Tout chaud', apercu: 'Aperçu de ta fournée : {n} news, la n°1 en doré', legende: 'La news la mieux notée du jour arrive toujours en doré.',
 refaire: 'Refaire le questionnaire', cta: 'Recevoir ma fournée',
 demo: 'Démo : aucun e-mail ni mot de passe n’est réellement envoyé ou enregistré.'
 },
@@ -64,7 +64,7 @@ en: {
 eyebrow: 'Your batch blueprint', titre: 'Here is your batch, {prenom}',
 chapo: 'Every morning, we will pick your news based on these answers. You can change everything from your profile.',
 metier: 'Your job', ton: 'Tone', langue: 'Language', news: 'News per morning', thematiques: 'Your topics',
-newsN: '{n} news', apercu: 'Preview of your batch: {n} news, number 1 in gold', legende: 'The best rated news of the day always comes in gold.',
+newsN: '{n} news', chaud: 'Piping hot', apercu: 'Preview of your batch: {n} news, number 1 in gold', legende: 'The best rated news of the day always comes in gold.',
 refaire: 'Retake the questionnaire', cta: 'Get my batch',
 demo: 'Demo: no email or password is actually sent or stored.'
 }
@@ -80,7 +80,7 @@ var c = (d && Auth.compteParEmail(etat, d.email)) || { prenom: '', profil: { met
 var p = c.profil;
 var n = Questionnaire.nombreDeNews(p.relation);
 var tuiles = [];
-for (var i = 1; i <= n; i++) tuiles.push({ rang: i, classe: 'mini-tuile' + (i === 1 ? ' or' : (i === 2 || i === 5 ? ' large' : '')) });
+for (var i = 1; i <= n; i++) tuiles.push({ rang: i, puce: i === 1 ? 'puce puce-chaud mini-puce' : 'pq-cache', chaud: t.chaud, classe: 'mini-tuile' + (i === 1 ? ' or' : (i === 2 || i === 5 ? ' large' : '')) });
 return {
 t: t,
 titre: t.titre.replace('{prenom}', c.prenom),
