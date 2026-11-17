@@ -1,11 +1,5 @@
 /* Feuille partagée des écrans du parcours d'entrée (landing, questionnaire, compte).
-   Charte : Fraunces + DM Sans, brun / crème / doré Maillard. Pas de nav latérale. */
-:root{
-  --fond:#FBF5EA;--creme:#FFFDF8;--sable:#F3E6CF;--miel:#F6E7CC;--bord:#E7D6B8;--bord-fort:#D9C29C;
-  --texte:#2E1D12;--doux:#6B5443;--brun:#8A4F1C;--brun-fonce:#5E3412;--dore:#B5651D;--sur-titre:#9A5B23;
-  --ok:#2F5E36;--ok-fond:#DCEBD6;--erreur:#8E2A1C;--erreur-fond:#F5DAD3;
-  --maillard:linear-gradient(140deg,#FBE3A8 0%,#F2C46D 55%,#E3A54A 100%);
-}
+   Palette : variables de charte.css (chargée avant). Pas de nav latérale. */
 *{box-sizing:border-box}
 html,body{overflow-x:hidden}
 body{margin:0;background:var(--fond);color:var(--texte);font-family:'DM Sans',-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55}
