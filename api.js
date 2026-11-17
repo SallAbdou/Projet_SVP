@@ -28,18 +28,53 @@
     });
   }
 
+  var Cfg = typeof module === 'object' && module.exports ? require('./config.js') : root.Config;
+
+  function marquerExemple(r) { r.source = 'exemple'; return r; }
+
+  // Mode réel : WF3 avec le jeton de session. Lenteur, panne ou réponse invalide : fournée d'exemple
+  // marquée source: 'exemple'. Plus de session : { etat: 'invalide' }, sans appeler WF3.
+  // deps = { fetch, jeton: () => Promise<string|null>, url, delaiMs, lireExemple: () => Promise }
+  function chargerFourneeReelle(deps) {
+    function exemple() { return deps.lireExemple().then(marquerExemple); }
+    return Promise.resolve().then(deps.jeton).then(function (jeton) {
+      if (!jeton) return { etat: 'invalide' };
+      var options = { method: 'POST', headers: { Authorization: 'Bearer ' + jeton, 'Content-Type': 'application/json' }, body: '{}' };
+      return Cfg.fetchAvecDelai(deps.fetch, deps.url, options, deps.delaiMs).then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      }).then(function (r) {
+        if (!estReponseValide(r)) throw new Error('réponse de fournée invalide');
+        return r;
+      });
+    }).catch(exemple);
+  }
+
+  function lireExemple() {
+    return lireJson('/data/fournee.json').then(function (r) {
+      if (!estReponseValide(r)) throw new Error('réponse de fournée invalide');
+      return r;
+    });
+  }
+
   // Juste après l'inscription, WF3 n'a pas encore écrit la sélection : on simule « attente » quelques secondes.
   function chargerFournee() {
+    if (root.PQ_MODE === 'reel' && root.PQ_CONFIG && root.Auth) {
+      return chargerFourneeReelle({
+        fetch: function (u, o) { return root.fetch(u, o); },
+        jeton: root.Auth.jetonValide,
+        url: root.PQ_CONFIG.webhookFournee,
+        delaiMs: root.PQ_CONFIG.delaiReseauMs || 8000,
+        lireExemple: lireExemple
+      });
+    }
     try {
       if (root.Auth && root.Auth.ouvrirFour) root.Auth.ouvrirFour();
       if (root.Auth && root.Auth.fourneeAuFour(root.Auth.charger(), new Date().toISOString())) {
         return Promise.resolve({ etat: 'attente' });
       }
     } catch (err) {}
-    return lireJson('/data/fournee.json').then(function (r) {
-      if (!estReponseValide(r)) throw new Error('réponse de fournée invalide');
-      return r;
-    });
+    return lireExemple();
   }
 
   var CHIFFRES = ['impressions', 'reactions', 'republications', 'commentaires', 'contacts'];
@@ -63,7 +98,7 @@
     });
   }
 
-  var Api = { estReponseValide: estReponseValide, postExempleValide: postExempleValide, chargerFournee: chargerFournee, chargerPosts: chargerPosts };
+  var Api = { estReponseValide: estReponseValide, postExempleValide: postExempleValide, chargerFournee: chargerFournee, chargerFourneeReelle: chargerFourneeReelle, chargerPosts: chargerPosts };
 
   if (typeof module === 'object' && module.exports) module.exports = Api;
   else root.Api = Api;

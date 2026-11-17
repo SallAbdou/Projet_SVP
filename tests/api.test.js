@@ -57,3 +57,54 @@ test('l historique d exemple donne les chiffres de la maquette', () => {
   assert.deepEqual(k.ecarts.reactions, { sens: 'hausse', valeur: 21 });
   assert.deepEqual(k.ecarts.republications, { sens: 'stable', valeur: 0 });
 });
+
+// ---------- Mode réel : WF3 avec le jeton de session ----------
+const EXEMPLE = { etat: 'pret', prenom: 'Léa', articles: [ok] };
+function rep(status, corps) { return { ok: status >= 200 && status < 300, status, json: () => Promise.resolve(corps) }; }
+function deps(fetch, jeton) {
+  const appels = [];
+  return {
+    appels,
+    fetch: (url, o) => { appels.push({ url, o }); return fetch(url, o); },
+    jeton: jeton || (() => Promise.resolve('JETON')),
+    url: 'https://n8n.exemple.fr/webhook/file', delaiMs: 30,
+    lireExemple: () => Promise.resolve(JSON.parse(JSON.stringify(EXEMPLE)))
+  };
+}
+
+test('fournée réelle : POST avec Bearer et corps {}, réponse WF3 telle quelle', async () => {
+  const wf3 = { etat: 'pret', prenom: 'Sam', articles: [ok] };
+  const d = deps(() => Promise.resolve(rep(200, wf3)));
+  assert.deepEqual(await A.chargerFourneeReelle(d), wf3);
+  assert.equal(d.appels[0].url, 'https://n8n.exemple.fr/webhook/file');
+  assert.equal(d.appels[0].o.method, 'POST');
+  assert.equal(d.appels[0].o.headers.Authorization, 'Bearer JETON');
+  assert.equal(d.appels[0].o.headers['Content-Type'], 'application/json');
+  assert.equal(d.appels[0].o.body, '{}');
+});
+
+test('fournée réelle : attente renvoyée telle quelle', async () => {
+  assert.deepEqual(await A.chargerFourneeReelle(deps(() => Promise.resolve(rep(200, { etat: 'attente' })))), { etat: 'attente' });
+});
+
+test('fournée réelle : 500, réponse invalide, panne, délai, jeton en panne ⇒ exemple marqué', async () => {
+  const cas = [
+    deps(() => Promise.resolve(rep(500, {}))),
+    deps(() => Promise.resolve(rep(200, { etat: 'fini' }))),
+    deps(() => Promise.reject(new TypeError('Failed to fetch'))),
+    deps((u, o) => new Promise((res, rej) => o.signal.addEventListener('abort', () => rej(new Error('abort'))))),
+    deps(() => Promise.resolve(rep(200, EXEMPLE)), () => Promise.reject(new Error('réseau')))
+  ];
+  for (const d of cas) {
+    const r = await A.chargerFourneeReelle(d);
+    assert.equal(r.source, 'exemple');
+    assert.equal(r.etat, 'pret');
+    assert.equal(r.prenom, 'Léa');
+  }
+});
+
+test('fournée réelle : plus de session ⇒ invalide, sans appel à WF3', async () => {
+  const d = deps(() => Promise.resolve(rep(200, EXEMPLE)), () => Promise.resolve(null));
+  assert.deepEqual(await A.chargerFourneeReelle(d), { etat: 'invalide' });
+  assert.equal(d.appels.length, 0);
+});

@@ -25,6 +25,7 @@ a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+<p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 </div>
 <span style="{{sampleStyle}}">{{t.sample}}</span>
 </header>
@@ -128,7 +129,7 @@ var SENS = { hausse: '#2F5E36', baisse: '#8E2A1C', stable: '#6B5443', nouveau: '
 var T = {
 fr: {
 navLabel: 'Navigation principale',
-eyebrowTail: 'tes 30 derniers jours',
+eyebrowTail: 'tes 30 derniers jours', exemple: 'Fournée d’exemple : n8n ne répond pas',
 title: 'Bonjour {prenom}, voici ce que tes fournées t’ont rapporté', titleAnon: 'Bonjour, voici ce que tes fournées t’ont rapporté',
 subtitle: 'Chaque matin, on enfourne les nouveautés IA. Toi, tu choisis ce que tu sers à ton audience.',
 sample: 'Inclut des données d’exemple',
@@ -151,7 +152,7 @@ pantryEmpty: 'Rien de côté pour l’instant.', pantryEmptyCta: 'Aller à la fo
 },
 en: {
 navLabel: 'Main navigation',
-eyebrowTail: 'your last 30 days',
+eyebrowTail: 'your last 30 days', exemple: 'Sample batch: n8n is not responding',
 title: 'Hi {prenom}, here’s what your batches brought in', titleAnon: 'Hi, here’s what your batches brought in',
 subtitle: 'Every morning we bake the latest AI news. You pick what to serve your audience.',
 sample: 'Includes sample data',
@@ -226,6 +227,7 @@ var news = Bento.pickTopics(articles, 1, Store.refsIgnorees(store, Store.dateDuJ
 var sauves = GardeManger.trier(store.sauves).slice(0, 3);
 return {
 t: t,
+exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:#6B5443;padding:6px 12px;border-radius:10px;border:1px dashed #D9C29C;align-self:flex-start' : HIDE,
 eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
 title: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
 sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #FFFDF8; border: 1px dashed #D9C29C; color: #6B5443' : HIDE,
