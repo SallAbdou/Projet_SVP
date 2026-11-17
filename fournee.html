@@ -262,7 +262,8 @@ return Bento.pickTopics(d.articles, d.articles.length, Store.refsIgnorees(st.sto
 available() { return this.restants().length; }
 // Mettre de côté (bascule) ou ignorer l'article de l'emplacement id. Le store est relu avant
 // d'écrire pour ne pas écraser un changement fait dans un autre onglet.
-agir(id, act) {
+// clavier : action déclenchée au clavier (clic d'activation, e.detail === 0) : le focus passe sur « Annuler ».
+agir(id, act, clavier) {
 var a = this.restants()[Bento.rankOf(id) - 1];
 if (!a) return;
 var store = Store.charger(stockage());
@@ -272,7 +273,7 @@ else if (Store.estDeCote(store, a.ref)) { store = Store.retirer(store, a.ref); t
 else { store = Store.mettreDeCote(store, a, new Date().toISOString()); type = 'save'; }
 Store.enregistrer(stockage(), store);
 // Si l'emplacement disparaît (plus assez de sujets), le focus se replie sur « Annuler ».
-this.pendingFocus = { id: id, act: act, repli: '[data-toast-undo]' };
+this.pendingFocus = clavier ? { toast: true, id: id, act: act } : { id: id, act: act, repli: '[data-toast-undo]' };
 this.setState({ store: store, toast: this.nouveauToast({ type: type, article: a, date: Store.dateDuJour(new Date()), origine: { id: id, act: act } }) });
 }
 // Chaque message remplace le précédent (seule la dernière action est annulable) et dure 5 s.
@@ -319,11 +320,18 @@ this.setState({ layout: layout });
 afterRender(root) {
 BentoUI.applyLayout(root, this.state.layout, this.available());
 var self = this;
-BentoUI.toast(document.getElementById('pq-toast'), this.vueToast(), function () { self.annuler(); });
+var zone = document.getElementById('pq-toast');
+BentoUI.toast(zone, this.vueToast(), function () { self.annuler(); });
+BentoUI.suivreToast(zone, {
+pause: function () { clearTimeout(self.toastTimer); },
+reprise: function () { clearTimeout(self.toastTimer); if (self.state.toast) self.toastTimer = setTimeout(function () { self.expirer(); }, 5000); },
+echap: function () { var t = self.state.toast; clearTimeout(self.toastTimer); self.pendingFocus = t && t.origine; self.setState({ toast: null }); }
+});
 var f = this.pendingFocus;
 this.pendingFocus = null;
 if (!f) return;
-var el = root.querySelector('[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : ''));
+var el = f.toast ? document.querySelector('[data-toast-undo]') : null;
+if (!el || !el.offsetParent) el = root.querySelector('[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : ''));
 if ((!el || !el.offsetParent) && f.repli) el = document.querySelector(f.repli);
 if (!el || !el.offsetParent) el = root.querySelector('[data-act="unskip-all"]');
 if (!el || !el.offsetParent) el = root.querySelector('[data-act="edit"]');
@@ -364,8 +372,8 @@ tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layo
 tileSize: function (e) { var id = idOf(e), s = e.currentTarget.getAttribute('data-size'); self.updateLayout(Bento.setSize(layout, id, s), { id: id, act: 'size-' + s }); },
 setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count')); self.updateLayout(Bento.setNewsCount(layout, n), { act: 'count-' + n }); },
 resetLayout: function () { self.updateLayout(Bento.defaultLayout(), { act: 'reset' }); },
-toggleSave: function (e) { self.agir(idOf(e), 'save'); },
-skip: function (e) { self.agir(idOf(e), 'skip'); },
+toggleSave: function (e) { self.agir(idOf(e), 'save', e.detail === 0); },
+skip: function (e) { self.agir(idOf(e), 'skip', e.detail === 0); },
 unskipAll: function () { self.toutFaireRevenir(); },
 emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
 editPressed: String(!!st.editing),

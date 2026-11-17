@@ -137,7 +137,8 @@ var st = this.state || {};
 return GardeManger.filtrer((st.store || Store.etatInitial()).sauves, st.filtre, this.maintenant());
 }
 // Le store est relu avant d'écrire pour ne pas écraser un changement fait dans un autre onglet.
-retirer(ref) {
+// clavier : action déclenchée au clavier (e.detail === 0) : le focus passe sur « Annuler ».
+retirer(ref, clavier) {
 var liste = this.visibles();
 var i = liste.map(function (a) { return a.ref; }).indexOf(ref);
 var store = Store.charger(stockage());
@@ -147,8 +148,9 @@ store = Store.retirer(store, ref);
 Store.enregistrer(stockage(), store);
 // Focus : Retirer de l'article suivant, sinon du précédent, sinon « Annuler » du message.
 var voisin = liste[i + 1] || liste[i - 1];
-this.pendingFocus = { act: 'remove', id: voisin ? voisin.ref : '__aucun__', repli: true };
-this.setState({ store: store, toast: this.nouveauToast({ type: 'remove', article: article }) });
+var suite = { act: 'remove', id: voisin ? voisin.ref : '__aucun__', repli: true };
+this.pendingFocus = clavier ? { toast: true, act: suite.act, id: suite.id, repli: true } : suite;
+this.setState({ store: store, toast: this.nouveauToast({ type: 'remove', article: article, origine: suite }) });
 }
 // Chaque message remplace le précédent (seule la dernière action est annulable) et dure 5 s.
 nouveauToast(t) {
@@ -174,10 +176,19 @@ this.setState({ store: store, toast: this.nouveauToast({ type: 'undone' }) });
 }
 afterRender(root) {
 var self = this;
-BentoUI.toast(document.getElementById('pq-toast'), this.vueToast(), function () { self.annuler(); });
+var zone = document.getElementById('pq-toast');
+BentoUI.toast(zone, this.vueToast(), function () { self.annuler(); });
+BentoUI.suivreToast(zone, {
+pause: function () { clearTimeout(self.toastTimer); },
+reprise: function () { clearTimeout(self.toastTimer); if (self.state.toast) self.toastTimer = setTimeout(function () { self.expirer(); }, 5000); },
+// Échap : retour sur l'article suivant (ou le filtre actif), comme à l'expiration.
+echap: function () { var t = self.state.toast; clearTimeout(self.toastTimer); self.pendingFocus = t && t.origine ? { act: t.origine.act, id: t.origine.id } : { act: 'filtre-' + self.state.filtre }; self.setState({ toast: null }); }
+});
 var f = this.pendingFocus;
 this.pendingFocus = null;
 if (!f) return;
+var d = f.toast ? document.querySelector('[data-toast-undo]') : null;
+if (d && d.offsetParent) { d.focus(); return; }
 var el = trouver(root, f.act, f.id);
 if ((!el || !el.offsetParent) && f.repli) el = document.querySelector('[data-toast-undo]');
 if (!el || !el.offsetParent) el = trouver(root, 'filtre-' + this.state.filtre);
@@ -228,7 +239,7 @@ var id = e.currentTarget.getAttribute('data-filtre');
 self.pendingFocus = { act: 'filtre-' + id };
 self.setState({ filtre: id });
 },
-retirer: function (e) { self.retirer(e.currentTarget.getAttribute('data-id')); }
+retirer: function (e) { self.retirer(e.currentTarget.getAttribute('data-id'), e.detail === 0); }
 };
 }
 }

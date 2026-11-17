@@ -99,12 +99,14 @@
     var box = document.createElement('div');
     box.className = 'toast-box';
     var texte = document.createElement('span');
+    texte.id = 'pq-toast-texte';
     texte.textContent = vue.texte;
     box.appendChild(texte);
     if (vue.annuler) {
       var b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('data-toast-undo', '');
+      b.setAttribute('aria-describedby', 'pq-toast-texte');
       b.textContent = vue.annuler;
       b.addEventListener('click', onUndo);
       box.appendChild(b);
@@ -112,5 +114,16 @@
     el.appendChild(box);
   }
 
-  root.BentoUI = { applyLayout: applyLayout, initDrag: initDrag, toast: toast };
+  // Accessibilité du message (liaison unique sur la zone statique) : délai suspendu tant que le
+  // focus est dedans (WCAG 2.2.1), repris à la sortie ; Échap ferme le message.
+  // f = { pause(), reprise(), echap() }.
+  function suivreToast(el, f) {
+    if (!el || el.__suivi) return;
+    el.__suivi = true;
+    el.addEventListener('focusin', function () { f.pause(); });
+    el.addEventListener('focusout', function (e) { if (!e.relatedTarget || !el.contains(e.relatedTarget)) f.reprise(); });
+    el.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); f.echap(); } });
+  }
+
+  root.BentoUI = { applyLayout: applyLayout, initDrag: initDrag, toast: toast, suivreToast: suivreToast };
 })(this);
