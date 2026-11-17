@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ta fournée t'attend · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="grisee">
+<div class="grisee-fond" aria-hidden="true" inert>
+<div class="grisee-nav"><span class="mini-ligne" style="height:28px;width:80%"></span><span class="mini-ligne"></span><span class="mini-ligne"></span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="grisee-app">
+<span class="mini-ligne" style="height:34px;width:50%;background:#D9C29C"></span>
+<span class="mini-ligne" style="width:70%"></span>
+<div class="mini-bento">
+<div class="mini-tuile or"><span class="mini-rang">1</span><span class="mini-titre">{{t.exemple1}}</span><span class="mini-ligne"></span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">2</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile"><span class="mini-rang">3</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile"><span class="mini-rang">4</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">5</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">6</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">7</span><span class="mini-ligne"></span></div>
+</div>
+</div>
+</div>
+<div class="grisee-avant">
+<header class="entete" data-entete data-connexion></header>
+<main class="contenu centre" style="align-items:center">
+<section class="carte" aria-labelledby="invit-t" style="text-align:center;align-items:center">
+<p class="sur-titre">{{t.eyebrow}}</p>
+<h1 id="invit-t" class="titre">{{t.titre}}</h1>
+<p class="chapo">{{t.chapo}}</p>
+<a class="bouton" href="/questionnaire" data-focus="cta">{{t.cta}}</a>
+<div class="liens-bas" style="width:100%">
+<a href="/">{{t.retour}}</a>
+<a href="/connexion">{{t.dejaCompte}}</a>
+</div>
+</section>
+</main>
+</div>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var T = {
+fr: {
+exemple1: 'Les agents IA entrent dans les PME', eyebrow: 'Ta fournée du jour',
+titre: 'Ta fournée t’attend.', chapo: '2 minutes pour la régler à ton goût : ton métier, tes thèmes, ton niveau.',
+cta: 'Régler ma fournée', retour: '← Retour à l’accueil', dejaCompte: 'J’ai déjà un compte'
+},
+en: {
+exemple1: 'AI agents are moving into small businesses', eyebrow: 'Your daily batch',
+titre: 'Your batch is waiting.', chapo: '2 minutes to make it just the way you like: your job, your topics, your level.',
+cta: 'Set up my batch', retour: '← Back to home', dejaCompte: 'I already have an account'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+return { t: T[lang] };
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

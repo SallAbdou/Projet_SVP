@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Votre pAIn quotidien · l'actu IA qui compte pour ton métier</title>
+<meta name="description" content="Chaque matin, l'actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete data-connexion></header>
+<main class="contenu">
+<section class="heros" aria-labelledby="heros-t">
+<div class="heros-texte">
+<p class="sur-titre">{{t.eyebrow}}</p>
+<h1 id="heros-t">{{t.promesse}}</h1>
+<p class="chapo">{{t.chapo}}</p>
+<div class="actions">
+<a class="bouton" href="{{ctaHref}}" data-focus="cta">{{ctaLabel}}</a>
+<a class="lien" href="/connexion">{{t.dejaCompte}}</a>
+</div>
+</div>
+<figure style="margin:0;display:flex;flex-direction:column;gap:10px">
+<div class="mini-bento" role="img" aria-label="{{t.apercuLabel}}">
+<div class="mini-tuile or"><span class="mini-rang">{{t.n1}}</span><span class="mini-titre">{{t.exemple1}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">{{t.n2}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">{{t.n5}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+</div>
+<figcaption style="font-size:14px;color:#6B5443">{{t.apercuLegende}}</figcaption>
+</figure>
+</section>
+<section aria-labelledby="etapes-t">
+<h2 id="etapes-t" class="section-titre">{{t.commentTitre}}</h2>
+<ol class="etapes">
+<sc-for list="{{etapes}}" as="e"><li class="etape"><span class="etape-num" aria-hidden="true">{{e.num}}</span><h3>{{e.titre}}</h3><p>{{e.texte}}</p></li></sc-for>
+</ol>
+</section>
+<section style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center" aria-labelledby="fin-t">
+<h2 id="fin-t" class="section-titre" style="margin:0">{{t.finTitre}}</h2>
+<a class="bouton" href="{{ctaHref}}">{{ctaLabel}}</a>
+</section>
+</main>
+<footer class="pied">
+<span>© 2026 Votre pAIn quotidien</span>
+<a href="/confidentialite">{{t.confidentialite}}</a>
+<span>{{t.demo}}</span>
+</footer>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var T = {
+fr: {
+eyebrow: 'Veille IA pour solopreneurs',
+promesse: 'Chaque matin, l’actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn',
+chapo: 'Tu choisis tes thèmes et ton niveau. On sélectionne, on note et on résume pour toi les meilleures news IA du jour, avec l’angle qui parle à tes clients.',
+cta: 'Goûter ma fournée', ctaConnecte: 'Voir ma fournée du jour', dejaCompte: 'J’ai déjà un compte',
+apercuLabel: 'Aperçu de la fournée du jour : la news n°1 en grand, en doré, puis les suivantes',
+apercuLegende: 'Ta fournée du jour : la news la mieux notée en doré, les suivantes autour.',
+n1: 'n°1', n2: 'n°2', n3: 'n°3', n4: 'n°4', n5: 'n°5', exemple1: 'Les agents IA entrent dans les PME',
+commentTitre: 'Comment ça marche',
+etapes: [
+['On collecte', 'Toutes les 3 heures, on ramasse l’actu IA dans des dizaines de sources fiables.'],
+['On trie pour toi', 'Chaque news est notée et résumée, puis choisie selon ton métier, tes thèmes et ton niveau.'],
+['Tu publies', 'Tu pétris la news en post LinkedIn en quelques minutes, et tu suis ce qu’il rapporte.']
+],
+finTitre: 'Ta première fournée est à 2 minutes',
+confidentialite: 'Confidentialité', demo: 'Démo : aucune donnée ne quitte ton navigateur.'
+},
+en: {
+eyebrow: 'AI news watch for solopreneurs',
+promesse: 'Every morning, the AI news that matters for your job, ready to knead into a LinkedIn post',
+chapo: 'Pick your topics and your level. We select, rate and sum up the best AI news of the day for you, with the angle your clients care about.',
+cta: 'Taste my batch', ctaConnecte: 'See today’s batch', dejaCompte: 'I already have an account',
+apercuLabel: 'Preview of today’s batch: news number 1 large and golden, then the next ones',
+apercuLegende: 'Your daily batch: the best rated news in gold, the next ones around it.',
+n1: '#1', n2: '#2', n3: '#3', n4: '#4', n5: '#5', exemple1: 'AI agents are moving into small businesses',
+commentTitre: 'How it works',
+etapes: [
+['We gather', 'Every 3 hours, we collect AI news from dozens of reliable sources.'],
+['We sort it for you', 'Each story is rated and summed up, then picked for your job, your topics and your level.'],
+['You publish', 'Knead the story into a LinkedIn post in minutes, then track what it brings in.']
+],
+finTitre: 'Your first batch is 2 minutes away',
+confidentialite: 'Privacy', demo: 'Demo: no data leaves your browser.'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+var t = T[lang];
+var connecte = false;
+try { connecte = !!Auth.utilisateurCourant(); } catch (e) {}
+return {
+t: t,
+ctaHref: connecte ? '/fournee' : '/decouvrir',
+ctaLabel: connecte ? t.ctaConnecte : t.cta,
+etapes: t.etapes.map(function (e, i) { return { num: i + 1, titre: e[0], texte: e[1] }; })
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
