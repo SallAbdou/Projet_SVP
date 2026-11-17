@@ -125,8 +125,17 @@
   }
 
   // n8n classe déjà les articles : on suit leur rang, sans muter la liste reçue.
-  function pickTopics(articles, n) {
-    return (articles || []).slice().sort(function (a, b) { return a.rang - b.rang; }).slice(0, n);
+  // exclus : refs ignorées du jour ; l'emplacement n°K reçoit le K-ième article restant.
+  function pickTopics(articles, n, exclus) {
+    var sans = exclus || [];
+    return (articles || [])
+      .filter(function (a) { return sans.indexOf(a.ref) === -1; })
+      .sort(function (a, b) { return a.rang - b.rang; })
+      .slice(0, n);
+  }
+
+  function lienFournil(ref) {
+    return '/fournil?ref=' + encodeURIComponent(ref);
   }
 
   function safeUrl(url) {
@@ -138,7 +147,7 @@
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,
     setNewsCount: setNewsCount, loadLayout: loadLayout, saveLayout: saveLayout,
-    totalScore: totalScore, pickTopics: pickTopics, safeUrl: safeUrl
+    totalScore: totalScore, pickTopics: pickTopics, lienFournil: lienFournil, safeUrl: safeUrl
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Bento;
