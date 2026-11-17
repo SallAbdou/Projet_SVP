@@ -52,19 +52,45 @@
       if (index !== d.startIndex) opts.onDrop(d.id, index);
     }
 
-    document.addEventListener('pointerdown', function (e) {
-      var handle = e.target.closest && e.target.closest('[data-drag]');
-      if (!handle || !opts.isEditing() || (e.pointerType === 'mouse' && e.button !== 0)) return;
-      var tile = handle.closest('[data-tile]');
-      if (!tile) return;
-      e.preventDefault();
-      drag = { tile: tile, id: tile.getAttribute('data-tile'), grid: tile.parentNode, handle: handle, pointerId: e.pointerId, startIndex: tilesOf(tile.parentNode).indexOf(tile), last: 0 };
-      try { handle.setPointerCapture(e.pointerId); } catch (err) {}
+    // Appui long au doigt en attente : { tile, pointerId, x, y, timer }.
+    var attente = null;
+    var APPUI_LONG = 400, TOLERANCE = 10;
+    function annulerAttente() { if (attente) { clearTimeout(attente.timer); attente = null; } }
+
+    function commencer(tile, pointerId) {
+      drag = { tile: tile, id: tile.getAttribute('data-tile'), grid: tile.parentNode, handle: tile, pointerId: pointerId, startIndex: tilesOf(tile.parentNode).indexOf(tile), last: 0 };
+      try { tile.setPointerCapture(pointerId); } catch (err) {}
       tile.classList.add('dragging');
       document.documentElement.classList.add('is-dragging');
+    }
+
+    // Le bloc s'attrape par n'importe quel endroit hors bouton (règle dans Bento.departGlisser).
+    document.addEventListener('pointerdown', function (e) {
+      var cible = e.target.closest ? e.target : null;
+      var tile = cible && cible.closest('[data-tile]');
+      var mode = root.Bento.departGlisser({
+        edition: opts.isEditing(), surTuile: !!(tile && tile.closest('[data-bento]')),
+        surPoignee: !!(cible && cible.closest('[data-drag]')),
+        surControle: !!(cible && cible.closest('button, a, input, select, textarea, label')),
+        typePointeur: e.pointerType, bouton: e.button
+      });
+      if (!mode || drag) return;
+      if (mode === 'immediat') { e.preventDefault(); commencer(tile, e.pointerId); return; }
+      annulerAttente();
+      attente = { tile: tile, pointerId: e.pointerId, x: e.clientX, y: e.clientY };
+      attente.timer = setTimeout(function () {
+        var a = attente;
+        attente = null;
+        if (a && document.contains(a.tile)) commencer(a.tile, a.pointerId);
+      }, APPUI_LONG);
     });
 
+    // Une fois le glisser commencé au doigt, la page ne défile plus ; l'appui long n'ouvre pas de menu.
+    document.addEventListener('touchmove', function (e) { if (drag) e.preventDefault(); }, { passive: false });
+    document.addEventListener('contextmenu', function (e) { if (drag || attente) e.preventDefault(); });
+
     document.addEventListener('pointermove', function (e) {
+      if (attente && e.pointerId === attente.pointerId && Math.abs(e.clientX - attente.x) + Math.abs(e.clientY - attente.y) > TOLERANCE) annulerAttente();
       if (!drag || e.pointerId !== drag.pointerId) return;
       e.preventDefault();
       var now = Date.now();
@@ -81,8 +107,8 @@
       drag.last = now;
     });
 
-    document.addEventListener('pointerup', function (e) { if (drag && e.pointerId === drag.pointerId) end(false); });
-    document.addEventListener('pointercancel', function (e) { if (drag && e.pointerId === drag.pointerId) end(true); });
+    document.addEventListener('pointerup', function (e) { annulerAttente(); if (drag && e.pointerId === drag.pointerId) end(false); });
+    document.addEventListener('pointercancel', function (e) { annulerAttente(); if (drag && e.pointerId === drag.pointerId) end(true); });
     document.addEventListener('keydown', function (e) { if (drag && e.key === 'Escape') end(true); });
   }
 

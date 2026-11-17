@@ -41,6 +41,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tool[aria-pressed="true"]{background:#8A4F1C;border-color:#8A4F1C;color:#FFFDF8}
 .tool-drag{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:18px}
+.bento.editing .tile{cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.bento.editing .tile button{cursor:pointer}
 .tile-tools{flex-wrap:nowrap;gap:4px;padding-bottom:0;border-bottom:0}
 .tile-tools .tool{min-height:28px;min-width:28px;height:28px;padding:0 7px;border-radius:8px;border-width:1px;font-size:12px}
 .tile-tools .tool-drag{font-size:14px}
@@ -211,7 +213,7 @@ subtitle: 'Les sujets tout juste sortis du four, du mieux noté au moins bien no
 sample: 'Données d’exemple', customize: 'Personnaliser', done: 'Terminer',
 loading: 'Mise au four…', loadError: 'Impossible de charger la fournée. Recharge la page.', exemple: 'Fournée d’exemple : n8n ne répond pas',
 waiting: 'Encore quelques secondes : on choisit tes sujets du jour.', waitTitle: 'Ta fournée est au four, {prenom}', why: 'Pourquoi cette couleur :',
-editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la mieux notée). Glisse les blocs par la poignée ⠿ ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
+editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la mieux notée). Attrape un bloc n’importe où pour le déplacer (au doigt : appui long, ou la poignée ⠿), ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
 countLabel: 'News affichées', reset: 'Disposition par défaut',
 mepTitre: 'Mise en page', toastMep: 'Mise en page « {nom} » appliquée', mepVide: 'Déplace ou redimensionne un bloc pour créer ta mise en page',
 mep: {
@@ -239,7 +241,7 @@ subtitle: 'Topics fresh out of the oven, from best to least rated. Arrange your 
 sample: 'Sample data', customize: 'Customise', done: 'Done',
 loading: 'Baking…', loadError: 'Could not load the batch. Reload the page.', exemple: 'Sample batch: n8n is not responding',
 waiting: 'Just a few more seconds: we are picking today’s topics.', waitTitle: 'Your batch is in the oven, {prenom}', why: 'Why this colour:',
-editHint: 'Each slot gets that day’s news of the same rank every morning (#1 = best rated). Drag blocks by the ⠿ handle or use the arrows. Your choices are saved on this device.',
+editHint: 'Each slot gets that day’s news of the same rank every morning (#1 = best rated). Grab a block anywhere to move it (on touch: long press, or the ⠿ handle), or use the arrows. Your choices are saved on this device.',
 countLabel: 'News shown', reset: 'Default layout',
 mepTitre: 'Layout', toastMep: 'Layout “{nom}” applied', mepVide: 'Move or resize a block to create your own layout',
 mep: {

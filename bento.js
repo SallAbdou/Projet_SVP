@@ -236,7 +236,18 @@
     return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : '#';
   }
 
+  // Mode Personnaliser : un appui sur un bloc (hors bouton) le déplace. Souris et stylet : tout de suite ;
+  // au doigt, appui long (sauf sur la poignée ⠿) pour que la page puisse encore défiler.
+  // o = { edition, surTuile, surPoignee, surControle, typePointeur, bouton }. Renvoie 'immediat', 'appui-long' ou null.
+  function departGlisser(o) {
+    if (!o || !o.edition || !o.surTuile || o.surControle) return null;
+    if (o.typePointeur === 'mouse' && o.bouton !== 0) return null;
+    if (o.typePointeur === 'touch' && !o.surPoignee) return 'appui-long';
+    return 'immediat';
+  }
+
   var Bento = {
+    departGlisser: departGlisser,
     TILE_IDS: TILE_IDS, SIZES: SIZES, COUNTS: COUNTS, STORAGE_KEY: STORAGE_KEY,
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,
