@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="fr" data-protegee><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mon profil · Votre pAIn quotidien</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <style>
@@ -8,6 +8,7 @@ a{color:#8A4F1C}a:hover{color:#5E3412}
 button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
@@ -19,7 +20,6 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </div>
-<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
 </header>
 <section aria-labelledby="carte-t" style="max-width:760px;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:24px 26px;display:flex;flex-direction:column;gap:18px">
 <div style="display:flex;align-items:center;gap:14px">
@@ -35,45 +35,54 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 <div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.langue}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.langue}}</dd></div>
 </dl>
 <p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{t.source}}</p>
+<a href="/questionnaire" style="align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;color:#8A4F1C;font-weight:700;text-decoration:none">{{t.redo}}</a>
 </section>
 </main>
 </div>
 </script>
 <script src="/dc.js"></script><script>
-// Profil de démo de Léa ; au lot 1, il viendra du questionnaire d'inscription (auth.js).
-var PROFIL = {
-prenom: 'Léa',
-metier: { fr: 'Consultante', en: 'Consultant' },
-themes: ['Automatisation et agents', 'IA en entreprise', 'LLMs'],
-relation: { fr: 'En couple (à l’aise avec l’IA)', en: 'In a relationship (comfortable with AI)' },
-langue: { fr: 'Français', en: 'French' }
+// Profil de l'utilisatrice connectée (auth.js), tel que saisi au questionnaire (textes du Tally).
+var RELATIONS = {
+'Timide': { fr: 'Timide (je découvre l’IA)', en: 'Shy (just discovering AI)' },
+'En couple': { fr: 'En couple (à l’aise avec l’IA)', en: 'In a relationship (comfortable with AI)' },
+'Marié': { fr: 'Marié (l’IA n’a plus de secret)', en: 'Married (AI holds no secrets)' }
 };
+var LANGUES = {
+'Je veux des sources françaises uniquement': { fr: 'Sources françaises uniquement', en: 'French sources only' },
+'Je veux des sources polyglottes avec une traduction française': { fr: 'Sources du monde entier, traduites en français', en: 'Sources from everywhere, translated into French' },
+'English all the way': { fr: 'Tout en anglais', en: 'English all the way' }
+};
+function traduire(table, v, lang) { return table[v] ? table[v][lang] : v; }
 var T = {
 fr: {
 navLabel: 'Navigation principale', eyebrow: 'Ton compte', title: 'Mon profil',
 subtitle: 'Ce que ta fournée sait de toi pour choisir tes sujets chaque matin.', sample: 'Données d’exemple',
 themes: 'Thématiques suivies', relation: 'Relation avec l’IA', langue: 'Langue des articles',
-source: 'Ton profil vient du questionnaire d’inscription.'
+source: 'Ton profil vient du questionnaire d’inscription.', redo: 'Refaire le questionnaire'
 },
 en: {
 navLabel: 'Main navigation', eyebrow: 'Your account', title: 'My profile',
 subtitle: 'What your batch knows about you to pick your topics every morning.', sample: 'Sample data',
 themes: 'Topics followed', relation: 'Relationship with AI', langue: 'Article language',
-source: 'Your profile comes from the sign-up questionnaire.'
+source: 'Your profile comes from the sign-up questionnaire.', redo: 'Retake the questionnaire'
 }
 };
 class Component extends DCLogic {
 constructor(props) { super(props); this.state = { lang: 'fr' }; }
 renderVals() {
 var lang = (this.state && this.state.lang) || 'fr';
+var u = null;
+try { u = Auth.utilisateurCourant(); } catch (e) {}
+var pr = u ? u.profil : { metiers: [], thematiques: [], relation: '', langue: '' };
+var prenom = u ? u.prenom : '';
 return {
 t: T[lang],
 p: {
-initiale: PROFIL.prenom.charAt(0), prenom: PROFIL.prenom, metier: PROFIL.metier[lang],
-themes: PROFIL.themes.map(function (x) { return { label: x }; }),
-relation: PROFIL.relation[lang], langue: PROFIL.langue[lang]
+initiale: prenom.charAt(0), prenom: prenom, metier: pr.metiers.join(', '),
+themes: pr.thematiques.map(function (x) { return { label: x }; }),
+relation: traduire(RELATIONS, pr.relation, lang), langue: traduire(LANGUES, pr.langue, lang)
 }
 };
 }
 }
-</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>
