@@ -83,3 +83,40 @@ test('presetCourant renvoie personnalisee après toute modification manuelle', (
     for (const m of modifs) assert.equal(B.presetCourant(m), 'personnalisee', p.id + ' ' + ids(m).join());
   }
 });
+
+test('choisirMiseEnPage garde la disposition personnalisée récupérable', () => {
+  const perso = B.setSize(B.moveTile(B.defaultLayout(), 'graph', 0), 'n2', 'S');
+  let r = B.choisirMiseEnPage(perso, null, 'concentree');
+  assert.deepEqual(r.layout, B.appliquerPreset(perso, 'concentree'));
+  assert.deepEqual(r.perso, perso);
+  r = B.choisirMiseEnPage(r.layout, r.perso, 'informative');
+  assert.equal(B.presetCourant(r.layout), 'informative');
+  assert.deepEqual(r.perso, perso, 'un préréglage n’écrase pas la disposition personnalisée');
+  r = B.choisirMiseEnPage(r.layout, r.perso, 'personnalisee');
+  assert.deepEqual(r.layout, perso);
+  assert.deepEqual(r.perso, perso);
+});
+
+test('choisirMiseEnPage : personnalisee sans disposition enregistrée ne change rien', () => {
+  const l = B.appliquerPreset(B.defaultLayout(), 'graphique');
+  const r = B.choisirMiseEnPage(l, null, 'personnalisee');
+  assert.deepEqual(r.layout, l);
+  assert.equal(r.perso, null);
+});
+
+test('loadPerso et savePerso', () => {
+  const mem = {};
+  const storage = { getItem: k => (k in mem ? mem[k] : null), setItem: (k, v) => { mem[k] = String(v); } };
+  assert.equal(B.PERSO_KEY, 'pq-layout-perso');
+  assert.equal(B.loadPerso(storage), null);
+  const l = B.setSize(B.defaultLayout(), 'n5', 'L');
+  assert.equal(B.savePerso(storage, l), true);
+  assert.deepEqual(B.loadPerso(storage), l);
+  mem['pq-layout-perso'] = '{cassé';
+  assert.equal(B.loadPerso(storage), null);
+  mem['pq-layout-perso'] = '{"version":1}';
+  assert.equal(B.loadPerso(storage), null);
+  const boom = { getItem() { throw new Error('bloqué'); }, setItem() { throw new Error('bloqué'); } };
+  assert.equal(B.loadPerso(boom), null);
+  assert.equal(B.savePerso(boom, l), false);
+});

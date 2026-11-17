@@ -10,6 +10,7 @@
   var DEFAULT_COUNT = 5;
   var VERSION = 2;
   var STORAGE_KEY = 'pq-layout';
+  var PERSO_KEY = 'pq-layout-perso';
 
   function has(list, v) { return list.indexOf(v) !== -1; }
 
@@ -183,6 +184,33 @@
     }
   }
 
+  // Choix dans le panneau « Mise en page ». Quitter une disposition personnalisée pour un
+  // préréglage la met de côté (perso) ; « personnalisee » la rend, s'il y en a une.
+  function choisirMiseEnPage(layout, perso, id) {
+    if (id === PRESET_PERSO) return { layout: copy(perso || layout), perso: perso || null };
+    if (!presetParId(id)) return { layout: copy(layout), perso: perso || null };
+    var garde = presetCourant(layout) === PRESET_PERSO ? copy(layout) : (perso || null);
+    return { layout: appliquerPreset(layout, id), perso: garde };
+  }
+
+  function loadPerso(storage) {
+    try {
+      var raw = JSON.parse(storage.getItem(PERSO_KEY));
+      return raw && raw.version === VERSION && Array.isArray(raw.tiles) ? normalizeLayout(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function savePerso(storage, layout) {
+    try {
+      storage.setItem(PERSO_KEY, JSON.stringify(layout));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /* Helpers de contenu (articles au format de la réponse n8n WF3) */
 
   function totalScore(article) {
@@ -215,6 +243,7 @@
     setNewsCount: setNewsCount, loadLayout: loadLayout, saveLayout: saveLayout,
     PRESETS: PRESETS, PRESET_PERSO: PRESET_PERSO,
     appliquerPreset: appliquerPreset, presetCourant: presetCourant, placer: placer,
+    PERSO_KEY: PERSO_KEY, choisirMiseEnPage: choisirMiseEnPage, loadPerso: loadPerso, savePerso: savePerso,
     totalScore: totalScore, pickTopics: pickTopics, lienFournil: lienFournil, safeUrl: safeUrl
   };
 
