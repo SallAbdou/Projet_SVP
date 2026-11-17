@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ta fournée type · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+<script src="/auth.js"></script>
+<script>
+// Sans inscription en cours, cet écran n'a rien à montrer : retour au questionnaire.
+(function () { var d = Auth.demandeEnCours(Auth.charger()); if (!d || d.motif !== 'inscription') { window.__redirige = true; location.replace('/questionnaire'); } })();
+</script>
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete></header>
+<main class="contenu centre">
+<section class="carte carte-large" aria-labelledby="titre">
+<p class="sur-titre">{{t.eyebrow}}</p>
+<h1 id="titre" class="titre">{{titre}}</h1>
+<p class="chapo">{{t.chapo}}</p>
+<dl style="margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 24px">
+<div><dt class="sur-titre" style="font-size:12px">{{t.metier}}</dt><dd style="margin:6px 0 0;font-weight:600">{{recap.metiers}}</dd></div>
+<div><dt class="sur-titre" style="font-size:12px">{{t.ton}}</dt><dd style="margin:6px 0 0;font-weight:600">{{recap.ton}}</dd></div>
+<div><dt class="sur-titre" style="font-size:12px">{{t.langue}}</dt><dd style="margin:6px 0 0;font-weight:600">{{recap.langue}}</dd></div>
+<div><dt class="sur-titre" style="font-size:12px">{{t.news}}</dt><dd style="margin:6px 0 0;font-weight:600">{{recap.news}}</dd></div>
+<div style="grid-column:1/-1"><dt class="sur-titre" style="font-size:12px">{{t.thematiques}}</dt>
+<dd style="margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{thematiques}}" as="th"><span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F3E6CF;color:#5E3412">{{th.label}}</span></sc-for></dd></div>
+</dl>
+<figure style="margin:0;display:flex;flex-direction:column;gap:8px">
+<div class="mini-bento" role="img" aria-label="{{apercuLabel}}">
+<sc-for list="{{tuiles}}" as="tu"><div class="{{tu.classe}}"><span class="mini-rang">{{tu.rang}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div></sc-for>
+</div>
+<figcaption class="aide">{{t.legende}}</figcaption>
+</figure>
+<div class="actions actions-fin">
+<a class="bouton-secondaire" href="/questionnaire">{{t.refaire}}</a>
+<a class="bouton" href="/verifie-tes-mails" data-focus="cta">{{t.cta}}</a>
+</div>
+<p class="mention-demo">{{t.demo}}</p>
+</section>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script src="/questionnaire.js"></script><script>
+var TONS = {
+fr: { 'Timide': 'Timide : des mots simples', 'En couple': 'En couple : un ton normal', 'Marié': 'Marié : un ton expert' },
+en: { 'Timide': 'Shy: plain words', 'En couple': 'In a relationship: normal tone', 'Marié': 'Married: expert tone' }
+};
+var LANGUES = {
+fr: { 'Je veux des sources françaises uniquement': 'Sources françaises uniquement', 'Je veux des sources polyglottes avec une traduction française': 'Sources du monde entier, traduites en français', 'English all the way': 'Tout en anglais' },
+en: { 'Je veux des sources françaises uniquement': 'French sources only', 'Je veux des sources polyglottes avec une traduction française': 'Sources from everywhere, translated into French', 'English all the way': 'English all the way' }
+};
+var T = {
+fr: {
+eyebrow: 'Ta fournée type', titre: 'Voici ta fournée, {prenom}',
+chapo: 'Chaque matin, on choisira tes news d’après ces réponses. Tu pourras tout changer depuis ton profil.',
+metier: 'Ton métier', ton: 'Ton', langue: 'Langue', news: 'News par matin', thematiques: 'Tes thématiques',
+newsN: '{n} news', apercu: 'Aperçu de ta fournée : {n} news, la n°1 en doré', legende: 'La news la mieux notée du jour arrive toujours en doré.',
+refaire: 'Refaire le questionnaire', cta: 'Recevoir ma fournée',
+demo: 'Démo : aucun e-mail ni mot de passe n’est réellement envoyé ou enregistré.'
+},
+en: {
+eyebrow: 'Your batch blueprint', titre: 'Here is your batch, {prenom}',
+chapo: 'Every morning, we will pick your news based on these answers. You can change everything from your profile.',
+metier: 'Your job', ton: 'Tone', langue: 'Language', news: 'News per morning', thematiques: 'Your topics',
+newsN: '{n} news', apercu: 'Preview of your batch: {n} news, number 1 in gold', legende: 'The best rated news of the day always comes in gold.',
+refaire: 'Retake the questionnaire', cta: 'Get my batch',
+demo: 'Demo: no email or password is actually sent or stored.'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+var t = T[lang];
+var etat = Auth.charger();
+var d = Auth.demandeEnCours(etat);
+var c = (d && Auth.compteParEmail(etat, d.email)) || { prenom: '', profil: { metiers: [], thematiques: [], relation: '', langue: '' } };
+var p = c.profil;
+var n = Questionnaire.nombreDeNews(p.relation);
+var tuiles = [];
+for (var i = 1; i <= n; i++) tuiles.push({ rang: i, classe: 'mini-tuile' + (i === 1 ? ' or' : (i === 2 || i === 5 ? ' large' : '')) });
+return {
+t: t,
+titre: t.titre.replace('{prenom}', c.prenom),
+recap: { metiers: p.metiers.join(', '), ton: TONS[lang][p.relation] || p.relation, langue: LANGUES[lang][p.langue] || p.langue, news: t.newsN.replace('{n}', n) },
+thematiques: p.thematiques.map(function (x) { return { label: x }; }),
+apercuLabel: t.apercu.replace('{n}', n),
+tuiles: tuiles
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

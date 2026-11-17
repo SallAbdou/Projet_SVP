@@ -6,8 +6,17 @@ const html = o => N.html(Object.assign({}, base, o));
 
 test('les 5 liens sont présents', () => {
   const h = html({});
-  for (const href of ['href="/"', 'href="/fournee"', 'href="/fournil"', 'href="/garde-manger"', 'href="/profil"']) assert.ok(h.includes(href), href);
+  for (const href of ['href="/comptoir"', 'href="/fournee"', 'href="/fournil"', 'href="/garde-manger"', 'href="/profil"']) assert.ok(h.includes(href), href);
+  assert.ok(!h.includes('href="/"'));
   assert.ok(!h.includes('/preferences'));
+});
+
+test('utilisatrice connectée : prénom, initiale et déconnexion', () => {
+  const h = html({ prenom: 'Sam' });
+  assert.ok(h.includes('>Sam<'));
+  assert.ok(h.includes('>S<'));
+  assert.ok(/<button type="button"[^>]*data-focus="logout"[^>]*>[^<]*Se déconnecter/.test(h));
+  assert.ok(/data-focus="logout"[^>]*>[^<]*Log out/.test(html({ lang: 'en' })));
 });
 
 test('aria-current seulement sur la page courante', () => {

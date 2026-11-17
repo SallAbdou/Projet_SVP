@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Règle ta fournée · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete></header>
+<main class="contenu centre">
+<div class="carte carte-large">
+<p class="chapo" style="font-size:15px">{{t.accroche}}</p>
+<div class="progression">
+<span class="progression-texte" id="progression-t">{{progression}}</span>
+<div class="progression-barre" role="progressbar" aria-labelledby="progression-t" aria-valuemin="1" aria-valuemax="6" aria-valuenow="{{etape}}"><span style="width:{{pourcent}}%"></span></div>
+</div>
+<form onSubmit="{{continuer}}" novalidate>
+
+<section style="{{vue.e1}}" aria-labelledby="t1">
+<h1 id="t1" class="titre" tabindex="-1">{{t.titre1}}</h1>
+<p class="aide" style="margin-top:6px">{{t.aide1}}</p>
+<div style="{{vue.existant}}" class="alerte" role="alert">{{t.existant}} <a href="/connexion">{{t.existantLien}}</a></div>
+<div class="champ" style="margin-top:16px">
+<label for="prenom">{{t.prenom}}</label>
+<input id="prenom" type="text" autocomplete="given-name" value="{{r.prenom}}" onInput="{{saisirPrenom}}" aria-invalid="{{inv.prenom}}" aria-describedby="err-prenom">
+<p id="err-prenom" class="erreur">{{err.prenom}}</p>
+</div>
+<div class="champ" style="margin-top:12px">
+<label for="email">{{t.email}}</label>
+<input id="email" type="email" autocomplete="email" inputmode="email" value="{{r.email}}" onInput="{{saisirEmail}}" aria-invalid="{{inv.email}}" aria-describedby="aide-email err-email">
+<p id="aide-email" class="aide">{{t.aideEmail}}</p>
+<p id="err-email" class="erreur">{{err.email}}</p>
+</div>
+</section>
+
+<section style="{{vue.e2}}">
+<fieldset class="champ" aria-describedby="aide-metiers err-metiers">
+<legend><h1 id="t2" class="titre" tabindex="-1">{{t.titre2}}</h1></legend>
+<p id="aide-metiers" class="aide">{{t.plusieurs}}</p>
+<div class="choix">
+<sc-for list="{{metiers}}" as="c"><label for="{{c.id}}"><input id="{{c.id}}" type="checkbox" name="metiers" data-valeur="{{c.valeur}}" onChange="{{basculerMetier}}" {{c.coche}}><span>{{c.label}}</span></label></sc-for>
+</div>
+<p id="err-metiers" class="erreur">{{err.metiers}}</p>
+</fieldset>
+</section>
+
+<section style="{{vue.e3}}">
+<fieldset class="champ" aria-describedby="aide-thematiques err-thematiques">
+<legend><h1 id="t3" class="titre" tabindex="-1">{{t.titre3}}</h1></legend>
+<p id="aide-thematiques" class="aide">{{t.auMoinsUne}}</p>
+<div class="choix">
+<sc-for list="{{thematiques}}" as="c"><label for="{{c.id}}"><input id="{{c.id}}" type="checkbox" name="thematiques" data-valeur="{{c.valeur}}" onChange="{{basculerThematique}}" {{c.coche}}><span>{{c.label}}</span></label></sc-for>
+</div>
+<p id="err-thematiques" class="erreur">{{err.thematiques}}</p>
+</fieldset>
+</section>
+
+<section style="{{vue.e4}}">
+<fieldset class="champ" aria-describedby="err-relation">
+<legend><h1 id="t4" class="titre" tabindex="-1">{{t.titre4}}</h1></legend>
+<div class="choix choix-ligne">
+<sc-for list="{{relations}}" as="c"><label for="{{c.id}}"><input id="{{c.id}}" type="radio" name="relation" data-valeur="{{c.valeur}}" onChange="{{choisirRelation}}" {{c.coche}}><span>{{c.label}}<span class="detail">{{c.detail}}</span></span></label></sc-for>
+</div>
+<p id="err-relation" class="erreur">{{err.relation}}</p>
+</fieldset>
+</section>
+
+<section style="{{vue.e5}}">
+<fieldset class="champ" aria-describedby="err-langue">
+<legend><h1 id="t5" class="titre" tabindex="-1">{{t.titre5}}</h1></legend>
+<div class="choix choix-ligne">
+<sc-for list="{{langues}}" as="c"><label for="{{c.id}}"><input id="{{c.id}}" type="radio" name="langue" data-valeur="{{c.valeur}}" onChange="{{choisirLangue}}" {{c.coche}}><span>{{c.label}}</span></label></sc-for>
+</div>
+<p id="err-langue" class="erreur">{{err.langue}}</p>
+</fieldset>
+</section>
+
+<section style="{{vue.e6}}">
+<fieldset class="champ">
+<legend><h1 id="t6" class="titre" tabindex="-1">{{t.titre6}}</h1></legend>
+<div class="choix choix-ligne">
+<label for="newsletter"><input id="newsletter" type="checkbox" onChange="{{basculerNewsletter}}" aria-describedby="err-newsletter" {{cocheNewsletter}}><span>{{t.consentNewsletter}}</span></label>
+<p id="err-newsletter" class="erreur">{{err.newsletter}}</p>
+<label for="rgpd"><input id="rgpd" type="checkbox" onChange="{{basculerRgpd}}" aria-describedby="err-rgpd" {{cocheRgpd}}><span>{{t.consentRgpd}}</span></label>
+<p id="err-rgpd" class="erreur">{{err.rgpd}}</p>
+</div>
+<a class="lien" href="/confidentialite">{{t.confidentialite}}</a>
+</fieldset>
+</section>
+
+<div class="actions actions-fin" style="margin-top:8px">
+<a class="bouton-secondaire" href="/decouvrir" style="{{vue.retourLien}}">{{t.retour}}</a>
+<button type="button" class="bouton-secondaire" onClick="{{reculer}}" data-focus="reculer" style="{{vue.retourBouton}}">{{t.retour}}</button>
+<button type="submit" class="bouton" data-focus="continuer">{{libelleSuite}}</button>
+</div>
+</form>
+<p class="mention-demo">{{t.demo}}</p>
+</div>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script src="/bento.js"></script><script src="/questionnaire.js"></script><script>
+var HIDE = 'display: none';
+var Q = Questionnaire;
+var T = {
+fr: {
+accroche: 'Nous cuisinons tes news préférées chaque matin, avalées devant ton café en 5 minutes.',
+progression: 'Étape {n} sur 6',
+titre1: 'Faisons connaissance', aide1: 'Ton prénom pour te saluer, ton e-mail pour t’envoyer ta fournée.',
+prenom: 'Ton prénom', email: 'Ton e-mail', aideEmail: 'Exemple : lea@mail.fr',
+existant: 'Un compte existe déjà avec cet e-mail.', existantLien: 'Connecte-toi',
+titre2: 'Quel est ton « gagne pAIn » ?', plusieurs: 'Plusieurs choix possibles.',
+titre3: 'Quelles thématiques IA te font le plus vibrer ?', auMoinsUne: 'Choisis-en au moins une, autant que tu veux.',
+titre4: 'Quelle est ta relation avec l’IA ?',
+titre5: 'Dans quelle langue doit-on te parler ?',
+titre6: 'Dernière étape : ton accord',
+consentNewsletter: 'J’accepte de souscrire à votre newsletter quotidienne',
+consentRgpd: 'J’accepte que mes données soient traitées conformément à la règlementation RGPD en vigueur et que mon activité serve à personnaliser mon contenu',
+confidentialite: 'Lire comment on utilise tes données',
+retour: 'Retour', continuer: 'Continuer', terminer: 'Voir ma fournée',
+demo: 'Démo : tes réponses restent dans ce navigateur, rien n’est envoyé.',
+labels: {},
+details: { 'Timide': 'Mots simples : on t’explique chaque notion.', 'En couple': 'Ton normal : tu connais les bases.', 'Marié': 'Ton expert : on va droit au but.' },
+erreurs: {
+prenom: { requis: 'Indique ton prénom.' },
+email: { requis: 'Indique ton e-mail.', invalide: 'Cet e-mail ne semble pas valide (exemple : lea@mail.fr).' },
+metiers: { requis: 'Choisis au moins un métier.', inconnu: 'Ce choix n’existe pas.' },
+thematiques: { requis: 'Choisis au moins une thématique.', inconnu: 'Ce choix n’existe pas.' },
+relation: { requis: 'Choisis ta relation avec l’IA.', inconnu: 'Ce choix n’existe pas.' },
+langue: { requis: 'Choisis une langue.', inconnu: 'Ce choix n’existe pas.' },
+newsletter: { requis: 'Coche cette case pour recevoir ta fournée.' },
+rgpd: { requis: 'Coche cette case pour continuer.' }
+}
+},
+en: {
+accroche: 'We cook your favourite news every morning, ready to enjoy with your coffee in 5 minutes.',
+progression: 'Step {n} of 6',
+titre1: 'Let’s get to know you', aide1: 'Your first name to greet you, your email to send you your batch.',
+prenom: 'Your first name', email: 'Your email', aideEmail: 'Example: lea@mail.com',
+existant: 'An account already exists with this email.', existantLien: 'Log in',
+titre2: 'How do you earn your daily bread?', plusieurs: 'Several choices allowed.',
+titre3: 'Which AI topics excite you most?', auMoinsUne: 'Pick at least one, as many as you like.',
+titre4: 'What is your relationship with AI?',
+titre5: 'Which language should we use?',
+titre6: 'Last step: your consent',
+consentNewsletter: 'I agree to subscribe to your daily newsletter',
+consentRgpd: 'I agree that my data is processed in line with current GDPR rules and that my activity is used to personalise my content',
+confidentialite: 'Read how we use your data',
+retour: 'Back', continuer: 'Continue', terminer: 'See my batch',
+demo: 'Demo: your answers stay in this browser, nothing is sent.',
+labels: {
+'Entrepreneur': 'Entrepreneur', 'Consultant': 'Consultant', 'Influenceur': 'Influencer', 'Formateur': 'Trainer', 'Étudiant': 'Student', 'Autre': 'Other',
+'Vidéo': 'Video', 'Automatisation et agents': 'Automation and agents', 'Cybersécurité': 'Cybersecurity', 'Actualité des grandes firmes': 'Big tech news',
+'Monétisation': 'Monetisation', 'Finance et spéculation': 'Finance and speculation', 'IA en entreprise': 'AI at work', 'Ecosystèmes': 'Ecosystems', 'Ingénierie R&D': 'R&D engineering',
+'Timide': 'Shy', 'En couple': 'In a relationship', 'Marié': 'Married',
+'Je veux des sources françaises uniquement': 'French sources only',
+'Je veux des sources polyglottes avec une traduction française': 'Sources in every language, translated into French',
+'English all the way': 'English all the way'
+},
+details: { 'Timide': 'Plain words: we explain every idea.', 'En couple': 'Normal tone: you know the basics.', 'Marié': 'Expert tone: straight to the point.' },
+erreurs: {
+prenom: { requis: 'Enter your first name.' },
+email: { requis: 'Enter your email.', invalide: 'This email does not look valid (example: lea@mail.com).' },
+metiers: { requis: 'Pick at least one job.', inconnu: 'This choice does not exist.' },
+thematiques: { requis: 'Pick at least one topic.', inconnu: 'This choice does not exist.' },
+relation: { requis: 'Pick your relationship with AI.', inconnu: 'This choice does not exist.' },
+langue: { requis: 'Pick a language.', inconnu: 'This choice does not exist.' },
+newsletter: { requis: 'Tick this box to get your batch.' },
+rgpd: { requis: 'Tick this box to continue.' }
+}
+}
+};
+// Ordre des champs de chaque étape : sert à placer le focus sur le premier champ en erreur.
+var CHAMPS = { 1: ['prenom', 'email'], 2: ['metiers'], 3: ['thematiques'], 4: ['relation'], 5: ['langue'], 6: ['newsletter', 'rgpd'] };
+var PREMIER = { prenom: 'prenom', email: 'email', metiers: 'metiers-0', thematiques: 'thematiques-0', relation: 'relation-0', langue: 'langue-0', newsletter: 'newsletter', rgpd: 'rgpd' };
+function stockage() { try { return window.localStorage; } catch (e) { return null; } }
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+var b = Q.chargerBrouillon(stockage());
+this.state = { lang: 'fr', etape: b.etape, reponses: b.reponses, erreurs: {}, compteExistant: false };
+}
+maj(changement) {
+var s = Object.assign({}, this.state, changement);
+Q.enregistrerBrouillon(stockage(), { etape: s.etape, reponses: s.reponses });
+this.setState(changement);
+}
+reponse(champ, valeur) {
+var r = Object.assign({}, this.state.reponses);
+r[champ] = valeur;
+var erreurs = Object.assign({}, this.state.erreurs);
+delete erreurs[champ];
+this.maj({ reponses: r, erreurs: erreurs, compteExistant: champ === 'email' ? false : this.state.compteExistant });
+}
+basculer(champ, valeur) {
+var liste = this.state.reponses[champ].slice();
+var i = liste.indexOf(valeur);
+if (i === -1) liste.push(valeur); else liste.splice(i, 1);
+this.reponse(champ, liste);
+}
+afterRender(root) {
+var id = this.pendingFocus;
+this.pendingFocus = null;
+if (id) Parcours.focaliser(root.querySelector('#' + id));
+}
+continuer() {
+var st = this.state;
+var v = Q.etapeValide(st.etape, st.reponses);
+if (!v.ok) {
+var premier = CHAMPS[st.etape].filter(function (c) { return v.erreurs[c]; })[0];
+this.pendingFocus = PREMIER[premier];
+this.setState({ erreurs: v.erreurs });
+return;
+}
+if (st.etape < Q.NB_ETAPES) {
+this.pendingFocus = 't' + (st.etape + 1);
+this.maj({ etape: st.etape + 1, erreurs: {} });
+return;
+}
+this.terminer();
+}
+terminer() {
+var r = Auth.inscrireDepuisQuestionnaire(Q.profilDepuis(this.state.reponses));
+if (!r.ok) {
+this.pendingFocus = 'email';
+this.maj({ etape: 1, erreurs: r.erreur === 'email-invalide' ? { email: 'invalide' } : {}, compteExistant: r.erreur === 'email-existant' });
+return;
+}
+try { Bento.saveLayout(window.localStorage, Bento.setNewsCount(Bento.defaultLayout(), Q.nombreDeNews(this.state.reponses.relation))); } catch (e) {}
+Q.effacerBrouillon(stockage());
+location.href = '/ta-fournee-type';
+}
+reculer() {
+if (this.state.etape <= 1) return;
+this.pendingFocus = 't' + (this.state.etape - 1);
+this.maj({ etape: this.state.etape - 1, erreurs: {} });
+}
+renderVals() {
+var self = this;
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+var r = st.reponses;
+var etape = st.etape;
+var label = function (v) { return t.labels[v] || v; };
+var options = function (nom, liste, coche) {
+return liste.map(function (v, i) { return { id: nom + '-' + i, valeur: v, label: label(v), detail: t.details[v] || '', coche: coche(v) ? 'checked' : '' }; });
+};
+var dans = function (champ) { return function (v) { return r[champ].indexOf(v) !== -1; }; };
+var egal = function (champ) { return function (v) { return r[champ] === v; }; };
+var err = {}, inv = {};
+['prenom', 'email', 'metiers', 'thematiques', 'relation', 'langue', 'newsletter', 'rgpd'].forEach(function (c) {
+var code = st.erreurs[c];
+err[c] = code ? t.erreurs[c][code] : '';
+inv[c] = code ? 'true' : 'false';
+});
+var vue = { existant: st.compteExistant && etape === 1 ? '' : HIDE, retourLien: etape === 1 ? '' : HIDE, retourBouton: etape === 1 ? HIDE : '' };
+for (var n = 1; n <= 6; n++) vue['e' + n] = n === etape ? 'display: flex; flex-direction: column; gap: 6px' : HIDE;
+var valeur = function (e) { return e.currentTarget.getAttribute('data-valeur'); };
+return {
+t: t, r: r, etape: etape, vue: vue, err: err, inv: inv,
+progression: t.progression.replace('{n}', etape),
+pourcent: Math.round(etape / 6 * 100),
+libelleSuite: etape === 6 ? t.terminer : t.continuer,
+metiers: options('metiers', Q.CHOIX.metiers, dans('metiers')),
+thematiques: options('thematiques', Q.CHOIX.thematiques, dans('thematiques')),
+relations: options('relation', Q.CHOIX.relations, egal('relation')),
+langues: options('langue', Q.CHOIX.langues, egal('langue')),
+cocheNewsletter: r.newsletter ? 'checked' : '', cocheRgpd: r.rgpd ? 'checked' : '',
+saisirPrenom: function (e) { self.reponse('prenom', e.target.value); },
+saisirEmail: function (e) { self.reponse('email', e.target.value); },
+basculerMetier: function (e) { self.basculer('metiers', valeur(e)); },
+basculerThematique: function (e) { self.basculer('thematiques', valeur(e)); },
+choisirRelation: function (e) { self.reponse('relation', valeur(e)); },
+choisirLangue: function (e) { self.reponse('langue', valeur(e)); },
+basculerNewsletter: function (e) { self.reponse('newsletter', e.target.checked); },
+basculerRgpd: function (e) { self.reponse('rgpd', e.target.checked); },
+continuer: function () { self.continuer(); },
+reculer: function () { self.reculer(); }
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

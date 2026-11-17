@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choisis ton mot de passe · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete></header>
+<main class="contenu centre">
+<section class="carte" aria-labelledby="perime-t" style="{{vue.perime}}">
+<h1 id="perime-t" class="titre">{{t.perimeTitre}}</h1>
+<p class="chapo">{{t.perimeTexte}}</p>
+<div class="actions"><a class="bouton" href="/connexion">{{t.perimeLien}}</a><a class="lien" href="/mot-de-passe-oublie">{{t.perimeOubli}}</a></div>
+</section>
+<section class="carte" aria-labelledby="titre" style="{{vue.form}}">
+<p class="sur-titre">{{email}}</p>
+<h1 id="titre" class="titre">{{titre}}</h1>
+<form onSubmit="{{valider}}" novalidate>
+<div class="champ">
+<label for="mdp">{{t.mdp}}</label>
+<div class="mdp"><input id="mdp" type="{{typeChamp}}" autocomplete="new-password" value="{{mdp}}" onInput="{{saisirMdp}}" aria-invalid="{{inv.mdp}}" aria-describedby="regles err-mdp">
+<button type="button" onClick="{{basculerVue}}" data-focus="voir" aria-pressed="{{visible}}">{{libelleVoir}}</button></div>
+<ul id="regles" class="regles" aria-label="{{t.reglesLabel}}">
+<sc-for list="{{regles}}" as="rg"><li class="{{rg.classe}}">{{rg.texte}} <span class="visuellement-cache">{{rg.etat}}</span></li></sc-for>
+</ul>
+<p id="err-mdp" class="erreur">{{err.mdp}}</p>
+</div>
+<div class="champ">
+<label for="confirmation">{{t.confirmation}}</label>
+<input id="confirmation" type="{{typeChamp}}" autocomplete="new-password" value="{{confirmation}}" onInput="{{saisirConfirmation}}" aria-invalid="{{inv.confirmation}}" aria-describedby="err-confirmation">
+<p id="err-confirmation" class="erreur">{{err.confirmation}}</p>
+</div>
+<button type="submit" class="bouton" data-focus="valider">{{t.valider}}</button>
+</form>
+<div class="liens-bas"><a href="/verifie-tes-mails">{{t.retour}}</a></div>
+<p class="mention-demo">{{t.demo}}</p>
+</section>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var HIDE = 'display: none';
+var T = {
+fr: {
+titreInscription: 'Choisis ton mot de passe', titreReinit: 'Choisis un nouveau mot de passe',
+mdp: 'Mot de passe', confirmation: 'Confirme ton mot de passe', voir: 'Afficher', masquer: 'Masquer',
+reglesLabel: 'Règles du mot de passe', regles: { longueur: '8 caractères minimum', majuscule: 'Au moins une majuscule', chiffre: 'Au moins un chiffre' },
+ok: '(respectée)', aFaire: '(pas encore)',
+faible: 'Ton mot de passe doit respecter les 3 règles.', differents: 'Les deux mots de passe ne sont pas identiques.',
+valider: 'Valider et voir ma fournée', retour: '← Retour à mes mails',
+perimeTitre: 'Ce lien n’est plus valable', perimeTexte: 'Il a déjà servi ou il a expiré. Connecte-toi, ou demande un nouveau lien.',
+perimeLien: 'Aller à la connexion', perimeOubli: 'Mot de passe oublié',
+demo: 'Démo : aucun mot de passe n’est envoyé ni enregistré, seules les règles sont vérifiées.'
+},
+en: {
+titreInscription: 'Choose your password', titreReinit: 'Choose a new password',
+mdp: 'Password', confirmation: 'Confirm your password', voir: 'Show', masquer: 'Hide',
+reglesLabel: 'Password rules', regles: { longueur: 'At least 8 characters', majuscule: 'At least one capital letter', chiffre: 'At least one digit' },
+ok: '(met)', aFaire: '(not yet)',
+faible: 'Your password must meet all 3 rules.', differents: 'The two passwords do not match.',
+valider: 'Confirm and see my batch', retour: '← Back to my emails',
+perimeTitre: 'This link is no longer valid', perimeTexte: 'It has already been used or it has expired. Log in, or ask for a new link.',
+perimeLien: 'Go to log in', perimeOubli: 'Forgot password',
+demo: 'Demo: no password is sent or stored, only the rules are checked.'
+}
+};
+// Les mots de passe ne vivent que dans l'état de la page : jamais dans localStorage.
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr', mdp: '', confirmation: '', visible: false, erreurs: {} }; }
+afterRender(root) {
+var id = this.pendingFocus;
+this.pendingFocus = null;
+if (id) Parcours.focaliser(root.querySelector('#' + id));
+}
+valider() {
+var st = this.state;
+var erreurs = {};
+if (!Auth.reglesMotDePasse(st.mdp).ok) erreurs.mdp = 'faible';
+else if (st.mdp !== st.confirmation) erreurs.confirmation = 'differents';
+if (erreurs.mdp || erreurs.confirmation) {
+this.pendingFocus = erreurs.mdp ? 'mdp' : 'confirmation';
+this.setState({ erreurs: erreurs });
+return;
+}
+var r = Auth.definirMotDePasse(st.mdp);
+// aucune-demande : le rendu bascule de lui-même sur « Ce lien n'est plus valable ».
+if (!r.ok) { this.setState({ erreurs: r.erreur === 'mot-de-passe-faible' ? { mdp: 'faible' } : {} }); return; }
+location.replace('/fournee');
+}
+renderVals() {
+var self = this;
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+var d = Auth.demandeEnCours(Auth.charger());
+var regles = Auth.reglesMotDePasse(st.mdp);
+var err = { mdp: st.erreurs.mdp ? t.faible : '', confirmation: st.erreurs.confirmation ? t.differents : '' };
+return {
+t: t, err: err,
+inv: { mdp: st.erreurs.mdp ? 'true' : 'false', confirmation: st.erreurs.confirmation ? 'true' : 'false' },
+vue: { perime: d ? HIDE : '', form: d ? '' : HIDE },
+email: d ? d.email : '',
+titre: d && d.motif === 'reinitialisation' ? t.titreReinit : t.titreInscription,
+mdp: st.mdp, confirmation: st.confirmation,
+typeChamp: st.visible ? 'text' : 'password', visible: String(!!st.visible), libelleVoir: st.visible ? t.masquer : t.voir,
+regles: ['longueur', 'majuscule', 'chiffre'].map(function (k) { return { texte: t.regles[k], classe: regles[k] ? 'ok' : '', etat: regles[k] ? t.ok : t.aFaire }; }),
+saisirMdp: function (e) { self.setState({ mdp: e.target.value, erreurs: {} }); },
+saisirConfirmation: function (e) { self.setState({ confirmation: e.target.value, erreurs: {} }); },
+basculerVue: function () { self.setState({ visible: !st.visible }); },
+valider: function () { self.valider(); }
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

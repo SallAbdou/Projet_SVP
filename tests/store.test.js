@@ -71,6 +71,11 @@ test('charger et enregistrer, y compris stockage cassé', () => {
   assert.deepEqual(Object.keys(mem), ['autre']);
 });
 
+test('CLES_DEMO couvre aussi le compte et le questionnaire', () => {
+  assert.ok(S.CLES_DEMO.includes('pq-auth'));
+  assert.ok(S.CLES_DEMO.includes('pq-questionnaire'));
+});
+
 test('retirerParamDemo', () => {
   assert.equal(S.retirerParamDemo('?demo=reset'), '');
   assert.equal(S.retirerParamDemo('?a=1&demo=reset&b=2'), '?a=1&b=2');
