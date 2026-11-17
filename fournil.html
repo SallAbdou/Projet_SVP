@@ -6,193 +6,508 @@
 body{margin:0;background:#FBF5EA}
 a{color:#8A4F1C}a:hover{color:#5E3412}
 textarea:focus,select:focus,input:focus{outline:2px solid #B5651D;outline-offset:1px}
+button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<style>
+.fo-carte{background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.fo-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}
+.fo-btn:hover{border-color:#8A4F1C;color:#2E1D12}
+.fo-btn-plein{border-color:#8A4F1C;background:#8A4F1C;color:#FFFDF8}
+.fo-btn-plein:hover{background:#5E3412;color:#FFFDF8}
+.fo-btn:disabled{opacity:.5;cursor:not-allowed}
+.fo-lien{background:none;border:0;padding:0 4px;min-height:44px;font:inherit;font-size:13px;font-weight:700;color:#8A4F1C;cursor:pointer;align-self:flex-start}
+.fo-select{min-height:44px;padding:0 12px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:500}
+.fo-choix{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:16px 20px;border-bottom:1px solid #F0E5D2}
+.fo-choix:last-child{border-bottom:0}
+.fo-post{display:flex;flex-direction:column;gap:12px;padding:18px;border:1px solid #EFE2CB;border-radius:16px;background:#FBF5EA}
+.fo-champs{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}
+.fo-champ{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:#4A3324;flex:1 1 130px;min-width:0}
+.fo-champ input{min-height:44px;width:100%;padding:0 12px;border-radius:12px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-size:15px}
+.fo-champ input[aria-invalid="true"]{border-color:#C0392B}
+.fo-erreur{font-size:12px;font-weight:600;color:#8E2A1C}
+.fo-voile{position:fixed;inset:0;z-index:40;background:rgba(46,29,18,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.fo-boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:#FFFDF8;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);padding:22px;display:flex;flex-direction:column;gap:14px}
+#pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
+.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+@media (max-width:640px){.fo-carte{padding:18px}.fo-choix{padding:14px 16px}}
+</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
+<div id="pq-toast" aria-live="polite"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="fournil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
-<header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
-<div style="display:flex;flex-direction:column;gap:6px;max-width:780px">
+<header style="display:flex;flex-direction:column;gap:6px;max-width:780px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
-</div>
-<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
 </header>
-<div style="background:#F3E6CF;border:1px solid #E7D6B8;border-radius:16px;padding:14px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px">
-<span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#DCEBD6;color:#2F5E36">{{t.hot}}</span>
-<span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;flex:1 1 320px;min-width:0">{{t.topic}}</span>
-<a href="/fournee" style="font-weight:700;font-size:14px">{{t.change}}</a>
+<p role="status" style="{{chargementStyle}}">{{t.chargement}}</p>
+<section aria-labelledby="choix-t" style="{{choixStyle}}">
+<h2 id="choix-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.choixTitre}}</h2>
+<p style="{{introuvableStyle}}">{{t.introuvable}}</p>
+<h3 style="{{jourTitreStyle}}">{{t.choixJour}}</h3>
+<div style="{{jourStyle}}">
+<sc-for list="{{choixJour}}" as="c" hint-placeholder-count="5">
+<div class="fo-choix">
+<span style="{{c.chip}}">{{c.etat}}</span>
+<div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:#6B5443">{{c.source}}</span></div>
+<a href="{{c.href}}" class="fo-btn fo-btn-plein" aria-label="{{c.label}}">{{t.petrir}}</a>
+</div>
+</sc-for>
+</div>
+<h3 style="{{cotesTitreStyle}}">{{t.choixCotes}}</h3>
+<div style="{{cotesStyle}}">
+<sc-for list="{{choixCotes}}" as="c" hint-placeholder-count="2">
+<div class="fo-choix">
+<span style="{{c.chip}}">{{c.etat}}</span>
+<div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:#6B5443">{{c.source}}</span></div>
+<a href="{{c.href}}" class="fo-btn fo-btn-plein" aria-label="{{c.label}}">{{t.petrir}}</a>
+</div>
+</sc-for>
+</div>
+<div style="{{choixVideStyle}}"><p style="margin:0;color:#6B5443">{{t.choixVide}}</p><a href="/fournee" class="fo-btn fo-btn-plein" style="align-self:flex-start">{{t.allerFournee}}</a></div>
+</section>
+<div style="{{sujetStyle}}">
+<div style="background:#F3E6CF;border:1px solid #E7D6B8;border-radius:16px;padding:14px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px">
+<span style="{{sujet.chip}}">{{sujet.etat}}</span>
+<div style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px">
+<span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{sujet.titre}}</span>
+<span style="font-size:13px;color:#6B5443">{{sujet.source}}</span>
+<span style="{{sujet.pourToiStyle}}">{{sujet.pourToi}}</span>
+</div>
+<a href="/fournil" data-focus="changer" style="font-weight:700;font-size:14px;min-height:44px;display:inline-flex;align-items:center">{{t.change}}</a>
 </div>
 <section style="display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start">
-<div style="flex:999 1 460px;min-width:0;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px">
+<div class="fo-carte" style="flex:999 1 460px;min-width:0">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px">
-<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.draftTitle}} <span style="font-family:'DM Sans', sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#DCEBD6;color:#2F5E36;vertical-align:middle">MVP</span></h2>
-<span style="font-size:13px;color:#6B5443">{{t.count}}</span>
+<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.draftTitle}}</h2>
+<span style="{{compteurStyle}}">{{compteur}}</span>
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:12px">
-<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#4A3324;flex:1 1 180px">{{t.tone}}
-<select style="min-height:44px;padding:0 12px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:500">
-<option>{{t.tone1}}</option><option>{{t.tone2}}</option><option>{{t.tone3}}</option>
+<label for="sel-ton" style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#4A3324;flex:1 1 180px">{{t.tone}}
+<select id="sel-ton" class="fo-select" onChange="{{choisirTon}}">
+<sc-for list="{{tons}}" as="o" hint-placeholder-count="3"><option value="{{o.v}}" {{o.sel}}>{{o.label}}</option></sc-for>
 </select>
 </label>
-<label style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#4A3324;flex:1 1 180px">{{t.langPost}}
-<select style="min-height:44px;padding:0 12px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:500">
-<option>{{t.l1}}</option><option>{{t.l2}}</option>
+<label for="sel-langue" style="display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:#4A3324;flex:1 1 180px">{{t.langPost}}
+<select id="sel-langue" class="fo-select" onChange="{{choisirLangue}}">
+<sc-for list="{{langues}}" as="o" hint-placeholder-count="2"><option value="{{o.v}}" {{o.sel}}>{{o.label}}</option></sc-for>
 </select>
 </label>
 </div>
-<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:#4A3324">{{t.textLabel}}
-<textarea rows="13" style="box-sizing:border-box;width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:400;font-size:15px;line-height:1.6;resize:vertical">{{t.draft}}</textarea>
+<div role="alert" style="{{attenteStyle}}">
+<span style="flex:1 1 100%;font-weight:600">{{attenteTexte}}</span>
+<button type="button" class="fo-btn fo-btn-plein" data-focus="remplacer" onClick="{{remplacer}}">{{t.remplacer}}</button>
+<button type="button" class="fo-btn" data-focus="garder" onClick="{{garder}}">{{t.garder}}</button>
+</div>
+<label for="brouillon" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:#4A3324">{{t.textLabel}}
+<textarea id="brouillon" rows="14" onInput="{{saisir}}" onCompositionend="{{saisir}}" style="box-sizing:border-box;width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:400;font-size:15px;line-height:1.6;resize:vertical">
+{{texte}}</textarea>
 </label>
 <div style="display:flex;flex-wrap:wrap;gap:10px">
-<button type="button" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700">
+<button type="button" class="fo-btn" data-focus="repetrir" onClick="{{repetrir}}">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg>{{t.regen}}</button>
-<button type="button" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:0;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700">
+<button type="button" class="fo-btn fo-btn-plein" data-focus="copier" onClick="{{copier}}" {{desactive}}>
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a1 1 0 0 1 1-1h10"></path></svg>{{t.copy}}</button>
-<button type="button" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700">{{t.publish}} <span style="font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></button>
+<button type="button" class="fo-btn" data-focus="publier" onClick="{{ouvrirModale}}" {{desactive}}>{{t.publish}}</button>
 </div>
 </div>
 <aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:18px">
-<div style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
-<h2 style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.preview}}</h2>
-<div style="display:flex;align-items:center;gap:10px">
-<span style="width:40px;height:40px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">L</span>
-<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">Léa Martin</span><span style="font-size:12px;color:#6B5443">{{t.role}}</span></div>
-</div>
-<p style="margin:0;font-size:14px;color:#3A281B">{{t.previewText}}</p>
-<span style="font-size:13px;font-weight:700;color:#8A4F1C">{{t.more}}</span>
-</div>
 <div style="background:#2E1D12;color:#FBF5EA;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
 <h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;color:#F2C77A">{{t.checkTitle}}</h2>
 <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
 <sc-for list="{{checks}}" as="k" hint-placeholder-count="4">
-<li style="display:flex;gap:10px;align-items:flex-start;font-size:14px"><span style="{{k.box}}" aria-hidden="true">{{k.mark}}</span><span>{{k.label}}</span></li>
+<li style="display:flex;gap:10px;align-items:flex-start;font-size:14px"><span style="{{k.box}}" aria-hidden="true">{{k.mark}}</span><span>{{k.label}}<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">{{k.etat}}</span></span></li>
 </sc-for>
 </ul>
 </div>
+<div style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
+<h2 style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.preview}}</h2>
+<div style="display:flex;align-items:center;gap:10px">
+<span aria-hidden="true" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">{{auteur.initiale}}</span>
+<div style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:700;font-size:14px">{{auteur.prenom}}</span><span style="font-size:12px;color:#6B5443">{{auteur.role}}</span></div>
+</div>
+<p id="apercu-texte" style="margin:0;font-size:14px;color:#3A281B;white-space:pre-line;overflow-wrap:anywhere">{{apercu.texte}}</p>
+<button type="button" class="fo-lien" data-focus="voir-plus" aria-expanded="{{apercu.ouvert}}" aria-controls="apercu-texte" onClick="{{basculerApercu}}" style="{{apercu.boutonStyle}}">{{apercu.bouton}}</button>
+</div>
 </aside>
 </section>
-<section style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:20px">
-<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px">
+</div>
+<section class="fo-carte" aria-labelledby="perf-t">
 <div style="display:flex;flex-direction:column;gap:4px;max-width:680px">
-<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.perfTitle}} <span style="font-family:'DM Sans', sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h2>
+<h2 id="perf-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.perfTitle}}</h2>
 <p style="margin:0;color:#6B5443;font-size:14px">{{t.perfSub}}</p>
 </div>
+<p style="{{perfVideStyle}}">{{t.perfVide}}</p>
+<sc-for list="{{posts}}" as="p" hint-placeholder-count="2">
+<form class="fo-post" data-index="{{p.i}}" data-id="{{p.id}}" onSubmit="{{enregistrerChiffres}}" novalidate aria-label="{{p.formLabel}}">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px"><h3 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:17px;overflow-wrap:anywhere">{{p.titre}}</h3><span style="font-size:13px;color:#6B5443">{{p.date}}</span></div>
+<p style="margin:0;font-size:14px;color:#4A3324">{{p.resume}}</p>
+<span style="font-size:13px;font-weight:700;color:#4A3324">{{t.formTitle}}</span>
+<div class="fo-champs">
+<label class="fo-champ" for="{{p.idImpressions}}">{{t.champs.impressions}}<input id="{{p.idImpressions}}" data-index="{{p.i}}" data-champ="impressions" inputmode="numeric" autocomplete="off" value="{{p.vImpressions}}" aria-invalid="{{p.invImpressions}}" aria-describedby="{{p.idImpressions}}-e" onInput="{{saisirChiffre}}"><span id="{{p.idImpressions}}-e" class="fo-erreur">{{p.eImpressions}}</span></label>
+<label class="fo-champ" for="{{p.idReactions}}">{{t.champs.reactions}}<input id="{{p.idReactions}}" data-index="{{p.i}}" data-champ="reactions" inputmode="numeric" autocomplete="off" value="{{p.vReactions}}" aria-invalid="{{p.invReactions}}" aria-describedby="{{p.idReactions}}-e" onInput="{{saisirChiffre}}"><span id="{{p.idReactions}}-e" class="fo-erreur">{{p.eReactions}}</span></label>
+<label class="fo-champ" for="{{p.idRepublications}}">{{t.champs.republications}}<input id="{{p.idRepublications}}" data-index="{{p.i}}" data-champ="republications" inputmode="numeric" autocomplete="off" value="{{p.vRepublications}}" aria-invalid="{{p.invRepublications}}" aria-describedby="{{p.idRepublications}}-e" onInput="{{saisirChiffre}}"><span id="{{p.idRepublications}}-e" class="fo-erreur">{{p.eRepublications}}</span></label>
+<label class="fo-champ" for="{{p.idCommentaires}}">{{t.champs.commentaires}}<input id="{{p.idCommentaires}}" data-index="{{p.i}}" data-champ="commentaires" inputmode="numeric" autocomplete="off" value="{{p.vCommentaires}}" aria-invalid="{{p.invCommentaires}}" aria-describedby="{{p.idCommentaires}}-e" onInput="{{saisirChiffre}}"><span id="{{p.idCommentaires}}-e" class="fo-erreur">{{p.eCommentaires}}</span></label>
+<label class="fo-champ" for="{{p.idContacts}}">{{t.champs.contacts}}<input id="{{p.idContacts}}" data-index="{{p.i}}" data-champ="contacts" inputmode="numeric" autocomplete="off" value="{{p.vContacts}}" aria-invalid="{{p.invContacts}}" aria-describedby="{{p.idContacts}}-e" onInput="{{saisirChiffre}}"><span id="{{p.idContacts}}-e" class="fo-erreur">{{p.eContacts}}</span></label>
 </div>
-<div style="display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:12px">
-<sc-for list="{{metrics}}" as="m" hint-placeholder-count="5">
-<div style="background:#FBF5EA;border:1px solid #EFE2CB;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column">
-<span style="font-size:12px;color:#6B5443">{{m.label}}</span>
-<span style="font-family:Fraunces, Georgia, serif;font-size:26px;font-weight:800">{{m.value}}</span>
-</div>
-</sc-for>
-</div>
-<form onSubmit="{{noSubmit}}" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;background:#F3E6CF;border-radius:16px;padding:16px">
-<span style="flex:1 1 100%;font-size:13px;font-weight:700;color:#4A3324">{{t.formTitle}}</span>
-<sc-for list="{{fields}}" as="f" hint-placeholder-count="4">
-<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:#4A3324;flex:1 1 120px">{{f.label}}
-<input type="number" min="0" placeholder="{{f.ph}}" style="min-height:44px;box-sizing:border-box;padding:0 12px;border-radius:12px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">
-</label>
-</sc-for>
-<button type="submit" style="min-height:44px;padding:0 20px;border-radius:999px;border:0;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700">{{t.save}}</button>
+<button type="submit" class="fo-btn fo-btn-plein" id="{{p.idBouton}}" style="align-self:flex-start">{{t.save}}</button>
 </form>
-<div style="overflow-x:auto">
-<table style="width:100%;min-width:640px;border-collapse:collapse;font-size:14px">
-<thead>
-<tr style="text-align:left;color:#6B5443;font-size:12px;text-transform:uppercase;letter-spacing:0.06em">
-<th scope="col" style="padding:8px 10px;border-bottom:1px solid #E7D6B8">{{t.c1}}</th>
-<th scope="col" style="padding:8px 10px;border-bottom:1px solid #E7D6B8">{{t.c2}}</th>
-<th scope="col" style="padding:8px 10px;border-bottom:1px solid #E7D6B8;text-align:right">{{t.c3}}</th>
-<th scope="col" style="padding:8px 10px;border-bottom:1px solid #E7D6B8;text-align:right">{{t.c4}}</th>
-<th scope="col" style="padding:8px 10px;border-bottom:1px solid #E7D6B8;text-align:right">{{t.c5}}</th>
-<th scope="col" style="padding:8px 10px;border-bottom:1px solid #E7D6B8;text-align:right">{{t.c6}}</th>
-</tr>
-</thead>
-<tbody>
-<sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
-<tr>
-<td style="padding:10px;border-bottom:1px solid #F0E5D2;white-space:nowrap;color:#6B5443">{{r.date}}</td>
-<td style="padding:10px;border-bottom:1px solid #F0E5D2;font-weight:600">{{r.post}}</td>
-<td style="padding:10px;border-bottom:1px solid #F0E5D2;text-align:right;font-variant-numeric:tabular-nums">{{r.views}}</td>
-<td style="padding:10px;border-bottom:1px solid #F0E5D2;text-align:right;font-variant-numeric:tabular-nums">{{r.likes}}</td>
-<td style="padding:10px;border-bottom:1px solid #F0E5D2;text-align:right;font-variant-numeric:tabular-nums">{{r.reposts}}</td>
-<td style="padding:10px;border-bottom:1px solid #F0E5D2;text-align:right;font-weight:700;color:#8A4F1C">{{r.leads}}</td>
-</tr>
 </sc-for>
-</tbody>
-</table>
-</div>
 <p style="margin:0;font-size:13px;color:#6B5443">{{t.apiNote}}</p>
 </section>
 </main>
 </div>
+<div class="fo-voile" style="{{modaleStyle}}" onClick="{{clicVoile}}">
+<div class="fo-boite" role="dialog" aria-modal="true" aria-labelledby="modale-t" aria-describedby="modale-d" onKeydown="{{clavierModale}}">
+<h2 id="modale-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.modaleTitre}}</h2>
+<p id="modale-d" style="margin:0;font-size:13px;font-weight:700;padding:8px 12px;border-radius:12px;background:#FBE3C2;color:#5E3412">{{t.modaleDemo}}</p>
+<div style="border:1px solid #E7D6B8;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF">
+<div style="display:flex;align-items:center;gap:10px">
+<span aria-hidden="true" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">{{auteur.initiale}}</span>
+<div style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:700;font-size:14px">{{auteur.prenom}}</span><span style="font-size:12px;color:#6B5443">{{auteur.role}}</span></div>
+</div>
+<p style="margin:0;font-size:14px;color:#3A281B;white-space:pre-line;overflow-wrap:anywhere;max-height:40vh;overflow:auto">{{texteNet}}</p>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+<button type="button" class="fo-btn" data-focus="modale-annuler" onClick="{{fermerModale}}">{{t.annuler}}</button>
+<button type="button" class="fo-btn fo-btn-plein" data-focus="modale-confirmer" onClick="{{confirmerPublication}}">{{t.confirmer}}</button>
+</div>
+</div>
+</div>
 </script>
-<script src="/dc.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/fournil.js"></script><script src="/parcours.js"></script><script>
+var HIDE = 'display: none';
+var CHIP = {
+vert: 'flex: 0 0 auto; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
+orange: 'flex: 0 0 auto; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
+rouge: 'flex: 0 0 auto; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
+};
+var BOX_ON = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; background: #F2C77A; color: #2E1D12; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800';
+var BOX_OFF = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid #F2C77A; box-sizing: border-box';
+var CHAMP_MAJ = { impressions: 'Impressions', reactions: 'Reactions', republications: 'Republications', commentaires: 'Commentaires', contacts: 'Contacts' };
 var T = {
 fr: {
 navLabel: 'Navigation principale',
-nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
 eyebrow: 'Studio LinkedIn', title: 'Le fournil · l’IA pétrit, tu enfournes',
 subtitle: 'Un premier jet rédigé à partir du sujet choisi. Tu ajustes, tu copies, tu publies.',
-sample: 'Données d’exemple', hot: 'Tout chaud',
-topic: 'Les agents IA gèrent désormais la facturation des petites entreprises', change: 'Changer de sujet',
-draftTitle: 'La pâte du jour', count: '1 240 / 3 000 caractères',
-tone: 'Ton', tone1: 'Expert accessible', tone2: 'Retour d’expérience', tone3: 'Provocateur', langPost: 'Langue du post', l1: 'Français', l2: 'Anglais',
+chargement: 'Le fournil chauffe…',
+choixTitre: 'Sur quel sujet veux-tu écrire ?', introuvable: 'Ce sujet n’est plus disponible. Choisis-en un autre.',
+choixJour: 'Les news du jour', choixCotes: 'Mis de côté', choixVide: 'Aucun sujet pour l’instant : commence par la fournée du jour.', allerFournee: 'Aller à la fournée du jour',
+petrir: 'Pétrir', feux: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
+change: 'Changer de sujet',
+draftTitle: 'La pâte du jour', caracteres: 'caractères', enTrop: 'caractères en trop pour LinkedIn',
+tone: 'Ton', tons: { expert: 'Expert accessible', retour: 'Retour d’expérience', provoc: 'Provocateur' },
+langPost: 'Langue du post', languesPost: { fr: 'Français', en: 'Anglais' },
+attente: 'Remplacer ton texte par la variante « {v} » ? Tes modifications seront perdues.', attenteAutre: 'Remplacer ton texte par une autre variante ? Tes modifications seront perdues.',
+remplacer: 'Remplacer', garder: 'Garder mon texte',
 textLabel: 'Texte du post',
-draft: 'Vos factures partent toutes seules. Et elles relancent aussi.\n\nCette semaine, plusieurs éditeurs ont lancé des agents IA capables d’émettre, d’envoyer et de relancer des factures sans intervention humaine.\n\nPour une TPE, c’est 3 à 5 heures récupérées chaque mois.\n\nCe que j’observe chez mes clients :\n→ la relance est la tâche la plus repoussée\n→ c’est aussi celle qui coûte le plus en trésorerie\n→ un agent ne se lasse pas de relancer\n\nLa vraie question n’est plus « faut-il automatiser ? » mais « que faites-vous des heures récupérées ? »\n\nVous avez déjà confié une tâche admin à un agent ?',
 regen: 'Repétrir', copy: 'Copier le texte', publish: 'Publier sur LinkedIn',
-preview: 'Aperçu dans le fil', previewText: 'Vos factures partent toutes seules. Et elles relancent aussi. Cette semaine, plusieurs éditeurs ont lancé des agents IA capables d’émettre…', more: '… voir plus',
-checkTitle: 'Avant d’enfourner',
-checks: [[1, 'Une accroche en moins de 2 lignes'], [1, 'Un chiffre ou un fait vérifiable'], [1, 'Ton point de vue, pas seulement l’info'], [0, 'Une question pour lancer les commentaires']],
+preview: 'Aperçu dans le fil', more: '… voir plus', less: 'voir moins', roleDefaut: 'Membre',
+checkTitle: 'Avant d’enfourner', fait: 'fait', aFaire: 'à faire',
+checks: { accroche: 'Une accroche courte (120 caractères au plus)', chiffre: 'Un chiffre ou un fait vérifiable', pointDeVue: 'Ton point de vue, pas seulement l’info', question: 'Une question pour lancer les commentaires' },
+copie: 'Texte copié', copieKo: 'Copie impossible : sélectionne le texte à la main',
+modaleTitre: 'Publier sur LinkedIn', modaleDemo: 'Démo : rien n’est envoyé à LinkedIn.', annuler: 'Annuler', confirmer: 'Confirmer la publication',
+publie: 'Post publié (simulation). Reporte ses chiffres plus bas.',
 perfTitle: 'Ce que tes posts t’ont rapporté', perfSub: 'Tu reportes tes chiffres LinkedIn après publication, le comptoir fait les totaux.',
-metrics: [['Impressions', '4 820'], ['Réactions', '186'], ['Republications', '23'], ['Commentaires', '41'], ['Prises de contact', '3']],
-formTitle: 'Reporter les chiffres du dernier post', fields: [['Impressions', '1 240'], ['Réactions', '52'], ['Republications', '7'], ['Prises de contact', '1']], save: 'Enregistrer',
-c1: 'Date', c2: 'Post', c3: 'Impressions', c4: 'Réactions', c5: 'Republications', c6: 'Contacts',
-rows: [['27 oct.', 'Agents IA et facturation des TPE', '1 240', '52', '7', '1'], ['23 oct.', 'Le coût réel d’un projet IA', '1 080', '47', '6', '1'], ['20 oct.', 'Open source contre modèles fermés', '890', '38', '4', '0'], ['16 oct.', 'Automatiser sans perdre le lien client', '680', '29', '3', '1']],
+perfVide: 'Rien de publié pour l’instant. Tes posts publiés apparaîtront ici.',
+publieLe: 'Publié le {d}', pasDeChiffres: 'Chiffres pas encore reportés.',
+formTitle: 'Reporter les chiffres', formLabel: 'Chiffres du post : {t}',
+champs: { impressions: 'Impressions', reactions: 'Réactions', republications: 'Republications', commentaires: 'Commentaires', contacts: 'Prises de contact' },
+erreurs: { requis: 'Indique un nombre (0 si aucun).', entier: 'Nombre entier positif ou nul, sans virgule.' },
+save: 'Enregistrer', enregistre: 'Chiffres enregistrés',
 apiNote: 'En V1, la saisie est manuelle. La lecture automatique des statistiques passe par l’API Community Management de LinkedIn, accessible sur demande et après validation.'
 },
 en: {
 navLabel: 'Main navigation',
-nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
 eyebrow: 'LinkedIn studio', title: 'The kitchen · AI kneads, you bake',
 subtitle: 'A first draft written from the topic you picked. You adjust, copy and post.',
-sample: 'Sample data', hot: 'Piping hot',
-topic: 'AI agents now handle invoicing for small businesses', change: 'Change topic',
-draftTitle: 'Today’s dough', count: '1,240 / 3,000 characters',
-tone: 'Tone', tone1: 'Accessible expert', tone2: 'Lessons learned', tone3: 'Bold take', langPost: 'Post language', l1: 'French', l2: 'English',
+chargement: 'Warming up the oven…',
+choixTitre: 'What do you want to write about?', introuvable: 'This topic is no longer available. Pick another one.',
+choixJour: 'Today’s news', choixCotes: 'Saved', choixVide: 'No topic yet: start with today’s batch.', allerFournee: 'Go to today’s batch',
+petrir: 'Knead', feux: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
+change: 'Change topic',
+draftTitle: 'Today’s dough', caracteres: 'characters', enTrop: 'characters over the LinkedIn limit',
+tone: 'Tone', tons: { expert: 'Accessible expert', retour: 'Lessons learned', provoc: 'Bold take' },
+langPost: 'Post language', languesPost: { fr: 'French', en: 'English' },
+attente: 'Replace your text with the “{v}” version? Your edits will be lost.', attenteAutre: 'Replace your text with another version? Your edits will be lost.',
+remplacer: 'Replace', garder: 'Keep my text',
 textLabel: 'Post text',
-draft: 'Your invoices now send themselves. And they chase payment too.\n\nThis week, several vendors launched AI agents that issue, send and follow up on invoices with no human in the loop.\n\nFor a small business, that’s 3 to 5 hours back every month.\n\nWhat I see with my clients:\n→ chasing payment is the most postponed task\n→ it’s also the one that hurts cash flow most\n→ an agent never gets tired of following up\n\nThe real question is no longer “should we automate?” but “what will you do with the hours you get back?”\n\nHave you handed an admin task to an agent yet?',
 regen: 'Re-knead', copy: 'Copy text', publish: 'Post to LinkedIn',
-preview: 'Feed preview', previewText: 'Your invoices now send themselves. And they chase payment too. This week, several vendors launched AI agents that issue…', more: '… see more',
-checkTitle: 'Before baking',
-checks: [[1, 'A hook in under 2 lines'], [1, 'A verifiable figure or fact'], [1, 'Your point of view, not just the news'], [0, 'A question to start the comments']],
+preview: 'Feed preview', more: '… see more', less: 'see less', roleDefaut: 'Member',
+checkTitle: 'Before baking', fait: 'done', aFaire: 'to do',
+checks: { accroche: 'A short hook (120 characters max)', chiffre: 'A verifiable figure or fact', pointDeVue: 'Your point of view, not just the news', question: 'A question to start the comments' },
+copie: 'Text copied', copieKo: 'Could not copy: select the text by hand',
+modaleTitre: 'Post to LinkedIn', modaleDemo: 'Demo: nothing is sent to LinkedIn.', annuler: 'Cancel', confirmer: 'Confirm and post',
+publie: 'Post published (simulation). Enter its numbers below.',
 perfTitle: 'What your posts brought in', perfSub: 'You enter your LinkedIn numbers after posting, the counter adds them up.',
-metrics: [['Impressions', '4,820'], ['Reactions', '186'], ['Reposts', '23'], ['Comments', '41'], ['Leads', '3']],
-formTitle: 'Enter the latest post’s numbers', fields: [['Impressions', '1,240'], ['Reactions', '52'], ['Reposts', '7'], ['Leads', '1']], save: 'Save',
-c1: 'Date', c2: 'Post', c3: 'Impressions', c4: 'Reactions', c5: 'Reposts', c6: 'Leads',
-rows: [['Oct 27', 'AI agents and small-business invoicing', '1,240', '52', '7', '1'], ['Oct 23', 'The real cost of an AI project', '1,080', '47', '6', '1'], ['Oct 20', 'Open source vs closed models', '890', '38', '4', '0'], ['Oct 16', 'Automating without losing the client bond', '680', '29', '3', '1']],
+perfVide: 'Nothing posted yet. Your published posts will show up here.',
+publieLe: 'Posted on {d}', pasDeChiffres: 'No numbers entered yet.',
+formTitle: 'Enter the numbers', formLabel: 'Post numbers: {t}',
+champs: { impressions: 'Impressions', reactions: 'Reactions', republications: 'Reposts', commentaires: 'Comments', contacts: 'Leads' },
+erreurs: { requis: 'Enter a number (0 if none).', entier: 'Whole number, zero or more, no decimals.' },
+save: 'Save', enregistre: 'Numbers saved',
 apiNote: 'In V1, numbers are entered by hand. Reading stats automatically goes through LinkedIn’s Community Management API, available on application and after approval.'
 }
 };
+var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
+function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
+function focalisables(el) { return Array.prototype.filter.call(el.querySelectorAll('a[href],button:not([disabled])'), function (x) { return x.offsetParent !== null; }); }
+function nombre(n, lang) { return Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR'); }
+function dateLisible(iso, lang) {
+var d = new Date(iso);
+if (isNaN(d.getTime())) return '';
+return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function refDemandee() { try { return new URLSearchParams(window.location.search).get('ref'); } catch (e) { return null; } }
 class Component extends DCLogic {
-constructor(props) { super(props); this.state = { lang: 'fr' }; }
-renderVals() {
-var lang = (this.state && this.state.lang) || 'fr';
-var t = T[lang];
-var boxOn = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; background: #F2C77A; color: #2E1D12; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800';
-var boxOff = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid #F2C77A; box-sizing: border-box';
+constructor(props) {
+super(props);
+var u = null;
+try { u = Auth.utilisateurCourant(); } catch (e) {}
+this.state = { lang: 'fr', chargement: true, ref: refDemandee(), articles: [], ecrits: {}, store: Store.charger(stockage()), utilisateur: u,
+sujet: null, ton: 'expert', langue: 'fr', n: 0, texte: '', propose: '', attente: null, apercuOuvert: false, modale: false, saisies: {}, erreurs: {}, toast: null };
+this.charger();
+}
+charger() {
 var self = this;
+var fournee = Api.chargerFournee().catch(function () { return {}; });
+var ecrits = fetch('/data/brouillons.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; });
+Promise.all([fournee, ecrits]).then(function (r) {
+var articles = r[0] && r[0].etat === 'pret' ? r[0].articles : [];
+self.ouvrir(articles, r[1] && typeof r[1] === 'object' ? r[1] : {});
+});
+}
+ouvrir(articles, ecrits) {
+var store = Store.charger(stockage());
+var trouve = Fournil.trouverSujet(this.state.ref, articles, store.sauves);
+var maj = { chargement: false, articles: articles, ecrits: ecrits, store: store, sujet: trouve };
+if (trouve) {
+var a = trouve.article;
+var enregistre = store.brouillons[a.ref];
+var v = typeof enregistre === 'string' ? Fournil.retrouverVariante(a, enregistre, ecrits) : null;
+var choix = v || { ton: 'expert', langue: 'fr', n: 0 };
+maj.ton = choix.ton; maj.langue = choix.langue; maj.n = choix.n;
+maj.propose = Fournil.proposerVariante(a, choix.ton, choix.langue, choix.n, ecrits);
+maj.texte = typeof enregistre === 'string' ? enregistre : maj.propose;
+}
+this.setState(maj);
+}
+// Avant chaque rendu : défilement interne et hauteur (redimensionnée à la main) de la zone de texte.
+setState(s) {
+var z = document.getElementById('brouillon');
+if (z) this.zone = { haut: z.scrollTop, hauteur: z.style.height };
+super.setState(s);
+}
+maintenant() { return new Date().toISOString(); }
+// Le store est relu avant chaque écriture pour ne pas écraser un changement fait dans un autre onglet.
+sauverBrouillon(texte) {
+var store = Store.enregistrerBrouillon(Store.charger(stockage()), this.state.sujet.article.ref, texte);
+Store.enregistrer(stockage(), store);
+return store;
+}
+saisir(e) {
+var el = e.target;
+if (e.isComposing) { this.state.texte = el.value; return; }
+this.setState({ texte: el.value, store: this.sauverBrouillon(el.value) });
+}
+demander(ton, langue, n, origine) {
+if (!this.state.sujet) return;
+var st = this.state;
+var modifie = st.texte.trim() !== '' && Fournil.texteModifie(st.texte, st.propose);
+if (modifie) { this.pendingFocus = 'remplacer'; this.setState({ attente: { ton: ton, langue: langue, n: n, origine: origine } }); return; }
+this.appliquer(ton, langue, n, origine);
+}
+appliquer(ton, langue, n, origine) {
+var texte = Fournil.proposerVariante(this.state.sujet.article, ton, langue, n, this.state.ecrits);
+this.pendingFocus = origine;
+this.setState({ ton: ton, langue: langue, n: n, propose: texte, texte: texte, attente: null, store: this.sauverBrouillon(texte) });
+}
+copier() {
+var self = this;
+var texte = this.state.texte;
+function repli() {
+var ok = false;
+var zone = document.createElement('textarea');
+zone.value = texte; zone.setAttribute('readonly', ''); zone.style.position = 'fixed'; zone.style.opacity = '0';
+document.body.appendChild(zone); zone.select();
+try { ok = document.execCommand('copy'); } catch (err) {}
+document.body.removeChild(zone);
+var b = document.querySelector('[data-focus="copier"]'); if (b) b.focus();
+self.annoncer(ok ? 'copie' : 'copieKo');
+}
+if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texte).then(function () { self.annoncer('copie'); }, repli);
+else repli();
+}
+annoncer(cle) {
+var self = this;
+clearTimeout(this.toastTimer);
+this.toastN = (this.toastN || 0) + 1;
+this.toastTimer = setTimeout(function () { self.setState({ toast: null }); }, 5000);
+this.setState({ toast: { cle: cle, n: this.toastN } });
+}
+fermerModale() { this.pendingFocus = 'publier'; this.setState({ modale: false }); }
+confirmerPublication() {
+var a = this.state.sujet.article;
+var store = Store.publier(Store.charger(stockage()), { ref: a.ref, titre: a.titre }, this.maintenant());
+Store.enregistrer(stockage(), store);
+this.pendingFocus = 'publier';
+this.state.store = store;
+this.state.modale = false;
+this.annoncer('publie');
+}
+enregistrerChiffres(form) {
+var i = form.getAttribute('data-index');
+var id = form.getAttribute('data-id');
+var r = Fournil.validerChiffres(this.saisiesDe(i));
+var erreurs = Object.assign({}, this.state.erreurs);
+erreurs[i] = r.erreurs;
+if (!r.chiffres) {
+var premier = Fournil.CHAMPS.filter(function (c) { return r.erreurs[c]; })[0];
+this.pendingFocus = '#ch-' + i + '-' + premier;
+this.setState({ erreurs: erreurs });
+return;
+}
+var store = Store.saisirChiffres(Store.charger(stockage()), id, r.chiffres);
+Store.enregistrer(stockage(), store);
+var saisies = Object.assign({}, this.state.saisies);
+delete saisies[i];
+this.state.store = store; this.state.erreurs = erreurs; this.state.saisies = saisies;
+this.annoncer('enregistre');
+}
+// Saisie en cours, sinon chiffres déjà enregistrés pour ce post.
+saisiesDe(i) {
+var post = (this.state.store.publies || [])[i];
+var base = {};
+Fournil.CHAMPS.forEach(function (c) { base[c] = post && post.chiffres ? String(post.chiffres[c]) : ''; });
+return Object.assign(base, this.state.saisies[i] || {});
+}
+afterRender(root) {
+var lang = this.state.lang || 'fr';
+var toast = this.state.toast;
+BentoUI.toast(document.getElementById('pq-toast'), toast ? { cle: toast.n + '-' + lang, texte: T[lang][toast.cle], annuler: '' } : null, function () {});
+var z = root.querySelector('#brouillon');
+if (z && this.zone) { z.style.height = this.zone.hauteur; z.scrollTop = this.zone.haut; }
+if (this.state.modale && this.pendingFocus === 'modale') {
+this.pendingFocus = null;
+var b = root.querySelector('[data-focus="modale-confirmer"]'); if (b) b.focus();
+return;
+}
+var f = this.pendingFocus;
+this.pendingFocus = null;
+if (!f) return;
+var el = f.charAt(0) === '#' ? root.querySelector(f) : root.querySelector('[data-focus="' + f + '"]');
+if (f === 'ton') el = root.querySelector('#sel-ton');
+if (f === 'langue') el = root.querySelector('#sel-langue');
+if (el) Parcours.focaliser(el);
+}
+renderVals() {
+var self = this;
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+var sep = lang === 'en' ? ': ' : ' : ';
+var choix = Fournil.listeChoix(st.articles, st.store.sauves);
+var enChoix = !st.chargement && !st.sujet;
+var vueChoix = function (a) {
+var feu = CHIP[a.feu] ? a.feu : 'rouge';
+return { chip: CHIP[feu], etat: t.feux[feu], titre: a.titre || '', source: a.source || '', href: Bento.lienFournil(a.ref), label: t.petrir + sep + (a.titre || '') };
+};
+var sujet = { chip: '', etat: '', titre: '', source: '', pourToi: '', pourToiStyle: HIDE };
+if (st.sujet) {
+var a = st.sujet.article;
+var feu = CHIP[a.feu] ? a.feu : 'rouge';
+sujet = { chip: CHIP[feu], etat: t.feux[feu], titre: a.titre || '', source: a.source || '', pourToi: a.pourToi || '',
+pourToiStyle: a.pourToi ? 'font-size: 14px; color: #4A3324; font-weight: 600' : HIDE };
+}
+var c = Fournil.checklist(st.texte, st.langue);
+var ap = Fournil.apercu(st.texte);
+var ouvert = st.apercuOuvert && ap.coupe;
+var u = st.utilisateur || {};
+var prenom = u.prenom || '';
+var metiers = u.profil && u.profil.metiers && u.profil.metiers.length ? u.profil.metiers.join(' · ') : t.roleDefaut;
+var vide = !String(st.texte || '').trim();
+var att = st.attente;
+var attenteTexte = '';
+if (att) attenteTexte = att.origine === 'repetrir' ? t.attenteAutre : t.attente.replace('{v}', t.tons[att.ton] + ' · ' + t.languesPost[att.langue]);
+var publies = (st.store.publies || []).map(function (p, i) { return { p: p, i: i }; })
+.sort(function (x, y) { return String(y.p.publieLe).localeCompare(String(x.p.publieLe)); });
 return {
 t: t,
-noSubmit: function (e) { if (e && e.preventDefault) e.preventDefault(); },
-checks: t.checks.map(function (k) { return { box: k[0] ? boxOn : boxOff, mark: k[0] ? '✓' : '', label: k[1] }; }),
-metrics: t.metrics.map(function (m) { return { label: m[0], value: m[1] }; }),
-fields: t.fields.map(function (f) { return { label: f[0], ph: f[1] }; }),
-rows: t.rows.map(function (r) { return { date: r[0], post: r[1], views: r[2], likes: r[3], reposts: r[4], leads: r[5] }; })
+chargementStyle: st.chargement ? 'margin: 0; color: #6B5443; font-weight: 600' : HIDE,
+choixStyle: enChoix ? 'display: flex; flex-direction: column; gap: 14px' : HIDE,
+introuvableStyle: enChoix && st.ref ? 'margin: 0; padding: 12px 16px; border-radius: 14px; background: #FBE3C2; color: #5E3412; font-weight: 600' : HIDE,
+jourTitreStyle: choix.jour.length ? 'margin: 6px 0 0; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #9A5B23' : HIDE,
+jourStyle: choix.jour.length ? 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 20px; overflow: hidden' : HIDE,
+cotesTitreStyle: choix.cotes.length ? 'margin: 6px 0 0; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #9A5B23' : HIDE,
+cotesStyle: choix.cotes.length ? 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 20px; overflow: hidden' : HIDE,
+choixVideStyle: choix.jour.length || choix.cotes.length ? HIDE : 'display: flex; flex-direction: column; gap: 12px; background: #FFFDF8; border: 1.5px dashed #D9C29C; border-radius: 20px; padding: 24px',
+choixJour: choix.jour.map(vueChoix), choixCotes: choix.cotes.map(vueChoix),
+sujetStyle: st.sujet ? 'display: flex; flex-direction: column; gap: 26px' : HIDE,
+sujet: sujet,
+compteur: nombre(c.longueur, lang) + ' / ' + nombre(c.max, lang) + ' ' + t.caracteres + (c.enTrop ? sep + nombre(c.enTrop, lang) + ' ' + t.enTrop : ''),
+compteurStyle: c.enTrop ? 'font-size: 13px; font-weight: 700; color: #8E2A1C; background: #F5DAD3; padding: 2px 10px; border-radius: 999px' : 'font-size: 13px; color: #6B5443',
+tons: Fournil.TONS.map(function (v) { return { v: v, label: t.tons[v], sel: v === st.ton ? 'selected' : '' }; }),
+langues: Fournil.LANGUES.map(function (v) { return { v: v, label: t.languesPost[v], sel: v === st.langue ? 'selected' : '' }; }),
+attenteStyle: att ? 'display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 16px; border-radius: 14px; background: #FBE3C2; color: #5E3412' : HIDE,
+attenteTexte: attenteTexte,
+texte: st.texte, texteNet: String(st.texte || '').trim(),
+desactive: vide ? 'disabled' : '',
+checks: ['accroche', 'chiffre', 'pointDeVue', 'question'].map(function (k) {
+return { box: c[k] ? BOX_ON : BOX_OFF, mark: c[k] ? '✓' : '', label: t.checks[k], etat: ' (' + (c[k] ? t.fait : t.aFaire) + ')' };
+}),
+auteur: { initiale: prenom.charAt(0).toUpperCase(), prenom: prenom, role: metiers },
+apercu: { texte: ouvert ? String(st.texte).trim() : ap.texte, ouvert: String(!!ouvert), bouton: ouvert ? t.less : t.more, boutonStyle: ap.coupe ? '' : HIDE },
+modaleStyle: st.modale ? '' : HIDE,
+perfVideStyle: publies.length ? HIDE : 'margin: 0; padding: 18px 20px; border: 1.5px dashed #D9C29C; border-radius: 16px; color: #6B5443; font-weight: 600',
+posts: publies.map(function (x) {
+var p = x.p, i = x.i;
+var s = self.saisiesDe(i);
+var e = st.erreurs[i] || {};
+var v = { i: i, id: p.id, titre: p.titre || '', date: t.publieLe.replace('{d}', dateLisible(p.publieLe, lang)), formLabel: t.formLabel.replace('{t}', p.titre || ''), idBouton: 'ch-' + i + '-ok',
+resume: p.chiffres ? Fournil.CHAMPS.map(function (k) { return t.champs[k] + sep + nombre(p.chiffres[k], lang); }).join(' · ') : t.pasDeChiffres };
+Fournil.CHAMPS.forEach(function (k) {
+var M = CHAMP_MAJ[k];
+v['id' + M] = 'ch-' + i + '-' + k;
+v['v' + M] = s[k];
+v['inv' + M] = String(!!e[k]);
+v['e' + M] = e[k] ? t.erreurs[e[k]] : '';
+});
+return v;
+}),
+choisirTon: function (e) { self.demander(e.target.value, st.langue, 0, 'ton'); },
+choisirLangue: function (e) { self.demander(st.ton, e.target.value, 0, 'langue'); },
+repetrir: function () { self.demander(st.ton, st.langue, st.n + 1, 'repetrir'); },
+remplacer: function () { var x = self.state.attente; if (x) self.appliquer(x.ton, x.langue, x.n, x.origine); },
+garder: function () { self.pendingFocus = self.state.attente ? self.state.attente.origine : 'brouillon'; self.setState({ attente: null }); },
+saisir: function (e) { self.saisir(e); },
+copier: function () { self.copier(); },
+basculerApercu: function () { self.setState({ apercuOuvert: !self.state.apercuOuvert }); },
+ouvrirModale: function () { if (!String(self.state.texte).trim()) return; self.pendingFocus = 'modale'; self.setState({ modale: true }); },
+fermerModale: function () { self.fermerModale(); },
+confirmerPublication: function () { self.confirmerPublication(); },
+clicVoile: function (e) { if (e.target === e.currentTarget) self.fermerModale(); },
+// Focus piégé dans la fenêtre : Tab boucle, Échap ferme.
+clavierModale: function (e) {
+if (e.key === 'Escape') { e.preventDefault(); self.fermerModale(); return; }
+if (e.key !== 'Tab') return;
+var els = focalisables(e.currentTarget);
+if (!els.length) return;
+var premier = els[0], dernier = els[els.length - 1];
+if (e.shiftKey && document.activeElement === premier) { e.preventDefault(); dernier.focus(); }
+else if (!e.shiftKey && document.activeElement === dernier) { e.preventDefault(); premier.focus(); }
+},
+saisirChiffre: function (e) {
+var el = e.target, i = el.getAttribute('data-index');
+var saisies = Object.assign({}, self.state.saisies);
+saisies[i] = Object.assign({}, self.saisiesDe(i));
+saisies[i][el.getAttribute('data-champ')] = el.value;
+self.setState({ saisies: saisies });
+},
+enregistrerChiffres: function (e) { self.enregistrerChiffres(e.currentTarget); }
 };
 }
 }
