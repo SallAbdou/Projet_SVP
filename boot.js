@@ -2,13 +2,33 @@
    À chaque rendu : branche les événements, émet « pq:rendu » (utilisé par nav.js), appelle
    afterRender de la page, puis restaure le focus, la sélection et le défilement. */
 (function () {
+  function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function get(o, p) { return p.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, o); }
+  // Valeur insérée par une liste : accolades encodées (affichage identique) pour que le second
+  // passage ne réinterprète jamais un « {{...}} » venu des données (titre d'article, par exemple).
+  function escListe(v) { return esc(v).replace(/\{/g, '&#123;').replace(/\}/g, '&#125;'); }
+
+  // Remplit le gabarit : listes sc-for (non imbriquées), événements onX="{{fn}}", puis valeurs.
+  function remplirGabarit(tpl, v) {
+    var s = tpl.replace(/<sc-for list="\{\{([\w.]+)\}\}" as="(\w+)"[^>]*>([\s\S]*?)<\/sc-for>/g, function (m, list, as, inner) {
+      return (get(v, list) || []).map(function (it) {
+        var sc = {}; sc[as] = it;
+        return inner.replace(/\{\{([\w.]+)\}\}/g, function (mm, p) { return p.split('.')[0] === as ? escListe(get(sc, p)) : mm; });
+      }).join('');
+    });
+    s = s.replace(/on([A-Z][a-z]+)="\{\{(\w+)\}\}"/g, function (m, ev, fn) { return 'data-ev="' + ev.toLowerCase() + ':' + fn + '"'; });
+    return s.replace(/\{\{([\w.]+)\}\}/g, function (m, p) { return esc(get(v, p)); });
+  }
+
+  if (typeof module === 'object' && module.exports) {
+    module.exports = { esc: esc, remplirGabarit: remplirGabarit };
+    return;
+  }
+
   var tpl = document.getElementById('tpl').textContent;
   var c = new Component({});
   try { var l = localStorage.getItem('pq-lang'); if (l === 'fr' || l === 'en') c.state.lang = l; } catch (e) {}
   window.__app = c;
-
-  function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-  function get(o, p) { return p.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, o); }
 
   // Repère stable de l'élément actif, pour le retrouver après le remplacement de #root.
   function repere(el, root) {
@@ -52,14 +72,7 @@
 
   window.__render = function () {
     var v = c.renderVals();
-    var s = tpl.replace(/<sc-for list="\{\{([\w.]+)\}\}" as="(\w+)"[^>]*>([\s\S]*?)<\/sc-for>/g, function (m, list, as, inner) {
-      return (get(v, list) || []).map(function (it) {
-        var sc = {}; sc[as] = it;
-        return inner.replace(/\{\{([\w.]+)\}\}/g, function (mm, p) { return p.split('.')[0] === as ? esc(get(sc, p)) : mm; });
-      }).join('');
-    });
-    s = s.replace(/on([A-Z][a-z]+)="\{\{(\w+)\}\}"/g, function (m, ev, fn) { return 'data-ev="' + ev.toLowerCase() + ':' + fn + '"'; });
-    s = s.replace(/\{\{([\w.]+)\}\}/g, function (m, p) { return esc(get(v, p)); });
+    var s = remplirGabarit(tpl, v);
 
     var root = document.getElementById('root');
     var etat = memoriser(root);
