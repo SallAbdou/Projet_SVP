@@ -103,3 +103,61 @@ test('texteModifie : ignore les espaces de bord', () => {
   assert.equal(F.texteModifie('a ', ' a'), false);
   assert.equal(F.texteModifie('a', 'b'), true);
 });
+
+const ECRITS = require('../data/brouillons.json');
+const ART = { ref: 'recX', rang: 3, titre: 'Un modèle open source rivalise avec les leaders', source: 'Blog', feu: 'orange', resume: 'Les performances se rapprochent des modèles fermés.', pourToi: 'Pour toi : parle du coût d’un projet client.' };
+
+test('brouillonGenerique : structure pour chaque ton et langue', () => {
+  for (const ton of F.TONS) for (const langue of F.LANGUES) {
+    const t = F.brouillonGenerique(ART, ton, langue, 0);
+    assert.ok(t.includes(ART.titre), ton + langue + ' titre');
+    assert.ok(t.includes(ART.resume), ton + langue + ' résumé');
+    assert.ok(t.includes('arle du coût d’un projet client.'), ton + langue + ' pour toi');
+    assert.ok(!t.includes('Pour toi :'), ton + langue + ' préfixe retiré');
+    assert.equal(t.split('\n').filter((l) => l.startsWith('→ ')).length, 3, ton + langue + ' puces');
+    assert.ok(t.trim().endsWith('?'), ton + langue + ' question');
+    const c = F.checklist(t, langue);
+    assert.equal(c.pointDeVue, true, ton + langue + ' point de vue');
+    assert.equal(c.chiffre, false, ton + langue + ' aucun chiffre inventé');
+  }
+});
+
+test('brouillonGenerique : trois variantes qui tournent, tons distincts', () => {
+  const v = [0, 1, 2, 3].map((n) => F.brouillonGenerique(ART, 'expert', 'fr', n));
+  assert.equal(new Set(v.slice(0, 3)).size, 3);
+  assert.equal(v[3], v[0]);
+  assert.notEqual(F.brouillonGenerique(ART, 'retour', 'fr', 0), v[0]);
+  assert.notEqual(F.brouillonGenerique(ART, 'provoc', 'fr', 0), v[0]);
+});
+
+test('brouillonGenerique : article sans résumé ni pour toi', () => {
+  const t = F.brouillonGenerique({ ref: 'y', titre: 'Titre seul' }, 'provoc', 'en', 1);
+  assert.ok(!/undefined|null/.test(t));
+  assert.ok(t.includes('Titre seul'));
+  assert.equal(t.split('\n').filter((l) => l.startsWith('→ ')).length, 3);
+});
+
+test('brouillons.json : 3 tons et 2 langues pour recDemo01 et recDemo02, checklist au vert', () => {
+  for (const ref of ['recDemo01', 'recDemo02']) for (const ton of F.TONS) for (const langue of F.LANGUES) {
+    const t = ECRITS[ref][ton][langue];
+    assert.equal(typeof t, 'string', ref + ton + langue);
+    const c = F.checklist(t, langue);
+    const nom = ref + ' ' + ton + ' ' + langue;
+    assert.ok(c.accroche, nom + ' accroche');
+    assert.ok(c.chiffre, nom + ' chiffre');
+    assert.ok(c.pointDeVue, nom + ' point de vue');
+    assert.ok(c.question, nom + ' question');
+    assert.equal(c.enTrop, 0, nom + ' longueur');
+  }
+});
+
+test('proposerVariante : texte écrit puis variantes générées', () => {
+  const a = { ref: 'recDemo01', titre: 'T', resume: 'R', pourToi: 'Pour toi : P' };
+  assert.equal(F.nbVariantes('recDemo01', ECRITS), 4);
+  assert.equal(F.nbVariantes('autre', ECRITS), 3);
+  assert.equal(F.proposerVariante(a, 'provoc', 'en', 0, ECRITS), ECRITS.recDemo01.provoc.en);
+  assert.equal(F.proposerVariante(a, 'provoc', 'en', 1, ECRITS), F.brouillonGenerique(a, 'provoc', 'en', 0));
+  assert.equal(F.proposerVariante(a, 'provoc', 'en', 4, ECRITS), ECRITS.recDemo01.provoc.en);
+  assert.equal(F.proposerVariante(ART, 'retour', 'fr', 4, ECRITS), F.brouillonGenerique(ART, 'retour', 'fr', 1));
+  assert.equal(F.proposerVariante(ART, 'inconnu', 'de', 0, null), F.brouillonGenerique(ART, 'expert', 'fr', 0));
+});
