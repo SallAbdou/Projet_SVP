@@ -44,6 +44,20 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .tile-tools .tool-drag{font-size:14px}
 .tile-tools .tool-sizes{gap:2px}
 @media (pointer:coarse){.tile-tools{flex-wrap:wrap}.tile-tools .tool{min-height:44px;min-width:44px;height:auto;font-size:inherit}}
+.tile-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;padding-top:4px}
+.bento.editing .tile-actions{display:none}
+.act-knead{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none}
+a.act-knead:hover{background:#5E3412;color:#FFFDF8}
+.act{position:relative;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.act:hover{border-color:#8A4F1C}
+.act .ico-plein{display:none}
+.act[aria-pressed="true"]{background:#F3E6CF;border-color:#8A4F1C;color:#5E3412}
+.act[aria-pressed="true"] .ico-plein{display:inline}
+.act[aria-pressed="true"] .ico-vide{display:none}
+.tile[data-tile="n1"] .act{background:#FFF6E3;border-color:#B87420}
+.tile[data-tile="n1"] .act[aria-pressed="true"]{background:#8A4F1C;color:#FFF6E3}
+@media (min-width:641px){.tile-S .act{padding:0}.tile-S .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (pointer:coarse){.act{min-height:44px;min-width:44px}}
 .tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (min-width:641px){.tile-S .only-M,.tile-S .only-L,.tile-M .only-L{display:none!important}}
@@ -107,8 +121,10 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
 <p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443">{{s.scoreLine}}</p>
 <strong style="font-family:Fraunces, Georgia, serif;font-size:17px">{{s.money}}</strong>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px">
-<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none">{{s.knead}}</a>
+<div class="tile-actions">
+<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="act-knead">{{s.knead}}</a>
+<button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="act-label">{{s.saveLabel}}</span></button>
+<button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="act-label">{{s.skipLabel}}</span></button>
 <a class="only-L" href="{{s.url}}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;color:#2E1D12;font-weight:700;font-size:14px;text-decoration:none">{{s.read}}</a>
 </div>
 </div>
@@ -172,7 +188,9 @@ rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
 toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille de {name}', drag: 'Glisser pour déplacer',
 money: 'Monétisation {m}/15', scoreLine: 'Durabilité {d}/5 · Propension {p}/5 · Lien offre {o}/5',
-knead: 'Pétrir un post', read: 'Lire la source',
+knead: 'Pétrir un post', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
+undo: 'Annuler', toastSave: 'Mis de côté', toastUnsave: 'Retiré du garde-manger', toastSkip: 'Sujet ignoré', toastUndone: 'Action annulée',
+allDone: 'Tu as tout passé en revue pour aujourd’hui', bringBack: 'Tout faire revenir',
 graphTitle: 'Tes derniers posts', graphSub: 'impressions par post'
 },
 en: {
@@ -189,10 +207,14 @@ rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
 money: 'Monetisation {m}/15', scoreLine: 'Shelf life {d}/5 · Shareability {p}/5 · Offer fit {o}/5',
-knead: 'Knead a post', read: 'Read the source',
+knead: 'Knead a post', read: 'Read the source', save: 'Save for later', skip: 'Skip',
+undo: 'Undo', toastSave: 'Saved for later', toastUnsave: 'Removed from the pantry', toastSkip: 'Topic skipped', toastUndone: 'Undone',
+allDone: 'You have gone through everything for today', bringBack: 'Bring everything back',
 graphTitle: 'Your latest posts', graphSub: 'impressions per post'
 }
 };
+var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
+function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
 function prenomCourant() { try { var u = Auth.utilisateurCourant(); return u ? u.prenom : ''; } catch (e) { return ''; } }
 function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
 function toolLabels(t, name) {
@@ -204,7 +226,7 @@ constructor(props) {
 super(props);
 var layout;
 try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
-this.state = { lang: 'fr', editing: false, layout: layout, data: null, posts: [], loadError: false };
+this.state = { lang: 'fr', editing: false, layout: layout, data: null, posts: [], loadError: false, store: Store.charger(stockage()) };
 var self = this;
 BentoUI.initDrag({
 isEditing: function () { return !!self.state.editing; },
@@ -223,7 +245,28 @@ if (res[0].etat === 'attente') setTimeout(function () { self.charger(); }, 2000)
 })
 .catch(function () { self.setState({ loadError: true }); });
 }
-available() { var d = this.state.data; return d && d.etat === 'pret' ? d.articles.length : 0; }
+// Articles du jour non ignorés, triés par rang : l'emplacement n°K reçoit le K-ième.
+restants() {
+var st = this.state || {};
+var d = st.data;
+if (!d || d.etat !== 'pret') return [];
+return Bento.pickTopics(d.articles, d.articles.length, Store.refsIgnorees(st.store || Store.etatInitial(), Store.dateDuJour(new Date())));
+}
+available() { return this.restants().length; }
+// Mettre de côté (bascule) ou ignorer l'article de l'emplacement id. Le store est relu avant
+// d'écrire pour ne pas écraser un changement fait dans un autre onglet.
+agir(id, act) {
+var a = this.restants()[Bento.rankOf(id) - 1];
+if (!a) return;
+var store = Store.charger(stockage());
+var type;
+if (act === 'skip') { store = Store.ignorer(store, a.ref, Store.dateDuJour(new Date())); type = 'skip'; }
+else if (Store.estDeCote(store, a.ref)) { store = Store.retirer(store, a.ref); type = 'unsave'; }
+else { store = Store.mettreDeCote(store, a, new Date().toISOString()); type = 'save'; }
+Store.enregistrer(stockage(), store);
+this.pendingFocus = { id: id, act: act };
+this.setState({ store: store });
+}
 // Enregistre la disposition puis re-rend la page. focus = { id, act } du bouton à refocaliser après le rendu.
 updateLayout(layout, focus) {
 try { Bento.saveLayout(window.localStorage, layout); } catch (e) {}
@@ -251,7 +294,8 @@ var self = this;
 var available = this.available();
 var idOf = function (e) { return e.currentTarget.getAttribute('data-id'); };
 var ready = !!data && data.etat === 'pret';
-var picked = Bento.pickTopics(ready ? data.articles : [], SLOT_IDS.length);
+var picked = this.restants();
+var store = st.store || Store.etatInitial();
 var posts = st.posts || [];
 var today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 var eyebrow = today.charAt(0).toUpperCase() + today.slice(1) + ' · ' + t.eyebrowTail;
@@ -265,6 +309,8 @@ tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layo
 tileSize: function (e) { var id = idOf(e), s = e.currentTarget.getAttribute('data-size'); self.updateLayout(Bento.setSize(layout, id, s), { id: id, act: 'size-' + s }); },
 setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count')); self.updateLayout(Bento.setNewsCount(layout, n), { act: 'count-' + n }); },
 resetLayout: function () { self.updateLayout(Bento.defaultLayout(), { act: 'reset' }); },
+toggleSave: function (e) { self.agir(idOf(e), 'save'); },
+skip: function (e) { self.agir(idOf(e), 'skip'); },
 editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
 editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: ' + (st.editing ? '#8A4F1C; color: #FFFDF8' : '#FFFDF8; color: #8A4F1C') + '; font: inherit; font-weight: 700; cursor: pointer',
@@ -282,7 +328,7 @@ var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
 chip: HIDE, state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, scoreLine: '', money: '', url: '#',
-knead: t.knead, read: t.read
+knead: t.knead, read: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
 var etat = FEU[c.feu];
@@ -291,6 +337,8 @@ s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why
 s.scoreLine = fill(t.scoreLine, { d: c.durabilite, p: c.propension, o: c.lienOffre });
 s.money = fill(t.money, { m: Bento.totalScore(c) });
 s.url = Bento.safeUrl(c.url);
+s.kneadHref = Bento.lienFournil(c.ref);
+s.saved = String(Store.estDeCote(store, c.ref));
 }
 return Object.assign(s, labels);
 }),
