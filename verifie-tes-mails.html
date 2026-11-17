@@ -22,7 +22,8 @@ if (d) return d;
 try { var o = JSON.parse(sessionStorage.getItem('pq-mail')); if (o && typeof o.email === 'string') return { email: o.email, motif: 'reinitialisation', fictive: true }; } catch (e) {}
 return null;
 }
-if (!adresseEnvoyee()) { window.__redirige = true; location.replace('/connexion'); }
+// Mode réel : Tally renvoie ici sans rien en mémoire, on affiche alors un texte générique.
+if (window.PQ_MODE !== 'reel' && !adresseEnvoyee()) { window.__redirige = true; location.replace('/connexion'); }
 </script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
@@ -32,9 +33,10 @@ if (!adresseEnvoyee()) { window.__redirige = true; location.replace('/connexion'
 <section class="carte" aria-labelledby="titre">
 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
 <h1 id="titre" class="titre">{{t.titre}}</h1>
-<p class="chapo">{{intro}} <strong>{{email}}</strong>.</p>
-<p>{{consigne}}</p>
-<div class="actions">
+<p class="chapo" style="{{vue.adresse}}">{{intro}} <strong>{{email}}</strong>.</p>
+<p class="chapo" style="{{vue.generique}}">{{t.generique}}</p>
+<p style="{{vue.adresse}}">{{consigne}}</p>
+<div class="actions" data-demo-seul>
 <button type="button" class="bouton" onClick="{{ouvrir}}" data-focus="ouvrir" aria-haspopup="dialog">{{t.ouvrir}}</button>
 <button type="button" class="bouton-secondaire" onClick="{{renvoyer}}" data-focus="renvoyer">{{t.renvoyer}}</button>
 </div>
@@ -65,6 +67,7 @@ if (!adresseEnvoyee()) { window.__redirige = true; location.replace('/connexion'
 var HIDE = 'display: none';
 var T = {
 fr: {
+generique: 'On vient de t’envoyer un e-mail. Clique sur le lien qu’il contient pour choisir ton mot de passe.',
 titre: 'Vérifie ta boîte mail', ouvrir: 'Ouvrir ma boîte de réception (démo)', renvoyer: 'Renvoyer l’e-mail',
 introInscription: 'On t’a envoyé un e-mail à', introReinit: 'Si un compte existe, on a envoyé un lien à',
 consigneInscription: 'Clique sur « Confirmer mon adresse » dans ce mail pour choisir ton mot de passe.',
@@ -78,6 +81,7 @@ inscription: { objet: 'Confirme ton adresse pour recevoir ta fournée', bonjour:
 reinitialisation: { objet: 'Réinitialise ton mot de passe', bonjour: 'Bonjour {prenom},', texte: 'Tu as demandé à changer ton mot de passe. Clique sur le bouton ci-dessous pour en choisir un nouveau. Si ce n’est pas toi, ignore ce message.', bouton: 'Choisir un nouveau mot de passe', fin: 'L’équipe Votre pAIn quotidien' }
 },
 en: {
+generique: 'We just sent you an email. Click the link inside to choose your password.',
 titre: 'Check your inbox', ouvrir: 'Open my inbox (demo)', renvoyer: 'Resend the email',
 introInscription: 'We sent an email to', introReinit: 'If an account exists, we sent a link to',
 consigneInscription: 'Click “Confirm my address” in that email to choose your password.',
@@ -106,12 +110,14 @@ var self = this;
 var st = this.state || {};
 var lang = st.lang || 'fr';
 var t = T[lang];
+var generique = window.PQ_MODE === 'reel' && !adresseEnvoyee();
 var d = adresseEnvoyee() || { email: '', motif: 'inscription' };
 var compte = d.fictive ? null : Auth.compteParEmail(Auth.charger(), d.email);
 var reinit = d.motif === 'reinitialisation';
 var m = t[d.motif];
 return {
 t: t, email: d.email,
+vue: { adresse: generique ? HIDE : '', generique: generique ? '' : HIDE },
 intro: reinit ? t.introReinit : t.introInscription,
 consigne: reinit ? t.consigneReinit : t.consigneInscription,
 changerHref: reinit ? '/mot-de-passe-oublie' : '/questionnaire',
