@@ -1,0 +1,8 @@
+[
+  { "label": "Puces IA", "impressions": 520, "feu": "rouge" },
+  { "label": "RGPD et LLM", "impressions": 410, "feu": "orange" },
+  { "label": "Agents en PME", "impressions": 1240, "feu": "vert" },
+  { "label": "Prompting", "impressions": 680, "feu": "orange" },
+  { "label": "Mistral OCR", "impressions": 1080, "feu": "vert" },
+  { "label": "IA et devis", "impressions": 890, "feu": "vert" }
+]

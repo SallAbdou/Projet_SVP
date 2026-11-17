@@ -117,49 +117,16 @@
     }
   }
 
-  /* Helpers de contenu */
+  /* Helpers de contenu (articles au format de la réponse n8n WF3) */
 
-  function totalScore(topic) {
-    var sc = (topic && topic.scores) || {};
-    return (sc.durability || 0) + (sc.propensity || 0) + (sc.offer || 0);
+  function totalScore(article) {
+    var a = article || {};
+    return (a.durabilite || 0) + (a.propension || 0) + (a.lienOffre || 0);
   }
 
-  function sortedByScore(topics) {
-    return (topics || [])
-      .map(function (t, i) { return { t: t, i: i, s: totalScore(t) }; })
-      .sort(function (a, b) { return b.s - a.s || a.i - b.i; })
-      .map(function (x) { return x.t; });
-  }
-
-  function pickTopics(topics, n) {
-    return sortedByScore(topics).slice(0, n);
-  }
-
-  function topTopic(topics) {
-    var list = sortedByScore(topics);
-    for (var i = 0; i < list.length; i++) if (list[i].state === 'hot') return list[i];
-    return list.length ? list[0] : null;
-  }
-
-  function countStates(topics) {
-    var c = { hot: 0, knead: 0, stale: 0 };
-    (topics || []).forEach(function (t) { if (c.hasOwnProperty(t.state)) c[t.state]++; });
-    return c;
-  }
-
-  function leftover(topics) {
-    var list = topics || [];
-    for (var i = 0; i < list.length; i++) if (list[i].state === 'stale' && list[i].newAngle) return list[i];
-    return null;
-  }
-
-  // Vérifie la forme minimale du JSON de données avant le rendu (données venant plus tard de n8n).
-  function isValidData(d) {
-    if (!d || typeof d !== 'object' || Array.isArray(d)) return false;
-    if (typeof d.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(d.date)) return false;
-    if (!Array.isArray(d.topics) || !Array.isArray(d.posts) || !Array.isArray(d.pantry)) return false;
-    var p = d.profile;
-    return !!p && typeof p === 'object' && Array.isArray(p.axes) && Array.isArray(p.sources);
+  // n8n classe déjà les articles : on suit leur rang, sans muter la liste reçue.
+  function pickTopics(articles, n) {
+    return (articles || []).slice().sort(function (a, b) { return a.rang - b.rang; }).slice(0, n);
   }
 
   function safeUrl(url) {
@@ -171,8 +138,7 @@
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,
     setNewsCount: setNewsCount, loadLayout: loadLayout, saveLayout: saveLayout,
-    totalScore: totalScore, pickTopics: pickTopics, topTopic: topTopic, countStates: countStates,
-    leftover: leftover, safeUrl: safeUrl, isValidData: isValidData
+    totalScore: totalScore, pickTopics: pickTopics, safeUrl: safeUrl
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Bento;
