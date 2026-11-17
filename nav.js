@@ -6,12 +6,12 @@
     fr: {
       tagline: 'On pétrit l’actu IA pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
       liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', profil: 'Mon profil' },
-      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter'
+      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu'
     },
     en: {
       tagline: 'We knead the AI news for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
       liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', profil: 'My profile' },
-      compteur: ['saved article', 'saved articles'], logout: 'Log out'
+      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu'
     }
   };
 
@@ -46,12 +46,19 @@
     var fr = o.lang !== 'en';
     var prenom = o.prenom || '';
     var role = o.role != null ? o.role : t.role;
-    return '<div style="display:flex;flex-direction:column;gap:6px">' +
+    return '<div class="pq-nav"' + (o.ouvert ? ' data-ouvert' : '') + '>' +
+      '<div class="pq-nav-tete">' +
+      '<div style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
       '<div style="display:flex;align-items:center;gap:10px">' +
-      '<span style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center">' +
+      '<span class="pq-nav-logo" style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center;flex:none">' +
       '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg></span>' +
-      '<span style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:#B5651D">AI</span>n quotidien</span></div>' +
-      '<span style="font-size:13px;color:#6B5443">' + esc(t.tagline) + '</span></div>' +
+      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:#B5651D">AI</span>n quotidien</span></div>' +
+      '<span class="pq-nav-tagline" style="font-size:13px;color:#6B5443">' + esc(t.tagline) + '</span></div>' +
+      '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
+      '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>' + esc(t.menu) + '</button>' +
+      '</div>' +
+      '<div id="pq-nav-panneau" class="pq-nav-panneau">' +
       '<div style="display:flex;flex-direction:column;gap:4px">' + liens + '</div>' +
       '<div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">' +
       '<div role="group" aria-label="' + esc(t.langLabel) + '" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:#E9D8BA;align-self:flex-start">' +
@@ -60,7 +67,42 @@
       '<div style="border-top:1px solid #E7D6B8;padding-top:14px;display:flex;align-items:center;gap:10px">' +
       '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
       '<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:#6B5443">' + esc(role) + '</span></div></div>' +
-      '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div>';
+      '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div></div></div>';
+  }
+
+  // Sous 900 px, la nav latérale devient une barre en haut avec un bouton Menu (modèle disclosure).
+  var CSS = '.pq-nav{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
+    '.pq-nav-tete{display:flex;align-items:center;gap:10px}' +
+    '.pq-nav-menu,.pq-nav-prenom{display:none}' +
+    '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
+    '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid #B5651D;outline-offset:2px}' +
+    '@media (max-width:899.98px){' +
+    '[data-nav]{position:sticky;top:0;z-index:40;flex:1 1 100%!important;padding:10px 16px!important;border-right:0!important;border-bottom:1px solid #E7D6B8;gap:0!important}' +
+    '.pq-nav{gap:0;position:relative}' +
+    '.pq-nav-tagline{display:none}' +
+    '.pq-nav-logo{width:32px!important;height:32px!important}' +
+    '.pq-nav-nom{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+    '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
+    '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
+    '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid #D9C29C;background:#FFFDF8;color:#5E3412;font:inherit;font-weight:700;cursor:pointer}' +
+    '.pq-nav-panneau{display:none;position:absolute;left:-16px;right:-16px;top:calc(100% + 10px);padding:16px;background:#F3E6CF;border-bottom:1px solid #E7D6B8;box-shadow:0 14px 24px rgba(46,29,18,.18);max-height:calc(100vh - 64px);overflow:auto;gap:18px}' +
+    '.pq-nav[data-ouvert] .pq-nav-panneau{display:flex}}';
+
+  var ouvert = false;
+
+  function navCourante() { return document.querySelector('[data-nav]'); }
+
+  function basculer(etat, rendreFocus) {
+    ouvert = etat;
+    var nav = navCourante();
+    if (!nav) return;
+    var boite = nav.querySelector('.pq-nav');
+    var bouton = nav.querySelector('[data-nav-menu]');
+    if (boite) { if (etat) boite.setAttribute('data-ouvert', ''); else boite.removeAttribute('data-ouvert'); }
+    if (bouton) {
+      bouton.setAttribute('aria-expanded', String(etat));
+      if (rendreFocus) bouton.focus();
+    }
   }
 
   function monter(e) {
@@ -73,7 +115,14 @@
     try { u = root.Auth.utilisateurCourant(); } catch (err) {}
     nav.innerHTML = html({
       page: nav.getAttribute('data-page'), lang: e.detail.lang, compteurGardeManger: compteur,
-      prenom: u ? u.prenom : '', role: u ? u.profil.metiers.join(', ') : ''
+      prenom: u ? u.prenom : '', role: u ? u.profil.metiers.join(', ') : '', ouvert: ouvert
+    });
+    nav.querySelector('[data-nav-menu]').addEventListener('click', function () { basculer(!ouvert, false); });
+    nav.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && ouvert) { ev.preventDefault(); basculer(false, true); }
+    });
+    nav.addEventListener('focusout', function (ev) {
+      if (ouvert && ev.relatedTarget && !nav.contains(ev.relatedTarget)) basculer(false, false);
     });
     nav.querySelectorAll('[data-lang]').forEach(function (b) {
       b.addEventListener('click', function () { root.__app.setState({ lang: b.getAttribute('data-lang') }); });
@@ -89,6 +138,15 @@
   if (typeof module === 'object' && module.exports) module.exports = Nav;
   else {
     root.Nav = Nav;
+    var style = document.createElement('style');
+    style.textContent = CSS;
+    document.head.appendChild(style);
     document.addEventListener('pq:rendu', monter);
+    // Clic hors de la nav : le panneau se ferme.
+    document.addEventListener('click', function (ev) {
+      var nav = navCourante();
+      // Cible retirée du document par un rendu (bouton de langue) : ce n'est pas un clic extérieur.
+      if (ouvert && nav && document.contains(ev.target) && !nav.contains(ev.target)) basculer(false, false);
+    });
   }
 })(this);

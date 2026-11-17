@@ -47,3 +47,28 @@ test('libellés et boutons de langue', () => {
   assert.ok(en.includes('The counter') && en.includes('My profile'));
   assert.ok(/data-focus="lang-en"[^>]*aria-pressed="true"/.test(en));
 });
+
+test('bouton menu mobile : disclosure fermée par défaut', () => {
+  const h = html({});
+  assert.ok(/<button type="button"[^>]*data-nav-menu[^>]*aria-expanded="false"/.test(h));
+  assert.ok(/data-nav-menu[^>]*aria-controls="pq-nav-panneau"/.test(h));
+  assert.ok(/data-nav-menu[^>]*data-focus="nav-menu"/.test(h));
+  assert.ok(/data-nav-menu[^>]*>[\s\S]*?Menu[\s\S]*?<\/button>/.test(h));
+  assert.ok(!h.includes('data-ouvert'));
+});
+
+test('bouton menu ouvert', () => {
+  const h = html({ ouvert: true });
+  assert.ok(/data-nav-menu[^>]*aria-expanded="true"/.test(h));
+  assert.ok(h.includes('data-ouvert'));
+});
+
+test('liens, langue et déconnexion dans le panneau, prénom dans la barre', () => {
+  const h = html({ prenom: 'Sam' });
+  const i = h.indexOf('id="pq-nav-panneau"');
+  assert.ok(i > 0);
+  const barre = h.slice(0, i);
+  const panneau = h.slice(i);
+  for (const x of ['href="/comptoir"', 'data-lang="en"', 'data-logout']) assert.ok(panneau.includes(x), x);
+  assert.ok(/class="pq-nav-prenom"[^>]*>Sam</.test(barre));
+});
