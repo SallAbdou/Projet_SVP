@@ -8,6 +8,7 @@
   var STATUTS = ['a-confirmer', 'actif'];
   var MOTIFS = ['inscription', 'reinitialisation'];
   var DELAI_FOUR_MS = 4000;
+  var OUVERTURE_FOUR_MS = 600000;
   var ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   var COMPTE_DEMO = {
@@ -22,7 +23,8 @@
       langue: 'Je veux des sources françaises uniquement'
     },
     inscritLe: '2026-10-01T08:00:00.000Z',
-    activeLe: '2026-10-01T08:00:00.000Z'
+    activeLe: '2026-10-01T08:00:00.000Z',
+    fourOuvertLe: null
   };
 
   function estObjet(v) { return !!v && typeof v === 'object' && !Array.isArray(v); }
@@ -47,7 +49,8 @@
         abonneId: c.abonneId, prenom: c.prenom, email: cleEmail(c.email), statut: c.statut,
         profil: { metiers: chaines(c.profil.metiers), thematiques: chaines(c.profil.thematiques), relation: String(c.profil.relation || ''), langue: String(c.profil.langue || '') },
         inscritLe: typeof c.inscritLe === 'string' ? c.inscritLe : null,
-        activeLe: typeof c.activeLe === 'string' ? c.activeLe : null
+        activeLe: typeof c.activeLe === 'string' ? c.activeLe : null,
+        fourOuvertLe: typeof c.fourOuvertLe === 'string' ? c.fourOuvertLe : null
       };
     }) : [];
     // Le compte de démo est toujours présent (jamais perdu, même si l'état est abîmé).
@@ -97,7 +100,7 @@
     e.comptes.push({
       abonneId: identifiant, prenom: String(p.prenom || '').trim(), email: email, statut: 'a-confirmer',
       profil: { metiers: chaines(p.metiers), thematiques: chaines(p.thematiques), relation: String(p.relation || ''), langue: String(p.langue || '') },
-      inscritLe: maintenantIso, activeLe: null
+      inscritLe: maintenantIso, activeLe: null, fourOuvertLe: null
     });
     e.demande = { email: email, motif: 'inscription' };
     return res(e);
@@ -147,11 +150,24 @@
     return etat && etat.demande ? copie(etat.demande) : null;
   }
 
+  // Les 4 s du four se comptent depuis la première demande de fournée (fourOuvertLe),
+  // à défaut depuis l'activation du compte.
   function fourneeAuFour(etat, maintenantIso) {
     var u = utilisateurCourant(etat);
     if (!u || !u.activeLe) return false;
-    var ecart = Date.parse(maintenantIso) - Date.parse(u.activeLe);
+    var ecart = Date.parse(maintenantIso) - Date.parse(u.fourOuvertLe || u.activeLe);
     return ecart >= 0 && ecart < DELAI_FOUR_MS;
+  }
+
+  // Première demande de fournée dans les 10 minutes qui suivent l'activation : le four s'ouvre.
+  function ouvrirFour(etat, maintenantIso) {
+    var e = copie(etat);
+    var s = utilisateurCourant(e);
+    var c = s && compteParEmail(e, s.email);
+    if (!c || !c.activeLe || c.fourOuvertLe) return res(e);
+    var ecart = Date.parse(maintenantIso) - Date.parse(c.activeLe);
+    if (ecart >= 0 && ecart < OUVERTURE_FOUR_MS) c.fourOuvertLe = maintenantIso;
+    return res(e);
   }
 
   function stockageParDefaut() {
@@ -202,6 +218,7 @@
       seConnecter: function (email, mdp) { return appliquer(seConnecter(charger(storage), email, mdp, maintenant())); },
       motDePasseOublie: function (email) { return appliquer(motDePasseOublie(charger(storage), email)); },
       seDeconnecter: function () { return appliquer(seDeconnecter(charger(storage))); },
+      ouvrirFour: function () { return appliquer(ouvrirFour(charger(storage), maintenant())); },
       utilisateurCourant: function () { return utilisateurCourant(charger(storage)); }
     };
   }
@@ -216,13 +233,14 @@
     charger: charger, enregistrer: enregistrer, avecStockage: avecStockage,
     pur: {
       inscrire: inscrire, definirMotDePasse: definirMotDePasse, seConnecter: seConnecter,
-      motDePasseOublie: motDePasseOublie, seDeconnecter: seDeconnecter, utilisateurCourant: utilisateurCourant
+      motDePasseOublie: motDePasseOublie, seDeconnecter: seDeconnecter, utilisateurCourant: utilisateurCourant, ouvrirFour: ouvrirFour
     },
     inscrireDepuisQuestionnaire: navigateur.inscrireDepuisQuestionnaire,
     definirMotDePasse: navigateur.definirMotDePasse,
     seConnecter: navigateur.seConnecter,
     motDePasseOublie: navigateur.motDePasseOublie,
     seDeconnecter: navigateur.seDeconnecter,
+    ouvrirFour: navigateur.ouvrirFour,
     utilisateurCourant: navigateur.utilisateurCourant
   };
 
