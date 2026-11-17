@@ -5,42 +5,63 @@
 <style>
 body{margin:0;background:#FBF5EA}
 a{color:#8A4F1C}a:hover{color:#5E3412}
+button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<style>
+.gm-item{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding:18px 24px;border-bottom:1px solid #F0E5D2}
+.gm-item:last-child{border-bottom:0}
+.gm-actions{flex:0 1 auto;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.gm-knead{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none}
+a.gm-knead:hover{background:#5E3412;color:#FFFDF8}
+.gm-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}
+.gm-sec:hover{border-color:#8A4F1C;color:#2E1D12}
+@media (max-width:640px){.gm-item{padding:16px}.gm-actions{justify-content:flex-start}}
+#pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
+.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+.toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
+.toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
+</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
+<div id="pq-toast" aria-live="polite"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="garde-manger" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:24px">
-<header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
-<div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
+<header style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
-</div>
-<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
 </header>
-<div role="group" aria-label="{{t.filterLabel}}" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-<button type="button" aria-pressed="true" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700">{{t.fAll}}</button>
-<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fHot}}</button>
-<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fKnead}}</button>
-<button type="button" aria-pressed="false" style="min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit">{{t.fStale}}</button>
+<div role="group" aria-label="{{t.filterLabel}}" style="{{filtersStyle}}">
+<sc-for list="{{filtres}}" as="f" hint-placeholder-count="4">
+<button type="button" data-act="{{f.act}}" data-filtre="{{f.id}}" aria-pressed="{{f.pressed}}" onClick="{{choisirFiltre}}" style="{{f.style}}">{{f.label}}</button>
+</sc-for>
 </div>
-<section aria-label="{{t.listLabel}}" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:20px;overflow:hidden">
+<div style="{{emptyStyle}}">
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h16v10H4z"></path><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path><path d="M10 14h4"></path></svg>
+<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800">{{t.emptyTitle}}</h2>
+<p style="margin:0;color:#6B5443;max-width:460px">{{t.emptyText}}</p>
+<a href="/fournee" data-act="go-batch" class="gm-knead">{{t.emptyLink}}</a>
+</div>
+<p style="{{noMatchStyle}}">{{t.noMatch}}</p>
+<section aria-label="{{t.listLabel}}" style="{{listStyle}}">
 <sc-for list="{{items}}" as="i" hint-placeholder-count="4">
-<article style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding:18px 24px;border-bottom:1px solid #F0E5D2">
+<article class="gm-item">
+<div style="flex:999 1 380px;min-width:0;display:flex;gap:14px">
 <span style="{{i.bar}}" aria-hidden="true"></span>
-<div style="flex:999 1 380px;min-width:0;display:flex;flex-direction:column;gap:6px">
+<div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:6px">
 <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:#6B5443">
-<span style="{{i.chip}}">{{i.state}}</span><span>{{i.source}}</span><span aria-hidden="true">·</span><span>{{i.saved}}</span>
+<span style="{{i.chip}}">{{i.state}}</span><span>{{i.source}}</span><span aria-hidden="true" style="{{i.sepStyle}}">·</span><span>{{i.saved}}</span>
 </div>
-<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:19px;line-height:1.3">{{i.title}}</h2>
-<p style="margin:0;font-size:14px;color:#5A4434">{{i.note}}</p>
+<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:19px;line-height:1.3;overflow-wrap:anywhere">{{i.title}}</h2>
 </div>
-<div style="flex:1 1 220px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end">
-<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#8A4F1C;color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none">{{t.knead}}</a>
-<button type="button" style="min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:14px">{{t.remove}}</button>
+</div>
+<div class="gm-actions">
+<a href="{{i.kneadHref}}" data-act="knead" data-id="{{i.ref}}" aria-label="{{i.kneadLabel}}" class="gm-knead">{{t.knead}}</a>
+<a href="{{i.url}}" target="_blank" rel="noopener" data-act="read" data-id="{{i.ref}}" aria-label="{{i.readLabel}}" class="gm-sec">{{t.read}}</a>
+<button type="button" data-act="remove" data-id="{{i.ref}}" aria-label="{{i.removeLabel}}" onClick="{{retirer}}" class="gm-sec">{{t.remove}}</button>
 </div>
 </article>
 </sc-for>
@@ -55,62 +76,158 @@ a{color:#8A4F1C}a:hover{color:#5E3412}
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script>
+<script src="/dc.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/garde-manger.js"></script><script>
+var HIDE = 'display: none';
 var CHIP = {
-hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
-knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
-stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
+chaud: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
+enfourner: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
+rassis: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
 };
 var BAR = {
-hot: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #3F8A4A',
-knead: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #D98200',
-stale: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #C0392B'
+chaud: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #3F8A4A',
+enfourner: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #D98200',
+rassis: 'flex: 0 0 6px; align-self: stretch; min-height: 56px; border-radius: 6px; background: #C0392B'
 };
+var FILTRE_ON = 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: #8A4F1C; color: #FFFDF8; font: inherit; font-weight: 700; cursor: pointer';
+var FILTRE_OFF = 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #D9C29C; background: #FFFDF8; color: #2E1D12; font: inherit; cursor: pointer';
 var T = {
 fr: {
 navLabel: 'Navigation principale',
-nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
 eyebrow: 'Articles mis de côté', title: 'Le garde-manger',
 subtitle: 'Les sujets que tu gardes pour plus tard. Chaque article indique s’il est encore bon à publier.',
-sample: 'Données d’exemple', filterLabel: 'Filtrer par fraîcheur', listLabel: 'Articles mis de côté',
-fAll: 'Tout (4)', fHot: 'Encore chaud (2)', fKnead: 'À enfourner avant demain (1)', fStale: 'Rassis (1)',
-knead: 'Pétrir', remove: 'Retirer',
-items: [
-['hot', 'Encore chaud', 'The Decoder', 'Mis de côté aujourd’hui', 'Les agents IA gèrent désormais la facturation des petites entreprises', 'Monétisation 13/15 · cas d’usage direct pour tes clients PME.'],
-['hot', 'Encore chaud', 'MIT Technology Review', 'Mis de côté hier', 'Comment les PME mesurent le retour sur investissement de l’IA', 'Monétisation 12/15 · donne des chiffres pour ton offre d’audit.'],
-['knead', 'À enfourner avant demain', 'Hugging Face Blog', 'Mis de côté il y a 2 jours', 'Un modèle open source rivalise avec les leaders du marché', 'Monétisation 10/15 · le sujet commence à circuler, publie vite ou trouve un angle.'],
-['stale', 'Rassis', 'TechCrunch AI', 'Mis de côté il y a 6 jours', 'Une nouvelle réglementation européenne entre en application', 'Monétisation 6/15 · déjà largement commenté, à garder comme référence.']
-],
+filterLabel: 'Filtrer par fraîcheur', listLabel: 'Articles mis de côté',
+filtres: { tout: 'Tout', chaud: 'Encore chaud', enfourner: 'À enfourner avant demain', rassis: 'Rassis' },
+knead: 'Pétrir', read: 'Lire la source', remove: 'Retirer', newTab: 'nouvel onglet',
+emptyTitle: 'Ton garde-manger est vide',
+emptyText: 'Dans la fournée du jour, mets de côté les sujets que tu veux garder pour plus tard : ils t’attendront ici.',
+emptyLink: 'Aller à la fournée du jour',
+noMatch: 'Rien dans cette catégorie pour l’instant',
+undo: 'Annuler', toastRemove: 'Retiré du garde-manger', toastUndone: 'Action annulée',
 learnTitle: 'Ta fournée s’affine', learnText: 'Ce que tu mets de côté, pétris ou ignores sert à mieux choisir les cinq sujets du lendemain.'
 },
 en: {
 navLabel: 'Main navigation',
-nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
 eyebrow: 'Saved articles', title: 'The pantry',
 subtitle: 'Topics you keep for later. Each article shows whether it’s still good to post.',
-sample: 'Sample data', filterLabel: 'Filter by freshness', listLabel: 'Saved articles',
-fAll: 'All (4)', fHot: 'Still warm (2)', fKnead: 'Bake before tomorrow (1)', fStale: 'Gone stale (1)',
-knead: 'Knead', remove: 'Remove',
-items: [
-['hot', 'Still warm', 'The Decoder', 'Saved today', 'AI agents now handle invoicing for small businesses', 'Monetisation 13/15 · a direct use case for your small-business clients.'],
-['hot', 'Still warm', 'MIT Technology Review', 'Saved yesterday', 'How small businesses measure the return on AI', 'Monetisation 12/15 · gives you figures for your audit offer.'],
-['knead', 'Bake before tomorrow', 'Hugging Face Blog', 'Saved 2 days ago', 'An open-source model rivals the market leaders', 'Monetisation 10/15 · starting to spread, post fast or find an angle.'],
-['stale', 'Gone stale', 'TechCrunch AI', 'Saved 6 days ago', 'A new European regulation comes into force', 'Monetisation 6/15 · widely covered already, keep it as a reference.']
-],
+filterLabel: 'Filter by freshness', listLabel: 'Saved articles',
+filtres: { tout: 'All', chaud: 'Still warm', enfourner: 'Bake before tomorrow', rassis: 'Gone stale' },
+knead: 'Knead', read: 'Read the source', remove: 'Remove', newTab: 'new tab',
+emptyTitle: 'Your pantry is empty',
+emptyText: 'In today’s batch, save the topics you want to keep for later: they will wait for you here.',
+emptyLink: 'Go to today’s batch',
+noMatch: 'Nothing in this category yet',
+undo: 'Undo', toastRemove: 'Removed from the pantry', toastUndone: 'Undone',
 learnTitle: 'Your batch gets sharper', learnText: 'What you save, knead or skip helps pick tomorrow’s five topics.'
 }
 };
+var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
+function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
+// Recherche par attribut sans construire de sélecteur (une ref peut contenir des guillemets).
+function trouver(root, act, id) {
+var els = root.querySelectorAll('[data-act="' + act + '"]');
+for (var i = 0; i < els.length; i++) if (id == null || els[i].getAttribute('data-id') === id) return els[i];
+return null;
+}
 class Component extends DCLogic {
-constructor(props) { super(props); this.state = { lang: 'fr' }; }
+constructor(props) { super(props); this.state = { lang: 'fr', filtre: 'tout', store: Store.charger(stockage()), toast: null }; }
+maintenant() { return new Date().toISOString(); }
+visibles() {
+var st = this.state || {};
+return GardeManger.filtrer((st.store || Store.etatInitial()).sauves, st.filtre, this.maintenant());
+}
+// Le store est relu avant d'écrire pour ne pas écraser un changement fait dans un autre onglet.
+retirer(ref) {
+var liste = this.visibles();
+var i = liste.map(function (a) { return a.ref; }).indexOf(ref);
+var store = Store.charger(stockage());
+var article = store.sauves.filter(function (s) { return s.ref === ref; })[0];
+if (!article) { this.setState({ store: store }); return; }
+store = Store.retirer(store, ref);
+Store.enregistrer(stockage(), store);
+// Focus : Retirer de l'article suivant, sinon du précédent, sinon « Annuler » du message.
+var voisin = liste[i + 1] || liste[i - 1];
+this.pendingFocus = { act: 'remove', id: voisin ? voisin.ref : '__aucun__', repli: true };
+this.setState({ store: store, toast: this.nouveauToast({ type: 'remove', article: article }) });
+}
+// Chaque message remplace le précédent (seule la dernière action est annulable) et dure 5 s.
+nouveauToast(t) {
+var self = this;
+clearTimeout(this.toastTimer);
+this.toastN = (this.toastN || 0) + 1;
+t.n = this.toastN;
+this.toastTimer = setTimeout(function () { self.expirer(); }, 5000);
+return t;
+}
+expirer() {
+var u = document.querySelector('[data-toast-undo]');
+if (u && document.activeElement === u) this.pendingFocus = { act: 'filtre-' + this.state.filtre };
+this.setState({ toast: null });
+}
+annuler() {
+var t = this.state.toast;
+if (!t || t.type !== 'remove') return;
+var store = Store.remettre(Store.charger(stockage()), t.article);
+Store.enregistrer(stockage(), store);
+this.pendingFocus = { act: 'remove', id: t.article.ref };
+this.setState({ store: store, toast: this.nouveauToast({ type: 'undone' }) });
+}
+afterRender(root) {
+var self = this;
+BentoUI.toast(document.getElementById('pq-toast'), this.vueToast(), function () { self.annuler(); });
+var f = this.pendingFocus;
+this.pendingFocus = null;
+if (!f) return;
+var el = trouver(root, f.act, f.id);
+if ((!el || !el.offsetParent) && f.repli) el = document.querySelector('[data-toast-undo]');
+if (!el || !el.offsetParent) el = trouver(root, 'filtre-' + this.state.filtre);
+if (!el || !el.offsetParent) el = trouver(root, 'go-batch');
+if (el) el.focus();
+}
+vueToast() {
+var t = this.state.toast;
+if (!t) return null;
+var tx = T[this.state.lang || 'fr'];
+return { cle: t.n + '-' + (this.state.lang || 'fr'), texte: t.type === 'remove' ? tx.toastRemove : tx.toastUndone, annuler: t.type === 'remove' ? tx.undo : '' };
+}
 renderVals() {
-var lang = (this.state && this.state.lang) || 'fr';
+var st = this.state || {};
+var lang = st.lang || 'fr';
 var t = T[lang];
 var self = this;
+var now = this.maintenant();
+var sauves = (st.store || Store.etatInitial()).sauves;
+var nb = GardeManger.compter(sauves, now);
+var filtre = GardeManger.FILTRES.indexOf(st.filtre) === -1 ? 'tout' : st.filtre;
+var items = this.visibles();
+var vide = nb.tout === 0;
+var label = function (verbe, titre) { return verbe + (lang === 'en' ? ': ' : ' : ') + titre; };
 return {
 t: t,
-items: t.items.map(function (i) {
-return { chip: CHIP[i[0]], bar: BAR[i[0]], state: i[1], source: i[2], saved: i[3], title: i[4], note: i[5] };
-})
+filtersStyle: vide ? HIDE : 'display: flex; flex-wrap: wrap; gap: 8px; align-items: center',
+emptyStyle: vide ? 'display: flex; flex-direction: column; align-items: flex-start; gap: 12px; background: #FFFDF8; border: 1.5px dashed #D9C29C; border-radius: 20px; padding: 28px' : HIDE,
+noMatchStyle: !vide && items.length === 0 ? 'margin: 0; padding: 22px 24px; background: #FFFDF8; border: 1.5px dashed #D9C29C; border-radius: 20px; color: #6B5443; font-weight: 600' : HIDE,
+listStyle: items.length ? 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 20px; overflow: hidden' : HIDE,
+filtres: GardeManger.FILTRES.map(function (id) {
+var on = id === filtre;
+return { id: id, act: 'filtre-' + id, pressed: String(on), style: on ? FILTRE_ON : FILTRE_OFF, label: t.filtres[id] + ' (' + nb[id] + ')' };
+}),
+items: items.map(function (a) {
+var cat = GardeManger.fraicheur(a, now);
+var saved = GardeManger.libelleAnciennete(GardeManger.joursDepuis(a.savedAt, now), lang);
+var titre = a.titre || '';
+return {
+ref: a.ref, title: titre, source: a.source || '', chip: CHIP[cat], bar: BAR[cat], state: t.filtres[cat],
+saved: saved, sepStyle: saved && a.source ? '' : HIDE,
+kneadHref: Bento.lienFournil(a.ref), url: Bento.safeUrl(a.url),
+kneadLabel: label(t.knead, titre), readLabel: label(t.read, titre) + ' (' + t.newTab + ')', removeLabel: label(t.remove, titre)
+};
+}),
+choisirFiltre: function (e) {
+var id = e.currentTarget.getAttribute('data-filtre');
+self.pendingFocus = { act: 'filtre-' + id };
+self.setState({ filtre: id });
+},
+retirer: function (e) { self.retirer(e.currentTarget.getAttribute('data-id')); }
 };
 }
 }

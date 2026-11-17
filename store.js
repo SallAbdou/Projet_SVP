@@ -64,6 +64,14 @@
     return e;
   }
 
+  // Annule un « Retirer » : remet l'article tel qu'il était (même savedAt, donc même place et même fraîcheur).
+  function remettre(etat, sauve) {
+    var e = copie(etat);
+    if (!estObjet(sauve) || typeof sauve.ref !== 'string' || estDeCote(e, sauve.ref)) return e;
+    e.sauves.push(copie(sauve));
+    return e;
+  }
+
   // Un sujet ignoré ne l'est que pour la fournée du jour : changer de date repart de zéro.
   function ignorer(etat, ref, dateFournee) {
     var e = copie(etat);
@@ -132,7 +140,7 @@
   var Store = {
     CLE: CLE, CLES_DEMO: CLES_DEMO,
     etatInitial: etatInitial, normaliserEtat: normaliserEtat, charger: charger, enregistrer: enregistrer,
-    mettreDeCote: mettreDeCote, estDeCote: estDeCote, retirer: retirer,
+    mettreDeCote: mettreDeCote, estDeCote: estDeCote, retirer: retirer, remettre: remettre,
     ignorer: ignorer, refsIgnorees: refsIgnorees, desIgnorer: desIgnorer, dateDuJour: dateDuJour,
     enregistrerBrouillon: enregistrerBrouillon,
     publier: publier, saisirChiffres: saisirChiffres,
