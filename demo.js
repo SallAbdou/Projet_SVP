@@ -3,5 +3,6 @@
   var search = window.Store && Store.retirerParamDemo(location.search);
   if (search == null) return;
   try { Store.reinitialiserDemo(window.localStorage); } catch (e) {}
+  try { sessionStorage.removeItem('pq-mail'); } catch (e) {}
   history.replaceState(null, '', location.pathname + search + location.hash);
 })();

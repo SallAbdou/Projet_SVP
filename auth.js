@@ -123,11 +123,11 @@
     return res(e);
   }
 
-  // Jamais d'erreur : on ne révèle pas quels comptes existent.
+  // Jamais d'erreur : on ne révèle pas quels comptes existent. Toute demande précédente est remplacée.
   function motDePasseOublie(etat, email) {
     var e = copie(etat);
     var c = compteParEmail(e, email);
-    if (c && c.statut === 'actif') e.demande = { email: c.email, motif: 'reinitialisation' };
+    e.demande = c && c.statut === 'actif' ? { email: c.email, motif: 'reinitialisation' } : null;
     return res(e);
   }
 

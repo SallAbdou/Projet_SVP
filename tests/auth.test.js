@@ -105,6 +105,7 @@ test('motDePasseOublie ne révèle rien', () => {
   assert.equal(r2.erreur, null);
   assert.deepEqual(r2.etat.demande, { email: 'lea@demo.painquotidien.fr', motif: 'reinitialisation' });
   assert.deepEqual(A.demandeEnCours(r2.etat), r2.etat.demande);
+  assert.equal(P.motDePasseOublie(inscrit(), 'inconnu@x.fr').etat.demande, null);
   const r3 = P.definirMotDePasse(r2.etat, 'Croissant8', T0);
   assert.equal(P.utilisateurCourant(r3.etat).activeLe, A.COMPTE_DEMO.activeLe);
 });

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connexion · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete></header>
+<main class="contenu centre">
+<section class="carte" aria-labelledby="titre">
+<h1 id="titre" class="titre">{{t.titre}}</h1>
+<p class="chapo">{{t.chapo}}</p>
+<button type="button" class="bouton-secondaire" onClick="{{remplirDemo}}" data-focus="demo">{{t.demoBouton}}</button>
+<form onSubmit="{{valider}}" novalidate>
+<p id="err-connexion" class="alerte" role="alert" style="{{alerteStyle}}">{{t.erreur}}</p>
+<div class="champ">
+<label for="email">{{t.email}}</label>
+<input id="email" type="email" autocomplete="username" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
+</div>
+<div class="champ">
+<label for="mdp">{{t.mdp}}</label>
+<div class="mdp"><input id="mdp" type="{{typeChamp}}" autocomplete="current-password" value="{{mdp}}" onInput="{{saisirMdp}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
+<button type="button" onClick="{{basculerVue}}" data-focus="voir" aria-pressed="{{visible}}">{{libelleVoir}}</button></div>
+<a class="lien" href="/mot-de-passe-oublie" style="align-self:flex-start">{{t.oubli}}</a>
+</div>
+<button type="submit" class="bouton" data-focus="valider">{{t.valider}}</button>
+</form>
+<div class="liens-bas">
+<a href="/">{{t.accueil}}</a>
+<a href="/questionnaire">{{t.creer}}</a>
+</div>
+<p class="mention-demo">{{t.demo}}</p>
+</section>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var HIDE = 'display: none';
+var DEMO = { email: 'lea@demo.painquotidien.fr', mdp: 'Croissant8' };
+var T = {
+fr: {
+titre: 'Content de te revoir', chapo: 'Connecte-toi pour retrouver ta fournée du jour.',
+demoBouton: 'Utiliser le compte de démo (Léa)',
+email: 'E-mail', mdp: 'Mot de passe', voir: 'Afficher', masquer: 'Masquer',
+oubli: 'Mot de passe oublié ?', valider: 'Me connecter',
+erreur: 'E-mail ou mot de passe incorrect.',
+accueil: '← Accueil', creer: 'Pas encore de compte ? Règle ta fournée',
+demo: 'Démo : aucun mot de passe n’est envoyé ni enregistré. Tout compte confirmé accepte un mot de passe qui respecte les règles (8 caractères, une majuscule, un chiffre).'
+},
+en: {
+titre: 'Good to see you again', chapo: 'Log in to get back to today’s batch.',
+demoBouton: 'Use the demo account (Léa)',
+email: 'Email', mdp: 'Password', voir: 'Show', masquer: 'Hide',
+oubli: 'Forgot your password?', valider: 'Log in',
+erreur: 'Incorrect email or password.',
+accueil: '← Home', creer: 'No account yet? Set up your batch',
+demo: 'Demo: no password is sent or stored. Any confirmed account accepts a password that meets the rules (8 characters, one capital, one digit).'
+}
+};
+function retourDemande() {
+var v = null;
+try { v = new URLSearchParams(location.search).get('retour'); } catch (e) {}
+return Garde.retourSur(v);
+}
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr', email: '', mdp: '', visible: false, erreur: false }; }
+afterRender(root) {
+var id = this.pendingFocus;
+this.pendingFocus = null;
+if (id) Parcours.focaliser(root.querySelector(id));
+}
+valider() {
+var r = Auth.seConnecter(this.state.email, this.state.mdp);
+if (!r.ok) { this.pendingFocus = '#email'; this.setState({ erreur: true }); return; }
+location.replace(retourDemande());
+}
+renderVals() {
+var self = this;
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+return {
+t: t, email: st.email, mdp: st.mdp,
+alerteStyle: st.erreur ? '' : HIDE, invalide: st.erreur ? 'true' : 'false',
+typeChamp: st.visible ? 'text' : 'password', visible: String(!!st.visible), libelleVoir: st.visible ? t.masquer : t.voir,
+saisirEmail: function (e) { self.setState({ email: e.target.value }); },
+saisirMdp: function (e) { self.setState({ mdp: e.target.value }); },
+basculerVue: function () { self.setState({ visible: !st.visible }); },
+remplirDemo: function () { self.pendingFocus = '[data-focus="valider"]'; self.setState({ email: DEMO.email, mdp: DEMO.mdp, erreur: false }); },
+valider: function () { self.valider(); }
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
