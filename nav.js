@@ -65,7 +65,7 @@
       '<button type="button" data-lang="fr" data-focus="lang-fr" aria-pressed="' + fr + '" style="' + (fr ? LANG_ON : LANG_OFF) + '">FR</button>' +
       '<button type="button" data-lang="en" data-focus="lang-en" aria-pressed="' + !fr + '" style="' + (fr ? LANG_OFF : LANG_ON) + '">EN</button></div>' +
       '<div style="border-top:1px solid #E7D6B8;padding-top:14px;display:flex;align-items:center;gap:10px">' +
-      '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
+      '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:#8A4F1C;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
       '<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:#6B5443">' + esc(role) + '</span></div></div>' +
       '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div></div></div>';
   }
@@ -83,6 +83,7 @@
     '.pq-nav-logo{width:32px!important;height:32px!important}' +
     '.pq-nav-nom{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
     '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
+    '.pq-nav-nom span{color:#8A4F1C!important}' +
     '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
     '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid #D9C29C;background:#FFFDF8;color:#5E3412;font:inherit;font-weight:700;cursor:pointer}' +
     '.pq-nav-panneau{display:none;position:absolute;left:-16px;right:-16px;top:calc(100% + 10px);padding:16px;background:#F3E6CF;border-bottom:1px solid #E7D6B8;box-shadow:0 14px 24px rgba(46,29,18,.18);max-height:calc(100vh - 64px);overflow:auto;gap:18px}' +
