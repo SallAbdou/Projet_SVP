@@ -13,6 +13,18 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .btn-plein:hover{background:#FFC85C;color:#2E1D12}
 .btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--braise);color:var(--braise);font-weight:700;font-size:14px;text-decoration:none}
 .btn-ligne:hover{background:var(--braise);color:#FFFFFF}
+/* Four illustré : un seul lien vers la news n°1 de la fournée. */
+.four-lien{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 12px 14px;border-radius:16px;color:var(--texte);text-decoration:none;text-align:center;transition:background .2s,transform .2s}
+.four-lien:hover{background:var(--miel);color:var(--texte);transform:translateY(-2px)}
+.four-lien:hover .four-cta{text-decoration:underline}
+.four-svg{display:block;width:100%;max-width:220px;height:auto}
+.four-titre{font-weight:700;font-size:16.5px;line-height:1.35;overflow-wrap:anywhere}
+.four-cta{font-weight:700;font-size:14px;color:var(--braise)}
+.four-vapeur{fill:none;stroke:#D9C29C;stroke-width:4;stroke-linecap:round;opacity:0;animation:pq-four-vapeur 3s ease-out infinite}
+.four-lueur{animation:pq-four-lueur 2.4s ease-in-out infinite alternate}
+@keyframes pq-four-vapeur{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
+@keyframes pq-four-lueur{from{opacity:.5}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.four-vapeur{animation:none;opacity:.8}.four-lueur{animation:none}.four-lien,.four-lien:hover{transition:none;transform:none}}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:1100px){.kpis{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}.kpis{grid-template-columns:repeat(2, minmax(0, 1fr))}.bars{gap:6px!important}}</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
@@ -71,17 +83,39 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
-<section aria-labelledby="next-t" style="background:#2E1D12;color:#FBF5EA;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
+<section aria-labelledby="next-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
 <h2 id="next-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.nextTitle}}</h2>
-<div style="{{nextStyle}}">
-<span class="{{next.chip}}" style="align-self:flex-start">{{next.state}}</span>
-<p style="margin:0;font-weight:700;font-size:17px;line-height:1.35">{{next.titre}}</p>
-<p style="margin:0;font-size:13.5px;color:#E9D8BA">{{next.pourToi}}</p>
-<a href="{{next.href}}" class="btn-plein" style="align-self:flex-start">{{t.nextCta}}</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<radialGradient id="pq-four-feu" cx="50%" cy="80%" r="75%"><stop offset="0" stop-color="#FFE08A"></stop><stop offset="0.45" stop-color="#FFB020"></stop><stop offset="1" stop-color="#F25C05"></stop></radialGradient>
+<linearGradient id="pq-four-pain" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE3A8"></stop><stop offset="0.55" stop-color="#F2C46D"></stop><stop offset="1" stop-color="#E3A54A"></stop></linearGradient>
+</defs><symbol id="pq-four" viewBox="0 0 200 170">
+<path class="four-vapeur" d="M78 40c-7-8 7-14 0-24" style="animation-delay:0s"></path>
+<path class="four-vapeur" d="M100 38c-7-8 7-14 0-24" style="animation-delay:1s"></path>
+<path class="four-vapeur" d="M122 40c-7-8 7-14 0-24" style="animation-delay:2s"></path>
+<rect x="34" y="154" width="18" height="10" rx="3" fill="#5E3412"></rect><rect x="148" y="154" width="18" height="10" rx="3" fill="#5E3412"></rect>
+<rect x="20" y="46" width="160" height="112" rx="16" fill="#8A4F1C"></rect>
+<rect x="20" y="46" width="160" height="24" rx="12" fill="#5E3412"></rect>
+<circle cx="44" cy="58" r="5" fill="#F3E6CF"></circle><circle cx="64" cy="58" r="5" fill="#F3E6CF"></circle><circle cx="156" cy="58" r="4" fill="#FFB020"></circle>
+<rect x="34" y="78" width="132" height="70" rx="10" fill="#2E1D12"></rect>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="#9A3412"></rect>
+<rect class="four-lueur" x="44" y="86" width="112" height="46" rx="8" fill="url(#pq-four-feu)"></rect>
+<path d="M60 130c0-15 18-26 40-26s40 11 40 26z" fill="url(#pq-four-pain)" stroke="#B87420" stroke-width="1.5"></path>
+<path d="M78 114l6 7M95 110l6 7M112 112l6 7" stroke="#8A4F1C" stroke-width="3" stroke-linecap="round"></path>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="none" stroke="#D9C29C" stroke-width="2"></rect>
+<rect x="70" y="137" width="60" height="5" rx="2.5" fill="#D9C29C"></rect>
+</symbol></svg>
+<a href="/fournee#n1" class="four-lien" aria-label="{{fourLabel}}" style="{{nextStyle}}">
+<svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
+<span class="four-titre">{{next.titre}}</span>
+<span class="four-cta">{{t.fourCta}}</span>
+</a>
+<div role="status" style="{{fourAttenteStyle}}">
+<svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
+<p style="margin:0;font-size:14px;color:#6B5443">{{t.nextLoading}}</p>
 </div>
 <div style="{{nextEmptyStyle}}">
-<p style="margin:0;font-size:14px;color:#E9D8BA">{{nextEmpty}}</p>
-<a href="/fournee" class="btn-plein" style="{{nextEmptyCtaStyle}}">{{t.nextEmptyCta}}</a>
+<p style="margin:0;font-size:14px;color:#6B5443">{{t.nextEmpty}}</p>
+<a href="/fournee" class="btn-plein" style="align-self:flex-start">{{t.nextEmptyCta}}</a>
 </div>
 </section>
 <section aria-labelledby="gain-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
@@ -133,7 +167,7 @@ bar: '{label} : {n} impressions, sujet {etat}',
 etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
 noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
 insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
-nextTitle: 'Tout juste sorti du four', nextCta: 'Pétrir le post',
+nextTitle: 'Tout juste sorti du four', fourCta: 'Voir dans la fournée →', fourLabel: 'Voir la première news du jour : {titre}',
 nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
 gainTitle: 'Ce que ta veille a rapporté', gainContacts: 'Prises de contact', gainPosts: 'Posts publiés grâce à la fournée', gainSince: 'Depuis le début',
 pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger →', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
@@ -155,7 +189,7 @@ bar: '{label}: {n} impressions, topic {etat}',
 etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
 noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
 insightNeutral: 'Publish and report your figures to see what works best.',
-nextTitle: 'Fresh out of the oven', nextCta: 'Knead the post',
+nextTitle: 'Fresh out of the oven', fourCta: 'See it in the batch →', fourLabel: 'See today’s first news: {titre}',
 nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
 gainTitle: 'What your watch brought in', gainContacts: 'Contact requests', gainPosts: 'Posts published thanks to the batch', gainSince: 'Since the start',
 pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry →', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
@@ -213,6 +247,7 @@ try { u = Auth.utilisateurCourant(); } catch (e) {}
 var jour = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 var champs = ['posts', 'impressions', 'reactions', 'republications', 'contacts'];
 var news = Bento.pickTopics(articles, 1, Store.refsIgnorees(store, Store.dateDuJour(new Date())))[0];
+var chauffe = !charge || !!(data && data.etat === 'attente');
 var sauves = GardeManger.trier(store.sauves).slice(0, 3);
 return {
 t: t,
@@ -244,11 +279,12 @@ barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre
 };
 }),
 ins: !charge ? { avant: t.loading, gras: '', apres: '' } : Comptoir.phraseAnalyse(ratio, lang) || { avant: t.insightNeutral, gras: '', apres: '' },
-nextStyle: news ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
-nextEmptyStyle: news ? HIDE : 'display: flex; flex-direction: column; gap: 10px',
-nextEmpty: charge && !(data && data.etat === 'attente') ? t.nextEmpty : t.nextLoading,
-nextEmptyCtaStyle: charge && !(data && data.etat === 'attente') ? 'align-self: flex-start' : HIDE,
-next: news ? { chip: CHIP(news.feu), state: t.etats[news.feu], titre: news.titre, pourToi: news.pourToi || '', href: Bento.lienFournil(news.ref) } : { chip: 'pq-cache', state: '', titre: '', pourToi: '', href: '/fournee' },
+// Four : lien vers la news n°1 quand la fournée est prête, four qui chauffe sans lien pendant l'attente.
+nextStyle: news ? '' : HIDE,
+fourAttenteStyle: !news && chauffe ? 'display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center' : HIDE,
+nextEmptyStyle: !news && !chauffe ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
+next: { titre: news ? news.titre : '' },
+fourLabel: news ? remplir(t.fourLabel, { titre: news.titre }) : '',
 gainContacts: num(bilan.contacts),
 gainPosts: num(bilan.posts),
 pantry: sauves.map(function (a) {
