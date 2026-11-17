@@ -30,7 +30,9 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .fo-voile{position:fixed;inset:0;z-index:40;background:rgba(46,29,18,.55);display:flex;align-items:center;justify-content:center;padding:16px}
 .fo-boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:#FFFDF8;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);padding:22px;display:flex;flex-direction:column;gap:14px}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
-.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+@keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
 @media (max-width:640px){.fo-carte{padding:18px}.fo-choix{padding:14px 16px}}
 </style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>

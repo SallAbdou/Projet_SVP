@@ -32,7 +32,7 @@ a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
 <span style="font-weight:700">{{waitText}}</span>
 <a href="/fournil" class="btn-ligne">{{t.waitCta}}</a>
 </div>
-<section aria-label="{{t.kpiLabel}}" style="display:flex;flex-direction:column;gap:12px">
+<section aria-label="{{t.kpiLabel}}" aria-busy="{{busy}}" style="display:flex;flex-direction:column;gap:12px">
 <p style="margin:0;font-size:14px;color:#6B5443"><strong style="color:#2E1D12">{{t.kpiTitle}}</strong></p>
 <div class="kpis">
 <sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
@@ -70,7 +70,7 @@ a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
 </sc-for>
 </p>
 </div>
-<p style="{{noBarsStyle}}">{{t.noBars}}</p>
+<p style="{{noBarsStyle}}">{{noBars}}</p>
 <p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{insight}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
@@ -143,7 +143,7 @@ noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte 
 insight: 'Tes posts sur des sujets tout chauds font en moyenne {r} fois plus d’impressions que les autres : sers-les vite.',
 insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
 nextTitle: 'Tout juste sorti du four', nextCta: 'Pétrir le post',
-nextLoading: 'La fournée chauffe…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
+nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
 gainTitle: 'Ce que ta veille a rapporté', gainContacts: 'Prises de contact', gainPosts: 'Posts publiés grâce à la fournée', gainSince: 'Depuis le début',
 pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger →', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
 fraicheur: { chaud: 'Encore chaud', enfourner: 'À enfourner avant demain', rassis: 'Rassis' },
@@ -166,7 +166,7 @@ noBars: 'No figures yet: publish a post from the kitchen, then report its figure
 insight: 'Your posts on piping hot topics get {r} times the impressions of the others on average: serve them fast.',
 insightNeutral: 'Publish and report your figures to see what works best.',
 nextTitle: 'Fresh out of the oven', nextCta: 'Knead the post',
-nextLoading: 'The batch is baking…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
+nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
 gainTitle: 'What your watch brought in', gainContacts: 'Contact requests', gainPosts: 'Posts published thanks to the batch', gainSince: 'Since the start',
 pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry →', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
 fraicheur: { chaud: 'Still warm', enfourner: 'Bake before tomorrow', rassis: 'Gone stale' },
@@ -188,12 +188,21 @@ var self = this;
 Promise.all([
 Api.chargerFournee().catch(function () { return null; }),
 Api.chargerPosts().catch(function () { return []; })
-]).then(function (res) { self.setState({ data: res[0], exemples: res[1], fourneeFinie: true }); });
+]).then(function (res) { self.setState({ data: res[0], exemples: res[1], fourneeFinie: true }); self.relancer(); });
 // Retour depuis le fournil par « précédent » : la page peut venir du cache, on relit le store.
 window.addEventListener('pageshow', function (e) { if (e.persisted) self.setState({ store: Store.charger(stockage()) }); });
 }
+// Juste après l'inscription, la fournée répond « attente » : on réinterroge toutes les 2 s (comme /fournee).
+relancer() {
+var self = this;
+if (!this.state.data || this.state.data.etat !== 'attente') return;
+setTimeout(function () {
+Api.chargerFournee().catch(function () { return null; }).then(function (d) { self.setState({ data: d }); self.relancer(); });
+}, 2000);
+}
 renderVals() {
 var st = this.state || {};
+var charge = !!st.fourneeFinie;
 var lang = st.lang || 'fr';
 var t = T[lang];
 var locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
@@ -226,14 +235,16 @@ kpis: champs.map(function (c, i) {
 var last = i === champs.length - 1;
 var e = k.ecarts[c];
 return {
-label: t.kpis[i], value: num(k.actuel[c]), sub: texteEcart(e, i === 0 ? 'nombre' : 'pourcent', t),
+label: t.kpis[i], value: charge ? num(k.actuel[c]) : '…', sub: charge ? texteEcart(e, i === 0 ? 'nombre' : 'pourcent', t) : '',
 box: last ? 'background: #8A4F1C; color: #FFFDF8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
 labelStyle: last ? 'font-size: 13px; color: #F6E7CC' : 'font-size: 13px; color: #6B5443',
 subStyle: last ? 'font-size: 12px; color: #F6E7CC' : 'font-size: 12px; color: ' + SENS[e.sens]
 };
 }),
-barsStyle: barres.length ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
-noBarsStyle: barres.length ? HIDE : 'margin: 0; color: #6B5443',
+barsStyle: charge && barres.length ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
+noBarsStyle: charge && barres.length ? HIDE : 'margin: 0; color: #6B5443',
+noBars: charge ? t.noBars : t.loading,
+busy: String(!charge),
 bars: barres.map(function (b) {
 return {
 value: num(b.impressions), label: b.label, dotStyle: DOT[b.feu],
@@ -242,11 +253,11 @@ barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + BAR[b.feu] +
 };
 }),
 legend: ['vert', 'orange', 'rouge'].map(function (f) { return { label: t.etats[f], dotStyle: DOT[f] }; }),
-insight: ratio === null ? t.insightNeutral : remplir(t.insight, { r: new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(ratio) }),
+insight: !charge ? t.loading : ratio === null ? t.insightNeutral : remplir(t.insight, { r: new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(ratio) }),
 nextStyle: news ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
 nextEmptyStyle: news ? HIDE : 'display: flex; flex-direction: column; gap: 10px',
-nextEmpty: st.fourneeFinie ? t.nextEmpty : t.nextLoading,
-nextEmptyCtaStyle: st.fourneeFinie ? 'align-self: flex-start' : HIDE,
+nextEmpty: charge && !(data && data.etat === 'attente') ? t.nextEmpty : t.nextLoading,
+nextEmptyCtaStyle: charge && !(data && data.etat === 'attente') ? 'align-self: flex-start' : HIDE,
 next: news ? { chip: CHIP[news.feu], state: t.etats[news.feu], titre: news.titre, pourToi: news.pourToi || '', href: Bento.lienFournil(news.ref) } : { chip: HIDE, state: '', titre: '', pourToi: '', href: '/fournee' },
 gainContacts: num(bilan.contacts),
 gainPosts: num(bilan.posts),

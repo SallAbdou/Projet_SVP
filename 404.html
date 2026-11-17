@@ -3,6 +3,7 @@
 <title>Attendez, on cook · Votre pAIn quotidien</title>
 <meta name="pq-titre-en" content="Hold on, we’re cooking · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800;9..144,900&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
 <style>
 body{margin:0;background:#FBF5EA}
 a{color:#8A4F1C}a:hover{color:#5E3412}
@@ -17,18 +18,7 @@ a{color:#8A4F1C}a:hover{color:#5E3412}
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="min-height:100vh;box-sizing:border-box;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5;display:flex;flex-direction:column;padding:24px 40px 40px">
-<header style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px">
-<a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#2E1D12">
-<span style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center">
-<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg>
-</span>
-<span style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px">Votre p<span style="color:#B5651D">AI</span>n quotidien</span>
-</a>
-<div role="group" aria-label="{{t.langLabel}}" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:#E9D8BA">
-<button type="button" aria-pressed="{{frPressed}}" onClick="{{setFr}}" style="{{frStyle}}">FR</button>
-<button type="button" aria-pressed="{{enPressed}}" onClick="{{setEn}}" style="{{enStyle}}">EN</button>
-</div>
-</header>
+<header class="entete" data-entete style="padding-left:0;padding-right:0"></header>
 <main style="flex:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:40px 72px;padding:32px 0">
 <svg width="340" height="340" viewBox="0 0 340 340" role="img" aria-label="{{t.ovenAlt}}" style="max-width:100%;height:auto;flex:0 1 340px">
 <g fill="none" stroke="#C9A97A" stroke-width="5" stroke-linecap="round">
@@ -81,7 +71,7 @@ langLabel: 'Langue', ovenAlt: 'Un four à pain avec une miche en train de cuire'
 title: 'Attendez, on cook.',
 text: 'Cette page est encore au four. Le boulanger la sort dès qu’elle est bien dorée. En attendant, ta fournée du jour est prête.',
 cook: 'Cuisson', hint: 'Encore quelques minutes. Pas la peine d’ouvrir la porte du four.',
-back: 'Retour au comptoir', batch: 'Voir la fournée du jour',
+back: 'Retour à l’accueil', batch: 'Voir la fournée du jour',
 footer: 'Erreur 404 · page introuvable'
 },
 en: {
@@ -89,7 +79,7 @@ langLabel: 'Language', ovenAlt: 'A bread oven with a loaf baking inside',
 title: 'Hold on, we’re cooking.',
 text: 'This page is still in the oven. The baker will take it out once it’s golden. In the meantime, today’s batch is ready.',
 cook: 'Baking', hint: 'A few more minutes. No need to open the oven door.',
-back: 'Back to the counter', batch: 'See today’s batch',
+back: 'Back to home', batch: 'See today’s batch',
 footer: 'Error 404 · page not found'
 }
 };
@@ -109,4 +99,4 @@ frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off
 };
 }
 }
-</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

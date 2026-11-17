@@ -19,7 +19,9 @@ a.gm-knead:hover{background:#5E3412;color:#FFFDF8}
 .gm-sec:hover{border-color:#8A4F1C;color:#2E1D12}
 @media (max-width:640px){.gm-item{padding:16px}.gm-actions{justify-content:flex-start}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
-.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+@keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
 </style>
@@ -32,7 +34,7 @@ a.gm-knead:hover{background:#5E3412;color:#FFFDF8}
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:24px">
 <header style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h1>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </header>
 <div role="group" aria-label="{{t.filterLabel}}" style="{{filtersStyle}}">
