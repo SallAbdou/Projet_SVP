@@ -44,3 +44,34 @@ test('fusionner trie du plus récent au plus ancien', () => {
   const b = [post('z', 3)];
   assert.deepEqual(C.fusionner(a, b).map(p => p.id), ['y', 'z', 'x']);
 });
+
+test('totaux et kpis découpent les fenêtres de 30 jours', () => {
+  const posts = [
+    post('j0', 0, chiffres(100, 1)), post('j29', 29, chiffres(200)), post('j30', 30, chiffres(50, 2)),
+    post('j59', 59, chiffres(50)), post('j60', 60, chiffres(999)),
+    post('futur', -2, chiffres(10)), post('sans', 2, null), post('illisible', 'pas une date', chiffres(7))
+  ];
+  const k = C.kpis(posts, MAINTENANT);
+  assert.equal(k.actuel.posts, 4);
+  assert.equal(k.actuel.impressions, 310);
+  assert.equal(k.actuel.contacts, 1);
+  assert.equal(k.precedent.posts, 2);
+  assert.equal(k.precedent.impressions, 100);
+  assert.equal(k.precedent.contacts, 2);
+  assert.deepEqual(k.ecarts.posts, { sens: 'hausse', valeur: 2 });
+  assert.deepEqual(k.ecarts.impressions, { sens: 'hausse', valeur: 210 });
+  assert.deepEqual(k.ecarts.contacts, { sens: 'baisse', valeur: 50 });
+  assert.deepEqual(C.totaux([], MAINTENANT, 0, 30), { posts: 0, impressions: 0, reactions: 0, republications: 0, commentaires: 0, contacts: 0 });
+});
+
+test('ecart en nombre ou en pourcentage, stable et nouveau', () => {
+  assert.deepEqual(C.ecart(6, 4, 'nombre'), { sens: 'hausse', valeur: 2 });
+  assert.deepEqual(C.ecart(3, 4, 'nombre'), { sens: 'baisse', valeur: 1 });
+  assert.deepEqual(C.ecart(4, 4, 'nombre'), { sens: 'stable', valeur: 0 });
+  assert.deepEqual(C.ecart(4820, 3493, 'pourcent'), { sens: 'hausse', valeur: 38 });
+  assert.deepEqual(C.ecart(27, 27, 'pourcent'), { sens: 'stable', valeur: 0 });
+  assert.deepEqual(C.ecart(1001, 1000, 'pourcent'), { sens: 'stable', valeur: 0 });
+  assert.deepEqual(C.ecart(5, 0, 'pourcent'), { sens: 'nouveau', valeur: 0 });
+  assert.deepEqual(C.ecart(0, 0, 'pourcent'), { sens: 'stable', valeur: 0 });
+  assert.deepEqual(C.ecart(80, 100, 'pourcent'), { sens: 'baisse', valeur: 20 });
+});

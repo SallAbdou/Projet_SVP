@@ -4,6 +4,7 @@
 (function (root) {
   var JOUR = 86400000;
   var FEUX = ['vert', 'orange', 'rouge'];
+  var CHAMPS = ['impressions', 'reactions', 'republications', 'commentaires', 'contacts'];
 
   function liste(v) { return Array.isArray(v) ? v : []; }
   function temps(iso) {
@@ -62,8 +63,46 @@
       .map(function (x) { return x.p; });
   }
 
+  // Posts dont l'âge est dans [debutJours, finJours[ ; une date future compte comme âge 0, une date illisible est ignorée.
+  // Les posts sans chiffres comptent dans « posts » mais pas dans les sommes.
+  function totaux(posts, maintenantIso, debutJours, finJours) {
+    var maintenant = temps(maintenantIso);
+    var r = { posts: 0 };
+    CHAMPS.forEach(function (c) { r[c] = 0; });
+    liste(posts).forEach(function (p) {
+      var t = temps(p.publieLe);
+      if (t === null) return;
+      var age = Math.max(0, (maintenant - t) / JOUR);
+      if (age < debutJours || age >= finJours) return;
+      r.posts++;
+      if (p.chiffres) CHAMPS.forEach(function (c) { r[c] += Number(p.chiffres[c]) || 0; });
+    });
+    return r;
+  }
+
+  function ecart(actuel, precedent, mode) {
+    var valeur;
+    if (mode === 'nombre') valeur = Math.abs(actuel - precedent);
+    else if (precedent === 0) return { sens: actuel > 0 ? 'nouveau' : 'stable', valeur: 0 };
+    else valeur = Math.round(Math.abs(actuel - precedent) / precedent * 100);
+    if (valeur === 0) return { sens: 'stable', valeur: 0 };
+    return { sens: actuel > precedent ? 'hausse' : 'baisse', valeur: valeur };
+  }
+
+  function kpis(posts, maintenantIso) {
+    var actuel = totaux(posts, maintenantIso, 0, 30);
+    var precedent = totaux(posts, maintenantIso, 30, 60);
+    var ecarts = { posts: ecart(actuel.posts, precedent.posts, 'nombre') };
+    ['impressions', 'reactions', 'republications', 'contacts'].forEach(function (c) {
+      ecarts[c] = ecart(actuel[c], precedent[c], 'pourcent');
+    });
+    return { actuel: actuel, precedent: precedent, ecarts: ecarts };
+  }
+
   var Comptoir = {
-    libelleCourt: libelleCourt, depuisExemples: depuisExemples, depuisPublies: depuisPublies, fusionner: fusionner
+    CHAMPS: CHAMPS,
+    libelleCourt: libelleCourt, depuisExemples: depuisExemples, depuisPublies: depuisPublies, fusionner: fusionner,
+    totaux: totaux, ecart: ecart, kpis: kpis
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Comptoir;
