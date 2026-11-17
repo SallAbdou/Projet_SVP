@@ -76,3 +76,13 @@ test('chaque page charge /charte.css avant toute autre feuille de style', () => 
     for (const x of autres) assert.ok(i < x, p + ' charge charte.css trop tard');
   }
 });
+
+test('ampoule « éclair de génie » : couleur et classes dans la charte, décorative devant chaque Pour toi', () => {
+  assert.match(css, /--eclair:\s*#[0-9A-Fa-f]{6}/);
+  assert.match(css, /\.pour-toi\{/);
+  assert.match(css, /\.ampoule\{[^}]*var\(--eclair\)/);
+  for (const p of ['fournee.html', 'fournil.html']) {
+    const h = fs.readFileSync(path.join(RACINE, p), 'utf8');
+    assert.match(h, /<svg class="ampoule"[^>]*aria-hidden="true"[^>]*focusable="false"/, p);
+  }
+});

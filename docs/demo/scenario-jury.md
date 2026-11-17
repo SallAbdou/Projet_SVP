@@ -24,10 +24,10 @@ Tout est simulé dans le navigateur : aucun e-mail, aucun mot de passe, aucune p
 | 8 | `/fournee`, bento | Clic sur « Mettre de côté » de la news n°2 (le message « Mis de côté · Annuler » apparaît). Montrer la pastille de couleur et la monétisation de la n°1. Clic sur « Personnaliser », puis sur la carte « Concentrée » dans « Mise en page », puis « Équilibrée », puis « Terminer ». | « Chaque news est notée : tout chaud, à pétrir ou rassis, avec trois scores. On garde ce qui nous intéresse pour plus tard, chaque news renvoie à sa source. La page se personnalise : mises en page toutes faites ou disposition à soi. » | 1:00 |
 | 9 | `/fournee` | Clic sur « Pétrir un post » de la news n°1 (dorée). | « On transforme la meilleure news en post. » | 0:05 |
 | 10 | `/fournil` | Choisir le ton « Provocateur » dans la liste, montrer la checklist et l'aperçu LinkedIn, clic sur « Valider et publier sur LinkedIn », puis « Confirmer la publication ». | « Trois tons, deux langues, une checklist de qualité. La publication est simulée pour la démo. » | 1:00 |
-| 11 | `/comptoir` | Clic sur « Le comptoir » dans la nav. | « Le comptoir fait les comptes : sept posts ce mois-ci, un attend ses chiffres. Les sujets tout chauds font près de deux fois plus d'impressions. » | 0:40 |
+| 11 | `/comptoir` | Clic sur « Le comptoir » dans la nav. Montrer les KPI et la phrase sous le graphique, puis clic sur le four « Tout juste sorti du four » : retour sur la fournée, la news n°1 est mise en évidence (halo doré 2 s, focus sur « Pétrir un post »). Revenir au comptoir par la nav. | « Le comptoir fait les comptes : sept posts ce mois-ci, un attend ses chiffres. Sers-les vite : les sujets tout chauds font près de deux fois plus d'audience. Et la prochaine fournée est déjà sortie du four : un clic et on y est. » | 0:50 |
 | 12 | `/garde-manger` | Clic sur « Le garde-manger ». | « Et l'article mis de côté est là, avec sa fraîcheur. Fin de la démo. » | 0:20 |
 
-Total indicatif : 6 min (étape 8 allongée de 10 s pour la mise en page).
+Total indicatif : 6 min (étape 8 allongée de 10 s pour la mise en page, étape 11 de 10 s pour le four).
 
 **Durées mesurées lors de la répétition du 17 novembre 2026** (navigateur piloté, sans parole, après `?demo=reset`) : landing à mot de passe validé en 1 min 29 s (étapes 1 à 6), four visible 4 s, publication au fournil à 2 min 06 s, comptoir à 2 min 11 s, garde-manger et plan B ensuite. Avec les phrases du tableau, la démo tient dans 5 à 7 minutes.
 

@@ -246,8 +246,19 @@
     return 'immediat';
   }
 
+  // Arrivée par une ancre « #n1 » à « #n7 » (lien du comptoir) : bloc visé s'il est visible,
+  // sinon premier bloc news visible dans l'ordre n1 à n7 ; null pour toute autre ancre.
+  function cibleAncre(hash, visibles) {
+    var m = /^#(n[1-7])$/.exec(String(hash || ''));
+    var v = Array.isArray(visibles) ? visibles : [];
+    if (!m) return null;
+    if (has(v, m[1])) return m[1];
+    var news = TILE_IDS.filter(function (id) { return id !== 'graph' && has(v, id); });
+    return news.length ? news[0] : null;
+  }
+
   var Bento = {
-    departGlisser: departGlisser,
+    departGlisser: departGlisser, cibleAncre: cibleAncre,
     TILE_IDS: TILE_IDS, SIZES: SIZES, COUNTS: COUNTS, STORAGE_KEY: STORAGE_KEY,
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,
