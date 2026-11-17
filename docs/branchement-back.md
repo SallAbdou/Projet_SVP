@@ -1,0 +1,133 @@
+# Brancher le vrai back (Supabase + n8n + Tally)
+
+Pour Abdou (accès Supabase) et l'équipe n8n. Le site tourne aujourd'hui **en mode démo** : tout est simulé dans le navigateur. Ce guide explique comment passer en **mode réel**, le tester, et revenir en démo.
+
+> La démo devant le jury se fait en mode démo. Ne passez en mode réel qu'après la soutenance, ou sur une copie du site.
+
+Design détaillé (formats exacts, sources) : `docs/superpowers/specs/2026-11-17-lot7-branchement-design.md`.
+
+## Vue d'ensemble
+
+```
+Tally ──webhook──▶ WF2 (n8n) ──invitation──▶ Supabase Auth ──e-mail──▶ l'abonné
+                                                                     │ clic sur le lien
+                                                                     ▼
+                         site /creer-mot-de-passe (choisit son mot de passe, session ouverte)
+                                                                     │
+                         site /fournee ──POST + jeton──▶ WF3 (n8n) ──vérifie le jeton──▶ Supabase
+```
+
+Le front ne contient que la **clé publique** Supabase. La clé `service_role` reste dans n8n.
+
+## 1. Remplir `config.js`
+
+À la racine du dépôt :
+
+```js
+var PQ_CONFIG = {
+  mode: 'reel',
+  supabaseUrl: 'https://<votre-projet>.supabase.co',
+  supabaseCleAnon: '<clé publique : anon ou publishable>',
+  webhookFournee: 'https://<votre-n8n>/webhook/<chemin-de-WF3>',
+  tallyUrl: 'https://tally.so/r/RWWqKd',
+  siteUrl: 'https://team42svp.vercel.app',
+  delaiReseauMs: 8000
+};
+```
+
+- Les trois adresses doivent commencer par `https://`. S'il manque quelque chose, le site **reste en démo** et l'écrit dans la console du navigateur.
+- **Jamais la clé `service_role`** (ou « secret ») dans ce fichier : elle donnerait tous les droits à n'importe quel visiteur.
+- Un test (`tests/config.test.js`) vérifie que le fichier commité est en mode démo sans valeur. Pour la production, faites le changement sur une branche dédiée et adaptez ce test en connaissance de cause.
+
+## 2. Régler Supabase (tableau de bord, rubrique Authentication)
+
+1. **URL Configuration**
+   - Site URL : `https://team42svp.vercel.app`
+   - Redirect URLs : ajouter `https://team42svp.vercel.app/creer-mot-de-passe` (et `http://localhost:4174/creer-mot-de-passe` pour tester en local).
+2. **Emails, Templates** : garder le lien `{{ .ConfirmationURL }}` et traduire en français, en tutoyant :
+   - *Invite user* : objet « Confirme ton adresse pour recevoir ta fournée », texte « Bonjour {{ .Data.prenom }}, ta fournée est presque prête. Clique ici pour choisir ton mot de passe : … ».
+   - *Reset password* : objet « Réinitialise ton mot de passe », texte « Tu as demandé à changer ton mot de passe. Clique ici pour en choisir un nouveau. Si ce n'est pas toi, ignore ce message. Le lien reste valable 1 heure. »
+3. **SMTP Settings** : brancher un service d'envoi (Resend, Brevo…). L'envoi par défaut de Supabase est très limité (quelques e-mails par heure, réservé aux tests) et ne suffit pas pour de vrais abonnés. Il faut un domaine vérifié chez le service choisi.
+4. Laisser activée la connexion par e-mail et mot de passe. Le front impose 8 caractères, une majuscule et un chiffre : réglez au moins 8 caractères de longueur minimale côté Supabase.
+
+## 3. WF2 : inviter l'abonné après le Tally
+
+Après le nœud « Lire les réponses » (qui a le prénom, l'e-mail et le profil), ajouter :
+
+**Nœud HTTP « Inviter dans Supabase »**
+- Méthode `POST`, adresse `https://<votre-projet>.supabase.co/auth/v1/invite?redirect_to=https://team42svp.vercel.app/creer-mot-de-passe`
+- En-têtes : `apikey: <service_role>`, `Authorization: Bearer <service_role>`, `Content-Type: application/json` (la clé dans un identifiant n8n, pas en clair dans le nœud).
+- Corps :
+
+```json
+{
+  "email": "{{ e-mail lu dans le Tally }}",
+  "data": {
+    "prenom": "{{ prénom }}",
+    "abonne_id": "{{ identifiant de l'abonné (ex. id de l'enregistrement Airtable) }}",
+    "profil": { "metiers": ["…"], "thematiques": ["…"], "relation": "En couple", "langue": "…" }
+  }
+}
+```
+
+`data` devient `user_metadata` : le site y lit le prénom et le profil (nav, « Mon profil »).
+
+**Nœud HTTP « Fixer abonne_id » (recommandé, sécurité)**
+`user_metadata` peut être modifié par l'utilisateur lui-même. Pour que personne ne puisse se faire passer pour un autre abonné, rangez aussi l'identifiant dans `app_metadata`, que seule la clé `service_role` peut écrire :
+- `PUT https://<votre-projet>.supabase.co/auth/v1/admin/users/{{ id renvoyé par l'invitation }}`, mêmes en-têtes, corps `{ "app_metadata": { "abonne_id": "…" } }`.
+
+Le site prend `app_metadata.abonne_id` en priorité, sinon `user_metadata.abonne_id`.
+
+Si l'e-mail existe déjà, Supabase répond une erreur : prévoir une branche qui l'ignore (l'abonné peut utiliser « Mot de passe oublié »).
+
+## 4. WF3 : vérifier le jeton au lieu de lire `body.id`
+
+Le site appelle maintenant WF3 ainsi :
+
+```
+POST <webhookFournee>
+Authorization: Bearer <jeton de session de l'abonné>
+Content-Type: application/json
+
+{}
+```
+
+À changer dans WF3 :
+1. **Remplacer la lecture de `body.id`** par un nœud HTTP `GET https://<votre-projet>.supabase.co/auth/v1/user` avec les en-têtes `apikey: <clé publique ou service_role>` et `Authorization: <l'en-tête Authorization reçu, recopié tel quel>`.
+   - Réponse 200 : l'utilisateur. Prendre `app_metadata.abonne_id` (sinon `user_metadata.abonne_id`) et continuer comme avant avec cet identifiant.
+   - Réponse 401 ou 403 : répondre `{ "etat": "invalide" }`.
+2. **Réponse inchangée** : `{ etat, prenom, articles: [ … ] }` comme aujourd'hui.
+3. **CORS** : le navigateur envoie d'abord une requête `OPTIONS` (à cause de l'en-tête `Authorization`). Le webhook doit répondre à `OPTIONS` et à `POST` avec :
+   - `Access-Control-Allow-Origin: https://team42svp.vercel.app` (ajouter `http://localhost:4174` pour les tests locaux)
+   - `Access-Control-Allow-Methods: POST, OPTIONS`
+   - `Access-Control-Allow-Headers: Authorization, Content-Type`
+   Dans n8n, le nœud Webhook a une option d'origines autorisées (CORS) dans ses options ; sinon, renvoyer ces en-têtes depuis le nœud « Respond to Webhook ». À vérifier sur votre version de n8n.
+4. **Rapidité** : au-delà de 8 s (`delaiReseauMs`), le site abandonne et affiche la fournée d'exemple avec la mention « Fournée d'exemple : n8n ne répond pas ». Si la sélection n'est pas prête, répondre vite `{ "etat": "attente" }` : le site redemande toutes les 2 s.
+
+## 5. Tally
+
+Dans les réglages du formulaire, page de fin : **rediriger vers** `https://team42svp.vercel.app/verifie-tes-mails`. Cette page affiche alors « On vient de t'envoyer un e-mail… ». En mode réel, les boutons « Régler ma fournée » mènent directement au Tally.
+
+## 6. 5 ou 7 news
+
+WF2 et WF4 sélectionnent aujourd'hui **5 articles**. Le site propose 1, 3, 5 ou 7 news et **cache automatiquement les emplacements sans sujet** : avec 5 articles, le choix « 7 » en affiche 5. Deux options, à trancher en équipe :
+- n8n sélectionne 7 articles : tous les choix du site sont pleins ;
+- n8n garde 5 : rien à changer, le choix 7 montre simplement 5 news.
+
+## 7. Tester de bout en bout
+
+1. Remplir `config.js` (étape 1) sur une branche de test, déployer (ou servir en local et ajouter `localhost` dans Supabase et le CORS de WF3).
+2. Remplir le Tally avec une adresse à vous : vous devez arriver sur `/verifie-tes-mails`, puis recevoir l'e-mail d'invitation en français.
+3. Cliquer le lien : `/creer-mot-de-passe` affiche votre adresse. Choisir un mot de passe : arrivée sur `/fournee`.
+4. `/fournee` montre vos articles, **sans** la mention « Fournée d'exemple ». Si la mention apparaît : regarder l'onglet Réseau du navigateur (requête vers WF3 : CORS, 401, délai ?).
+5. Se déconnecter, se reconnecter sur `/connexion`.
+6. « Mot de passe oublié » : recevoir l'e-mail, choisir un nouveau mot de passe.
+7. Lien expiré ou déjà utilisé : la page dit « Ce lien n'est plus valable ».
+
+## 8. Revenir en mode démo
+
+Remettre `mode: 'demo'` dans `config.js` (et vider les trois champs avant tout commit sur `main`), puis redéployer. Ouvrir `https://team42svp.vercel.app/?demo=reset` pour repartir d'une démo propre. Les deux modes ne partagent rien : la démo est dans `localStorage` sous `pq-auth`, le mode réel sous `pq-auth-reel`.
+
+## Ce qui n'a pas pu être testé
+
+Le front a été testé avec un `fetch` simulé et avec de fausses adresses (le site retombe proprement sur l'exemple et affiche des erreurs claires). **Le vrai Supabase et le vrai n8n n'ont pas été testés** : la première vraie mise en route se fera avec ce guide.

@@ -71,6 +71,11 @@ test('utilisateurDepuisSession : même forme que le compte de démo', () => {
   assert.equal(R.utilisateurDepuisSession(null), null);
 });
 
+test('utilisateurDepuisSession : abonne_id de app_metadata prioritaire (non modifiable par l’utilisateur)', () => {
+  const u = Object.assign({}, USER, { app_metadata: { abonne_id: 'recSur' } });
+  assert.equal(R.utilisateurDepuisSession({ user: u }).abonneId, 'recSur');
+});
+
 test('seConnecter : requête exacte, session gardée sous pq-auth-reel', async () => {
   const f = faux(reponse(200, SESSION_OK));
   const { a, storage } = adaptateur(f);

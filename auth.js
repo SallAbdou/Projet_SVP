@@ -301,8 +301,10 @@
     if (!s || !estObjet(s.user)) return null;
     var md = estObjet(s.user.user_metadata) ? s.user.user_metadata : {};
     var p = estObjet(md.profil) ? md.profil : {};
+    // app_metadata n'est modifiable que par la clé service_role (n8n) : il fait foi pour abonne_id.
+    var app = estObjet(s.user.app_metadata) ? s.user.app_metadata : {};
     return {
-      abonneId: String(md.abonne_id || ''), prenom: String(md.prenom || ''), email: cleEmail(s.user.email), statut: 'actif',
+      abonneId: String(app.abonne_id || md.abonne_id || ''), prenom: String(md.prenom || ''), email: cleEmail(s.user.email), statut: 'actif',
       profil: { metiers: chaines(p.metiers), thematiques: chaines(p.thematiques), relation: String(p.relation || ''), langue: String(p.langue || '') },
       inscritLe: null, activeLe: null, fourOuvertLe: null
     };
