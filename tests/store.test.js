@@ -97,3 +97,16 @@ test('dateDuJour au format YYYY-MM-DD, heure locale', () => {
   assert.equal(S.dateDuJour(new Date(2026, 0, 5, 23, 59)), '2026-01-05');
   assert.equal(S.dateDuJour(new Date(2026, 10, 17, 0, 1)), '2026-11-17');
 });
+
+test('remettre restaure l\'article d\'origine, sans doublon', () => {
+  const avecA = S.mettreDeCote(S.etatInitial(), art, T0);
+  const original = avecA.sauves[0];
+  const vide = S.retirer(avecA, 'recA');
+  const avant = JSON.stringify(vide);
+  const remis = S.remettre(vide, original);
+  assert.deepEqual(remis.sauves, [original]);
+  assert.equal(remis.sauves[0].savedAt, T0);
+  assert.equal(JSON.stringify(vide), avant, 'entrée non mutée');
+  assert.equal(S.remettre(remis, original).sauves.length, 1);
+  assert.equal(S.remettre(vide, { titre: 'sans ref' }).sauves.length, 0);
+});
