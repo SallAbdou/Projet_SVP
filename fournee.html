@@ -17,9 +17,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
 /* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
-.tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px rgba(255,176,32,.55);animation:pq-halo 1s ease-in-out 2 alternate}
+.bento .tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px rgba(255,176,32,.55);animation:pq-halo 1s ease-in-out 2 alternate}
 @keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute),0 0 10px 2px rgba(255,176,32,.35)}to{box-shadow:0 0 0 5px var(--croute),0 0 30px 10px rgba(255,176,32,.6)}}
-@media (prefers-reduced-motion:reduce){.tile.pq-halo{animation:none}}
+@media (prefers-reduced-motion:reduce){.bento .tile.pq-halo{animation:none}}
+.bento .tile.pq-halo .act-knead:focus{outline:2px solid var(--braise);outline-offset:2px}
 .tile-S{grid-column:span 1;grid-row:span 1}
 .tile-M{grid-column:span 2;grid-row:span 1}
 .tile-L{grid-column:span 2;grid-row:span 2}
