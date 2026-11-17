@@ -5,8 +5,14 @@
 <style>
 body{margin:0;background:#FBF5EA}
 a{color:#8A4F1C}a:hover{color:#5E3412}
+a:focus-visible{outline:3px solid #B5651D;outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:14px}
+.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#F2C77A;color:#2E1D12;font-weight:700;text-decoration:none}
+.btn-plein:hover{background:#FFDDA0;color:#2E1D12}
+.btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #8A4F1C;color:#8A4F1C;font-weight:700;font-size:14px;text-decoration:none}
+.btn-ligne:hover{background:#8A4F1C;color:#FFFDF8}
 </style>
-<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:1100px){.kpis{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}.kpis{grid-template-columns:repeat(2, minmax(0, 1fr))}.bars{gap:6px!important}}</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
@@ -15,19 +21,19 @@ a{color:#8A4F1C}a:hover{color:#5E3412}
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
-<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{eyebrow}}</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </div>
-<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:#6B5443">
-<span style="font-weight:700;padding:2px 8px;border-radius:999px;background:#DCEBD6;color:#2F5E36">MVP</span>{{t.built}}
-<span style="font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span>{{t.next}}
-<span style="font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
-</div>
+<span style="{{sampleStyle}}">{{t.sample}}</span>
 </header>
+<div role="status" style="{{waitStyle}}">
+<span style="font-weight:700">{{waitText}}</span>
+<a href="/fournil" class="btn-ligne">{{t.waitCta}}</a>
+</div>
 <section aria-label="{{t.kpiLabel}}" style="display:flex;flex-direction:column;gap:12px">
-<p style="margin:0;font-size:14px;color:#6B5443"><strong style="color:#2E1D12">{{t.kpiTitle}}</strong> <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></p>
-<div style="display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:14px">
+<p style="margin:0;font-size:14px;color:#6B5443"><strong style="color:#2E1D12">{{t.kpiTitle}}</strong></p>
+<div class="kpis">
 <sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
 <div style="{{k.box}}">
 <span style="{{k.labelStyle}}">{{k.label}}</span>
@@ -40,130 +46,218 @@ a{color:#8A4F1C}a:hover{color:#5E3412}
 <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start">
 <section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
-<h2 id="vis-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.visTitle}} <span style="font-family:'DM Sans', sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h2>
+<h2 id="vis-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.visTitle}}</h2>
 <span style="font-size:13px;color:#6B5443">{{t.visSub}}</span>
 </div>
-<div style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;align-items:end;height:220px;border-bottom:2px solid #E7D6B8;padding-bottom:4px">
+<div style="{{barsStyle}}">
+<div class="bars" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;align-items:end;height:220px;border-bottom:2px solid #E7D6B8;padding-bottom:4px">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
-<div style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
-<span style="font-size:12px;font-weight:700">{{b.value}}</span>
-<div style="{{b.barStyle}}"></div>
+<div role="img" aria-label="{{b.aria}}" style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
+<span style="font-size:12px;font-weight:700" aria-hidden="true">{{b.value}}</span>
+<div style="{{b.barStyle}}" aria-hidden="true"></div>
 </div>
 </sc-for>
 </div>
-<div style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:#4A3324;text-align:center">
+<div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:#4A3324;text-align:center">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
-<span><span style="{{b.dotStyle}}" aria-hidden="true">●</span> {{b.label}}</span>
+<span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto"><span style="{{b.dotStyle}}">●</span> {{b.label}}</span>
 </sc-for>
 </div>
-<p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{t.insight}}</p>
+<p style="margin:0;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#6B5443">
+<sc-for list="{{legend}}" as="l" hint-placeholder-count="3">
+<span><span style="{{l.dotStyle}}" aria-hidden="true">●</span> {{l.label}}</span>
+</sc-for>
+</p>
+</div>
+<p style="{{noBarsStyle}}">{{t.noBars}}</p>
+<p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{insight}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
 <section aria-labelledby="next-t" style="background:#2E1D12;color:#FBF5EA;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
-<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
 <h2 id="next-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.nextTitle}}</h2>
-<span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#DCEBD6;color:#2F5E36">MVP</span>
+<div style="{{nextStyle}}">
+<span style="{{next.chip}}">{{next.state}}</span>
+<p style="margin:0;font-weight:700;font-size:17px;line-height:1.35">{{next.titre}}</p>
+<p style="margin:0;font-size:13.5px;color:#E9D8BA">{{next.pourToi}}</p>
+<a href="{{next.href}}" class="btn-plein" style="align-self:flex-start">{{t.nextCta}}</a>
 </div>
-<span style="align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#F2C77A;color:#3B2416">{{t.hot}}</span>
-<p style="margin:0;font-weight:700;font-size:17px;line-height:1.35">{{t.nextArticle}}</p>
-<p style="margin:0;font-size:13.5px;color:#E9D8BA">{{t.nextWhy}}</p>
-<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:#F2C77A;color:#2E1D12;font-weight:700;text-decoration:none">{{t.nextCta}}</a>
+<div style="{{nextEmptyStyle}}">
+<p style="margin:0;font-size:14px;color:#E9D8BA">{{nextEmpty}}</p>
+<a href="/fournee" class="btn-plein" style="{{nextEmptyCtaStyle}}">{{t.nextEmptyCta}}</a>
+</div>
 </section>
 <section aria-labelledby="gain-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
-<h2 id="gain-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.gainTitle}} <span style="font-family:'DM Sans', sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h2>
-<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:#6B5443">{{t.gainQuotes}}</span><strong>3</strong></div>
-<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:#6B5443">{{t.gainClicks}}</span><strong>41</strong></div>
+<h2 id="gain-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.gainTitle}}</h2>
+<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:#6B5443">{{t.gainContacts}}</span><strong>{{gainContacts}}</strong></div>
+<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:#6B5443">{{t.gainPosts}}</span><strong>{{gainPosts}}</strong></div>
+<span style="font-size:12px;color:#6B5443">{{t.gainSince}}</span>
 </section>
 </div>
 </div>
 <section aria-labelledby="pantry-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:4px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-bottom:8px">
-<h2 id="pantry-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.pantryTitle}} <span style="font-family:'DM Sans', sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h2>
-<a href="/garde-manger" style="font-weight:700;font-size:14px">{{t.pantryAll}}</a>
+<h2 id="pantry-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.pantryTitle}}</h2>
+<a href="/garde-manger" style="font-weight:700;font-size:14px;display:inline-flex;align-items:center;min-height:44px">{{t.pantryAll}}</a>
 </div>
 <sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
 <div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid #F0E3CC">
-<div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700">{{p.title}}</span><span style="font-size:12px;color:#6B5443">{{p.meta}}</span></div>
+<div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;overflow-wrap:anywhere">{{p.titre}}</span><span style="font-size:12px;color:#6B5443">{{p.meta}}</span></div>
 <span style="{{p.chip}}">{{p.state}}</span>
-<a href="/fournil" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #8A4F1C;color:#8A4F1C;font-weight:700;font-size:14px;text-decoration:none">{{t.knead}}</a>
+<a href="{{p.href}}" class="btn-ligne" aria-label="{{p.kneadLabel}}">{{t.knead}}</a>
 </div>
 </sc-for>
+<div style="{{pantryEmptyStyle}}">
+<p style="margin:0;color:#6B5443">{{t.pantryEmpty}}</p>
+<a href="/fournee" class="btn-ligne">{{t.pantryEmptyCta}}</a>
+</div>
 </section>
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/garde-manger.js"></script><script src="/comptoir.js"></script><script>
+var HIDE = 'display: none';
+var PUCE = 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; align-self: flex-start; ';
 var CHIP = {
-hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
-knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
-stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
+vert: PUCE + 'background: #DCEBD6; color: #2F5E36', orange: PUCE + 'background: #FBE3C2; color: #8A4B00', rouge: PUCE + 'background: #F5DAD3; color: #8E2A1C',
+chaud: PUCE + 'background: #DCEBD6; color: #2F5E36', enfourner: PUCE + 'background: #FBE3C2; color: #8A4B00', rassis: PUCE + 'background: #F5DAD3; color: #8E2A1C'
 };
-var DOT = { hot: 'color: #3F8A4A', knead: 'color: #D98200', stale: 'color: #C0392B' };
+var DOT = { vert: 'color: #3F8A4A', orange: 'color: #D98200', rouge: 'color: #C0392B' };
+var BAR = { vert: '#B5651D', orange: '#E3B678', rouge: '#EAD7B4' };
+var SENS = { hausse: '#2F5E36', baisse: '#8E2A1C', stable: '#6B5443', nouveau: '#2F5E36' };
 var T = {
 fr: {
 navLabel: 'Navigation principale',
-nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
-eyebrow: 'Vendredi 30 octobre · tes 30 derniers jours',
-title: 'Bonjour {prenom}, voici ce que tes fournées t’ont rapporté',
+eyebrowTail: 'tes 30 derniers jours',
+title: 'Bonjour {prenom}, voici ce que tes fournées t’ont rapporté', titleAnon: 'Bonjour, voici ce que tes fournées t’ont rapporté',
 subtitle: 'Chaque matin, on enfourne les nouveautés IA. Toi, tu choisis ce que tu sers à ton audience.',
-built: 'déjà construit', next: 'prochaine version', sample: 'Données d’exemple',
+sample: 'Inclut des données d’exemple',
+waitOne: '1 post attend ses chiffres', waitMany: '{n} posts attendent leurs chiffres', waitCta: 'Reporter mes chiffres',
 kpiLabel: 'Chiffres clés', kpiTitle: 'Tes posts, 30 derniers jours',
-visTitle: 'Ce qui est le mieux sorti du four', visSub: 'impressions par post · couleur = état du sujet à la publication',
-insight: 'Tes posts sur des sujets « tout chauds » font en moyenne deux fois plus d’impressions : sers-les vite.',
-nextTitle: 'Tout juste sorti du four', hot: 'Tout chaud · publie vite',
-nextArticle: 'Les agents IA gèrent désormais la facturation des petites entreprises',
-nextWhy: 'Pour toi : tu conseilles des PME sur l’automatisation.', nextCta: 'Pétrir le post',
-gainTitle: 'Ce que ta veille a rapporté', gainQuotes: 'Demandes de devis', gainClicks: 'Clics vers ton offre',
-pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger →', knead: 'Pétrir',
-kpis: [['Posts publiés', '6', '+2 vs mois dernier'], ['Impressions', '4 820', '+38 %'], ['Réactions', '312', '+21 %'], ['Reposts', '27', 'stable'], ['Clics vers ton offre', '41', '→ 3 demandes de devis']],
-bars: ['Puces IA', 'RGPD et LLM', 'Agents en PME', 'Prompting', 'Mistral OCR', 'IA et devis'],
-pantry: [['Un agent open source trie les alertes de sécurité', 'Hacker News · mis de côté il y a 1 jour', 'hot', 'Encore chaud'], ['Les PME adoptent l’IA pour leurs devis', 'MIT Tech Review · mis de côté il y a 3 jours', 'knead', 'À enfourner avant demain'], ['Le RGPD face aux modèles de langage', 'The Verge · mis de côté il y a 6 jours', 'stale', 'Rassis']]
+kpis: ['Posts publiés', 'Impressions', 'Réactions', 'Republications', 'Prises de contact'],
+ecart: { hausseN: '+{n} vs mois dernier', baisseN: '-{n} vs mois dernier', hausseP: '+{n} %', baisseP: '-{n} %', stable: 'stable', nouveau: 'nouveau' },
+visTitle: 'Ce qui est le mieux sorti du four', visSub: 'impressions de tes 6 derniers posts',
+bar: '{label} : {n} impressions, sujet {etat}',
+etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
+noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
+insight: 'Tes posts sur des sujets tout chauds font en moyenne {r} fois plus d’impressions que les autres : sers-les vite.',
+insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
+nextTitle: 'Tout juste sorti du four', nextCta: 'Pétrir le post',
+nextLoading: 'La fournée chauffe…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
+gainTitle: 'Ce que ta veille a rapporté', gainContacts: 'Prises de contact', gainPosts: 'Posts publiés grâce à la fournée', gainSince: 'Depuis le début',
+pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger →', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
+fraicheur: { chaud: 'Encore chaud', enfourner: 'À enfourner avant demain', rassis: 'Rassis' },
+pantryEmpty: 'Rien de côté pour l’instant.', pantryEmptyCta: 'Aller à la fournée du jour'
 },
 en: {
 navLabel: 'Main navigation',
-nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
-eyebrow: 'Friday, October 30 · your last 30 days',
-title: 'Hi {prenom}, here’s what your batches brought in',
+eyebrowTail: 'your last 30 days',
+title: 'Hi {prenom}, here’s what your batches brought in', titleAnon: 'Hi, here’s what your batches brought in',
 subtitle: 'Every morning we bake the latest AI news. You pick what to serve your audience.',
-built: 'built', next: 'next version', sample: 'Sample data',
+sample: 'Includes sample data',
+waitOne: '1 post is waiting for its figures', waitMany: '{n} posts are waiting for their figures', waitCta: 'Report my figures',
 kpiLabel: 'Key figures', kpiTitle: 'Your posts, last 30 days',
-visTitle: 'What came out of the oven best', visSub: 'impressions per post · colour = topic status when published',
-insight: 'Posts on “fresh out of the oven” topics get twice the impressions on average: serve them fast.',
-nextTitle: 'Fresh out of the oven', hot: 'Piping hot · post it fast',
-nextArticle: 'AI agents now handle invoicing for small businesses',
-nextWhy: 'For you: you advise small businesses on automation.', nextCta: 'Knead the post',
-gainTitle: 'What your watch brought in', gainQuotes: 'Quote requests', gainClicks: 'Clicks to your offer',
-pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry →', knead: 'Knead',
-kpis: [['Posts published', '6', '+2 vs last month'], ['Impressions', '4,820', '+38%'], ['Reactions', '312', '+21%'], ['Reposts', '27', 'steady'], ['Clicks to your offer', '41', '→ 3 quote requests']],
-bars: ['AI chips', 'GDPR & LLMs', 'Agents in SMBs', 'Prompting', 'Mistral OCR', 'AI & quotes'],
-pantry: [['An open-source agent triages security alerts', 'Hacker News · set aside 1 day ago', 'hot', 'Still warm'], ['Small businesses use AI for their quotes', 'MIT Tech Review · set aside 3 days ago', 'knead', 'Bake before tomorrow'], ['GDPR versus large language models', 'The Verge · set aside 6 days ago', 'stale', 'Gone stale']]
+kpis: ['Posts published', 'Impressions', 'Reactions', 'Reposts', 'Contact requests'],
+ecart: { hausseN: '+{n} vs last month', baisseN: '-{n} vs last month', hausseP: '+{n}%', baisseP: '-{n}%', stable: 'steady', nouveau: 'new' },
+visTitle: 'What came out of the oven best', visSub: 'impressions of your last 6 posts',
+bar: '{label}: {n} impressions, topic {etat}',
+etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
+noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
+insight: 'Your posts on piping hot topics get {r} times the impressions of the others on average: serve them fast.',
+insightNeutral: 'Publish and report your figures to see what works best.',
+nextTitle: 'Fresh out of the oven', nextCta: 'Knead the post',
+nextLoading: 'The batch is baking…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
+gainTitle: 'What your watch brought in', gainContacts: 'Contact requests', gainPosts: 'Posts published thanks to the batch', gainSince: 'Since the start',
+pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry →', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
+fraicheur: { chaud: 'Still warm', enfourner: 'Bake before tomorrow', rassis: 'Gone stale' },
+pantryEmpty: 'Nothing set aside yet.', pantryEmptyCta: 'Go to today’s batch'
 }
 };
-var BARS = [['520', 36, 'stale'], ['410', 28, 'knead'], ['1 240', 86, 'hot'], ['680', 47, 'knead'], ['1 080', 75, 'hot'], ['890', 62, 'hot']];
+var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
+function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
+function remplir(s, v) { return String(s).replace(/\{(\w+)\}/g, function (m, k) { return v[k] === undefined ? m : v[k]; }); }
+function texteEcart(e, mode, t) {
+if (e.sens === 'stable' || e.sens === 'nouveau') return t.ecart[e.sens];
+return remplir(t.ecart[e.sens + (mode === 'nombre' ? 'N' : 'P')], { n: e.valeur });
+}
 class Component extends DCLogic {
-constructor(props) { super(props); this.state = { lang: 'fr' }; }
+constructor(props) {
+super(props);
+this.state = { lang: 'fr', data: null, fourneeFinie: false, exemples: [], store: Store.charger(stockage()) };
+var self = this;
+Promise.all([
+Api.chargerFournee().catch(function () { return null; }),
+Api.chargerPosts().catch(function () { return []; })
+]).then(function (res) { self.setState({ data: res[0], exemples: res[1], fourneeFinie: true }); });
+// Retour depuis le fournil par « précédent » : la page peut venir du cache, on relit le store.
+window.addEventListener('pageshow', function (e) { if (e.persisted) self.setState({ store: Store.charger(stockage()) }); });
+}
 renderVals() {
-var lang = (this.state && this.state.lang) || 'fr';
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+var locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
+var num = function (n) { return new Intl.NumberFormat(locale).format(n); };
+var maintenant = new Date().toISOString();
+var store = st.store || Store.etatInitial();
+var data = st.data;
+var articles = data && data.etat === 'pret' ? data.articles : [];
+var exemples = Comptoir.depuisExemples(st.exemples || [], maintenant);
+var posts = Comptoir.fusionner(exemples, Comptoir.depuisPublies(store.publies, articles, store.sauves));
+var k = Comptoir.kpis(posts, maintenant);
+var barres = Comptoir.graphique(posts);
+var ratio = Comptoir.analyse(posts).ratio;
+var attente = Comptoir.sansChiffres(posts);
+var bilan = Comptoir.bilan(posts);
 var u = null;
 try { u = Auth.utilisateurCourant(); } catch (e) {}
-var t = Object.assign({}, T[lang], { title: T[lang].title.replace('{prenom}', u ? u.prenom : '') });
-var self = this;
+var jour = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+var champs = ['posts', 'impressions', 'reactions', 'republications', 'contacts'];
+var news = Bento.pickTopics(articles, 1, Store.refsIgnorees(store, Store.dateDuJour(new Date())))[0];
+var sauves = GardeManger.trier(store.sauves).slice(0, 3);
 return {
 t: t,
-kpis: t.kpis.map(function (k, i) {
-var last = i === t.kpis.length - 1;
+eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
+title: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
+sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #FFFDF8; border: 1px dashed #D9C29C; color: #6B5443' : HIDE,
+waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; border-radius: 14px; background: #FBE3C2; color: #5E3412; border: 1px solid #E9C48E' : HIDE,
+waitText: attente === 1 ? t.waitOne : remplir(t.waitMany, { n: attente }),
+kpis: champs.map(function (c, i) {
+var last = i === champs.length - 1;
+var e = k.ecarts[c];
 return {
-label: k[0], value: k[1], sub: k[2],
-box: last ? 'background: #8A4F1C; color: #FFFDF8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px' : 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px',
+label: t.kpis[i], value: num(k.actuel[c]), sub: texteEcart(e, i === 0 ? 'nombre' : 'pourcent', t),
+box: last ? 'background: #8A4F1C; color: #FFFDF8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
 labelStyle: last ? 'font-size: 13px; color: #F6E7CC' : 'font-size: 13px; color: #6B5443',
-subStyle: last ? 'font-size: 12px; color: #F6E7CC' : 'font-size: 12px; color: #2F5E36'
+subStyle: last ? 'font-size: 12px; color: #F6E7CC' : 'font-size: 12px; color: ' + SENS[e.sens]
 };
 }),
-bars: BARS.map(function (b, i) {
-var color = b[2] === 'hot' ? '#B5651D' : (b[2] === 'knead' ? '#E3B678' : '#EAD7B4');
-return { value: b[0], label: t.bars[i], dotStyle: DOT[b[2]], barStyle: 'width: 100%; height: ' + b[1] + '%; background: ' + color + '; border-radius: 14px 14px 4px 4px' };
+barsStyle: barres.length ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
+noBarsStyle: barres.length ? HIDE : 'margin: 0; color: #6B5443',
+bars: barres.map(function (b) {
+return {
+value: num(b.impressions), label: b.label, dotStyle: DOT[b.feu],
+aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.feu] }),
+barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + BAR[b.feu] + '; border-radius: 14px 14px 4px 4px'
+};
 }),
-pantry: t.pantry.map(function (p) { return { title: p[0], meta: p[1], chip: CHIP[p[2]], state: p[3] }; })
+legend: ['vert', 'orange', 'rouge'].map(function (f) { return { label: t.etats[f], dotStyle: DOT[f] }; }),
+insight: ratio === null ? t.insightNeutral : remplir(t.insight, { r: new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(ratio) }),
+nextStyle: news ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
+nextEmptyStyle: news ? HIDE : 'display: flex; flex-direction: column; gap: 10px',
+nextEmpty: st.fourneeFinie ? t.nextEmpty : t.nextLoading,
+nextEmptyCtaStyle: st.fourneeFinie ? 'align-self: flex-start' : HIDE,
+next: news ? { chip: CHIP[news.feu], state: t.etats[news.feu], titre: news.titre, pourToi: news.pourToi || '', href: Bento.lienFournil(news.ref) } : { chip: HIDE, state: '', titre: '', pourToi: '', href: '/fournee' },
+gainContacts: num(bilan.contacts),
+gainPosts: num(bilan.posts),
+pantry: sauves.map(function (a) {
+var f = GardeManger.fraicheur(a, maintenant);
+var age = GardeManger.libelleAnciennete(GardeManger.joursDepuis(a.savedAt, maintenant), lang);
+return {
+titre: a.titre, meta: [a.source, age].filter(Boolean).join(' · '), chip: CHIP[f], state: t.fraicheur[f],
+href: Bento.lienFournil(a.ref), kneadLabel: remplir(t.kneadLabel, { titre: a.titre })
+};
+}),
+pantryEmptyStyle: sauves.length ? HIDE : 'display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-top: 4px'
 };
 }
 }
