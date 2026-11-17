@@ -5,10 +5,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/parcours.css">
 <style>
-.voile{position:fixed;inset:0;z-index:10;background:rgba(46,29,18,.55);display:flex;align-items:center;justify-content:center;padding:16px}
-.boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.3);display:flex;flex-direction:column}
-.boite-barre{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid #E7D6B8;background:#F3E6CF;border-radius:18px 18px 0 0}
-.boite-barre h2{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0}
 .mail{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
 .mail-entete{display:flex;flex-direction:column;gap:2px;font-size:14px;color:#6B5443;border-bottom:1px solid #F3E6CF;padding-bottom:12px}
 .mail-entete strong{color:#2E1D12}
@@ -95,7 +91,7 @@ inscription: { objet: 'Confirm your address to get your batch', bonjour: 'Hi {pr
 reinitialisation: { objet: 'Reset your password', bonjour: 'Hi {prenom},', texte: 'You asked to change your password. Click the button below to choose a new one. If this was not you, ignore this message.', bouton: 'Choose a new password', fin: 'The Votre pAIn quotidien team' }
 }
 };
-function focalisables(el) { return Array.prototype.filter.call(el.querySelectorAll('a[href],button'), function (x) { return x.offsetParent !== null; }); }
+function focalisables(el) { return Parcours.focalisables(el); }
 class Component extends DCLogic {
 constructor(props) { super(props); this.state = { lang: 'fr', ouverte: false, renvoye: false }; }
 afterRender(root) {
@@ -131,15 +127,7 @@ fermer: function () { self.fermer(); },
 renvoyer: function () { self.setState({ renvoye: true }); },
 clicVoile: function (e) { if (e.target === e.currentTarget) self.fermer(); },
 // Focus piégé dans la fenêtre : Tab boucle, Échap ferme.
-clavierModale: function (e) {
-if (e.key === 'Escape') { e.preventDefault(); self.fermer(); return; }
-if (e.key !== 'Tab') return;
-var els = focalisables(e.currentTarget);
-if (!els.length) return;
-var premier = els[0], dernier = els[els.length - 1];
-if (e.shiftKey && document.activeElement === premier) { e.preventDefault(); dernier.focus(); }
-else if (!e.shiftKey && document.activeElement === dernier) { e.preventDefault(); premier.focus(); }
-}
+clavierModale: function (e) { Parcours.clavierModale(e, function () { self.fermer(); }); }
 };
 }
 }

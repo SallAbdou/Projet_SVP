@@ -8,7 +8,7 @@
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div class="parcours">
-<header class="entete" data-entete data-connexion></header>
+<header class="entete" data-entete data-connexion data-qr></header>
 <main class="contenu">
 <section class="heros" aria-labelledby="heros-t">
 <div class="heros-texte">
@@ -19,10 +19,6 @@
 <a class="bouton" href="{{ctaHref}}" data-focus="cta">{{ctaLabel}}</a>
 <a class="lien" href="/connexion">{{t.dejaCompte}}</a>
 </div>
-<aside class="qr-demo" aria-labelledby="qr-t">
-<img src="/assets/qr-landing.svg" width="104" height="104" alt="{{t.qrAlt}}">
-<div class="qr-demo-texte"><p id="qr-t" class="qr-demo-titre">{{t.qrTitre}}</p><p class="qr-demo-adresse">team42svp.vercel.app</p><a class="lien" href="/qr">{{t.qrImprimer}}</a></div>
-</aside>
 </div>
 <figure style="margin:0;display:flex;flex-direction:column;gap:10px">
 <div class="mini-bento" role="img" aria-label="{{t.apercuLabel}}">
@@ -51,6 +47,17 @@
 <a href="/confidentialite">{{t.confidentialite}}</a>
 <span>{{t.demo}}</span>
 </footer>
+<div class="voile" style="{{voileStyle}}" onClick="{{clicVoile}}">
+<div class="boite qr-boite" role="dialog" aria-modal="true" aria-labelledby="qr-t" aria-describedby="qr-d" onKeydown="{{clavierModale}}">
+<div class="boite-barre"><h2 id="qr-t">{{t.qrTitre}}</h2><button type="button" class="bouton-secondaire" style="min-height:44px;padding:0 16px" onClick="{{fermerQr}}" data-focus="qr-fermer">{{t.fermer}}</button></div>
+<div class="qr-contenu">
+<img src="/assets/qr-landing.svg" width="320" height="320" alt="{{t.qrAlt}}">
+<p class="qr-contenu-adresse">https://team42svp.vercel.app/</p>
+<p id="qr-d" class="qr-contenu-aide">{{t.qrAide}}</p>
+<a class="lien" href="/qr">{{t.qrImprimer}}</a>
+</div>
+</div>
+</div>
 </div>
 </script>
 <script src="/dc.js"></script><script>
@@ -70,7 +77,8 @@ etapes: [
 ['Tu publies', 'Tu pétris la news en post LinkedIn en quelques minutes, et tu suis ce qu’il rapporte.']
 ],
 finTitre: 'Ta première fournée est à 2 minutes',
-qrTitre: 'Scanne pour la démo', qrAlt: 'QR code vers team42svp.vercel.app', qrImprimer: 'Version à imprimer',
+qrTitre: 'Scanne pour la démo', qrAlt: 'QR code vers https://team42svp.vercel.app/', qrImprimer: 'Version à imprimer',
+qrAide: 'Ouvre l’appareil photo de ton téléphone et vise le code pour suivre la démo.', fermer: 'Fermer',
 confidentialite: 'Confidentialité', demo: 'Démo : aucune donnée ne quitte ton navigateur.'
 },
 en: {
@@ -88,19 +96,34 @@ etapes: [
 ['You publish', 'Knead the story into a LinkedIn post in minutes, then track what it brings in.']
 ],
 finTitre: 'Your first batch is 2 minutes away',
-qrTitre: 'Scan for the demo', qrAlt: 'QR code to team42svp.vercel.app', qrImprimer: 'Printable version',
+qrTitre: 'Scan for the demo', qrAlt: 'QR code to https://team42svp.vercel.app/', qrImprimer: 'Printable version',
+qrAide: 'Open your phone camera and point it at the code to follow the demo.', fermer: 'Close',
 confidentialite: 'Privacy', demo: 'Demo: no data leaves your browser.'
 }
 };
 class Component extends DCLogic {
-constructor(props) { super(props); this.state = { lang: 'fr' }; }
+constructor(props) { super(props); this.state = { lang: 'fr', qrOuvert: false }; }
+// Appelée par le bouton QR de l'en-tête (parcours.js).
+ouvrirQr() { this.pendingFocus = 'qr-fermer'; this.setState({ qrOuvert: true }); }
+fermerQr() { this.pendingFocus = 'entete-qr'; this.setState({ qrOuvert: false }); }
+afterRender(root) {
+var f = this.pendingFocus;
+this.pendingFocus = null;
+var el = f && root.querySelector('[data-focus="' + f + '"]');
+if (el) el.focus();
+}
 renderVals() {
+var self = this;
 var lang = (this.state && this.state.lang) || 'fr';
 var t = T[lang];
 var connecte = false;
 try { connecte = !!Auth.utilisateurCourant(); } catch (e) {}
 return {
 t: t,
+voileStyle: this.state && this.state.qrOuvert ? '' : 'display: none',
+fermerQr: function () { self.fermerQr(); },
+clicVoile: function (e) { if (e.target === e.currentTarget) self.fermerQr(); },
+clavierModale: function (e) { Parcours.clavierModale(e, function () { self.fermerQr(); }); },
 ctaHref: connecte ? '/fournee' : '/decouvrir',
 ctaLabel: connecte ? t.ctaConnecte : t.cta,
 etapes: t.etapes.map(function (e, i) { return { num: i + 1, titre: e[0], texte: e[1] }; })

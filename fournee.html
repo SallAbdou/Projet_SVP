@@ -51,12 +51,15 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 a.act-knead:hover{background:#5E3412;color:#FFFDF8}
 .act{position:relative;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .act:hover{border-color:#8A4F1C}
+a.act{text-decoration:none}a.act:hover{color:#2E1D12}
 .act .ico-plein{display:none}
 .act[aria-pressed="true"]{background:#F3E6CF;border-color:#8A4F1C;color:#5E3412}
 .act[aria-pressed="true"] .ico-plein{display:inline}
 .act[aria-pressed="true"] .ico-vide{display:none}
 .tile[data-tile="n1"] .act{background:#FFF6E3;border-color:#B87420}
 .tile[data-tile="n1"] .act[aria-pressed="true"]{background:#8A4F1C;color:#FFF6E3}
+@media (min-width:641px){.tile-M .act[data-act="read"]{padding:0}.tile-M .act[data-act="read"] .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (min-width:641px){.tile-S .news-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0;gap:6px}}
 @media (min-width:641px){.tile-S .act{padding:0}.tile-S .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (pointer:coarse){.act{min-height:44px;min-width:44px}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
@@ -65,6 +68,17 @@ a.act-knead:hover{background:#5E3412;color:#FFFDF8}
 .toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
+.mep-zone{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}
+.mep-titre{margin:0;font-weight:700;font-size:14px;color:#2E1D12}
+.mep-groupe{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.mep{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:44px;padding:10px;border-radius:14px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;text-align:left;cursor:pointer}
+.mep:hover{border-color:#8A4F1C}
+.mep[aria-checked="true"]{border:2px solid #8A4F1C;padding:9.5px;background:#FFFDF8;box-shadow:0 0 0 3px rgba(138,79,28,.15)}
+.mep[aria-checked="true"] .mep-nom::before{content:'✓ ';color:#8A4F1C}
+.mep-mini{display:block;padding:6px;border-radius:8px;background:#F3E6CF}
+.mep-mini svg{display:block;width:100%;height:auto;max-height:84px}
+.mep-nom{font-weight:700;font-size:14px}
+.mep-desc{font-size:12.5px;color:#6B5443;line-height:1.35}
 .tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (min-width:641px){.tile-S .only-M,.tile-S .only-L,.tile-M .only-L{display:none!important}}
@@ -94,6 +108,14 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <p role="alert" style="{{errorStyle}}">{{t.loadError}}</p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 <div style="{{editBarStyle}}">
+<div class="mep-zone">
+<p id="mep-t" class="mep-titre">{{t.mepTitre}}</p>
+<div class="mep-groupe" role="radiogroup" aria-labelledby="mep-t" onKeydown="{{clavierMep}}">
+<sc-for list="{{mep}}" as="p" hint-placeholder-count="5">
+<button type="button" role="radio" class="mep" data-mep="{{p.id}}" data-act="mep-{{p.id}}" aria-checked="{{p.checked}}" tabindex="{{p.tabindex}}" onClick="{{choisirMep}}"><span class="mep-mini" data-mini="{{p.id}}" aria-hidden="true"></span><span class="mep-nom">{{p.nom}}</span><span class="mep-desc">{{p.desc}}</span></button>
+</sc-for>
+</div>
+</div>
 <p style="margin:0;flex:1 1 320px;font-size:14px;color:#5E3412">{{t.editHint}}</p>
 <div role="group" aria-label="{{t.countLabel}}" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
 <span class="muted" style="margin-right:4px">{{t.countLabel}}</span>
@@ -135,7 +157,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="act-knead">{{s.knead}}</a>
 <button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="act-label">{{s.saveLabel}}</span></button>
 <button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="act-label">{{s.skipLabel}}</span></button>
-<a class="only-L" href="{{s.url}}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid #D9C29C;color:#2E1D12;font-weight:700;font-size:14px;text-decoration:none">{{s.read}}</a>
+<a class="act" data-act="read" data-id="{{s.id}}" href="{{s.url}}" target="_blank" rel="noopener" aria-label="{{s.readLabel}}" title="{{s.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{s.read}}</span></a>
 </div>
 </div>
 </section>
@@ -193,6 +215,15 @@ loading: 'Mise au four…', loadError: 'Impossible de charger la fournée. Recha
 waiting: 'Encore quelques secondes : on choisit tes sujets du jour.', waitTitle: 'Ta fournée est au four, {prenom}', why: 'Pourquoi cette couleur :',
 editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la mieux notée). Glisse les blocs par la poignée ⠿ ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
 countLabel: 'News affichées', reset: 'Disposition par défaut',
+mepTitre: 'Mise en page', toastMep: 'Mise en page « {nom} » appliquée', mepVide: 'Déplace ou redimensionne un bloc pour créer ta mise en page',
+mep: {
+concentree: ['Concentrée', '3 news, la n°1 en grand, et ton graphique'],
+equilibree: ['Équilibrée', '5 news, la disposition par défaut'],
+informative: ['Informative', '7 news en blocs compacts, et ton graphique'],
+graphique: ['Graphique en avant', 'Ton graphique en grand, puis 3 news'],
+personnalisee: ['Personnalisée', 'Ta disposition à toi : déplace ou redimensionne un bloc']
+},
+readFull: 'Lire la source : {titre} (nouvel onglet)',
 states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
 rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
@@ -212,6 +243,15 @@ loading: 'Baking…', loadError: 'Could not load the batch. Reload the page.', e
 waiting: 'Just a few more seconds: we are picking today’s topics.', waitTitle: 'Your batch is in the oven, {prenom}', why: 'Why this colour:',
 editHint: 'Each slot gets that day’s news of the same rank every morning (#1 = best rated). Drag blocks by the ⠿ handle or use the arrows. Your choices are saved on this device.',
 countLabel: 'News shown', reset: 'Default layout',
+mepTitre: 'Layout', toastMep: 'Layout “{nom}” applied', mepVide: 'Move or resize a block to create your own layout',
+mep: {
+concentree: ['Focused', '3 news, #1 large, plus your chart'],
+equilibree: ['Balanced', '5 news, the default layout'],
+informative: ['Informative', '7 news in compact blocks, plus your chart'],
+graphique: ['Chart first', 'Your chart large, then 3 news'],
+personnalisee: ['Custom', 'Your own layout: move or resize a block']
+},
+readFull: 'Read the source: {titre} (new tab)',
 states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
 rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
@@ -227,6 +267,7 @@ var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function (
 function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
 function prenomCourant() { try { var u = Auth.utilisateurCourant(); return u ? u.prenom : ''; } catch (e) { return ''; } }
 function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
+function mepIds() { return Bento.PRESETS.map(function (p) { return p.id; }).concat(Bento.PRESET_PERSO); }
 function toolLabels(t, name) {
 var n = { name: name };
 return { toolsLabel: fill(t.toolsGroup, n), upLabel: fill(t.up, n), downLabel: fill(t.down, n), sizeLabel: fill(t.size, n), dragLabel: t.drag };
@@ -236,7 +277,7 @@ constructor(props) {
 super(props);
 var layout;
 try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
-this.state = { lang: 'fr', editing: false, layout: layout, data: null, posts: [], loadError: false, store: Store.charger(stockage()) };
+this.state = { lang: 'fr', editing: false, layout: layout, perso: Bento.loadPerso(stockage()), data: null, posts: [], loadError: false, store: Store.charger(stockage()) };
 var self = this;
 BentoUI.initDrag({
 isEditing: function () { return !!self.state.editing; },
@@ -320,8 +361,25 @@ try { Bento.saveLayout(window.localStorage, layout); } catch (e) {}
 this.pendingFocus = focus || null;
 this.setState({ layout: layout });
 }
+// Panneau « Mise en page » : applique un préréglage (ou rend la disposition personnalisée),
+// l'enregistre et l'annonce dans la zone aria-live. focus : data-act à refocaliser.
+choisirMep(id, focus) {
+var st = this.state;
+var r = Bento.choisirMiseEnPage(st.layout, st.perso, id);
+if (r.perso && r.perso !== st.perso) Bento.savePerso(stockage(), r.perso);
+var vide = id === Bento.PRESET_PERSO && !st.perso && Bento.presetCourant(st.layout) !== Bento.PRESET_PERSO;
+try { Bento.saveLayout(window.localStorage, r.layout); } catch (e) {}
+this.pendingFocus = { act: focus || 'mep-' + id };
+this.setState({ layout: r.layout, perso: r.perso, toast: this.nouveauToast({ type: vide ? 'mepVide' : 'mep', mep: id }) });
+}
 afterRender(root) {
 BentoUI.applyLayout(root, this.state.layout, this.available());
+var lay = this.state.layout, perso = this.state.perso;
+root.querySelectorAll('[data-mini]').forEach(function (el) {
+var id = el.getAttribute('data-mini');
+var l = id !== Bento.PRESET_PERSO ? Bento.appliquerPreset(lay, id) : (Bento.presetCourant(lay) === Bento.PRESET_PERSO ? lay : (perso || lay));
+BentoUI.miniature(el, l);
+});
 var self = this;
 var zone = document.getElementById('pq-toast');
 BentoUI.toast(zone, this.vueToast(), function () { self.annuler(); });
@@ -344,8 +402,10 @@ vueToast() {
 var t = this.state.toast;
 if (!t) return null;
 var tx = T[this.state.lang || 'fr'];
-var textes = { save: tx.toastSave, unsave: tx.toastUnsave, skip: tx.toastSkip, undone: tx.toastUndone };
-return { cle: t.n + '-' + (this.state.lang || 'fr'), texte: textes[t.type], annuler: t.type === 'undone' ? '' : tx.undo };
+var textes = { save: tx.toastSave, unsave: tx.toastUnsave, skip: tx.toastSkip, undone: tx.toastUndone, mepVide: tx.mepVide };
+if (t.type === 'mep') textes.mep = fill(tx.toastMep, { nom: tx.mep[t.mep][0] });
+var sansAnnuler = t.type === 'undone' || t.type === 'mep' || t.type === 'mepVide';
+return { cle: t.n + '-' + (this.state.lang || 'fr'), texte: textes[t.type], annuler: sansAnnuler ? '' : tx.undo };
 }
 renderVals() {
 var st = this.state || {};
@@ -374,7 +434,26 @@ tileUp: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout
 tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, 1, available), { id: id, act: 'down' }); },
 tileSize: function (e) { var id = idOf(e), s = e.currentTarget.getAttribute('data-size'); self.updateLayout(Bento.setSize(layout, id, s), { id: id, act: 'size-' + s }); },
 setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count')); self.updateLayout(Bento.setNewsCount(layout, n), { act: 'count-' + n }); },
-resetLayout: function () { self.updateLayout(Bento.defaultLayout(), { act: 'reset' }); },
+resetLayout: function () { self.choisirMep('equilibree', 'reset'); },
+choisirMep: function (e) { self.choisirMep(e.currentTarget.getAttribute('data-mep')); },
+// Groupe de boutons radio : les flèches cochent la carte voisine (en boucle), Début et Fin les extrémités.
+clavierMep: function (e) {
+var ordre = mepIds();
+var cur = e.target.closest && e.target.closest('[data-mep]');
+var i = cur ? ordre.indexOf(cur.getAttribute('data-mep')) : -1;
+if (i === -1) return;
+var j = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: ordre.length - 1 }[e.key];
+if (j === undefined) return;
+e.preventDefault();
+self.choisirMep(ordre[(j + ordre.length) % ordre.length]);
+},
+mep: (function () {
+var courant = Bento.presetCourant(layout);
+return mepIds().map(function (id) {
+var on = id === courant;
+return { id: id, nom: t.mep[id][0], desc: t.mep[id][1], checked: String(on), tabindex: on ? '0' : '-1' };
+});
+})(),
 toggleSave: function (e) { self.agir(idOf(e), 'save', e.detail === 0); },
 skip: function (e) { self.agir(idOf(e), 'skip', e.detail === 0); },
 unskipAll: function () { self.toutFaireRevenir(); },
@@ -397,7 +476,7 @@ var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
 chip: HIDE, state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, scoreLine: '', money: '', url: '#',
-knead: t.knead, read: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
+knead: t.knead, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
 var etat = FEU[c.feu];
@@ -406,6 +485,7 @@ s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why
 s.scoreLine = fill(t.scoreLine, { d: c.durabilite, p: c.propension, o: c.lienOffre });
 s.money = fill(t.money, { m: Bento.totalScore(c) });
 s.url = Bento.safeUrl(c.url);
+s.readLabel = fill(t.readFull, { titre: c.titre });
 s.kneadHref = Bento.lienFournil(c.ref);
 s.saved = String(Store.estDeCote(store, c.ref));
 }

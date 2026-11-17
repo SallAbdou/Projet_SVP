@@ -10,6 +10,7 @@
   var DEFAULT_COUNT = 5;
   var VERSION = 2;
   var STORAGE_KEY = 'pq-layout';
+  var PERSO_KEY = 'pq-layout-perso';
 
   function has(list, v) { return list.indexOf(v) !== -1; }
 
@@ -99,6 +100,72 @@
     return next;
   }
 
+  /* Mises en page prédéfinies (panneau « Mise en page » du mode Personnaliser).
+     shown : emplacements affichés dans l'ordre ; les autres suivent dans l'ordre par défaut.
+     Chaque préréglage remplit la grille de 4 colonnes sans trou (vérifié par les tests). */
+  var PRESET_DEFS = [
+    { id: 'concentree', newsCount: 3, shown: [['n1', 'L'], ['n2', 'S'], ['n3', 'S'], ['graph', 'M']] },
+    { id: 'equilibree', newsCount: 5, shown: [['n1', 'L'], ['n2', 'M'], ['n3', 'M'], ['graph', 'M'], ['n4', 'S'], ['n5', 'S']] },
+    { id: 'informative', newsCount: 7, shown: [['n1', 'M'], ['n2', 'M'], ['n3', 'M'], ['graph', 'M'], ['n4', 'S'], ['n5', 'S'], ['n6', 'S'], ['n7', 'S']] },
+    { id: 'graphique', newsCount: 3, shown: [['graph', 'L'], ['n1', 'M'], ['n2', 'S'], ['n3', 'S']] }
+  ];
+  var PRESET_PERSO = 'personnalisee';
+  var PRESETS = PRESET_DEFS.map(function (d) {
+    var tiles = d.shown.map(function (s) { return { id: s[0], size: s[1] }; });
+    var pris = d.shown.map(function (s) { return s[0]; });
+    TILE_IDS.forEach(function (id) { if (!has(pris, id)) tiles.push({ id: id, size: DEFAULT_SIZES[id] }); });
+    return { id: d.id, newsCount: d.newsCount, tiles: tiles };
+  });
+
+  function presetParId(id) {
+    for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i];
+    return null;
+  }
+
+  function appliquerPreset(layout, id) {
+    var p = presetParId(id);
+    return copy(p ? { newsCount: p.newsCount, tiles: p.tiles } : layout);
+  }
+
+  function memeDisposition(a, b) {
+    if (a.newsCount !== b.newsCount || a.tiles.length !== b.tiles.length) return false;
+    for (var i = 0; i < a.tiles.length; i++) {
+      if (a.tiles[i].id !== b.tiles[i].id || a.tiles[i].size !== b.tiles[i].size) return false;
+    }
+    return true;
+  }
+
+  function presetCourant(layout) {
+    for (var i = 0; i < PRESETS.length; i++) if (memeDisposition(layout, PRESETS[i])) return PRESETS[i].id;
+    return PRESET_PERSO;
+  }
+
+  // Placement « dense » comme CSS grid-auto-flow: dense : chaque bloc affiché prend la première
+  // case libre (rangée puis colonne) où il tient. S = 1×1, M = 2×1, L = 2×2.
+  var DIMS = { S: [1, 1], M: [2, 1], L: [2, 2] };
+  function placer(layout, available, colonnes) {
+    var cols = Math.max(1, colonnes || 4);
+    var pris = {};
+    function libre(r, c, w, h) {
+      for (var y = r; y < r + h; y++) for (var x = c; x < c + w; x++) if (pris[y + ',' + x]) return false;
+      return true;
+    }
+    var out = [];
+    layout.tiles.forEach(function (t) {
+      if (!isShown(layout, t.id, available)) return;
+      var w = Math.min(DIMS[t.size][0], cols), h = DIMS[t.size][1];
+      for (var r = 0; ; r++) {
+        for (var c = 0; c + w <= cols; c++) {
+          if (!libre(r, c, w, h)) continue;
+          for (var y = r; y < r + h; y++) for (var x = c; x < c + w; x++) pris[y + ',' + x] = true;
+          out.push({ id: t.id, col: c, row: r, w: w, h: h });
+          return;
+        }
+      }
+    });
+    return out;
+  }
+
   function loadLayout(storage) {
     try {
       var raw = storage.getItem(STORAGE_KEY);
@@ -111,6 +178,33 @@
   function saveLayout(storage, layout) {
     try {
       storage.setItem(STORAGE_KEY, JSON.stringify(layout));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Choix dans le panneau « Mise en page ». Quitter une disposition personnalisée pour un
+  // préréglage la met de côté (perso) ; « personnalisee » la rend, s'il y en a une.
+  function choisirMiseEnPage(layout, perso, id) {
+    if (id === PRESET_PERSO) return { layout: copy(perso || layout), perso: perso || null };
+    if (!presetParId(id)) return { layout: copy(layout), perso: perso || null };
+    var garde = presetCourant(layout) === PRESET_PERSO ? copy(layout) : (perso || null);
+    return { layout: appliquerPreset(layout, id), perso: garde };
+  }
+
+  function loadPerso(storage) {
+    try {
+      var raw = JSON.parse(storage.getItem(PERSO_KEY));
+      return raw && raw.version === VERSION && Array.isArray(raw.tiles) ? normalizeLayout(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function savePerso(storage, layout) {
+    try {
+      storage.setItem(PERSO_KEY, JSON.stringify(layout));
       return true;
     } catch (e) {
       return false;
@@ -147,6 +241,9 @@
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,
     setNewsCount: setNewsCount, loadLayout: loadLayout, saveLayout: saveLayout,
+    PRESETS: PRESETS, PRESET_PERSO: PRESET_PERSO,
+    appliquerPreset: appliquerPreset, presetCourant: presetCourant, placer: placer,
+    PERSO_KEY: PERSO_KEY, choisirMiseEnPage: choisirMiseEnPage, loadPerso: loadPerso, savePerso: savePerso,
     totalScore: totalScore, pickTopics: pickTopics, lienFournil: lienFournil, safeUrl: safeUrl
   };
 
