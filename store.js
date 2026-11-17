@@ -76,6 +76,19 @@
     return etat.ignores.date === dateFournee ? etat.ignores.refs.slice() : [];
   }
 
+  // Annule un « Ignorer » de la fournée du jour ; sans effet sur une autre date.
+  function desIgnorer(etat, ref, dateFournee) {
+    var e = copie(etat);
+    if (e.ignores.date === dateFournee) e.ignores.refs = e.ignores.refs.filter(function (r) { return r !== ref; });
+    return e;
+  }
+
+  // Date de la fournée en heure locale (WF3 n'en renvoie pas) : YYYY-MM-DD.
+  function dateDuJour(d) {
+    function deux(n) { return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + deux(d.getMonth() + 1) + '-' + deux(d.getDate());
+  }
+
   function enregistrerBrouillon(etat, ref, texte) {
     var e = copie(etat);
     e.brouillons[ref] = String(texte);
@@ -120,7 +133,8 @@
     CLE: CLE, CLES_DEMO: CLES_DEMO,
     etatInitial: etatInitial, normaliserEtat: normaliserEtat, charger: charger, enregistrer: enregistrer,
     mettreDeCote: mettreDeCote, estDeCote: estDeCote, retirer: retirer,
-    ignorer: ignorer, refsIgnorees: refsIgnorees, enregistrerBrouillon: enregistrerBrouillon,
+    ignorer: ignorer, refsIgnorees: refsIgnorees, desIgnorer: desIgnorer, dateDuJour: dateDuJour,
+    enregistrerBrouillon: enregistrerBrouillon,
     publier: publier, saisirChiffres: saisirChiffres,
     reinitialiserDemo: reinitialiserDemo, retirerParamDemo: retirerParamDemo
   };

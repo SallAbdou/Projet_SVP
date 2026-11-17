@@ -82,3 +82,18 @@ test('retirerParamDemo', () => {
   assert.equal(S.retirerParamDemo('?demo=autre'), null);
   assert.equal(S.retirerParamDemo(''), null);
 });
+
+test('desIgnorer annule un ignorer du jour, sans toucher aux autres dates', () => {
+  let e = S.ignorer(S.etatInitial(), 'recA', '2026-11-17');
+  e = S.ignorer(e, 'recB', '2026-11-17');
+  const avant = JSON.stringify(e);
+  assert.deepEqual(S.refsIgnorees(S.desIgnorer(e, 'recA', '2026-11-17'), '2026-11-17'), ['recB']);
+  assert.equal(JSON.stringify(e), avant, 'entrée non mutée');
+  assert.deepEqual(S.refsIgnorees(S.desIgnorer(e, 'recA', '2026-11-18'), '2026-11-17'), ['recA', 'recB']);
+  assert.deepEqual(S.refsIgnorees(S.desIgnorer(e, 'inconnu', '2026-11-17'), '2026-11-17'), ['recA', 'recB']);
+});
+
+test('dateDuJour au format YYYY-MM-DD, heure locale', () => {
+  assert.equal(S.dateDuJour(new Date(2026, 0, 5, 23, 59)), '2026-01-05');
+  assert.equal(S.dateDuJour(new Date(2026, 10, 17, 0, 1)), '2026-11-17');
+});
