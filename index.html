@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Votre pAIn quotidien · l'actu IA qui compte pour ton métier</title>
+<meta name="pq-titre-en" content="Votre pAIn quotidien · the AI news that matters for your job">
 <meta name="description" content="Chaque matin, l'actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/parcours.css">
@@ -18,6 +19,10 @@
 <a class="bouton" href="{{ctaHref}}" data-focus="cta">{{ctaLabel}}</a>
 <a class="lien" href="/connexion">{{t.dejaCompte}}</a>
 </div>
+<aside class="qr-demo" aria-labelledby="qr-t">
+<img src="/assets/qr-landing.svg" width="104" height="104" alt="{{t.qrAlt}}">
+<div class="qr-demo-texte"><p id="qr-t" class="qr-demo-titre">{{t.qrTitre}}</p><p class="qr-demo-adresse">team42svp.vercel.app</p><a class="lien" href="/qr">{{t.qrImprimer}}</a></div>
+</aside>
 </div>
 <figure style="margin:0;display:flex;flex-direction:column;gap:10px">
 <div class="mini-bento" role="img" aria-label="{{t.apercuLabel}}">
@@ -65,6 +70,7 @@ etapes: [
 ['Tu publies', 'Tu pétris la news en post LinkedIn en quelques minutes, et tu suis ce qu’il rapporte.']
 ],
 finTitre: 'Ta première fournée est à 2 minutes',
+qrTitre: 'Scanne pour la démo', qrAlt: 'QR code vers team42svp.vercel.app', qrImprimer: 'Version à imprimer',
 confidentialite: 'Confidentialité', demo: 'Démo : aucune donnée ne quitte ton navigateur.'
 },
 en: {
@@ -82,6 +88,7 @@ etapes: [
 ['You publish', 'Knead the story into a LinkedIn post in minutes, then track what it brings in.']
 ],
 finTitre: 'Your first batch is 2 minutes away',
+qrTitre: 'Scan for the demo', qrAlt: 'QR code to team42svp.vercel.app', qrImprimer: 'Printable version',
 confidentialite: 'Privacy', demo: 'Demo: no data leaves your browser.'
 }
 };

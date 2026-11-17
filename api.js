@@ -31,6 +31,7 @@
   // Juste après l'inscription, WF3 n'a pas encore écrit la sélection : on simule « attente » quelques secondes.
   function chargerFournee() {
     try {
+      if (root.Auth && root.Auth.ouvrirFour) root.Auth.ouvrirFour();
       if (root.Auth && root.Auth.fourneeAuFour(root.Auth.charger(), new Date().toISOString())) {
         return Promise.resolve({ etat: 'attente' });
       }

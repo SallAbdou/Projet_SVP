@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr" data-protegee><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Le garde-manger · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="The pantry · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <style>
 body{margin:0;background:#FBF5EA}
@@ -18,7 +19,9 @@ a.gm-knead:hover{background:#5E3412;color:#FFFDF8}
 .gm-sec:hover{border-color:#8A4F1C;color:#2E1D12}
 @media (max-width:640px){.gm-item{padding:16px}.gm-actions{justify-content:flex-start}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
-.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+@keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
 </style>
@@ -31,7 +34,7 @@ a.gm-knead:hover{background:#5E3412;color:#FFFDF8}
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:24px">
 <header style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#E9D2A9;color:#5E3412;vertical-align:middle">V1</span></h1>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </header>
 <div role="group" aria-label="{{t.filterLabel}}" style="{{filtersStyle}}">
@@ -136,7 +139,8 @@ var st = this.state || {};
 return GardeManger.filtrer((st.store || Store.etatInitial()).sauves, st.filtre, this.maintenant());
 }
 // Le store est relu avant d'écrire pour ne pas écraser un changement fait dans un autre onglet.
-retirer(ref) {
+// clavier : action déclenchée au clavier (e.detail === 0) : le focus passe sur « Annuler ».
+retirer(ref, clavier) {
 var liste = this.visibles();
 var i = liste.map(function (a) { return a.ref; }).indexOf(ref);
 var store = Store.charger(stockage());
@@ -146,8 +150,9 @@ store = Store.retirer(store, ref);
 Store.enregistrer(stockage(), store);
 // Focus : Retirer de l'article suivant, sinon du précédent, sinon « Annuler » du message.
 var voisin = liste[i + 1] || liste[i - 1];
-this.pendingFocus = { act: 'remove', id: voisin ? voisin.ref : '__aucun__', repli: true };
-this.setState({ store: store, toast: this.nouveauToast({ type: 'remove', article: article }) });
+var suite = { act: 'remove', id: voisin ? voisin.ref : '__aucun__', repli: true };
+this.pendingFocus = clavier ? { toast: true, act: suite.act, id: suite.id, repli: true } : suite;
+this.setState({ store: store, toast: this.nouveauToast({ type: 'remove', article: article, origine: suite }) });
 }
 // Chaque message remplace le précédent (seule la dernière action est annulable) et dure 5 s.
 nouveauToast(t) {
@@ -173,10 +178,19 @@ this.setState({ store: store, toast: this.nouveauToast({ type: 'undone' }) });
 }
 afterRender(root) {
 var self = this;
-BentoUI.toast(document.getElementById('pq-toast'), this.vueToast(), function () { self.annuler(); });
+var zone = document.getElementById('pq-toast');
+BentoUI.toast(zone, this.vueToast(), function () { self.annuler(); });
+BentoUI.suivreToast(zone, {
+pause: function () { clearTimeout(self.toastTimer); },
+reprise: function () { clearTimeout(self.toastTimer); if (self.state.toast) self.toastTimer = setTimeout(function () { self.expirer(); }, 5000); },
+// Échap : retour sur l'article suivant (ou le filtre actif), comme à l'expiration.
+echap: function () { var t = self.state.toast; clearTimeout(self.toastTimer); self.pendingFocus = t && t.origine ? { act: t.origine.act, id: t.origine.id } : { act: 'filtre-' + self.state.filtre }; self.setState({ toast: null }); }
+});
 var f = this.pendingFocus;
 this.pendingFocus = null;
 if (!f) return;
+var d = f.toast ? document.querySelector('[data-toast-undo]') : null;
+if (d && d.offsetParent) { d.focus(); return; }
 var el = trouver(root, f.act, f.id);
 if ((!el || !el.offsetParent) && f.repli) el = document.querySelector('[data-toast-undo]');
 if (!el || !el.offsetParent) el = trouver(root, 'filtre-' + this.state.filtre);
@@ -227,7 +241,7 @@ var id = e.currentTarget.getAttribute('data-filtre');
 self.pendingFocus = { act: 'filtre-' + id };
 self.setState({ filtre: id });
 },
-retirer: function (e) { self.retirer(e.currentTarget.getAttribute('data-id')); }
+retirer: function (e) { self.retirer(e.currentTarget.getAttribute('data-id'), e.detail === 0); }
 };
 }
 }

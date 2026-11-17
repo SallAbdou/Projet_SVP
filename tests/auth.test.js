@@ -126,6 +126,27 @@ test('fourneeAuFour', () => {
   assert.equal(A.fourneeAuFour(A.etatInitial(), T0), false);
 });
 
+test('le four se compte depuis la première demande de fournée après activation', () => {
+  const ouvert = P.ouvrirFour(actif(), plus(30)).etat;
+  assert.equal(P.utilisateurCourant(ouvert).fourOuvertLe, plus(30));
+  assert.equal(A.fourneeAuFour(ouvert, plus(33)), true);
+  assert.equal(A.fourneeAuFour(ouvert, plus(35)), false);
+  const encore = P.ouvrirFour(ouvert, plus(40)).etat;
+  assert.equal(P.utilisateurCourant(encore).fourOuvertLe, plus(30));
+  assert.equal(A.fourneeAuFour(A.normaliser(JSON.parse(JSON.stringify(ouvert))), plus(33)), true);
+});
+
+test('pas de four plus de 10 minutes après activation, ni pour Léa', () => {
+  const tard = P.ouvrirFour(actif(), plus(11 * 60)).etat;
+  assert.equal(P.utilisateurCourant(tard).fourOuvertLe, null);
+  assert.equal(A.fourneeAuFour(tard, plus(11 * 60 + 1)), false);
+  const lea = P.seConnecter(A.etatInitial(), 'lea@demo.painquotidien.fr', 'Croissant8', T0).etat;
+  const leaOuvert = P.ouvrirFour(lea, T0).etat;
+  assert.equal(P.utilisateurCourant(leaOuvert).fourOuvertLe, null);
+  assert.equal(A.fourneeAuFour(leaOuvert, T0), false);
+  assert.deepEqual(P.ouvrirFour(A.etatInitial(), T0).etat, A.etatInitial());
+});
+
 test('normaliser', () => {
   assert.deepEqual(A.normaliser('x'), A.etatInitial());
   assert.deepEqual(A.normaliser({ version: 2, comptes: [], session: null, demande: null }), A.etatInitial());

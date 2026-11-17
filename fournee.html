@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr" data-protegee><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La fournée du jour · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="Today’s batch · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <style>
 body{margin:0;background:#FBF5EA}
@@ -59,7 +60,9 @@ a.act-knead:hover{background:#5E3412;color:#FFFDF8}
 @media (min-width:641px){.tile-S .act{padding:0}.tile-S .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (pointer:coarse){.act{min-height:44px;min-width:44px}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
-.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+@keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
 .tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
@@ -78,7 +81,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}} <span style="font-family:'DM Sans', sans-serif;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#DCEBD6;color:#2F5E36;vertical-align:middle">MVP</span></h1>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
@@ -261,7 +264,8 @@ return Bento.pickTopics(d.articles, d.articles.length, Store.refsIgnorees(st.sto
 available() { return this.restants().length; }
 // Mettre de côté (bascule) ou ignorer l'article de l'emplacement id. Le store est relu avant
 // d'écrire pour ne pas écraser un changement fait dans un autre onglet.
-agir(id, act) {
+// clavier : action déclenchée au clavier (clic d'activation, e.detail === 0) : le focus passe sur « Annuler ».
+agir(id, act, clavier) {
 var a = this.restants()[Bento.rankOf(id) - 1];
 if (!a) return;
 var store = Store.charger(stockage());
@@ -271,7 +275,7 @@ else if (Store.estDeCote(store, a.ref)) { store = Store.retirer(store, a.ref); t
 else { store = Store.mettreDeCote(store, a, new Date().toISOString()); type = 'save'; }
 Store.enregistrer(stockage(), store);
 // Si l'emplacement disparaît (plus assez de sujets), le focus se replie sur « Annuler ».
-this.pendingFocus = { id: id, act: act, repli: '[data-toast-undo]' };
+this.pendingFocus = clavier ? { toast: true, id: id, act: act } : { id: id, act: act, repli: '[data-toast-undo]' };
 this.setState({ store: store, toast: this.nouveauToast({ type: type, article: a, date: Store.dateDuJour(new Date()), origine: { id: id, act: act } }) });
 }
 // Chaque message remplace le précédent (seule la dernière action est annulable) et dure 5 s.
@@ -318,11 +322,18 @@ this.setState({ layout: layout });
 afterRender(root) {
 BentoUI.applyLayout(root, this.state.layout, this.available());
 var self = this;
-BentoUI.toast(document.getElementById('pq-toast'), this.vueToast(), function () { self.annuler(); });
+var zone = document.getElementById('pq-toast');
+BentoUI.toast(zone, this.vueToast(), function () { self.annuler(); });
+BentoUI.suivreToast(zone, {
+pause: function () { clearTimeout(self.toastTimer); },
+reprise: function () { clearTimeout(self.toastTimer); if (self.state.toast) self.toastTimer = setTimeout(function () { self.expirer(); }, 5000); },
+echap: function () { var t = self.state.toast; clearTimeout(self.toastTimer); self.pendingFocus = t && t.origine; self.setState({ toast: null }); }
+});
 var f = this.pendingFocus;
 this.pendingFocus = null;
 if (!f) return;
-var el = root.querySelector('[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : ''));
+var el = f.toast ? document.querySelector('[data-toast-undo]') : null;
+if (!el || !el.offsetParent) el = root.querySelector('[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : ''));
 if ((!el || !el.offsetParent) && f.repli) el = document.querySelector(f.repli);
 if (!el || !el.offsetParent) el = root.querySelector('[data-act="unskip-all"]');
 if (!el || !el.offsetParent) el = root.querySelector('[data-act="edit"]');
@@ -363,8 +374,8 @@ tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layo
 tileSize: function (e) { var id = idOf(e), s = e.currentTarget.getAttribute('data-size'); self.updateLayout(Bento.setSize(layout, id, s), { id: id, act: 'size-' + s }); },
 setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count')); self.updateLayout(Bento.setNewsCount(layout, n), { act: 'count-' + n }); },
 resetLayout: function () { self.updateLayout(Bento.defaultLayout(), { act: 'reset' }); },
-toggleSave: function (e) { self.agir(idOf(e), 'save'); },
-skip: function (e) { self.agir(idOf(e), 'skip'); },
+toggleSave: function (e) { self.agir(idOf(e), 'save', e.detail === 0); },
+skip: function (e) { self.agir(idOf(e), 'skip', e.detail === 0); },
 unskipAll: function () { self.toutFaireRevenir(); },
 emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
 editPressed: String(!!st.editing),

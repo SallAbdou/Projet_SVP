@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Règle ta fournée · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="Set up your batch · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/parcours.css">
 </head><body><div id="root"></div>
@@ -119,7 +120,6 @@ consentRgpd: 'J’accepte que mes données soient traitées conformément à la 
 confidentialite: 'Lire comment on utilise tes données',
 retour: 'Retour', continuer: 'Continuer', terminer: 'Voir ma fournée',
 demo: 'Démo : tes réponses restent dans ce navigateur, rien n’est envoyé.',
-labels: {},
 details: { 'Timide': 'Mots simples : on t’explique chaque notion.', 'En couple': 'Ton normal : tu connais les bases.', 'Marié': 'Ton expert : on va droit au but.' },
 erreurs: {
 prenom: { requis: 'Indique ton prénom.' },
@@ -148,15 +148,6 @@ consentRgpd: 'I agree that my data is processed in line with current GDPR rules 
 confidentialite: 'Read how we use your data',
 retour: 'Back', continuer: 'Continue', terminer: 'See my batch',
 demo: 'Demo: your answers stay in this browser, nothing is sent.',
-labels: {
-'Entrepreneur': 'Entrepreneur', 'Consultant': 'Consultant', 'Influenceur': 'Influencer', 'Formateur': 'Trainer', 'Étudiant': 'Student', 'Autre': 'Other',
-'Vidéo': 'Video', 'Automatisation et agents': 'Automation and agents', 'Cybersécurité': 'Cybersecurity', 'Actualité des grandes firmes': 'Big tech news',
-'Monétisation': 'Monetisation', 'Finance et spéculation': 'Finance and speculation', 'IA en entreprise': 'AI at work', 'Ecosystèmes': 'Ecosystems', 'Ingénierie R&D': 'R&D engineering',
-'Timide': 'Shy', 'En couple': 'In a relationship', 'Marié': 'Married',
-'Je veux des sources françaises uniquement': 'French sources only',
-'Je veux des sources polyglottes avec une traduction française': 'Sources in every language, translated into French',
-'English all the way': 'English all the way'
-},
 details: { 'Timide': 'Plain words: we explain every idea.', 'En couple': 'Normal tone: you know the basics.', 'Marié': 'Expert tone: straight to the point.' },
 erreurs: {
 prenom: { requis: 'Enter your first name.' },
@@ -242,7 +233,7 @@ var lang = st.lang || 'fr';
 var t = T[lang];
 var r = st.reponses;
 var etape = st.etape;
-var label = function (v) { return t.labels[v] || v; };
+var label = function (v) { return Questionnaire.libelle(v, lang); };
 var options = function (nom, liste, coche) {
 return liste.map(function (v, i) { return { id: nom + '-' + i, valeur: v, label: label(v), detail: t.details[v] || '', coche: coche(v) ? 'checked' : '' }; });
 };

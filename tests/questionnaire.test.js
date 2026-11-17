@@ -82,3 +82,13 @@ test('brouillon : aller-retour, valeurs abîmées et stockage cassé', () => {
   assert.equal(Q.enregistrerBrouillon(boom, b), false);
   assert.doesNotThrow(() => Q.effacerBrouillon(boom));
 });
+
+test('libellés anglais des choix du Tally', () => {
+  assert.equal(Q.libelle('Vidéo', 'en'), 'Video');
+  assert.equal(Q.libelle('Vidéo', 'fr'), 'Vidéo');
+  assert.equal(Q.libelle('Inconnu', 'en'), 'Inconnu');
+  assert.equal(Q.libelle('LLMs', 'en'), 'LLMs');
+  for (const cle of ['metiers', 'thematiques', 'relations', 'langues']) {
+    for (const v of Q.CHOIX[cle]) assert.equal(typeof Q.LIBELLES_EN[v], 'string', v);
+  }
+});

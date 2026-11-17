@@ -99,8 +99,24 @@
     try { storage.removeItem(CLE_BROUILLON); } catch (err) {}
   }
 
+  // Libellés anglais des choix : affichage seulement, la valeur enregistrée reste le texte du Tally.
+  var LIBELLES_EN = {
+    'Entrepreneur': 'Entrepreneur', 'Consultant': 'Consultant', 'Influenceur': 'Influencer', 'Formateur': 'Trainer', 'Étudiant': 'Student', 'Autre': 'Other',
+    'LLMs': 'LLMs', 'Vidéo': 'Video', 'Image': 'Image', 'Automatisation et agents': 'Automation and agents', 'Cybersécurité': 'Cybersecurity',
+    'Actualité des grandes firmes': 'Big tech news', 'Monétisation': 'Monetisation', 'Finance et spéculation': 'Finance and speculation',
+    'Hardware': 'Hardware', 'IA en entreprise': 'AI at work', 'Ecosystèmes': 'Ecosystems', 'Ingénierie R&D': 'R&D engineering',
+    'Timide': 'Shy', 'En couple': 'In a relationship', 'Marié': 'Married',
+    'Je veux des sources françaises uniquement': 'French sources only',
+    'Je veux des sources polyglottes avec une traduction française': 'Sources in every language, translated into French',
+    'English all the way': 'English all the way'
+  };
+
+  function libelle(valeur, lang) {
+    return lang === 'en' && Object.prototype.hasOwnProperty.call(LIBELLES_EN, valeur) ? LIBELLES_EN[valeur] : valeur;
+  }
+
   var Questionnaire = {
-    CHOIX: CHOIX, NB_ETAPES: NB_ETAPES, CLE_BROUILLON: CLE_BROUILLON,
+    CHOIX: CHOIX, NB_ETAPES: NB_ETAPES, CLE_BROUILLON: CLE_BROUILLON, LIBELLES_EN: LIBELLES_EN, libelle: libelle,
     reponsesVides: reponsesVides, etapeValide: etapeValide, nombreDeNews: nombreDeNews, profilDepuis: profilDepuis,
     chargerBrouillon: chargerBrouillon, enregistrerBrouillon: enregistrerBrouillon, effacerBrouillon: effacerBrouillon
   };

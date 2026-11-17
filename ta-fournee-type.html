@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ta fournée type · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="Your typical batch · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/parcours.css">
-<script src="/auth.js"></script>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script>
 <script>
 // Sans inscription en cours, cet écran n'a rien à montrer : retour au questionnaire.
 (function () { var d = Auth.demandeEnCours(Auth.charger()); if (!d || d.motif !== 'inscription') { window.__redirige = true; location.replace('/questionnaire'); } })();
@@ -82,11 +83,11 @@ for (var i = 1; i <= n; i++) tuiles.push({ rang: i, classe: 'mini-tuile' + (i ==
 return {
 t: t,
 titre: t.titre.replace('{prenom}', c.prenom),
-recap: { metiers: p.metiers.join(', '), ton: TONS[lang][p.relation] || p.relation, langue: LANGUES[lang][p.langue] || p.langue, news: t.newsN.replace('{n}', n) },
-thematiques: p.thematiques.map(function (x) { return { label: x }; }),
+recap: { metiers: p.metiers.map(function (x) { return Questionnaire.libelle(x, lang); }).join(', '), ton: TONS[lang][p.relation] || p.relation, langue: LANGUES[lang][p.langue] || p.langue, news: t.newsN.replace('{n}', n) },
+thematiques: p.thematiques.map(function (x) { return { label: Questionnaire.libelle(x, lang) }; }),
 apercuLabel: t.apercu.replace('{n}', n),
 tuiles: tuiles
 };
 }
 }
-</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
