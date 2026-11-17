@@ -108,3 +108,19 @@ test('bilan additionne tout l historique', () => {
   assert.deepEqual(C.bilan([post('a', 1, chiffres(1, 2)), post('b', 90, chiffres(1, 3)), post('c', 2, null)]), { posts: 3, contacts: 5 });
   assert.deepEqual(C.bilan([]), { posts: 0, contacts: 0 });
 });
+
+test('phraseAnalyse FR : appel à l’action, gras, virgule décimale', () => {
+  assert.deepEqual(C.phraseAnalyse(1.8, 'fr'), {
+    avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud',
+    apres: ' font en moyenne 1,8 fois plus d’audience que les autres.'
+  });
+  assert.equal(C.phraseAnalyse(2, 'fr').apres, ' font en moyenne 2 fois plus d’audience que les autres.');
+});
+
+test('phraseAnalyse EN et ratio absent', () => {
+  assert.deepEqual(C.phraseAnalyse(1.8, 'en'), {
+    avant: 'Serve them fast! Your posts on ', gras: 'piping hot',
+    apres: ' topics get on average 1.8 times more reach than the others.'
+  });
+  assert.equal(C.phraseAnalyse(null, 'fr'), null);
+});

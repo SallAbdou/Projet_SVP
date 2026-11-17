@@ -24,8 +24,8 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{title}}</h1>
-<p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em"><span style="display:block">{{titleL1}}</span><span style="display:block">{{t.titleL2}}</span></h1>
+<p style="margin:0;color:#6B5443;font-size:16px"><span style="display:block">{{t.subtitle1}}</span><span style="display:block">{{t.subtitle2}}</span></p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 </div>
 <span style="{{sampleStyle}}">{{t.sample}}</span>
@@ -63,17 +63,12 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </div>
 <div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:#4A3324;text-align:center">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
-<span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto"><span style="{{b.dotStyle}}">●</span> {{b.label}}</span>
+<span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto">{{b.label}}</span>
 </sc-for>
 </div>
-<p style="margin:0;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#6B5443">
-<sc-for list="{{legend}}" as="l" hint-placeholder-count="3">
-<span><span style="{{l.dotStyle}}" aria-hidden="true">●</span> {{l.label}}</span>
-</sc-for>
-</p>
 </div>
 <p style="{{noBarsStyle}}">{{noBars}}</p>
-<p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{insight}}</p>
+<p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
 <section aria-labelledby="next-t" style="background:#2E1D12;color:#FBF5EA;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
@@ -121,24 +116,22 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 var HIDE = 'display: none';
 // Puces et barres : classes et variables de la charte (charte.css, charte.js).
 function CHIP(etat) { return Charte.puce(etat) || 'pq-cache'; }
-var DOT = { vert: 'color: var(--braise-vive)', orange: 'color: var(--barre-petrir)', rouge: 'color: var(--barre-rassis)' };
 var SENS = { hausse: '#2F5E36', baisse: '#8E2A1C', stable: '#6B5443', nouveau: '#2F5E36' };
 var T = {
 fr: {
 navLabel: 'Navigation principale',
 eyebrowTail: 'tes 30 derniers jours', exemple: 'Fournée d’exemple : n8n ne répond pas',
-title: 'Bonjour {prenom}, voici ce que tes fournées t’ont rapporté', titleAnon: 'Bonjour, voici ce que tes fournées t’ont rapporté',
-subtitle: 'Chaque matin, on enfourne les nouveautés IA. Toi, tu choisis ce que tu sers à ton audience.',
+title: 'Bonjour {prenom},', titleAnon: 'Bonjour,', titleL2: 'Regardons ensemble ce que tes fournées ont généré',
+subtitle1: 'Chaque matin, on cook les nouveautés IA pour toi.', subtitle2: 'Tu choisis ce que tu sers à ton audience.',
 sample: 'Inclut des données d’exemple',
 waitOne: '1 post attend ses chiffres', waitMany: '{n} posts attendent leurs chiffres', waitCta: 'Reporter mes chiffres',
-kpiLabel: 'Chiffres clés', kpiTitle: 'Tes posts, 30 derniers jours',
+kpiLabel: 'Chiffres clés', kpiTitle: 'Tes posts, ces 30 derniers jours',
 kpis: ['Posts publiés', 'Impressions', 'Réactions', 'Republications', 'Prises de contact'],
 ecart: { hausseN: '+{n} vs mois dernier', baisseN: '-{n} vs mois dernier', hausseP: '+{n} %', baisseP: '-{n} %', stable: 'stable', nouveau: 'nouveau' },
-visTitle: 'Ce qui est le mieux sorti du four', visSub: 'impressions de tes 6 derniers posts',
+visTitle: 'Tes meilleures fournées', visSub: 'Impressions de tes 6 derniers posts',
 bar: '{label} : {n} impressions, sujet {etat}',
 etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
 noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
-insight: 'Tes posts sur des sujets tout chauds font en moyenne {r} fois plus d’impressions que les autres : sers-les vite.',
 insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
 nextTitle: 'Tout juste sorti du four', nextCta: 'Pétrir le post',
 nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
@@ -150,18 +143,17 @@ pantryEmpty: 'Rien de côté pour l’instant.', pantryEmptyCta: 'Aller à la fo
 en: {
 navLabel: 'Main navigation',
 eyebrowTail: 'your last 30 days', exemple: 'Sample batch: n8n is not responding',
-title: 'Hi {prenom}, here’s what your batches brought in', titleAnon: 'Hi, here’s what your batches brought in',
-subtitle: 'Every morning we bake the latest AI news. You pick what to serve your audience.',
+title: 'Hi {prenom},', titleAnon: 'Hi,', titleL2: 'Let’s look at what your batches brought in',
+subtitle1: 'Every morning, we cook the latest AI news for you.', subtitle2: 'You choose what to serve your audience.',
 sample: 'Includes sample data',
 waitOne: '1 post is waiting for its figures', waitMany: '{n} posts are waiting for their figures', waitCta: 'Report my figures',
-kpiLabel: 'Key figures', kpiTitle: 'Your posts, last 30 days',
+kpiLabel: 'Key figures', kpiTitle: 'Your posts, these last 30 days',
 kpis: ['Posts published', 'Impressions', 'Reactions', 'Reposts', 'Contact requests'],
 ecart: { hausseN: '+{n} vs last month', baisseN: '-{n} vs last month', hausseP: '+{n}%', baisseP: '-{n}%', stable: 'steady', nouveau: 'new' },
-visTitle: 'What came out of the oven best', visSub: 'impressions of your last 6 posts',
+visTitle: 'Your best batches', visSub: 'Impressions of your last 6 posts',
 bar: '{label}: {n} impressions, topic {etat}',
 etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
 noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
-insight: 'Your posts on piping hot topics get {r} times the impressions of the others on average: serve them fast.',
 insightNeutral: 'Publish and report your figures to see what works best.',
 nextTitle: 'Fresh out of the oven', nextCta: 'Knead the post',
 nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
@@ -226,7 +218,7 @@ return {
 t: t,
 exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:#6B5443;padding:6px 12px;border-radius:10px;border:1px dashed #D9C29C;align-self:flex-start' : HIDE,
 eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
-title: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
+titleL1: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
 sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #FFFDF8; border: 1px dashed #D9C29C; color: #6B5443' : HIDE,
 waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; border-radius: 14px; background: #FBE3C2; color: #5E3412; border: 1px solid #E9C48E' : HIDE,
 waitText: attente === 1 ? t.waitOne : remplir(t.waitMany, { n: attente }),
@@ -246,13 +238,12 @@ noBars: charge ? t.noBars : t.loading,
 busy: String(!charge),
 bars: barres.map(function (b) {
 return {
-value: num(b.impressions), label: b.label, dotStyle: DOT[b.feu],
+value: num(b.impressions), label: b.label,
 aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.feu] }),
 barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; border-radius: 14px 14px 4px 4px'
 };
 }),
-legend: ['vert', 'orange', 'rouge'].map(function (f) { return { label: t.etats[f], dotStyle: DOT[f] }; }),
-insight: !charge ? t.loading : ratio === null ? t.insightNeutral : remplir(t.insight, { r: new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(ratio) }),
+ins: !charge ? { avant: t.loading, gras: '', apres: '' } : Comptoir.phraseAnalyse(ratio, lang) || { avant: t.insightNeutral, gras: '', apres: '' },
 nextStyle: news ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
 nextEmptyStyle: news ? HIDE : 'display: flex; flex-direction: column; gap: 10px',
 nextEmpty: charge && !(data && data.etat === 'attente') ? t.nextEmpty : t.nextLoading,
