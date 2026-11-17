@@ -16,6 +16,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile{min-width:0;min-height:0;overflow:hidden;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
 .tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
+/* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
+.tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px rgba(255,176,32,.55);animation:pq-halo 1s ease-in-out 2 alternate}
+@keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute),0 0 10px 2px rgba(255,176,32,.35)}to{box-shadow:0 0 0 5px var(--croute),0 0 30px 10px rgba(255,176,32,.6)}}
+@media (prefers-reduced-motion:reduce){.tile.pq-halo{animation:none}}
 .tile-S{grid-column:span 1;grid-row:span 1}
 .tile-M{grid-column:span 2;grid-row:span 1}
 .tile-L{grid-column:span 2;grid-row:span 2}
@@ -278,6 +282,9 @@ super(props);
 var layout;
 try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
 this.state = { lang: 'fr', editing: false, layout: layout, perso: Bento.loadPerso(stockage()), data: null, posts: [], loadError: false, store: Store.charger(stockage()) };
+// Arrivée depuis le four du comptoir (/fournee#n1) : traitée une seule fois, au premier rendu de la bento.
+this.ancre = window.location.hash || null;
+this.halo = null;
 var self = this;
 BentoUI.initDrag({
 isEditing: function () { return !!self.state.editing; },
@@ -372,8 +379,39 @@ try { Bento.saveLayout(window.localStorage, r.layout); } catch (e) {}
 this.pendingFocus = { act: focus || 'mep-' + id };
 this.setState({ layout: r.layout, perso: r.perso, toast: this.nouveauToast({ type: vide ? 'mepVide' : 'mep', mep: id }) });
 }
+// Défilement doux jusqu'au bloc visé, focus sur « Pétrir un post », halo doré 2 s.
+// Le défilement part après le rendu, car boot.js restaure la position de défilement juste après afterRender.
+arriverParAncre(root) {
+var data = this.state.data;
+if (this.ancre && data && data.etat === 'pret') {
+var visibles = [].slice.call(root.querySelectorAll('.tile[data-tile]')).filter(function (el) { return !el.hidden; }).map(function (el) { return el.getAttribute('data-tile'); });
+var id = Bento.cibleAncre(this.ancre, visibles);
+this.ancre = null;
+if (id) {
+var self = this;
+var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+this.halo = { id: id };
+var bouton = root.querySelector('[data-act="knead"][data-id="' + id + '"]');
+if (bouton) { try { bouton.focus({ preventScroll: true }); } catch (e) { bouton.focus(); } }
+setTimeout(function () {
+var bloc = document.querySelector('.tile[data-tile="' + id + '"]');
+if (bloc) bloc.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'center' });
+}, 0);
+setTimeout(function () {
+self.halo = null;
+var bloc = document.querySelector('.tile.pq-halo');
+if (bloc) bloc.classList.remove('pq-halo');
+}, 2000);
+}
+}
+if (this.halo) {
+var b = root.querySelector('.tile[data-tile="' + this.halo.id + '"]');
+if (b) b.classList.add('pq-halo');
+}
+}
 afterRender(root) {
 BentoUI.applyLayout(root, this.state.layout, this.available());
+this.arriverParAncre(root);
 var lay = this.state.layout, perso = this.state.perso;
 root.querySelectorAll('[data-mini]').forEach(function (el) {
 var id = el.getAttribute('data-mini');
