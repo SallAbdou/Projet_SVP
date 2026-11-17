@@ -168,7 +168,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/comptoir.js"></script><script>
 var CHIP = {
 hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
 knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
@@ -352,7 +352,8 @@ var store = st.store || Store.etatInitial();
 var posts = st.posts || [];
 var today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 var eyebrow = today.charAt(0).toUpperCase() + today.slice(1) + ' · ' + t.eyebrowTail;
-var maxImp = Math.max.apply(null, posts.map(function (p) { return p.impressions; }).concat([1]));
+var maintenant = new Date().toISOString();
+var barres = Comptoir.graphique(Comptoir.fusionner(Comptoir.depuisExemples(posts, maintenant), Comptoir.depuisPublies(store.publies, ready ? data.articles : [], store.sauves)));
 return {
 t: t,
 eyebrow: eyebrow,
@@ -398,10 +399,10 @@ s.saved = String(Store.estDeCote(store, c.ref));
 return Object.assign(s, labels);
 }),
 g: toolLabels(t, t.graphName),
-bars: posts.map(function (p) {
+bars: barres.map(function (b) {
 return {
-value: num(p.impressions), label: p.label,
-barStyle: 'width: 100%; max-width: 44px; height: ' + Math.round(p.impressions / maxImp * 100) + '%; background: ' + BAR_COLOR[FEU[p.feu]] + '; border-radius: 10px 10px 3px 3px'
+value: num(b.impressions), label: b.label,
+barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background: ' + BAR_COLOR[FEU[b.feu]] + '; border-radius: 10px 10px 3px 3px'
 };
 })
 };
