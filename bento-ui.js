@@ -86,5 +86,31 @@
     document.addEventListener('keydown', function (e) { if (drag && e.key === 'Escape') end(true); });
   }
 
-  root.BentoUI = { applyLayout: applyLayout, initDrag: initDrag };
+  // Message bref en bas d'écran. el est une zone aria-live statique, hors de #root (qui est
+  // remplacé à chaque rendu) : on ne réécrit son contenu que si vue.cle change, pour n'annoncer
+  // chaque message qu'une fois. vue = { cle, texte, annuler } ou null pour effacer.
+  function toast(el, vue, onUndo) {
+    if (!el) return;
+    var cle = vue ? String(vue.cle) : '';
+    if (el.getAttribute('data-cle') === cle) return;
+    el.setAttribute('data-cle', cle);
+    el.innerHTML = '';
+    if (!vue) return;
+    var box = document.createElement('div');
+    box.className = 'toast-box';
+    var texte = document.createElement('span');
+    texte.textContent = vue.texte;
+    box.appendChild(texte);
+    if (vue.annuler) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('data-toast-undo', '');
+      b.textContent = vue.annuler;
+      b.addEventListener('click', onUndo);
+      box.appendChild(b);
+    }
+    el.appendChild(box);
+  }
+
+  root.BentoUI = { applyLayout: applyLayout, initDrag: initDrag, toast: toast };
 })(this);

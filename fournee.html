@@ -58,6 +58,10 @@ a.act-knead:hover{background:#5E3412;color:#FFFDF8}
 .tile[data-tile="n1"] .act[aria-pressed="true"]{background:#8A4F1C;color:#FFF6E3}
 @media (min-width:641px){.tile-S .act{padding:0}.tile-S .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (pointer:coarse){.act{min-height:44px;min-width:44px}}
+#pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
+.toast-box{pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+.toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:#F2C46D;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
+.toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
 .tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (min-width:641px){.tile-S .only-M,.tile-S .only-L,.tile-M .only-L{display:none!important}}
@@ -66,6 +70,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
+<div id="pq-toast" aria-live="polite"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
@@ -95,6 +100,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 <button type="button" class="tool" data-act="reset" onClick="{{resetLayout}}">{{t.reset}}</button>
 </div>
+<div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:#2E1D12">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:#8A4F1C;color:#FFFDF8;font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
 <div data-bento class="bento {{gridClass}}" style="{{gridStyle}}">
 
 <sc-for list="{{slots}}" as="s" hint-placeholder-count="7">
@@ -264,8 +270,44 @@ if (act === 'skip') { store = Store.ignorer(store, a.ref, Store.dateDuJour(new D
 else if (Store.estDeCote(store, a.ref)) { store = Store.retirer(store, a.ref); type = 'unsave'; }
 else { store = Store.mettreDeCote(store, a, new Date().toISOString()); type = 'save'; }
 Store.enregistrer(stockage(), store);
-this.pendingFocus = { id: id, act: act };
-this.setState({ store: store });
+// Si l'emplacement disparaît (plus assez de sujets), le focus se replie sur « Annuler ».
+this.pendingFocus = { id: id, act: act, repli: '[data-toast-undo]' };
+this.setState({ store: store, toast: this.nouveauToast({ type: type, article: a, date: Store.dateDuJour(new Date()), origine: { id: id, act: act } }) });
+}
+// Chaque message remplace le précédent (seule la dernière action est annulable) et dure 5 s.
+nouveauToast(t) {
+var self = this;
+clearTimeout(this.toastTimer);
+this.toastN = (this.toastN || 0) + 1;
+t.n = this.toastN;
+this.toastTimer = setTimeout(function () { self.expirer(); }, 5000);
+return t;
+}
+expirer() {
+var t = this.state.toast;
+var u = document.querySelector('[data-toast-undo]');
+if (t && u && document.activeElement === u) this.pendingFocus = t.origine;
+this.setState({ toast: null });
+}
+annuler() {
+var t = this.state.toast;
+if (!t || t.type === 'undone') return;
+var store = Store.charger(stockage());
+if (t.type === 'save') store = Store.retirer(store, t.article.ref);
+else if (t.type === 'unsave') store = Store.mettreDeCote(store, t.article, new Date().toISOString());
+else store = Store.desIgnorer(store, t.article.ref, t.date);
+Store.enregistrer(stockage(), store);
+this.pendingFocus = t.origine;
+this.setState({ store: store, toast: this.nouveauToast({ type: 'undone' }) });
+}
+toutFaireRevenir() {
+var date = Store.dateDuJour(new Date());
+var store = Store.charger(stockage());
+Store.refsIgnorees(store, date).forEach(function (ref) { store = Store.desIgnorer(store, ref, date); });
+Store.enregistrer(stockage(), store);
+clearTimeout(this.toastTimer);
+this.pendingFocus = { id: 'n1', act: 'knead' };
+this.setState({ store: store, toast: null });
 }
 // Enregistre la disposition puis re-rend la page. focus = { id, act } du bouton à refocaliser après le rendu.
 updateLayout(layout, focus) {
@@ -275,12 +317,23 @@ this.setState({ layout: layout });
 }
 afterRender(root) {
 BentoUI.applyLayout(root, this.state.layout, this.available());
+var self = this;
+BentoUI.toast(document.getElementById('pq-toast'), this.vueToast(), function () { self.annuler(); });
 var f = this.pendingFocus;
 this.pendingFocus = null;
 if (!f) return;
 var el = root.querySelector('[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : ''));
+if ((!el || !el.offsetParent) && f.repli) el = document.querySelector(f.repli);
+if (!el || !el.offsetParent) el = root.querySelector('[data-act="unskip-all"]');
 if (!el || !el.offsetParent) el = root.querySelector('[data-act="edit"]');
 if (el) el.focus();
+}
+vueToast() {
+var t = this.state.toast;
+if (!t) return null;
+var tx = T[this.state.lang || 'fr'];
+var textes = { save: tx.toastSave, unsave: tx.toastUnsave, skip: tx.toastSkip, undone: tx.toastUndone };
+return { cle: t.n + '-' + (this.state.lang || 'fr'), texte: textes[t.type], annuler: t.type === 'undone' ? '' : tx.undo };
 }
 renderVals() {
 var st = this.state || {};
@@ -311,6 +364,8 @@ setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count
 resetLayout: function () { self.updateLayout(Bento.defaultLayout(), { act: 'reset' }); },
 toggleSave: function (e) { self.agir(idOf(e), 'save'); },
 skip: function (e) { self.agir(idOf(e), 'skip'); },
+unskipAll: function () { self.toutFaireRevenir(); },
+emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
 editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
 editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: ' + (st.editing ? '#8A4F1C; color: #FFFDF8' : '#FFFDF8; color: #8A4F1C') + '; font: inherit; font-weight: 700; cursor: pointer',
