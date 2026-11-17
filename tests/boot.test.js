@@ -20,3 +20,10 @@ test('événements et échappement inchangés', () => {
 test('valeur de premier niveau contenant {{...}} affichée telle quelle', () => {
   assert.equal(B.remplirGabarit('<p>{{a}}</p>{{b}}', { a: '{{b}}', b: 'B' }), '<p>{{b}}</p>B');
 });
+
+test('titre de page selon la langue', () => {
+  assert.equal(B.titrePage('en', 'A', 'B'), 'B');
+  assert.equal(B.titrePage('fr', 'A', 'B'), 'A');
+  assert.equal(B.titrePage('en', 'A', ''), 'A');
+  assert.equal(B.titrePage('en', 'A', null), 'A');
+});

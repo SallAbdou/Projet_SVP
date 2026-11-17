@@ -20,8 +20,11 @@
     return s.replace(/\{\{([\w.]+)\}\}/g, function (m, p) { return esc(get(v, p)); });
   }
 
+  // Titre de l'onglet : version anglaise si elle existe (meta pq-titre-en), sinon le titre français.
+  function titrePage(lang, fr, en) { return lang === 'en' && en ? en : fr; }
+
   if (typeof module === 'object' && module.exports) {
-    module.exports = { esc: esc, remplirGabarit: remplirGabarit };
+    module.exports = { esc: esc, remplirGabarit: remplirGabarit, titrePage: titrePage };
     return;
   }
 
@@ -29,6 +32,8 @@
   var c = new Component({});
   try { var l = localStorage.getItem('pq-lang'); if (l === 'fr' || l === 'en') c.state.lang = l; } catch (e) {}
   window.__app = c;
+  var titreFr = document.title;
+  var metaEn = document.querySelector('meta[name="pq-titre-en"]');
 
   // Repère stable de l'élément actif, pour le retrouver après le remplacement de #root.
   function repere(el, root) {
@@ -83,6 +88,7 @@
     });
     var lang = c.state.lang || 'fr';
     document.documentElement.lang = lang;
+    document.title = titrePage(lang, titreFr, metaEn && metaEn.getAttribute('content'));
     document.dispatchEvent(new CustomEvent('pq:rendu', { detail: { root: root, lang: lang } }));
     if (typeof c.afterRender === 'function') c.afterRender(root);
     restaurer(etat, root);

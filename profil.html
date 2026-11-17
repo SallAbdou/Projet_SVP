@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr" data-protegee><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mon profil · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="My profile · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <style>
 body{margin:0;background:#FBF5EA}
@@ -40,7 +41,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script>
+<script src="/dc.js"></script><script src="/questionnaire.js"></script><script>
 // Profil de l'utilisatrice connectée (auth.js), tel que saisi au questionnaire (textes du Tally).
 var RELATIONS = {
 'Timide': { fr: 'Timide (je découvre l’IA)', en: 'Shy (just discovering AI)' },
@@ -78,8 +79,8 @@ var prenom = u ? u.prenom : '';
 return {
 t: T[lang],
 p: {
-initiale: prenom.charAt(0), prenom: prenom, metier: pr.metiers.join(', '),
-themes: pr.thematiques.map(function (x) { return { label: x }; }),
+initiale: prenom.charAt(0), prenom: prenom, metier: pr.metiers.map(function (x) { return Questionnaire.libelle(x, lang); }).join(', '),
+themes: pr.thematiques.map(function (x) { return { label: Questionnaire.libelle(x, lang) }; }),
 relation: traduire(RELATIONS, pr.relation, lang), langue: traduire(LANGUES, pr.langue, lang)
 }
 };
