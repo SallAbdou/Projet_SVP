@@ -1,8 +1,22 @@
 [
-  { "label": "Puces IA", "impressions": 520, "feu": "rouge" },
-  { "label": "RGPD et LLM", "impressions": 410, "feu": "orange" },
-  { "label": "Agents en PME", "impressions": 1240, "feu": "vert" },
-  { "label": "Prompting", "impressions": 680, "feu": "orange" },
-  { "label": "Mistral OCR", "impressions": 1080, "feu": "vert" },
-  { "label": "IA et devis", "impressions": 890, "feu": "vert" }
+  { "ref": "hist01", "titre": "Les PME adoptent l’IA pour rédiger leurs devis", "label": "IA et devis", "feu": "vert", "ilYaJours": 3,
+    "chiffres": { "impressions": 890, "reactions": 64, "republications": 6, "commentaires": 11, "contacts": 2 } },
+  { "ref": "hist02", "titre": "Un modèle OCR lit enfin les factures scannées", "label": "Mistral OCR", "feu": "vert", "ilYaJours": 7,
+    "chiffres": { "impressions": 1080, "reactions": 72, "republications": 5, "commentaires": 14, "contacts": 1 } },
+  { "ref": "hist03", "titre": "Trois réflexes de prompting pour gagner une heure par jour", "label": "Prompting", "feu": "orange", "ilYaJours": 12,
+    "chiffres": { "impressions": 680, "reactions": 41, "republications": 3, "commentaires": 6, "contacts": 0 } },
+  { "ref": "hist04", "titre": "Les agents IA entrent dans les PME", "label": "Agents en PME", "feu": "vert", "ilYaJours": 17,
+    "chiffres": { "impressions": 1240, "reactions": 88, "republications": 9, "commentaires": 17, "contacts": 2 } },
+  { "ref": "hist05", "titre": "Le RGPD face aux modèles de langage", "label": "RGPD et LLM", "feu": "orange", "ilYaJours": 23,
+    "chiffres": { "impressions": 410, "reactions": 27, "republications": 2, "commentaires": 4, "contacts": 0 } },
+  { "ref": "hist06", "titre": "La guerre des puces IA vue d’une PME", "label": "Puces IA", "feu": "rouge", "ilYaJours": 28,
+    "chiffres": { "impressions": 520, "reactions": 20, "republications": 2, "commentaires": 3, "contacts": 0 } },
+  { "ref": "hist07", "titre": "Le no-code se met à l’IA générative", "label": "No-code et IA", "feu": "orange", "ilYaJours": 34,
+    "chiffres": { "impressions": 610, "reactions": 44, "republications": 4, "commentaires": 5, "contacts": 0 } },
+  { "ref": "hist08", "titre": "Les assistants vocaux répondent au téléphone des artisans", "label": "Assistants vocaux", "feu": "vert", "ilYaJours": 41,
+    "chiffres": { "impressions": 1150, "reactions": 92, "republications": 10, "commentaires": 12, "contacts": 1 } },
+  { "ref": "hist09", "titre": "Un modèle open source rattrape les leaders", "label": "Open source", "feu": "orange", "ilYaJours": 47,
+    "chiffres": { "impressions": 720, "reactions": 52, "republications": 6, "commentaires": 7, "contacts": 0 } },
+  { "ref": "hist10", "titre": "La facturation automatique arrive chez les indépendants", "label": "Facturation auto", "feu": "vert", "ilYaJours": 55,
+    "chiffres": { "impressions": 1013, "reactions": 70, "republications": 7, "commentaires": 9, "contacts": 1 } }
 ]

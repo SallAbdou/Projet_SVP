@@ -41,14 +41,28 @@
     });
   }
 
+  var CHIFFRES = ['impressions', 'reactions', 'republications', 'commentaires', 'contacts'];
+  function entierPositif(v) { return typeof v === 'number' && v % 1 === 0 && v >= 0; }
+
+  // Post de l'historique d'exemple (data/posts.json), daté relativement à aujourd'hui.
+  function postExempleValide(p) {
+    return !!p && typeof p === 'object' && !Array.isArray(p) &&
+      typeof p.ref === 'string' && p.ref !== '' &&
+      typeof p.titre === 'string' && typeof p.label === 'string' &&
+      FEUX.indexOf(p.feu) !== -1 && entierPositif(p.ilYaJours) &&
+      !!p.chiffres && typeof p.chiffres === 'object' &&
+      CHIFFRES.every(function (c) { return entierPositif(p.chiffres[c]); });
+  }
+
+  // Les posts d'exemple invalides sont écartés, un seul mauvais post ne vide pas le comptoir.
   function chargerPosts() {
     return lireJson('/data/posts.json').then(function (p) {
       if (!Array.isArray(p)) throw new Error('posts invalides');
-      return p;
+      return p.filter(postExempleValide);
     });
   }
 
-  var Api = { estReponseValide: estReponseValide, chargerFournee: chargerFournee, chargerPosts: chargerPosts };
+  var Api = { estReponseValide: estReponseValide, postExempleValide: postExempleValide, chargerFournee: chargerFournee, chargerPosts: chargerPosts };
 
   if (typeof module === 'object' && module.exports) module.exports = Api;
   else root.Api = Api;
