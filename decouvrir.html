@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
 <title>Ta fournée t'attend · Votre pAIn quotidien</title>
 <meta name="pq-titre-en" content="Your batch is waiting · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
@@ -30,7 +30,7 @@
 <p class="sur-titre">{{t.eyebrow}}</p>
 <h1 id="invit-t" class="titre">{{t.titre}}</h1>
 <p class="chapo">{{t.chapo}}</p>
-<a class="bouton" href="/questionnaire" data-focus="cta">{{t.cta}}</a>
+<a class="bouton" href="{{ctaHref}}" data-focus="cta">{{t.cta}}</a>
 <div class="liens-bas" style="width:100%">
 <a href="/">{{t.retour}}</a>
 <a href="/connexion">{{t.dejaCompte}}</a>
@@ -57,7 +57,8 @@ class Component extends DCLogic {
 constructor(props) { super(props); this.state = { lang: 'fr' }; }
 renderVals() {
 var lang = (this.state && this.state.lang) || 'fr';
-return { t: T[lang] };
+// Mode réel : le CTA mène au Tally (même onglet).
+return { t: T[lang], ctaHref: window.PQ_MODE === 'reel' ? window.PQ_CONFIG.tallyUrl : '/questionnaire' };
 }
 }
 </script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

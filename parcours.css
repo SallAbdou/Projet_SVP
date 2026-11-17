@@ -147,3 +147,4 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
   .qr-demo-titre{margin:0;font-weight:700}
   .qr-demo-adresse{margin:0;font-size:14px;color:#6B5443}
 }
+[data-mode="reel"] .mention-demo,[data-mode="reel"] [data-demo-seul]{display:none}

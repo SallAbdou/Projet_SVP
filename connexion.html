@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
 <title>Connexion · Votre pAIn quotidien</title>
 <meta name="pq-titre-en" content="Log in · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
@@ -12,9 +12,9 @@
 <section class="carte" aria-labelledby="titre">
 <h1 id="titre" class="titre">{{t.titre}}</h1>
 <p class="chapo">{{t.chapo}}</p>
-<button type="button" class="bouton-secondaire" onClick="{{remplirDemo}}" data-focus="demo">{{t.demoBouton}}</button>
+<button type="button" class="bouton-secondaire" onClick="{{remplirDemo}}" data-focus="demo" data-demo-seul>{{t.demoBouton}}</button>
 <form onSubmit="{{valider}}" novalidate>
-<p id="err-connexion" class="alerte" role="alert" style="{{alerteStyle}}">{{t.erreur}}</p>
+<p id="err-connexion" class="alerte" role="alert" style="{{alerteStyle}}">{{erreurTexte}}</p>
 <div class="champ">
 <label for="email">{{t.email}}</label>
 <input id="email" type="email" autocomplete="username" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
@@ -46,6 +46,7 @@ demoBouton: 'Utiliser le compte de démo (Léa)',
 email: 'E-mail', mdp: 'Mot de passe', voir: 'Afficher', masquer: 'Masquer',
 oubli: 'Mot de passe oublié ?', valider: 'Me connecter',
 erreur: 'E-mail ou mot de passe incorrect.',
+reseau: 'Le serveur ne répond pas. Réessaie dans un instant.',
 accueil: '← Accueil', creer: 'Pas encore de compte ? Règle ta fournée',
 demo: 'Démo : aucun mot de passe n’est envoyé ni enregistré. Tout compte confirmé accepte un mot de passe qui respecte les règles (8 caractères, une majuscule, un chiffre).'
 },
@@ -55,6 +56,7 @@ demoBouton: 'Use the demo account (Léa)',
 email: 'Email', mdp: 'Password', voir: 'Show', masquer: 'Hide',
 oubli: 'Forgot your password?', valider: 'Log in',
 erreur: 'Incorrect email or password.',
+reseau: 'The server is not responding. Try again in a moment.',
 accueil: '← Home', creer: 'No account yet? Set up your batch',
 demo: 'Demo: no password is sent or stored. Any confirmed account accepts a password that meets the rules (8 characters, one capital, one digit).'
 }
@@ -72,9 +74,15 @@ this.pendingFocus = null;
 if (id) Parcours.focaliser(root.querySelector(id));
 }
 valider() {
-var r = Auth.seConnecter(this.state.email, this.state.mdp);
-if (!r.ok) { this.pendingFocus = '#email'; this.setState({ erreur: true }); return; }
+// Démo : réponse immédiate ; mode réel : promesse (Supabase). Promise.resolve couvre les deux.
+var self = this;
+if (this.envoi) return;
+this.envoi = true;
+Promise.resolve(Auth.seConnecter(this.state.email, this.state.mdp)).then(function (r) {
+self.envoi = false;
+if (!r.ok) { self.pendingFocus = '#email'; self.setState({ erreur: r.erreur === 'reseau' ? 'reseau' : 'identifiants' }); return; }
 location.replace(retourDemande());
+});
 }
 renderVals() {
 var self = this;
@@ -83,6 +91,7 @@ var lang = st.lang || 'fr';
 var t = T[lang];
 return {
 t: t, email: st.email, mdp: st.mdp,
+erreurTexte: st.erreur === 'reseau' ? t.reseau : t.erreur,
 alerteStyle: st.erreur ? '' : HIDE, invalide: st.erreur ? 'true' : 'false',
 typeChamp: st.visible ? 'text' : 'password', visible: String(!!st.visible), libelleVoir: st.visible ? t.masquer : t.voir,
 saisirEmail: function (e) { self.setState({ email: e.target.value }); },

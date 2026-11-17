@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
 <title>Choisis ton mot de passe · Votre pAIn quotidien</title>
 <meta name="pq-titre-en" content="Choose your password · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
@@ -48,6 +48,7 @@ titreInscription: 'Choisis ton mot de passe', titreReinit: 'Choisis un nouveau m
 mdp: 'Mot de passe', confirmation: 'Confirme ton mot de passe', voir: 'Afficher', masquer: 'Masquer',
 reglesLabel: 'Règles du mot de passe', regles: { longueur: '8 caractères minimum', majuscule: 'Au moins une majuscule', chiffre: 'Au moins un chiffre' },
 ok: '(respectée)', aFaire: '(pas encore)',
+reseau: 'Le serveur ne répond pas. Réessaie dans un instant.',
 faible: 'Ton mot de passe doit respecter les 3 règles.', differents: 'Les deux mots de passe ne sont pas identiques.',
 valider: 'Valider et voir ma fournée', retour: '← Retour à mes mails',
 perimeTitre: 'Ce lien n’est plus valable', perimeTexte: 'Il a déjà servi ou il a expiré. Connecte-toi, ou demande un nouveau lien.',
@@ -59,6 +60,7 @@ titreInscription: 'Choose your password', titreReinit: 'Choose a new password',
 mdp: 'Password', confirmation: 'Confirm your password', voir: 'Show', masquer: 'Hide',
 reglesLabel: 'Password rules', regles: { longueur: 'At least 8 characters', majuscule: 'At least one capital letter', chiffre: 'At least one digit' },
 ok: '(met)', aFaire: '(not yet)',
+reseau: 'The server is not responding. Try again in a moment.',
 faible: 'Your password must meet all 3 rules.', differents: 'The two passwords do not match.',
 valider: 'Confirm and see my batch', retour: '← Back to my emails',
 perimeTitre: 'This link is no longer valid', perimeTexte: 'It has already been used or it has expired. Log in, or ask for a new link.',
@@ -84,10 +86,20 @@ this.pendingFocus = erreurs.mdp ? 'mdp' : 'confirmation';
 this.setState({ erreurs: erreurs });
 return;
 }
-var r = Auth.definirMotDePasse(st.mdp);
+var self = this;
+if (this.envoi) return;
+this.envoi = true;
+// Démo : réponse immédiate ; mode réel : promesse (Supabase). Promise.resolve couvre les deux.
+Promise.resolve(Auth.definirMotDePasse(st.mdp)).then(function (r) {
+self.envoi = false;
 // aucune-demande : le rendu bascule de lui-même sur « Ce lien n'est plus valable ».
-if (!r.ok) { this.setState({ erreurs: r.erreur === 'mot-de-passe-faible' ? { mdp: 'faible' } : {} }); return; }
+if (!r.ok) {
+self.pendingFocus = r.erreur === 'aucune-demande' ? null : 'mdp';
+self.setState({ erreurs: r.erreur === 'mot-de-passe-faible' ? { mdp: 'faible' } : r.erreur === 'reseau' ? { mdp: 'reseau' } : {} });
+return;
+}
 location.replace('/fournee');
+});
 }
 renderVals() {
 var self = this;
@@ -96,7 +108,7 @@ var lang = st.lang || 'fr';
 var t = T[lang];
 var d = Auth.demandeEnCours(Auth.charger());
 var regles = Auth.reglesMotDePasse(st.mdp);
-var err = { mdp: st.erreurs.mdp ? t.faible : '', confirmation: st.erreurs.confirmation ? t.differents : '' };
+var err = { mdp: st.erreurs.mdp ? t[st.erreurs.mdp] : '', confirmation: st.erreurs.confirmation ? t.differents : '' };
 return {
 t: t, err: err,
 inv: { mdp: st.erreurs.mdp ? 'true' : 'false', confirmation: st.erreurs.confirmation ? 'true' : 'false' },

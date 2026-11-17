@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
 <title>Mot de passe oublié · Votre pAIn quotidien</title>
 <meta name="pq-titre-en" content="Forgot password · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
@@ -31,12 +31,14 @@ var T = {
 fr: {
 titre: 'Mot de passe oublié', chapo: 'Indique ton e-mail : on t’envoie un lien pour choisir un nouveau mot de passe.',
 email: 'Ton e-mail', valider: 'Recevoir le lien', retour: '← Retour à la connexion',
+reseau: 'Le serveur ne répond pas. Réessaie dans un instant.',
 requis: 'Indique ton e-mail.', invalide: 'Cet e-mail ne semble pas valide (exemple : lea@mail.fr).',
 demo: 'Démo : aucun e-mail ni mot de passe n’est réellement envoyé ou enregistré.'
 },
 en: {
 titre: 'Forgot your password', chapo: 'Enter your email: we will send you a link to choose a new password.',
 email: 'Your email', valider: 'Send me the link', retour: '← Back to log in',
+reseau: 'The server is not responding. Try again in a moment.',
 requis: 'Enter your email.', invalide: 'This email does not look valid (example: lea@mail.com).',
 demo: 'Demo: no email or password is actually sent or stored.'
 }
@@ -52,9 +54,16 @@ var email = this.state.email.trim();
 var code = !email ? 'requis' : (Auth.emailValide(email) ? '' : 'invalide');
 if (code) { this.pendingFocus = true; this.setState({ erreur: code }); return; }
 // Même suite que le compte existe ou non : on ne révèle pas quels comptes existent.
-Auth.motDePasseOublie(email);
+// Démo : réponse immédiate ; mode réel : promesse (Supabase). Seule une panne réseau arrête la suite.
+var self = this;
+if (this.envoi) return;
+this.envoi = true;
+Promise.resolve(Auth.motDePasseOublie(email)).then(function (r) {
+self.envoi = false;
+if (r && r.erreur === 'reseau') { self.pendingFocus = true; self.setState({ erreur: 'reseau' }); return; }
 try { sessionStorage.setItem('pq-mail', JSON.stringify({ email: email })); } catch (e) {}
 location.href = '/verifie-tes-mails';
+});
 }
 renderVals() {
 var self = this;
