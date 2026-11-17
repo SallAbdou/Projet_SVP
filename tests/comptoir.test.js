@@ -75,3 +75,36 @@ test('ecart en nombre ou en pourcentage, stable et nouveau', () => {
   assert.deepEqual(C.ecart(0, 0, 'pourcent'), { sens: 'stable', valeur: 0 });
   assert.deepEqual(C.ecart(80, 100, 'pourcent'), { sens: 'baisse', valeur: 20 });
 });
+
+test('graphique prend les 6 derniers posts chiffrés, du plus ancien au plus récent', () => {
+  const posts = C.fusionner([
+    post('p1', 1, chiffres(400)), post('p2', 2, null), post('p3', 3, chiffres(800)), post('p4', 4, chiffres(200)),
+    post('p5', 5, chiffres(100)), post('p6', 6, chiffres(600)), post('p7', 7, chiffres(300)), post('p8', 8, chiffres(900))
+  ], []);
+  const g = C.graphique(posts);
+  assert.deepEqual(g.map(b => b.id), ['p7', 'p6', 'p5', 'p4', 'p3', 'p1']);
+  assert.deepEqual(g.map(b => b.hauteur), [38, 75, 13, 25, 100, 50]);
+  assert.deepEqual(Object.keys(g[0]).sort(), ['feu', 'hauteur', 'id', 'impressions', 'label']);
+  assert.equal(C.graphique(posts, 2).length, 2);
+  assert.deepEqual(C.graphique([post('z', 1, chiffres(0))]).map(b => b.hauteur), [0]);
+  assert.deepEqual(C.graphique([]), []);
+});
+
+test('analyse compare les impressions des sujets verts aux autres', () => {
+  const verts = [post('v1', 1, chiffres(1000), 'vert'), post('v2', 2, chiffres(1200), 'vert')];
+  assert.deepEqual(C.analyse(verts.concat([post('o', 3, chiffres(600)), post('s', 4, null)])), { ratio: 1.8 });
+  assert.deepEqual(C.analyse(verts), { ratio: null });
+  assert.deepEqual(C.analyse([post('o', 3, chiffres(600))]), { ratio: null });
+  assert.deepEqual(C.analyse(verts.concat([post('o', 3, chiffres(0))])), { ratio: null });
+});
+
+test('sansChiffres ne compte que les posts publiés en attente', () => {
+  const ex = Object.assign(post('e', 1, null), { exemple: true });
+  assert.equal(C.sansChiffres([ex, post('a', 1, null), post('b', 2, null), post('c', 3)]), 2);
+  assert.equal(C.sansChiffres(undefined), 0);
+});
+
+test('bilan additionne tout l historique', () => {
+  assert.deepEqual(C.bilan([post('a', 1, chiffres(1, 2)), post('b', 90, chiffres(1, 3)), post('c', 2, null)]), { posts: 3, contacts: 5 });
+  assert.deepEqual(C.bilan([]), { posts: 0, contacts: 0 });
+});

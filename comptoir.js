@@ -99,8 +99,46 @@
     return { actuel: actuel, precedent: precedent, ecarts: ecarts };
   }
 
+  function chiffres(posts) { return liste(posts).filter(function (p) { return !!p.chiffres; }); }
+
+  // posts : triés du plus récent au plus ancien (fusionner) ; barres du plus ancien au plus récent.
+  function graphique(posts, n) {
+    var choisis = chiffres(posts).slice(0, n || 6).reverse();
+    var max = Math.max.apply(null, choisis.map(function (p) { return Number(p.chiffres.impressions) || 0; }).concat([1]));
+    return choisis.map(function (p) {
+      var imp = Number(p.chiffres.impressions) || 0;
+      return { id: p.id, label: p.label, feu: p.feu, impressions: imp, hauteur: Math.round(imp / max * 100) };
+    });
+  }
+
+  function moyenne(posts) {
+    if (!posts.length) return null;
+    return posts.reduce(function (s, p) { return s + (Number(p.chiffres.impressions) || 0); }, 0) / posts.length;
+  }
+
+  // Impressions moyennes des sujets verts divisées par celles des autres, arrondies à une décimale.
+  function analyse(posts) {
+    var avec = chiffres(posts);
+    var verts = moyenne(avec.filter(function (p) { return p.feu === 'vert'; }));
+    var autres = moyenne(avec.filter(function (p) { return p.feu !== 'vert'; }));
+    if (verts === null || !autres) return { ratio: null };
+    return { ratio: Math.round(verts / autres * 10) / 10 };
+  }
+
+  function sansChiffres(posts) {
+    return liste(posts).filter(function (p) { return !p.exemple && !p.chiffres; }).length;
+  }
+
+  function bilan(posts) {
+    return {
+      posts: liste(posts).length,
+      contacts: chiffres(posts).reduce(function (s, p) { return s + (Number(p.chiffres.contacts) || 0); }, 0)
+    };
+  }
+
   var Comptoir = {
     CHAMPS: CHAMPS,
+    graphique: graphique, analyse: analyse, sansChiffres: sansChiffres, bilan: bilan,
     libelleCourt: libelleCourt, depuisExemples: depuisExemples, depuisPublies: depuisPublies, fusionner: fusionner,
     totaux: totaux, ecart: ecart, kpis: kpis
   };
