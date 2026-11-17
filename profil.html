@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon profil · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#FBF5EA}
+a{color:#8A4F1C}a:hover{color:#5E3412}
+button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2px}
+</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav data-nav data-page="profil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
+<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
+<header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#9A5B23">{{t.eyebrow}}</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
+<p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+</div>
+<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
+</header>
+<section aria-labelledby="carte-t" style="max-width:760px;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:24px 26px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:center;gap:14px">
+<span aria-hidden="true" style="width:56px;height:56px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800">{{p.initiale}}</span>
+<div style="display:flex;flex-direction:column"><h2 id="carte-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{p.prenom}}</h2><span style="color:#6B5443">{{p.metier}}</span></div>
+</div>
+<dl style="margin:0;display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px 24px">
+<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.themes}}</dt>
+<dd style="margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{p.themes}}" as="th" hint-placeholder-count="3"><span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:#F3E6CF;color:#5E3412">{{th.label}}</span></sc-for>
+</dd></div>
+<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.relation}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.relation}}</dd></div>
+<div><dt style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#9A5B23">{{t.langue}}</dt><dd style="margin:8px 0 0;font-weight:600">{{p.langue}}</dd></div>
+</dl>
+<p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{t.source}}</p>
+</section>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+// Profil de démo de Léa ; au lot 1, il viendra du questionnaire d'inscription (auth.js).
+var PROFIL = {
+prenom: 'Léa',
+metier: { fr: 'Consultante', en: 'Consultant' },
+themes: ['Automatisation et agents', 'IA en entreprise', 'LLMs'],
+relation: { fr: 'En couple (à l’aise avec l’IA)', en: 'In a relationship (comfortable with AI)' },
+langue: { fr: 'Français', en: 'French' }
+};
+var T = {
+fr: {
+navLabel: 'Navigation principale', eyebrow: 'Ton compte', title: 'Mon profil',
+subtitle: 'Ce que ta fournée sait de toi pour choisir tes sujets chaque matin.', sample: 'Données d’exemple',
+themes: 'Thématiques suivies', relation: 'Relation avec l’IA', langue: 'Langue des articles',
+source: 'Ton profil vient du questionnaire d’inscription.'
+},
+en: {
+navLabel: 'Main navigation', eyebrow: 'Your account', title: 'My profile',
+subtitle: 'What your batch knows about you to pick your topics every morning.', sample: 'Sample data',
+themes: 'Topics followed', relation: 'Relationship with AI', langue: 'Article language',
+source: 'Your profile comes from the sign-up questionnaire.'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var lang = (this.state && this.state.lang) || 'fr';
+return {
+t: T[lang],
+p: {
+initiale: PROFIL.prenom.charAt(0), prenom: PROFIL.prenom, metier: PROFIL.metier[lang],
+themes: PROFIL.themes.map(function (x) { return { label: x }; }),
+relation: PROFIL.relation[lang], langue: PROFIL.langue[lang]
+}
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>

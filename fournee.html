@@ -23,6 +23,14 @@ button:focus-visible,a:focus-visible{outline:2px solid #B5651D;outline-offset:2p
 .tile-L .news-title{font-size:24px}
 .rank{font-family:Fraunces, Georgia, serif;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;background:#2E1D12;color:#FBF5EA}
 .muted{font-size:13px;color:#6B5443}
+/* Emplacement n°1 : doré « Maillard », la croûte bien dorée, pour repérer d'un coup d'œil la news la mieux notée. */
+.tile[data-tile="n1"]{background:linear-gradient(140deg,#FBE3A8 0%,#F2C46D 55%,#E3A54A 100%);border:2px solid #B87420;box-shadow:0 8px 22px rgba(184,116,32,.30)}
+.bento.editing .tile[data-tile="n1"]{border:2px dashed #8A4F1C}
+.tile[data-tile="n1"] .rank{background:#8A4F1C;color:#FBE3A8;box-shadow:0 0 0 2px #FBE3A8}
+.tile[data-tile="n1"] .tile-body p{color:#3B2416!important}
+.tile[data-tile="n1"] .tile-body a[target]{background:#FFF6E3;border-color:#B87420!important}
+.tile[data-tile="n1"] .tile-tools .tool{background:#FFF6E3}
+.tile[data-tile="n1"] .tile-tools .tool[aria-pressed="true"]{background:#8A4F1C;color:#FFFDF8}
 .tile-tools{display:none;flex-wrap:wrap;gap:6px;padding-bottom:10px;border-bottom:1.5px dashed #D9C29C}
 .bento.editing .tile-tools{display:flex}
 .bento.editing .tile{border:1.5px dashed #B5651D;box-shadow:0 2px 0 #E7D6B8}
@@ -44,39 +52,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:#FBF5EA;color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
-<nav aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px">
-<div style="display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="width:38px;height:38px;border-radius:12px;background:#8A4F1C;color:#FBF5EA;display:inline-flex;align-items:center;justify-content:center">
-<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg>
-</span>
-<span style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:#B5651D">AI</span>n quotidien</span>
-</div>
-<span style="font-size:13px;color:#6B5443">{{t.tagline}}</span>
-</div>
-<div style="display:flex;flex-direction:column;gap:4px">
-<a href="/" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18v10H3z"></path><path d="M5 10l2-5h10l2 5"></path></svg>{{t.nav.counter}}</a>
-<a href="/fournee" aria-current="page" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;background:#FFFDF8;color:#5E3412;font-weight:700;text-decoration:none;box-shadow:inset 0 0 0 1px #E7D6B8">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>{{t.nav.batch}}</a>
-<a href="/fournil" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"></rect><rect x="7" y="9" width="10" height="7" rx="2"></rect></svg>{{t.nav.kitchen}}</a>
-<a href="/garde-manger" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg>{{t.nav.pantry}}<span style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">4</span></a>
-<a href="/preferences" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:#4A3324;text-decoration:none">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"></path><circle cx="15" cy="7" r="2"></circle><circle cx="9" cy="17" r="2"></circle></svg>{{t.nav.prefs}}<span style="margin-left:auto;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">V1</span></a>
-</div>
-<div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">
-<div role="group" aria-label="{{t.langLabel}}" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:#E9D8BA;align-self:flex-start">
-<button type="button" aria-pressed="{{frPressed}}" onClick="{{setFr}}" style="{{frStyle}}">FR</button>
-<button type="button" aria-pressed="{{enPressed}}" onClick="{{setEn}}" style="{{enStyle}}">EN</button>
-</div>
-<div style="border-top:1px solid #E7D6B8;padding-top:14px;display:flex;align-items:center;gap:10px">
-<span style="width:36px;height:36px;border-radius:50%;background:#B5651D;color:#FFFDF8;display:inline-flex;align-items:center;justify-content:center;font-weight:700">L</span>
-<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">Léa Martin</span><span style="font-size:12px;color:#6B5443">{{t.role}}</span></div>
-</div>
-</div>
-</nav>
+<nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
@@ -90,6 +66,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 </header>
 <p role="status" style="{{loadingStyle}}">{{t.loading}}</p>
+<p role="status" style="{{waitStyle}}">{{t.waiting}}</p>
 <p role="alert" style="{{errorStyle}}">{{t.loadError}}</p>
 <div style="{{editBarStyle}}">
 <p style="margin:0;flex:1 1 320px;font-size:14px;color:#5E3412">{{t.editHint}}</p>
@@ -125,6 +102,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <h2 id="tt-{{s.id}}" class="news-title">{{s.title}}</h2>
 <p class="only-M" style="margin:0;color:#5A4434;font-size:14px">{{s.summary}}</p>
 <p class="only-L" style="margin:0;font-size:13.5px;color:#8A4F1C;font-weight:600">{{s.forYou}}</p>
+<p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
 <p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443">{{s.scoreLine}}</p>
 <strong style="font-family:Fraunces, Georgia, serif;font-size:17px">{{s.money}}</strong>
 <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px">
@@ -166,23 +144,25 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script>
 var CHIP = {
 hot: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #DCEBD6; color: #2F5E36',
 knead: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #FBE3C2; color: #8A4B00',
 stale: 'font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #F5DAD3; color: #8E2A1C'
 };
 var BAR_COLOR = { hot: '#B5651D', knead: '#E3B678', stale: '#EAD7B4' };
+// Feu tricolore de n8n vers les états de la boulangerie.
+var FEU = { vert: 'hot', orange: 'knead', rouge: 'stale' };
 var HIDE = 'display: none';
 var SLOT_IDS = ['n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7'];
 var T = {
 fr: {
-navLabel: 'Navigation principale', langLabel: 'Langue', tagline: 'On pétrit l’actu IA pour toi.', role: 'Consultante IA · solopreneuse',
-nav: { counter: 'Le comptoir', batch: 'La fournée du jour', kitchen: 'Le fournil', pantry: 'Le garde-manger', prefs: 'Mes préférences' },
+navLabel: 'Navigation principale',
 eyebrowTail: 'choisi pour toi par l’IA', title: 'La fournée du jour',
 subtitle: 'Les sujets tout juste sortis du four, du mieux noté au moins bien noté. Arrange ta page comme tu veux.',
 sample: 'Données d’exemple', customize: 'Personnaliser', done: 'Terminer',
 loading: 'Mise au four…', loadError: 'Impossible de charger la fournée. Recharge la page.',
+waiting: 'Ta fournée est encore au four, reviens dans un instant.', why: 'Pourquoi cette couleur :',
 editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la mieux notée). Glisse les blocs par la poignée ⠿ ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
 countLabel: 'News affichées', reset: 'Disposition par défaut',
 states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
@@ -194,12 +174,12 @@ knead: 'Pétrir un post', read: 'Lire la source',
 graphTitle: 'Tes derniers posts', graphSub: 'impressions par post'
 },
 en: {
-navLabel: 'Main navigation', langLabel: 'Language', tagline: 'We knead the AI news for you.', role: 'AI consultant · solopreneur',
-nav: { counter: 'The counter', batch: 'Today’s batch', kitchen: 'The kitchen', pantry: 'The pantry', prefs: 'My preferences' },
+navLabel: 'Main navigation',
 eyebrowTail: 'picked for you by AI', title: 'Today’s batch',
 subtitle: 'Topics fresh out of the oven, from best to least rated. Arrange your page the way you like.',
 sample: 'Sample data', customize: 'Customise', done: 'Done',
 loading: 'Baking…', loadError: 'Could not load the batch. Reload the page.',
+waiting: 'Your batch is still in the oven, come back in a moment.', why: 'Why this colour:',
 editHint: 'Each slot gets that day’s news of the same rank every morning (#1 = best rated). Drag blocks by the ⠿ handle or use the arrows. Your choices are saved on this device.',
 countLabel: 'News shown', reset: 'Default layout',
 states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
@@ -221,18 +201,20 @@ constructor(props) {
 super(props);
 var layout;
 try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
-this.state = { lang: 'fr', editing: false, layout: layout, data: null, loadError: false };
+this.state = { lang: 'fr', editing: false, layout: layout, data: null, posts: [], loadError: false };
 var self = this;
 BentoUI.initDrag({
 isEditing: function () { return !!self.state.editing; },
 onDrop: function (id, index) { self.updateLayout(Bento.moveTile(self.state.layout, id, index)); }
 });
-fetch('/data/fournee.json')
-.then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-.then(function (data) { if (!Bento.isValidData(data)) throw new Error('données invalides'); self.setState({ data: data }); })
+Promise.all([Api.chargerFournee(), Api.chargerPosts().catch(function () { return []; })])
+.then(function (res) {
+if (res[0].etat === 'invalide') throw new Error('identifiant invalide');
+self.setState({ data: res[0], posts: res[1] });
+})
 .catch(function () { self.setState({ loadError: true }); });
 }
-available() { return this.state.data ? this.state.data.topics.length : 0; }
+available() { var d = this.state.data; return d && d.etat === 'pret' ? d.articles.length : 0; }
 // Enregistre la disposition puis re-rend la page. focus = { id, act } du bouton à refocaliser après le rendu.
 updateLayout(layout, focus) {
 try { Bento.saveLayout(window.localStorage, layout); } catch (e) {}
@@ -255,28 +237,19 @@ var t = T[lang];
 var data = st.data;
 var layout = st.layout;
 var locale = lang === 'fr' ? 'fr-FR' : 'en-GB';
-var L = function (v) { return v ? (v[lang] || v.fr || '') : ''; };
 var num = function (n) { return new Intl.NumberFormat(locale).format(n); };
-var on = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: #8A4F1C; color: #FFFDF8; font: inherit; font-weight: 700; cursor: pointer';
-var off = 'min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 0; background: transparent; color: #5E3412; font: inherit; font-weight: 600; cursor: pointer';
 var self = this;
 var available = this.available();
 var idOf = function (e) { return e.currentTarget.getAttribute('data-id'); };
-var topics = data ? data.topics : [];
-var picked = Bento.pickTopics(topics, SLOT_IDS.length);
-var eyebrow = t.eyebrowTail;
-if (data) {
-var d = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(data.date + 'T12:00:00'));
-eyebrow = d.charAt(0).toUpperCase() + d.slice(1) + ' · ' + t.eyebrowTail;
-}
-var maxImp = Math.max.apply(null, (data ? data.posts : []).map(function (p) { return p.impressions; }).concat([1]));
+var ready = !!data && data.etat === 'pret';
+var picked = Bento.pickTopics(ready ? data.articles : [], SLOT_IDS.length);
+var posts = st.posts || [];
+var today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+var eyebrow = today.charAt(0).toUpperCase() + today.slice(1) + ' · ' + t.eyebrowTail;
+var maxImp = Math.max.apply(null, posts.map(function (p) { return p.impressions; }).concat([1]));
 return {
 t: t,
 eyebrow: eyebrow,
-setFr: function () { self.setState({ lang: 'fr' }); },
-setEn: function () { self.setState({ lang: 'en' }); },
-frPressed: String(lang === 'fr'), enPressed: String(lang === 'en'),
-frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off,
 toggleEdit: function () { self.pendingFocus = { act: 'edit' }; self.setState({ editing: !st.editing }); },
 tileUp: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, -1, available), { id: id, act: 'up' }); },
 tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, 1, available), { id: id, act: 'down' }); },
@@ -287,36 +260,38 @@ editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
 editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #8A4F1C; background: ' + (st.editing ? '#8A4F1C; color: #FFFDF8' : '#FFFDF8; color: #8A4F1C') + '; font: inherit; font-weight: 700; cursor: pointer',
 loadingStyle: !data && !st.loadError ? 'margin: 0; color: #6B5443' : HIDE,
+waitStyle: data && data.etat === 'attente' && !st.loadError ? 'margin: 0; padding: 14px 18px; border-radius: 14px; background: #F6E7CC; color: #5E3412; font-weight: 600' : HIDE,
 errorStyle: st.loadError ? 'margin: 0; padding: 14px 18px; border-radius: 14px; background: #F5DAD3; color: #8E2A1C; font-weight: 600' : HIDE,
-editBarStyle: data && st.editing ? 'display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 14px 18px; border-radius: 16px; background: #F6E7CC' : HIDE,
+editBarStyle: ready && st.editing ? 'display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 14px 18px; border-radius: 16px; background: #F6E7CC' : HIDE,
 gridClass: st.editing ? 'editing' : '',
-gridStyle: data ? '' : HIDE,
+gridStyle: ready ? '' : HIDE,
 slots: SLOT_IDS.map(function (id) {
 var k = Bento.rankOf(id);
 var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: HIDE, state: '', source: '', title: '', summary: '', forYou: '', scoreLine: '', money: '', url: '#',
+chip: HIDE, state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, scoreLine: '', money: '', url: '#',
 knead: t.knead, read: t.read
 };
 if (c) {
-s.chip = CHIP[c.state]; s.state = t.states[c.state]; s.source = c.source;
-s.title = L(c.title); s.summary = L(c.summary); s.forYou = L(c.forYou);
-s.scoreLine = fill(t.scoreLine, { d: c.scores.durability, p: c.scores.propensity, o: c.scores.offer });
+var etat = FEU[c.feu];
+s.chip = CHIP[etat]; s.state = t.states[etat]; s.source = c.source;
+s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
+s.scoreLine = fill(t.scoreLine, { d: c.durabilite, p: c.propension, o: c.lienOffre });
 s.money = fill(t.money, { m: Bento.totalScore(c) });
 s.url = Bento.safeUrl(c.url);
 }
 return Object.assign(s, labels);
 }),
 g: toolLabels(t, t.graphName),
-bars: (data ? data.posts : []).map(function (p) {
+bars: posts.map(function (p) {
 return {
-value: num(p.impressions), label: L(p.label),
-barStyle: 'width: 100%; max-width: 44px; height: ' + Math.round(p.impressions / maxImp * 100) + '%; background: ' + BAR_COLOR[p.state] + '; border-radius: 10px 10px 3px 3px'
+value: num(p.impressions), label: p.label,
+barStyle: 'width: 100%; max-width: 44px; height: ' + Math.round(p.impressions / maxImp * 100) + '%; background: ' + BAR_COLOR[FEU[p.feu]] + '; border-radius: 10px 10px 3px 3px'
 };
 })
 };
 }
 }
-</script><script src="/boot.js"></script></body></html>
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>
