@@ -153,8 +153,25 @@
     return k === 0 ? main : brouillonGenerique(a, to, la, k - 1);
   }
 
+  var CHAMPS = ['impressions', 'reactions', 'republications', 'commentaires', 'contacts'];
+
+  // Entier positif ou nul ; les séparateurs de milliers (espaces, espaces insécables) sont tolérés.
+  function validerChiffres(saisie) {
+    var s = saisie && typeof saisie === 'object' ? saisie : {};
+    var chiffres = {}, erreurs = {};
+    CHAMPS.forEach(function (c) {
+      var v = s[c];
+      var brut = typeof v === 'number' ? String(v) : texteDe(v).replace(/[\s  ]/g, '');
+      if (brut === '') { erreurs[c] = 'requis'; return; }
+      var n = /^\d+$/.test(brut) ? parseInt(brut, 10) : NaN;
+      if (!Number.isSafeInteger(n)) { erreurs[c] = 'entier'; return; }
+      chiffres[c] = n;
+    });
+    return { chiffres: Object.keys(erreurs).length ? null : chiffres, erreurs: erreurs };
+  }
+
   var Fournil = {
-    MAX: MAX, TONS: TONS, LANGUES: LANGUES,
+    MAX: MAX, TONS: TONS, LANGUES: LANGUES, CHAMPS: CHAMPS, validerChiffres: validerChiffres,
     trouverSujet: trouverSujet, listeChoix: listeChoix, checklist: checklist,
     apercu: apercu, texteModifie: texteModifie,
     brouillonGenerique: brouillonGenerique, nbVariantes: nbVariantes, proposerVariante: proposerVariante

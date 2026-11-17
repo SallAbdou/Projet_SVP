@@ -161,3 +161,35 @@ test('proposerVariante : texte écrit puis variantes générées', () => {
   assert.equal(F.proposerVariante(ART, 'retour', 'fr', 4, ECRITS), F.brouillonGenerique(ART, 'retour', 'fr', 1));
   assert.equal(F.proposerVariante(ART, 'inconnu', 'de', 0, null), F.brouillonGenerique(ART, 'expert', 'fr', 0));
 });
+
+const Store = require('../store.js');
+
+test('validerChiffres : saisie complète acceptée', () => {
+  const r = F.validerChiffres({ impressions: '1 240', reactions: '52', republications: 7, commentaires: '0', contacts: '007' });
+  assert.deepEqual(r.erreurs, {});
+  assert.deepEqual(r.chiffres, { impressions: 1240, reactions: 52, republications: 7, commentaires: 0, contacts: 7 });
+  assert.equal(F.validerChiffres({ impressions: '1 240', reactions: '1 000', republications: 0, commentaires: 0, contacts: 0 }).chiffres.reactions, 1000);
+});
+
+test('validerChiffres : champ vide = requis, valeur invalide = entier', () => {
+  for (const v of ['12.5', '-3', '1e3', 'abc', '99999999999999999', 2.5, -1]) {
+    const r = F.validerChiffres({ impressions: v, reactions: '1', republications: '1', commentaires: '1', contacts: '1' });
+    assert.equal(r.chiffres, null, String(v));
+    assert.deepEqual(r.erreurs, { impressions: 'entier' }, String(v));
+  }
+  assert.deepEqual(F.validerChiffres({ impressions: '  ', reactions: '1', republications: '1', commentaires: '1', contacts: '1' }).erreurs, { impressions: 'requis' });
+});
+
+test('validerChiffres : saisie absente', () => {
+  const r = F.validerChiffres(null);
+  assert.equal(r.chiffres, null);
+  assert.deepEqual(Object.keys(r.erreurs), F.CHAMPS);
+  assert.ok(Object.values(r.erreurs).every((e) => e === 'requis'));
+});
+
+test('validerChiffres : résultat accepté par Store.saisirChiffres', () => {
+  let e = Store.publier(Store.etatInitial(), { ref: 'a', titre: 'T' }, '2026-11-17T10:00:00.000Z');
+  const id = e.publies[0].id;
+  e = Store.saisirChiffres(e, id, F.validerChiffres({ impressions: '10', reactions: '2', republications: '1', commentaires: '0', contacts: '1' }).chiffres);
+  assert.equal(e.publies[0].chiffres.impressions, 10);
+});
