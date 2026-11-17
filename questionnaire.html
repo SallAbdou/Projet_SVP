@@ -201,8 +201,7 @@ this.reponse(champ, liste);
 afterRender(root) {
 var id = this.pendingFocus;
 this.pendingFocus = null;
-var el = id && root.querySelector('#' + id);
-if (el) el.focus();
+if (id) Parcours.focaliser(root.querySelector('#' + id));
 }
 continuer() {
 var st = this.state;

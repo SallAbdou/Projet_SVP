@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vérifie tes mails · Votre pAIn quotidien</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/parcours.css">
+<style>
+.voile{position:fixed;inset:0;z-index:10;background:rgba(46,29,18,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.3);display:flex;flex-direction:column}
+.boite-barre{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid #E7D6B8;background:#F3E6CF;border-radius:18px 18px 0 0}
+.boite-barre h2{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0}
+.mail{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.mail-entete{display:flex;flex-direction:column;gap:2px;font-size:14px;color:#6B5443;border-bottom:1px solid #F3E6CF;padding-bottom:12px}
+.mail-entete strong{color:#2E1D12}
+</style>
+<script src="/auth.js"></script>
+<script>
+// Adresse à afficher : la demande en cours, ou l'adresse saisie sur « mot de passe oublié » (même si aucun compte n'existe).
+function adresseEnvoyee() {
+var d = Auth.demandeEnCours(Auth.charger());
+if (d) return d;
+try { var o = JSON.parse(sessionStorage.getItem('pq-mail')); if (o && typeof o.email === 'string') return { email: o.email, motif: 'reinitialisation', fictive: true }; } catch (e) {}
+return null;
+}
+if (!adresseEnvoyee()) { window.__redirige = true; location.replace('/connexion'); }
+</script>
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete></header>
+<main class="contenu centre">
+<section class="carte" aria-labelledby="titre">
+<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+<h1 id="titre" class="titre">{{t.titre}}</h1>
+<p class="chapo">{{intro}} <strong>{{email}}</strong>.</p>
+<p>{{consigne}}</p>
+<div class="actions">
+<button type="button" class="bouton" onClick="{{ouvrir}}" data-focus="ouvrir" aria-haspopup="dialog">{{t.ouvrir}}</button>
+<button type="button" class="bouton-secondaire" onClick="{{renvoyer}}" data-focus="renvoyer">{{t.renvoyer}}</button>
+</div>
+<p role="status" class="{{renvoiClasse}}">{{renvoiTexte}}</p>
+<div class="liens-bas">
+<a href="{{changerHref}}">{{t.changer}}</a>
+<a href="/connexion">{{t.connexion}}</a>
+</div>
+<p class="mention-demo">{{t.demo}}</p>
+</section>
+</main>
+<div class="voile" style="{{voileStyle}}" onClick="{{clicVoile}}">
+<div class="boite" role="dialog" aria-modal="true" aria-labelledby="boite-t" onKeydown="{{clavierModale}}">
+<div class="boite-barre"><h2 id="boite-t">{{t.boite}}</h2><button type="button" class="bouton-secondaire" style="min-height:44px;padding:0 16px" onClick="{{fermer}}" data-focus="fermer">{{t.fermer}}</button></div>
+<div class="mail" style="{{mailStyle}}">
+<div class="mail-entete"><span>{{t.de}} <strong>Votre pAIn quotidien</strong> &lt;bonjour@painquotidien.fr&gt;</span><span>{{t.a}} {{email}}</span><span>{{t.objet}} <strong>{{mail.objet}}</strong></span></div>
+<p>{{mail.bonjour}}</p>
+<p>{{mail.texte}}</p>
+<a class="bouton" href="/creer-mot-de-passe" style="align-self:flex-start" data-focus="mail-cta">{{mail.bouton}}</a>
+<p class="aide">{{mail.fin}}</p>
+</div>
+<p class="mail" style="{{videStyle}}">{{t.vide}}</p>
+</div>
+</div>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var HIDE = 'display: none';
+var T = {
+fr: {
+titre: 'Vérifie ta boîte mail', ouvrir: 'Ouvrir ma boîte de réception (démo)', renvoyer: 'Renvoyer l’e-mail',
+introInscription: 'On t’a envoyé un e-mail à', introReinit: 'Si un compte existe, on a envoyé un lien à',
+consigneInscription: 'Clique sur « Confirmer mon adresse » dans ce mail pour choisir ton mot de passe.',
+consigneReinit: 'Clique sur le bouton du mail pour choisir un nouveau mot de passe. Le lien reste valable 1 heure.',
+renvoye: 'C’est renvoyé ! Pense aussi à regarder dans tes indésirables.',
+changer: 'Changer d’adresse', connexion: 'Retour à la connexion',
+demo: 'Démo : aucun e-mail ni mot de passe n’est réellement envoyé ou enregistré.',
+boite: 'Boîte de réception (démo)', fermer: 'Fermer', de: 'De :', a: 'À :', objet: 'Objet :',
+vide: 'Aucun nouveau message.',
+inscription: { objet: 'Confirme ton adresse pour recevoir ta fournée', bonjour: 'Bonjour {prenom},', texte: 'Ta fournée est presque prête. Confirme ton adresse e-mail, choisis ton mot de passe, et ta première fournée sort du four.', bouton: 'Confirmer mon adresse', fin: 'À très vite, l’équipe Votre pAIn quotidien' },
+reinitialisation: { objet: 'Réinitialise ton mot de passe', bonjour: 'Bonjour {prenom},', texte: 'Tu as demandé à changer ton mot de passe. Clique sur le bouton ci-dessous pour en choisir un nouveau. Si ce n’est pas toi, ignore ce message.', bouton: 'Choisir un nouveau mot de passe', fin: 'L’équipe Votre pAIn quotidien' }
+},
+en: {
+titre: 'Check your inbox', ouvrir: 'Open my inbox (demo)', renvoyer: 'Resend the email',
+introInscription: 'We sent an email to', introReinit: 'If an account exists, we sent a link to',
+consigneInscription: 'Click “Confirm my address” in that email to choose your password.',
+consigneReinit: 'Click the button in the email to choose a new password. The link is valid for 1 hour.',
+renvoye: 'Sent again! Also check your spam folder.',
+changer: 'Use another address', connexion: 'Back to log in',
+demo: 'Demo: no email or password is actually sent or stored.',
+boite: 'Inbox (demo)', fermer: 'Close', de: 'From:', a: 'To:', objet: 'Subject:',
+vide: 'No new messages.',
+inscription: { objet: 'Confirm your address to get your batch', bonjour: 'Hi {prenom},', texte: 'Your batch is almost ready. Confirm your email address, choose your password, and your first batch comes out of the oven.', bouton: 'Confirm my address', fin: 'See you soon, the Votre pAIn quotidien team' },
+reinitialisation: { objet: 'Reset your password', bonjour: 'Hi {prenom},', texte: 'You asked to change your password. Click the button below to choose a new one. If this was not you, ignore this message.', bouton: 'Choose a new password', fin: 'The Votre pAIn quotidien team' }
+}
+};
+function focalisables(el) { return Array.prototype.filter.call(el.querySelectorAll('a[href],button'), function (x) { return x.offsetParent !== null; }); }
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr', ouverte: false, renvoye: false }; }
+afterRender(root) {
+var f = this.pendingFocus;
+this.pendingFocus = null;
+if (f === 'boite') { var els = focalisables(root.querySelector('.boite')); if (els.length) els[els.length - 1].focus(); }
+else if (f) { var el = root.querySelector('[data-focus="' + f + '"]'); if (el) el.focus(); }
+}
+fermer() { this.pendingFocus = 'ouvrir'; this.setState({ ouverte: false }); }
+renderVals() {
+var self = this;
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+var d = adresseEnvoyee() || { email: '', motif: 'inscription' };
+var compte = d.fictive ? null : Auth.compteParEmail(Auth.charger(), d.email);
+var reinit = d.motif === 'reinitialisation';
+var m = t[d.motif];
+return {
+t: t, email: d.email,
+intro: reinit ? t.introReinit : t.introInscription,
+consigne: reinit ? t.consigneReinit : t.consigneInscription,
+changerHref: reinit ? '/mot-de-passe-oublie' : '/questionnaire',
+renvoiClasse: st.renvoye ? 'info' : '', renvoiTexte: st.renvoye ? t.renvoye : '',
+voileStyle: st.ouverte ? '' : HIDE,
+mailStyle: compte ? '' : HIDE,
+videStyle: compte ? HIDE : '',
+mail: { objet: m.objet, bonjour: m.bonjour.replace('{prenom}', compte ? compte.prenom : ''), texte: m.texte, bouton: m.bouton, fin: m.fin },
+ouvrir: function () { self.pendingFocus = 'boite'; self.setState({ ouverte: true }); },
+fermer: function () { self.fermer(); },
+renvoyer: function () { self.setState({ renvoye: true }); },
+clicVoile: function (e) { if (e.target === e.currentTarget) self.fermer(); },
+// Focus piégé dans la fenêtre : Tab boucle, Échap ferme.
+clavierModale: function (e) {
+if (e.key === 'Escape') { e.preventDefault(); self.fermer(); return; }
+if (e.key !== 'Tab') return;
+var els = focalisables(e.currentTarget);
+if (!els.length) return;
+var premier = els[0], dernier = els[els.length - 1];
+if (e.shiftKey && document.activeElement === premier) { e.preventDefault(); dernier.focus(); }
+else if (!e.shiftKey && document.activeElement === dernier) { e.preventDefault(); premier.focus(); }
+}
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

@@ -33,7 +33,14 @@
     });
   }
 
-  var Parcours = { enteteHtml: enteteHtml };
+  // Focus déplacé par une page (champ en erreur, titre d'étape) : curseur placé en fin de saisie.
+  function focaliser(el) {
+    if (!el) return;
+    el.focus();
+    try { if (typeof el.value === 'string' && el.setSelectionRange) el.setSelectionRange(el.value.length, el.value.length); } catch (err) {}
+  }
+
+  var Parcours = { enteteHtml: enteteHtml, focaliser: focaliser };
   if (typeof module === 'object' && module.exports) module.exports = Parcours;
   else {
     root.Parcours = Parcours;
