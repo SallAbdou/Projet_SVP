@@ -193,3 +193,10 @@ test('validerChiffres : résultat accepté par Store.saisirChiffres', () => {
   e = Store.saisirChiffres(e, id, F.validerChiffres({ impressions: '10', reactions: '2', republications: '1', commentaires: '0', contacts: '1' }).chiffres);
   assert.equal(e.publies[0].chiffres.impressions, 10);
 });
+
+test('retrouverVariante : retrouve ton, langue et rang d’un brouillon non modifié', () => {
+  const a = { ref: 'recDemo01', titre: 'T', resume: 'R', pourToi: 'Pour toi : P' };
+  assert.deepEqual(F.retrouverVariante(a, ECRITS.recDemo01.retour.en + '\n', ECRITS), { ton: 'retour', langue: 'en', n: 0 });
+  assert.deepEqual(F.retrouverVariante(ART, F.brouillonGenerique(ART, 'provoc', 'fr', 2), ECRITS), { ton: 'provoc', langue: 'fr', n: 2 });
+  assert.equal(F.retrouverVariante(ART, 'Texte réécrit', ECRITS), null);
+});

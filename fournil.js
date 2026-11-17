@@ -153,6 +153,19 @@
     return k === 0 ? main : brouillonGenerique(a, to, la, k - 1);
   }
 
+  // Après un rechargement : quelle variante a produit ce brouillon (null s'il a été retouché).
+  function retrouverVariante(article, texte, ecrits) {
+    var nb = nbVariantes((article || {}).ref, ecrits);
+    for (var t = 0; t < TONS.length; t++) {
+      for (var l = 0; l < LANGUES.length; l++) {
+        for (var n = 0; n < nb; n++) {
+          if (!texteModifie(texte, proposerVariante(article, TONS[t], LANGUES[l], n, ecrits))) return { ton: TONS[t], langue: LANGUES[l], n: n };
+        }
+      }
+    }
+    return null;
+  }
+
   var CHAMPS = ['impressions', 'reactions', 'republications', 'commentaires', 'contacts'];
 
   // Entier positif ou nul ; les séparateurs de milliers (espaces, espaces insécables) sont tolérés.
@@ -174,7 +187,8 @@
     MAX: MAX, TONS: TONS, LANGUES: LANGUES, CHAMPS: CHAMPS, validerChiffres: validerChiffres,
     trouverSujet: trouverSujet, listeChoix: listeChoix, checklist: checklist,
     apercu: apercu, texteModifie: texteModifie,
-    brouillonGenerique: brouillonGenerique, nbVariantes: nbVariantes, proposerVariante: proposerVariante
+    brouillonGenerique: brouillonGenerique, nbVariantes: nbVariantes, proposerVariante: proposerVariante,
+    retrouverVariante: retrouverVariante
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Fournil;
