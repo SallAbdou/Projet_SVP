@@ -12,16 +12,16 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <style>.four-pain-miche{transform-origin:48px 56px;animation:lever 1.6s ease-in-out infinite alternate}@keyframes lever{from{transform:scale(.86,.7)}to{transform:scale(1,1)}}@media (prefers-reduced-motion:reduce){.four-pain-miche{animation:none}}</style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
 <style>
-.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:264px;grid-auto-flow:dense;gap:16px}
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(180px,auto);grid-auto-flow:dense;gap:16px}
 .tile{min-width:0;min-height:0;overflow:hidden;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
-.tile-body{flex:1 1 auto;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;margin-right:-10px;padding-right:10px}
+.tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
 .tile-S{grid-column:span 1;grid-row:span 1}
 .tile-M{grid-column:span 2;grid-row:span 1}
 .tile-L{grid-column:span 2;grid-row:span 2}
 .tile-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
 .tile-title{margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;line-height:1.2}
-.news-title{margin:0;font-family:Fraunces, Georgia, serif;font-size:18px;line-height:1.3}
+.news-title{margin:0;overflow-wrap:anywhere;font-family:Fraunces, Georgia, serif;font-size:18px;line-height:1.3}
 .tile-S .news-title{font-size:16px}
 .tile-L .news-title{font-size:24px}
 .rank{font-family:Fraunces, Georgia, serif;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;background:#2E1D12;color:#FBF5EA}
@@ -59,8 +59,9 @@ a.act{text-decoration:none}a.act:hover{color:#2E1D12}
 .act[aria-pressed="true"] .ico-vide{display:none}
 .tile[data-tile="n1"] .act{background:#FFF6E3;border-color:#B87420}
 .tile[data-tile="n1"] .act[aria-pressed="true"]{background:#8A4F1C;color:#FFF6E3}
-@media (min-width:641px){.tile-M .act[data-act="read"]{padding:0}.tile-M .act[data-act="read"] .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
-@media (min-width:641px){.tile-S .news-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0;gap:6px}}
+.act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--source);border-color:var(--source)!important;color:#FFFFFF}
+a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--source-fonce);border-color:var(--source-fonce)!important;color:#FFFFFF}
+@media (min-width:641px){.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0;gap:6px}}
 @media (min-width:641px){.tile-S .act{padding:0}.tile-S .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (pointer:coarse){.act{min-height:44px;min-width:44px}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
