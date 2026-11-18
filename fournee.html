@@ -31,6 +31,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile-L .news-title{font-size:24px}
 .rank{font-family:Fraunces, Georgia, serif;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;background:#2E1D12;color:#FBF5EA}
 .muted{font-size:13px;color:#6B5443}
+.score{margin:0;font-family:Fraunces, Georgia, serif;font-size:15px;font-weight:700;line-height:1.3}
+.score-detail{margin:0;font-size:12.5px;color:#6B5443}
+.score:empty,.score-detail:empty{display:none}
 /* Emplacement n°1 : doré « Maillard », la croûte bien dorée, pour repérer d'un coup d'œil la news la mieux notée. */
 .tile[data-tile="n1"]{background:linear-gradient(140deg,#FBE3A8 0%,#F2C46D 55%,#E3A54A 100%);border:2px solid #B87420;box-shadow:0 8px 22px rgba(184,116,32,.30)}
 .bento.editing .tile[data-tile="n1"]{border:2px dashed #8A4F1C}
@@ -163,7 +166,9 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <h2 id="tt-{{s.id}}" class="news-title">{{s.title}}</h2>
 <p class="only-M" style="margin:0;color:#5A4434;font-size:14px">{{s.summary}}</p>
 <p class="only-L pour-toi" style="margin:0"><svg class="ampoule" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v1.8M4.2 4.2l1.3 1.3M19.8 4.2l-1.3 1.3M1.5 11.5h1.8M20.7 11.5h1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M12 5a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 5z" fill="currentColor" stroke="#8A4F1C" stroke-width="1.2" stroke-linejoin="round"></path><path d="M9.6 20.6h4.8M10.6 22.8h2.8" stroke="#8A4F1C" stroke-width="1.6" stroke-linecap="round"></path></svg><span>{{s.forYou}}</span></p>
-<p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
+<p class="{{s.whyClass}}" style="margin:0;font-size:12.5px;color:#6B5443"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
+<p class="only-L score-detail">{{s.scoreLine}}</p>
+<p class="score">{{s.money}}</p>
 <div class="tile-actions">
 <a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
 <button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
@@ -235,6 +240,7 @@ states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
 rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
 toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille de {name}', drag: 'Glisser pour déplacer',
+money: 'Monétisation {m}/15', scoreLine: 'Durabilité {d}/5 · Propension {p}/5 · Lien offre {o}/5',
 knead: 'Pétrir', kneadSuite: ' un post', graphShow: 'Afficher le graphique', graphHide: 'Masquer le graphique', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
 undo: 'Annuler', toastSave: 'Mis de côté', toastUnsave: 'Retiré du garde-manger', toastSkip: 'Sujet ignoré', toastUndone: 'Action annulée',
 allDone: 'Tu as tout passé en revue pour aujourd’hui', bringBack: 'Tout faire revenir',
@@ -262,6 +268,7 @@ states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
 rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
+money: 'Monetisation {m}/15', scoreLine: 'Shelf life {d}/5 · Shareability {p}/5 · Offer fit {o}/5',
 knead: 'Knead', kneadSuite: ' a post', graphShow: 'Show the chart', graphHide: 'Hide the chart', read: 'Read the source', save: 'Save for later', skip: 'Skip',
 undo: 'Undo', toastSave: 'Saved for later', toastUnsave: 'Removed from the pantry', toastSkip: 'Topic skipped', toastUndone: 'Undone',
 allDone: 'You have gone through everything for today', bringBack: 'Bring everything back',
@@ -517,7 +524,7 @@ var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, url: '#',
+chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', scoreLine: '', money: '', url: '#',
 knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
@@ -525,6 +532,8 @@ var etat = FEU[c.feu];
 s.chip = CHIP(etat); s.state = t.states[etat]; s.source = c.source;
 s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
 s.url = Bento.safeUrl(c.url);
+s.money = fill(t.money, { m: Bento.totalScore(c) });
+s.scoreLine = fill(t.scoreLine, { d: c.durabilite || 0, p: c.propension || 0, o: c.lienOffre || 0 });
 s.readLabel = fill(t.readFull, { titre: c.titre });
 s.kneadHref = Bento.lienFournil(c.ref);
 s.saved = String(Store.estDeCote(store, c.ref));

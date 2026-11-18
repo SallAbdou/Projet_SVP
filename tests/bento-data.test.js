@@ -35,3 +35,8 @@ test('lienFournil encode la ref', () => {
   assert.equal(B.lienFournil('recDemo01'), '/fournil?ref=recDemo01');
   assert.equal(B.lienFournil('a&b c'), '/fournil?ref=a%26b%20c');
 });
+
+test('montreRaison : le n°1 doré ne commente pas sa couleur, les autres oui', () => {
+  assert.equal(B.montreRaison('n1'), false);
+  for (const id of ['n2', 'n3', 'n4', 'n5', 'n6', 'n7']) assert.equal(B.montreRaison(id), true, id);
+});
