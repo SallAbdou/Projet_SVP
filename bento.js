@@ -246,6 +246,26 @@
     return (a.durabilite || 0) + (a.propension || 0) + (a.lienOffre || 0);
   }
 
+  // Jauges de monétisation du n°1 : trois critères notés de 0 à 5 (bornés), pourcentage de remplissage
+  // de chaque jauge et total sur 15.
+  var CRITERES = ['durabilite', 'propension', 'lienOffre'];
+  function jauges(article) {
+    var a = article || {};
+    var total = 0;
+    var criteres = CRITERES.map(function (cle) {
+      var v = Number(a[cle]);
+      v = isFinite(v) ? Math.min(5, Math.max(0, v)) : 0;
+      total += v;
+      return { cle: cle, valeur: v, pct: Math.round(v * 20) };
+    });
+    return { criteres: criteres, total: total, max: 15, totalPct: Math.round(total / 15 * 100) };
+  }
+
+  // Nombre de rangées de la grille affichée (sert à savoir si la fournée tient sans défilement).
+  function rangees(layout, available, colonnes) {
+    return placer(layout, available, colonnes).reduce(function (m, b) { return Math.max(m, b.row + b.h); }, 0);
+  }
+
   // n8n classe déjà les articles : on suit leur rang, sans muter la liste reçue.
   // exclus : refs ignorées du jour ; l'emplacement n°K reçoit le K-ième article restant.
   function pickTopics(articles, n, exclus) {
@@ -298,6 +318,7 @@
     PRESETS: PRESETS, PRESET_PERSO: PRESET_PERSO,
     appliquerPreset: appliquerPreset, presetCourant: presetCourant, placer: placer,
     PERSO_KEY: PERSO_KEY, choisirMiseEnPage: choisirMiseEnPage, loadPerso: loadPerso, savePerso: savePerso,
+    jauges: jauges, rangees: rangees,
     totalScore: totalScore, montreRaison: montreRaison, pickTopics: pickTopics, lienFournil: lienFournil, safeUrl: safeUrl
   };
 
