@@ -1,46 +1,49 @@
 /* Charte graphique commune, chargée en premier par toutes les pages.
    Quatre thèmes par variables de rôle, posés par data-theme sur <html> (theme.js) :
-   Bronze (défaut, d'après le tableau Pinterest « Bronze wallpaper » : chocolats, caramels, bronzes, crèmes champagne),
-   Boulangerie classique (palette d'avant le lot 13), Nuit (fond sombre) et Contraste élevé.
-   Les états (Tout chaud, À pétrir, Rassis), le doré du n°1 et le pain « Pétrir » gardent leur teinte partout.
+   Bronze (défaut), Boulangerie classique (palette d'avant le lot 13), Nuit (fond sombre) et Contraste élevé.
+   Lot 14 : rampes tonales par famille calculées en OKLCH (tools/palette-oklch.js, teinte et chroma fixes,
+   luminosité par pas réguliers) puis écrites en hex. Familles : farine et mie (fonds), brun (textes),
+   bronze cuivré (accent unique des actions), or (Maillard, croûte, pétrir, pain), patine vert-de-gris
+   (Lire la source), cendre (Rassis). Ombres et voiles teintés brun par --ombre-teinte.
+   Aucune couleur en dur ailleurs que dans ces blocs (tests/couleurs.test.js).
    Contrastes vérifiés thème par thème par tests/charte.test.js. */
 :root,[data-theme="bronze"]{
-  --fond:#F6EDE1;--creme:#FFFAF3;--sable:#EEDFC9;--miel:#F4E4CB;--bord:#E3CFB2;--bord-fort:#CBA67A;--trait:#EFE3D2;
-  --texte:#2A1710;--texte-2:#4A2F20;--doux:#67493A;--brun:#8A4A1F;--brun-fonce:#4B2E21;--dore:#B83D0B;--sur-titre:#96461A;--cuivre:#9E5A22;
-  --ok:#2F5E36;--ok-fond:#DCEBD6;--erreur:#8E2A1C;--erreur-fond:#F5DAD3;
-  --or-haut:#F7DFA8;--or-bas:#D49B55;--maillard:linear-gradient(140deg,#F7DFA8 0%,#E8BB6E 55%,#D49B55 100%);
-  --braise:#B83D0B;--braise-fonce:#93300C;--braise-vive:#F25C05;--croute:#FFB020;
-  --chaud-texte:#1F1208;--chaud-degrade:linear-gradient(135deg,#FFB020 0%,#F25C05 55%,#FFB020 100%);
-  --petrir-fond:#FFE7B0;--petrir-texte:#7A3E00;
-  --rassis-fond:#1C1714;--rassis-texte:#FFFFFF;
-  --eclair:#E0A100;
-  --source:#6E2A5E;--source-fonce:#521F46;
-  --barre-chaud:linear-gradient(180deg,#FFB020 0%,#F25C05 100%);--barre-petrir:#C97F00;
-  --barre-rassis:#D6CCC2;--barre-rassis-contour:#7D7068;
-  --sur-plein:#FFFAF3;--sur-clair:#2A1408;--champ:#FFFFFF;--bord-champ:#8A6A48;
-  --etiquette-fond:#4B2E21;--etiquette-texte:#F6EBDA;--focus:#B83D0B;
-  --panneau:#2A1710;--panneau-texte:#F6EDE1;--panneau-doux:#EFE3D2;
-  --pain-haut:#EDBB72;--pain-bas:#BA7230;--pain-grigne:#F8DDA6;--pain-texte:#1E0E05;
+  --fond:#F8F0E6;--creme:#FEFAF3;--sable:#F2E5D5;--miel:#F8E7CE;--trait:#F1E8DD;--bord:#E4D4C2;--bord-fort:#C7A586;
+  --texte:#2C1910;--texte-2:#4A2F22;--doux:#684D3D;--brun:#884922;--brun-fonce:#4E2D1C;
+  --braise:#9F4D1A;--braise-fonce:#823B15;--dore:#9F4D1A;--focus:#9F4D1A;--sur-titre:#8D4B21;--cuivre:#9F5E25;
+  --ok:#2F5C31;--ok-fond:#DAEFD6;--erreur:#892B20;--erreur-fond:#FEE0D8;
+  --or-haut:#FAE4B5;--or-milieu:#F0CD92;--or-bas:#E3B778;--croute:#F4BB5B;--braise-vive:#D27528;--chaud-texte:#321707;--eclair:#E1A536;
+  --petrir-fond:#FBE3B9;--petrir-texte:#744214;--barre-petrir:#BA7E2D;--pain-haut:#EEBE7C;--pain-bas:#BD7D41;--pain-grigne:#FBE7C0;--pain-texte:#2B160A;
+  --or-texte:#2C1910;--or-texte-2:#4A2F22;--or-brun:#653312;--or-surface:#FFF6E4;--or-sur-plein:#FEFAF3;--or-bord:#AB722D;--or-source:#345E59;--or-source-fonce:#264A45;
+  --source:#345E59;--source-fonce:#264A45;
+  --rassis-fond:#3A4147;--rassis-texte:#F4F7FB;--barre-rassis:#C5CBD1;--barre-rassis-contour:#6E767C;
+  --sur-plein:#FEFAF3;--sur-clair:#2B160A;--champ:#FFFDFA;--bord-champ:#896C55;--etiquette-fond:#4A2F22;--etiquette-texte:#F5EBDE;
+  --panneau:#311D14;--panneau-texte:#F7EFE5;--panneau-doux:#E7DCCF;--panneau-or:#F2CB88;--ombre-teinte:#3D2013;
+  --qr-fond:#FFFFFF;
+  --maillard:linear-gradient(140deg,var(--or-haut) 0%,var(--or-milieu) 55%,var(--or-bas) 100%);
+  --chaud-degrade:linear-gradient(135deg,var(--croute) 0%,var(--braise-vive) 55%,var(--croute) 100%);
+  --barre-chaud:linear-gradient(180deg,var(--croute) 0%,var(--braise-vive) 100%);
+  --ombre-1:0 1px 2px color-mix(in srgb,var(--ombre-teinte) 10%,transparent),0 3px 10px color-mix(in srgb,var(--ombre-teinte) 8%,transparent);
+  --ombre-2:0 2px 4px color-mix(in srgb,var(--ombre-teinte) 10%,transparent),0 10px 28px color-mix(in srgb,var(--ombre-teinte) 14%,transparent);
+  --ombre-3:0 6px 14px color-mix(in srgb,var(--ombre-teinte) 18%,transparent),0 24px 56px color-mix(in srgb,var(--ombre-teinte) 26%,transparent);
+  --voile:color-mix(in srgb,var(--ombre-teinte) 55%,transparent);
+  --fond-page:radial-gradient(ellipse 120% 55% at 50% -12%,var(--creme) 0%,transparent 70%) no-repeat,linear-gradient(180deg,var(--fond) 0%,var(--fond) 35%,var(--sable) 100%);
 }
 [data-theme="classique"]{
   --fond:#FBF5EA;--creme:#FFFDF8;--sable:#F3E6CF;--miel:#F6E7CC;--bord:#E7D6B8;--bord-fort:#D9C29C;--trait:#F0E5D2;
   --texte:#2E1D12;--texte-2:#4A3324;--doux:#6B5443;--brun:#8A4F1C;--brun-fonce:#5E3412;--dore:#C2410C;--sur-titre:#B23A0B;--cuivre:#9A5B23;
-  --or-haut:#FBE3A8;--or-bas:#E3A54A;--maillard:linear-gradient(140deg,#FBE3A8 0%,#F2C46D 55%,#E3A54A 100%);
+  --or-haut:#FBE3A8;--or-milieu:#F2C46D;--or-bas:#E3A54A;
   --braise:#C2410C;--braise-fonce:#9A3412;
   --sur-plein:#FFFDF8;--sur-clair:#2E1D12;--bord-champ:#8A6A48;
   --etiquette-fond:#5E3412;--etiquette-texte:#FFF6E3;--focus:#C2410C;
   --panneau:#2E1D12;--panneau-texte:#FBF5EA;--panneau-doux:#F0E5D2;
 }
 [data-theme="nuit"]{
-  --fond:#16100C;--creme:#211812;--sable:#2A1F17;--miel:#33261C;--bord:#4A3828;--bord-fort:#6E5640;--trait:#33271D;
-  --texte:#F5EADB;--texte-2:#E6D6C2;--doux:#CDB7A0;--brun:#EAA866;--brun-fonce:#F2CB98;--dore:#F2793A;--sur-titre:#F0A660;--cuivre:#C98A4B;
-  --ok:#A6D9AA;--ok-fond:#1C3322;--erreur:#F4A090;--erreur-fond:#3A1A15;
-  --braise:#F2793A;--braise-fonce:#F89C66;
-  --source:#DDA8CF;--source-fonce:#EBC4E1;
-  --barre-rassis-contour:#8F8279;
-  --sur-plein:#1A100A;--champ:#120D0A;--bord-champ:#9C8166;
-  --etiquette-fond:#5A3826;--etiquette-texte:#F6EBDA;--focus:#F2B36B;
-  --panneau:#3A2B1F;--panneau-texte:#F5EADB;--panneau-doux:#E6D6C2;
+  --fond:#140E0A;--creme:#1F1610;--sable:#281E17;--miel:#2F2419;--trait:#2D231C;--bord:#45362A;--bord-fort:#6D5541;--texte:#F5EBDE;
+  --texte-2:#E4D7C7;--doux:#CDBAA6;--brun:#E3AF7C;--brun-fonce:#EFD3AC;--braise:#E5905A;--braise-fonce:#EBAB79;--dore:#E5905A;--focus:#EEBA70;
+  --sur-titre:#E9AC76;--cuivre:#CE9869;--ok:#A3D7A3;--ok-fond:#1D2F1E;--erreur:#EFA598;--erreur-fond:#3F201B;--source:#85BEB6;--source-fonce:#A0CFC8;
+  --barre-rassis-contour:#858D94;--sur-plein:#140E0A;--champ:#0D0805;--bord-champ:#977E67;--etiquette-fond:#593C2B;--etiquette-texte:#F5EBDE;--panneau:#3A2A20;--panneau-texte:#F5EBDE;
+  --panneau-doux:#E4D7C7;--panneau-or:#F2CB88;--ombre-teinte:#030101;
   color-scheme:dark;
 }
 [data-theme="contraste"]{
@@ -48,27 +51,28 @@
   --texte:#000000;--texte-2:#000000;--doux:#2B2B2B;--brun:#5C2600;--brun-fonce:#3A1800;--dore:#9E2E08;--sur-titre:#7A2400;--cuivre:#5C2600;
   --ok:#1B4D22;--ok-fond:#E3F1DF;--erreur:#7A1A0F;--erreur-fond:#FCE4DF;
   --braise:#9E2E08;--braise-fonce:#7A2408;
-  --source:#4A1240;--source-fonce:#320A2B;
+  --source:#033C36;--source-fonce:#012824;
   --barre-petrir:#8F5A00;--barre-rassis-contour:#000000;
   --sur-plein:#FFFFFF;--sur-clair:#000000;--champ:#FFFFFF;--bord-champ:#000000;
   --etiquette-fond:#000000;--etiquette-texte:#FFFFFF;--focus:#000000;
-  --panneau:#000000;--panneau-texte:#FFFFFF;--panneau-doux:#FFFFFF;
+  --panneau:#000000;--panneau-texte:#FFFFFF;--panneau-doux:#FFFFFF;--ombre-teinte:#000000;
+  --fond-page:var(--fond);
 }
 .pq-cache{display:none!important}
 
-/* Puces d'état : Tout chaud (braise animée), À pétrir, Rassis (noir, écrit en blanc). */
+/* Puces d'état : Tout chaud (braise animée), À pétrir, Rassis (ardoise cendrée, froide et éteinte). */
 .puce{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap}
-.puce-chaud{background:var(--chaud-degrade);background-size:200% 100%;color:var(--chaud-texte);box-shadow:0 0 8px 0 rgba(242,92,5,.35);animation:pq-braise 2.4s ease-in-out infinite}
-.puce-chaud::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:#FFF4D6;box-shadow:0 0 4px 1px #FFE08A;animation:pq-braise-point 1.2s ease-in-out infinite alternate}
+.puce-chaud{background:var(--chaud-degrade);background-size:200% 100%;color:var(--chaud-texte);box-shadow:0 0 8px 0 color-mix(in srgb,var(--braise-vive) 35%,transparent);animation:pq-braise 2.4s ease-in-out infinite}
+.puce-chaud::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:var(--pain-grigne);box-shadow:0 0 4px 1px var(--or-haut);animation:pq-braise-point 1.2s ease-in-out infinite alternate}
 .puce-petrir{background:var(--petrir-fond);color:var(--petrir-texte);box-shadow:inset 0 0 0 1px var(--barre-petrir)}
 .puce-rassis{background:var(--rassis-fond);color:var(--rassis-texte)}
 @keyframes pq-braise{
-  0%,100%{background-position:0% 50%;box-shadow:0 0 6px 0 rgba(242,92,5,.30)}
-  50%{background-position:100% 50%;box-shadow:0 0 14px 3px rgba(255,140,20,.55)}
+  0%,100%{background-position:0% 50%;box-shadow:0 0 6px 0 color-mix(in srgb,var(--braise-vive) 30%,transparent)}
+  50%{background-position:100% 50%;box-shadow:0 0 14px 3px color-mix(in srgb,var(--croute) 55%,transparent)}
 }
 @keyframes pq-braise-point{from{opacity:.65;transform:scale(.85)}to{opacity:1;transform:scale(1.1)}}
 @media (prefers-reduced-motion:reduce){.puce-chaud,.puce-chaud::before{animation:none}}
-.puce-rassis{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.puce-rassis{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rassis-texte) 22%,transparent)}
 
 /* Ampoule « éclair de génie » devant « Pour toi » (SVG décoratif, plein, jaune croûte), alignée sur la première ligne. */
 .pour-toi{display:flex;align-items:flex-start;gap:8px;font-size:17px;line-height:1.4}
@@ -76,12 +80,12 @@
 .pour-toi>span{color:var(--brun-fonce);font-weight:600}
 .ampoule{flex:none;width:26px;height:26px;margin-top:-1px;color:var(--croute)}
 
-/* Bouton « Pétrir » : un gros pain bâtard sur tout le site. Croûte dorée en dégradé, trois grignes
-   (entailles) décoratives en ::before sous le texte, le pain s'enfonce légèrement à l'appui. */
-.btn-petrir{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;min-width:76px;padding:0 20px;border:0;border-radius:50%/50%;background:linear-gradient(170deg,var(--pain-haut) 0%,var(--pain-haut) 30%,var(--pain-bas) 100%);color:var(--pain-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 -3px 0 rgba(90,45,10,.35),inset 0 2px 0 rgba(255,244,214,.55),0 3px 6px rgba(60,30,10,.28);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease}
-.btn-petrir::before{content:'';position:absolute;z-index:-1;inset:7px 18% 9px;pointer-events:none;background:linear-gradient(115deg,transparent 0 44%,var(--pain-grigne) 44% 56%,transparent 56%) 0 50%/34% 100% no-repeat,linear-gradient(115deg,transparent 0 44%,var(--pain-grigne) 44% 56%,transparent 56%) 50% 50%/34% 100% no-repeat,linear-gradient(115deg,transparent 0 44%,var(--pain-grigne) 44% 56%,transparent 56%) 100% 50%/34% 100% no-repeat;opacity:.9}
-.btn-petrir:hover{color:var(--pain-texte);filter:brightness(.95) saturate(1.08)}
-.btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 -1px 0 rgba(90,45,10,.35),inset 0 2px 4px rgba(60,30,10,.35),0 1px 2px rgba(60,30,10,.25)}
+/* Bouton « Pétrir » : pastille dorée couleur croûte sur tout le site, fond uni sous le texte, petit pain
+   décoratif (svg.pain-ico, aria-hidden) à gauche du texte. S'enfonce légèrement à l'appui. */
+.btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--pain-bas);border-radius:999px;background:var(--pain-haut);color:var(--pain-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 var(--pain-grigne),var(--ombre-1);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease}
+.btn-petrir .pain-ico{flex:none;width:22px;height:15px;overflow:visible}
+.btn-petrir:hover{background:var(--pain-grigne);color:var(--pain-texte)}
+.btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 4px color-mix(in srgb,var(--ombre-teinte) 28%,transparent)}
 .btn-petrir:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.btn-petrir{transition:none}.btn-petrir:active{transform:none}}
 

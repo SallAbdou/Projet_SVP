@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <style>
-body{margin:0;background:var(--fond)}
+body{margin:0;background:var(--fond-page)}
 a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
@@ -17,8 +17,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
 /* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
-.bento .tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px rgba(255,176,32,.55);animation:pq-halo 1s ease-in-out 2 alternate}
-@keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute),0 0 10px 2px rgba(255,176,32,.35)}to{box-shadow:0 0 0 5px var(--croute),0 0 30px 10px rgba(255,176,32,.6)}}
+.bento .tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px color-mix(in srgb,var(--croute) 55%,transparent);animation:pq-halo 1s ease-in-out 2 alternate}
+@keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute),0 0 10px 2px color-mix(in srgb,var(--croute) 35%,transparent)}to{box-shadow:0 0 0 5px var(--croute),0 0 30px 10px color-mix(in srgb,var(--croute) 60%,transparent)}}
 @media (prefers-reduced-motion:reduce){.bento .tile.pq-halo{animation:none}}
 .bento .tile.pq-halo .act-knead:focus{outline:2px solid var(--braise);outline-offset:2px}
 .tile-S{grid-column:span 1;grid-row:span 1}
@@ -35,12 +35,12 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .score-detail{margin:0;font-size:12.5px;color:var(--doux)}
 .score:empty,.score-detail:empty{display:none}
 /* Emplacement n°1 : doré « Maillard », la croûte bien dorée, pour repérer d'un coup d'œil la news la mieux notée. */
-.tile[data-tile="n1"]{--texte:#2A1710;--texte-2:#4A2F20;--doux:#4A2F20;--brun:#5E2E0E;--brun-fonce:#4B2E21;--creme:#FFF6E3;--sur-plein:#FFFAF3;--source:#6E2A5E;--source-fonce:#521F46;--bord-fort:#B87420;color:var(--sur-clair);background:var(--maillard);border:2px solid var(--cuivre);box-shadow:0 8px 22px rgba(184,116,32,.30)}
+.tile[data-tile="n1"]{--texte:var(--or-texte);--texte-2:var(--or-texte-2);--doux:var(--or-texte-2);--brun:var(--or-brun);--brun-fonce:var(--or-texte-2);--creme:var(--or-surface);--sur-plein:var(--or-sur-plein);--source:var(--or-source);--source-fonce:var(--or-source-fonce);--bord-fort:var(--or-bord);color:var(--sur-clair);background:var(--maillard);border:2px solid var(--cuivre);box-shadow:0 8px 22px color-mix(in srgb,var(--or-bord) 30%,transparent)}
 .bento.editing .tile[data-tile="n1"]{border:2px dashed var(--brun)}
-.tile[data-tile="n1"] .rank{background:var(--brun);color:#FBE3A8;box-shadow:0 0 0 2px #FBE3A8}
+.tile[data-tile="n1"] .rank{background:var(--brun);color:var(--or-surface);box-shadow:0 0 0 2px var(--or-haut)}
 .tile[data-tile="n1"] .tile-body p{color:var(--sur-clair)!important}
-.tile[data-tile="n1"] .tile-body a[target]{background:#FFF6E3;border-color:var(--cuivre)!important}
-.tile[data-tile="n1"] .tile-tools .tool{background:#FFF6E3}
+.tile[data-tile="n1"] .tile-body a[target]{background:var(--creme);border-color:var(--cuivre)!important}
+.tile[data-tile="n1"] .tile-tools .tool{background:var(--creme)}
 .tile[data-tile="n1"] .tile-tools .tool[aria-pressed="true"]{background:var(--brun);color:var(--sur-plein)}
 .tile-tools{display:none;flex-wrap:wrap;gap:6px;padding-bottom:10px;border-bottom:1.5px dashed var(--bord-fort)}
 .bento.editing .tile-tools{display:flex}
@@ -66,8 +66,8 @@ a.act{text-decoration:none}a.act:hover{color:var(--texte)}
 .act[aria-pressed="true"]{background:var(--sable);border-color:var(--brun);color:var(--brun-fonce)}
 .act[aria-pressed="true"] .ico-plein{display:inline}
 .act[aria-pressed="true"] .ico-vide{display:none}
-.tile[data-tile="n1"] .act{background:#FFF6E3;border-color:var(--cuivre)}
-.tile[data-tile="n1"] .act[aria-pressed="true"]{background:var(--brun);color:#FFF6E3}
+.tile[data-tile="n1"] .act{background:var(--creme);border-color:var(--cuivre)}
+.tile[data-tile="n1"] .act[aria-pressed="true"]{background:var(--brun);color:var(--creme)}
 .act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--source);border-color:var(--source)!important;color:var(--sur-plein)}
 a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--source-fonce);border-color:var(--source-fonce)!important;color:var(--sur-plein)}
 @media (min-width:641px){.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0}}
@@ -80,7 +80,7 @@ a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="re
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
-.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:var(--ombre-3)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--croute);color:var(--sur-clair);font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid var(--fond);outline-offset:2px}
 .mep-zone{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}
@@ -88,13 +88,13 @@ a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="re
 .mep-groupe{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .mep{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:44px;padding:10px;border-radius:14px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;text-align:left;cursor:pointer}
 .mep:hover{border-color:var(--brun)}
-.mep[aria-checked="true"]{border:2px solid var(--brun);padding:9.5px;background:var(--creme);box-shadow:0 0 0 3px rgba(138,79,28,.15)}
+.mep[aria-checked="true"]{border:2px solid var(--brun);padding:9.5px;background:var(--creme);box-shadow:0 0 0 3px color-mix(in srgb,var(--brun) 15%,transparent)}
 .mep[aria-checked="true"] .mep-nom::before{content:'✓ ';color:var(--brun)}
 .mep-mini{display:block;padding:6px;border-radius:8px;background:var(--sable)}
 .mep-mini svg{display:block;width:100%;height:auto;max-height:84px}
 .mep-nom{font-weight:700;font-size:14px}
 .mep-desc{font-size:12.5px;color:var(--doux);line-height:1.35}
-.tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
+.tile.dragging{opacity:.6;box-shadow:var(--ombre-3);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (min-width:641px){.tile-S .only-M,.tile-S .only-L,.tile-M .only-L{display:none!important}}
 @media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile-S{grid-column:span 1}.tile-M,.tile-L{grid-column:span 2}}
@@ -119,7 +119,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 </header>
 <p role="status" style="{{loadingStyle}}">{{t.loading}}</p>
-<div role="status" style="{{waitStyle}}"><svg class="four-pain" width="96" height="72" viewBox="0 0 96 72" aria-hidden="true"><rect x="4" y="58" width="88" height="10" rx="5" fill="var(--brun)"></rect><g class="four-pain-miche"><path d="M14 56c0-17 15-30 34-30s34 13 34 30z" fill="#D9A15B"></path><path d="M30 38l6 8M45 34l6 8M60 38l6 8" stroke="var(--brun)" stroke-width="3" stroke-linecap="round"></path></g></svg><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800;color:var(--texte)">{{waitTitle}}</p><p style="margin:0;color:var(--doux)">{{t.waiting}}</p></div>
+<div role="status" style="{{waitStyle}}"><svg class="four-pain" width="96" height="72" viewBox="0 0 96 72" aria-hidden="true"><rect x="4" y="58" width="88" height="10" rx="5" fill="var(--brun)"></rect><g class="four-pain-miche"><path d="M14 56c0-17 15-30 34-30s34 13 34 30z" fill="var(--pain-haut)"></path><path d="M30 38l6 8M45 34l6 8M60 38l6 8" stroke="var(--brun)" stroke-width="3" stroke-linecap="round"></path></g></svg><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800;color:var(--texte)">{{waitTitle}}</p><p style="margin:0;color:var(--doux)">{{t.waiting}}</p></div>
 <p role="alert" style="{{errorStyle}}">{{t.loadError}}</p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 <div style="{{editBarStyle}}">
@@ -170,7 +170,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <p class="only-L score-detail">{{s.scoreLine}}</p>
 <p class="score">{{s.money}}</p>
 <div class="tile-actions">
-<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
+<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
 <button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
 <button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="pq-sr">{{s.skipLabel}}</span></button>
 <a class="act" data-act="read" data-id="{{s.id}}" href="{{s.url}}" target="_blank" rel="noopener" aria-label="{{s.readLabel}}" title="{{s.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{s.read}}</span></a>

@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <style>
-body{margin:0;background:var(--fond)}
+body{margin:0;background:var(--fond-page)}
 a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 textarea:focus,select:focus,input:focus{outline:2px solid var(--braise);outline-offset:1px}
 button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
@@ -28,12 +28,12 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .fo-champ input{min-height:44px;width:100%;padding:0 12px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--creme);color:var(--texte);font:inherit;font-size:15px}
 .fo-champ input[aria-invalid="true"]{border-color:var(--erreur)}
 .fo-erreur{font-size:12px;font-weight:600;color:var(--erreur)}
-.fo-voile{position:fixed;inset:0;z-index:40;background:rgba(46,29,18,.55);display:flex;align-items:center;justify-content:center;padding:16px}
-.fo-boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:var(--creme);border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);padding:22px;display:flex;flex-direction:column;gap:14px}
+.fo-voile{position:fixed;inset:0;z-index:40;background:var(--voile);display:flex;align-items:center;justify-content:center;padding:16px}
+.fo-boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:var(--creme);border-radius:20px;box-shadow:var(--ombre-3);padding:22px;display:flex;flex-direction:column;gap:14px}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
-.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:var(--ombre-3)}
 @media (max-width:640px){.fo-carte{padding:18px}.fo-choix{padding:14px 16px}}
 </style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script>
@@ -58,7 +58,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-choix">
 <span class="{{c.chip}}">{{c.etat}}</span>
 <div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:var(--doux)">{{c.source}}</span></div>
-<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}">{{t.petrir}}</a>
+<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.petrir}}</a>
 </div>
 </sc-for>
 </div>
@@ -68,7 +68,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-choix">
 <span class="{{c.chip}}">{{c.etat}}</span>
 <div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:var(--doux)">{{c.source}}</span></div>
-<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}">{{t.petrir}}</a>
+<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.petrir}}</a>
 </div>
 </sc-for>
 </div>
@@ -121,7 +121,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 </div>
 <aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:18px">
 <div style="background:var(--panneau);color:var(--panneau-texte);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
-<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;color:#F2C77A">{{t.checkTitle}}</h2>
+<h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;color:var(--panneau-or)">{{t.checkTitle}}</h2>
 <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
 <sc-for list="{{checks}}" as="k" hint-placeholder-count="4">
 <li style="display:flex;gap:10px;align-items:flex-start;font-size:14px"><span style="{{k.box}}" aria-hidden="true">{{k.mark}}</span><span>{{k.label}}<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">{{k.etat}}</span></span></li>
@@ -186,8 +186,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/fournil.js"></script><script src="/charte.js"></script><script src="/parcours.js"></script><script>
 var HIDE = 'display: none';
 var CHIP = { vert: Charte.puce('vert'), orange: Charte.puce('orange'), rouge: Charte.puce('rouge') };
-var BOX_ON = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; background: #F2C77A; color: var(--sur-clair); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800';
-var BOX_OFF = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid #F2C77A; box-sizing: border-box';
+var BOX_ON = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; background: var(--panneau-or); color: var(--sur-clair); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800';
+var BOX_OFF = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--panneau-or); box-sizing: border-box';
 var CHAMP_MAJ = { impressions: 'Impressions', reactions: 'Reactions', republications: 'Republications', commentaires: 'Commentaires', contacts: 'Contacts' };
 var T = {
 fr: {

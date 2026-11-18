@@ -79,12 +79,17 @@ const TEXTE = [
   ['sur-clair', 'croute'], ['sur-clair', 'or-haut'], ['sur-clair', 'or-bas'], ['sur-clair', 'petrir-fond'],
   ['pain-texte', 'pain-haut'], ['pain-texte', 'pain-bas'], ['pain-texte', 'pain-grigne'],
   ['erreur', 'creme'], ['erreur', 'erreur-fond'], ['ok', 'creme'], ['ok', 'ok-fond'],
-  ['sur-plein', 'cuivre'], ['panneau-texte', 'panneau'], ['panneau-doux', 'panneau'], ['#F2C77A', 'panneau']
+  ['sur-plein', 'cuivre'], ['panneau-texte', 'panneau'], ['panneau-doux', 'panneau'], ['panneau-or', 'panneau'],
+  ['or-texte', 'or-haut'], ['or-texte', 'or-milieu'], ['or-texte', 'or-bas'], ['or-texte', 'or-surface'],
+  ['or-texte-2', 'or-haut'], ['or-texte-2', 'or-bas'], ['or-texte-2', 'or-surface'], ['or-brun', 'or-surface'], ['or-brun', 'or-haut'],
+  ['or-surface', 'or-brun'], ['or-sur-plein', 'or-source'], ['or-sur-plein', 'or-source-fonce'],
+  ['sur-clair', 'or-milieu'], ['sur-clair', 'pain-haut'], ['brun-fonce', 'miel'], ['sur-clair', 'panneau-or']
 ];
 const GRAPHIQUE = [
   ['braise', 'sable'], ['source', 'creme'], ['barre-petrir', 'creme'], ['barre-rassis-contour', 'creme'],
   ['braise-vive', 'creme'], ['bord-champ', 'champ'], ['focus', 'fond'], ['focus', 'creme'], ['focus', 'sable'], ['cuivre', 'creme'],
-  ['pain-bas', 'creme'], ['pain-bas', 'fond']
+  ['pain-bas', 'creme'], ['pain-bas', 'fond'], ['or-source', 'or-bas'], ['or-bord', 'or-haut'],
+  ['source', 'fond']
 ];
 for (const [nom, vars] of Object.entries(THEMES)) {
   const v = x => (x.charAt(0) === '#' ? x : vars[x]);
@@ -97,6 +102,15 @@ for (const [nom, vars] of Object.entries(THEMES)) {
   test(`thème ${nom} : contours, barres et focus >= 3:1`, () => { for (const [a, b] of GRAPHIQUE) verifier(a, b, 3); });
 }
 
+test('Bronze, Nuit et la source du Contraste élevé suivent les rampes OKLCH de tools/palette-oklch.js', () => {
+  const P = require('../tools/palette-oklch.js');
+  assert.equal(P.hex(1, 0, 0), '#FFFFFF');
+  assert.equal(P.hex(0, 0, 0), '#000000');
+  for (const t of ['bronze', 'nuit', 'contraste']) {
+    for (const [k, h] of Object.entries(P[t])) assert.equal((BLOCS[t] || {})[k], h, `${t} --${k}`);
+  }
+});
+
 test('quatre thèmes déclarés, Bronze par défaut sur :root', () => {
   assert.ok(Object.keys(BLOCS.bronze || {}).length > 30, 'bloc :root,[data-theme="bronze"] absent');
   for (const nom of ['classique', 'nuit', 'contraste']) assert.ok(BLOCS[nom], nom);
@@ -106,7 +120,7 @@ test('Boulangerie classique reprend la palette d’avant le lot 13', () => {
   const c = THEMES.classique;
   assert.equal(c.fond, '#FBF5EA'); assert.equal(c.creme, '#FFFDF8'); assert.equal(c.texte, '#2E1D12');
   assert.equal(c.doux, '#6B5443'); assert.equal(c.brun, '#8A4F1C'); assert.equal(c['brun-fonce'], '#5E3412');
-  assert.equal(c.braise, '#C2410C'); assert.equal(c.source, '#6E2A5E');
+  assert.equal(c.braise, '#C2410C');
 });
 
 test('Contraste élevé : texte courant à 7:1 au moins', () => {
@@ -133,16 +147,74 @@ test('Rassis en gris chaud clair dans les graphiques, plus de noir', () => {
   assert.ok(C.luminance(VARS['barre-rassis']) > 0.5, VARS['barre-rassis']);
 });
 
-test('« Lire la source » en prune, distinct de la braise', () => {
-  assert.equal(VARS.source, '#6E2A5E');
-  assert.equal(VARS['source-fonce'], '#521F46');
+// Teinte approximative en degrés (HSV), suffisante pour distinguer vert, bronze et prune.
+function teinte(hex) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16) / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  if (!d) return 0;
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+}
+const rvb = hex => [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16));
+
+test('« Lire la source » en vert-de-gris (patine du bronze) dans tous les thèmes, loin de la braise', () => {
+  for (const [nom, t] of Object.entries(THEMES)) {
+    for (const k of ['source', 'source-fonce']) {
+      const h = teinte(t[k]);
+      assert.ok(h >= 150 && h <= 200, `${nom} ${k} ${t[k]} teinte ${Math.round(h)}`);
+    }
+    assert.ok(Math.abs(teinte(t.source) - teinte(t.braise)) > 100, nom);
+  }
 });
 
-test('bouton Pétrir en forme de pain : croûte, grignes, appui, focus, sans animation si réduit', () => {
-  assert.match(css, /\.btn-petrir\{[^}]*var\(--pain-haut\)[^}]*var\(--pain-bas\)/);
+test('un seul accent d’action : braise, doré et focus du thème Bronze sont la même teinte bronze cuivrée', () => {
+  assert.equal(VARS.braise, VARS.dore);
+  assert.equal(VARS.braise, VARS.focus);
+  const h = teinte(VARS.braise);
+  assert.ok(h >= 15 && h <= 35, `braise teinte ${Math.round(h)}`);
+});
+
+test('accents adoucis : ni orange fluo ni jaune fluo', () => {
+  const sat = hex => { const v = rvb(hex); return (Math.max(...v) - Math.min(...v)) / Math.max(...v); };
+  for (const k of ['braise-vive', 'croute', 'eclair', 'barre-petrir']) assert.ok(sat(VARS[k]) < 0.82, `${k} ${VARS[k]} saturation ${sat(VARS[k]).toFixed(2)}`);
+});
+
+test('Rassis froid et éteint, sans noir ni blanc purs', () => {
+  const f = VARS['rassis-fond'], t = VARS['rassis-texte'];
+  assert.ok(C.luminance(f) > 0.03 && C.luminance(f) < 0.1, f);
+  assert.notEqual(t.toUpperCase(), '#FFFFFF');
+  const [r, , b] = rvb(f);
+  assert.ok(b >= r, 'Rassis doit tirer vers le froid : ' + f);
+});
+
+test('profondeur : fond de page en léger dégradé et ombres teintées brun, unis en contraste élevé', () => {
+  assert.match(css, /:root,\[data-theme="bronze"\]\{[^}]*--fond-page:[^;}]*gradient/);
+  assert.match(css, /\[data-theme="contraste"\]\{[^}]*--fond-page:var\(--fond\)/);
+  for (const n of ['ombre-1', 'ombre-2', 'ombre-3']) assert.match(css, new RegExp('--' + n + ':[^;}]*var\\(--ombre-teinte\\)'));
+  const [r, g, b] = rvb(VARS['ombre-teinte']);
+  assert.ok(r > g && g > b, 'ombre brune attendue : ' + VARS['ombre-teinte']);
+  for (const p of ['comptoir.html', 'fournee.html', 'fournil.html', 'garde-manger.html', 'profil.html']) {
+    assert.match(fs.readFileSync(path.join(RACINE, p), 'utf8'), /body\{margin:0;background:var\(--fond-page\)/, p);
+  }
+  assert.match(fs.readFileSync(path.join(RACINE, 'parcours.css'), 'utf8'), /body\{[^}]*background:var\(--fond-page\)/);
+});
+
+test('bouton Pétrir en pastille dorée : fond uni sous le texte, petit pain décoratif, appui, focus, sans animation si réduit', () => {
+  assert.match(css, /\.btn-petrir\{[^}]*border-radius:999px/);
+  assert.match(css, /\.btn-petrir\{[^}]*background:var\(--pain-haut\)/);
+  assert.match(css, /\.btn-petrir\{[^}]*border:1\.5px solid var\(--pain-bas\)/);
   assert.match(css, /\.btn-petrir\{[^}]*color:var\(--pain-texte\)/);
   assert.match(css, /\.btn-petrir\{[^}]*min-height:44px/);
-  assert.match(css, /\.btn-petrir::before\{[^}]*var\(--pain-grigne\)/);
+  assert.doesNotMatch(css, /\.btn-petrir::before/);
+  assert.doesNotMatch(css, /\.btn-petrir\{[^}]*gradient/);
+  assert.match(css, /\.btn-petrir \.pain-ico\{[^}]*width:/);
+  const gabarits = { 'comptoir.html': 1, 'fournee.html': 1, 'fournil.html': 2, 'garde-manger.html': 1 };
+  for (const [p, n] of Object.entries(gabarits)) {
+    const h = fs.readFileSync(path.join(RACINE, p), 'utf8');
+    const boutons = h.match(/<a [^>]*class="btn-petrir[^"]*"[^>]*>[\s\S]*?<\/a>/g) || [];
+    assert.equal(boutons.length, n, p);
+    for (const b of boutons) assert.match(b, /^<a [^>]*><svg class="pain-ico"[^>]*aria-hidden="true"[^>]*focusable="false"/, p);
+  }
   assert.match(css, /\.btn-petrir:active\{[^}]*transform/);
   assert.match(css, /\.btn-petrir:focus-visible\{[^}]*outline:3px solid var\(--focus\)/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.btn-petrir/);
@@ -189,14 +261,32 @@ test('n°1 doré : ses variables locales restent lisibles sur le doré dans tous
   const h = fs.readFileSync(path.join(RACINE, 'fournee.html'), 'utf8');
   const regle = /\.tile\[data-tile="n1"\]\{([^}]*)\}/.exec(h);
   assert.ok(regle, 'règle du n°1 absente');
-  const loc = lireVars(regle[1]);
+  const loc = {};
+  regle[1].replace(/--([\w-]+):var\(--([\w-]+)\)/g, (m, nom, ref) => { loc[nom] = VARS[ref]; });
+  assert.doesNotMatch(regle[1], /#[0-9A-Fa-f]{3,8}\b|rgba?\(/, 'n°1 sans couleur en dur');
   assert.match(regle[1], /color:var\(--sur-clair\)/);
+  for (const nom of ['texte', 'texte-2', 'doux', 'brun', 'brun-fonce', 'creme', 'sur-plein', 'source', 'source-fonce']) {
+    assert.ok(loc[nom], 'variable locale du n°1 absente : ' + nom);
+  }
   for (const nom of ['texte', 'texte-2', 'doux', 'brun', 'brun-fonce']) {
-    for (const fond of [VARS['or-haut'], VARS['or-bas'], loc.creme]) {
+    for (const fond of [VARS['or-haut'], VARS['or-milieu'], VARS['or-bas'], loc.creme]) {
       assert.ok(C.contraste(loc[nom], fond) >= 4.5, `${nom} ${loc[nom]} sur ${fond} = ${arrondi(C.contraste(loc[nom], fond))}`);
     }
   }
-  // « Lire la source » garde son prune foncé sur le doré, même en Nuit.
+  // « Lire la source » garde sa patine foncée sur le doré, même en Nuit.
   for (const fond of [loc.source, loc['source-fonce']]) assert.ok(C.contraste(loc['sur-plein'], fond) >= 4.5, fond);
   assert.ok(C.contraste(loc.source, VARS['or-bas']) >= 3);
+});
+
+test('Rassis se détache du fond clair (Bronze et classique) ; en Nuit son liseré le délimite', () => {
+  for (const nom of ['bronze', 'classique']) {
+    for (const fond of ['fond', 'creme']) assert.ok(C.contraste(THEMES[nom]['rassis-fond'], THEMES[nom][fond]) >= 3, nom + ' ' + fond);
+  }
+  assert.match(css, /\.puce-rassis\{box-shadow:inset 0 0 0 1px color-mix\(in srgb,var\(--rassis-texte\)/);
+});
+
+test('mini-tuile dorée de la landing : titre et rang en couleurs du n°1, lisibles dans tous les thèmes', () => {
+  const p = fs.readFileSync(path.join(RACINE, 'parcours.css'), 'utf8');
+  assert.match(p, /\.mini-titre\{[^}]*color:var\(--or-texte\)/);
+  assert.match(p, /\.mini-tuile\.or \.mini-rang\{background:var\(--or-brun\);color:var\(--or-surface\)\}/);
 });

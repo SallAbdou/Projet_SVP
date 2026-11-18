@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <style>
-body{margin:0;background:var(--fond)}
+body{margin:0;background:var(--fond-page)}
 a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
@@ -24,7 +24,7 @@ a.gm-source:hover{background:var(--source-fonce);border-color:var(--source-fonce
 /* Filtres aux couleurs des états : contour et pastille de la couleur, rempli et coché quand actif. */
 .gm-filtre{--f:var(--brun-fonce);--f-texte:var(--sur-plein);display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:2px solid var(--f);background:var(--creme);color:var(--texte);font:inherit;font-weight:600;cursor:pointer}
 .gm-filtre::before{content:'';flex:none;width:10px;height:10px;border-radius:50%;background:var(--f)}
-.gm-filtre:hover{box-shadow:0 0 0 3px rgba(138,79,28,.18)}
+.gm-filtre:hover{box-shadow:0 0 0 3px color-mix(in srgb,var(--brun) 18%,transparent)}
 .gm-filtre[aria-pressed="true"]{background:var(--f);color:var(--f-texte);font-weight:700}
 .gm-filtre[aria-pressed="true"]::before{content:'✓';content:'✓' / '';width:auto;height:auto;background:none;border-radius:0;font-weight:800}
 .gm-filtre-chaud{--f:var(--braise)}
@@ -33,7 +33,7 @@ a.gm-source:hover{background:var(--source-fonce);border-color:var(--source-fonce
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
-.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:var(--ombre-3)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--croute);color:var(--sur-clair);font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid var(--fond);outline-offset:2px}
 </style>
@@ -74,7 +74,7 @@ a.gm-source:hover{background:var(--source-fonce);border-color:var(--source-fonce
 </div>
 </div>
 <div class="gm-actions">
-<a href="{{i.kneadHref}}" data-act="knead" data-id="{{i.ref}}" aria-label="{{i.kneadLabel}}" class="btn-petrir">{{t.knead}}</a>
+<a href="{{i.kneadHref}}" data-act="knead" data-id="{{i.ref}}" aria-label="{{i.kneadLabel}}" class="btn-petrir"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.knead}}</a>
 <a href="{{i.url}}" target="_blank" rel="noopener" data-act="read" data-id="{{i.ref}}" aria-label="{{i.readLabel}}" class="gm-sec gm-source"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:6px"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>{{t.read}}</a>
 <button type="button" data-act="remove" data-id="{{i.ref}}" aria-label="{{i.removeLabel}}" onClick="{{retirer}}" class="gm-sec">{{t.remove}}</button>
 </div>
@@ -82,9 +82,9 @@ a.gm-source:hover{background:var(--source-fonce);border-color:var(--source-fonce
 </sc-for>
 </section>
 <div style="display:flex;gap:14px;align-items:flex-start;background:var(--panneau);color:var(--panneau-texte);border-radius:18px;padding:18px 22px">
-<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2C77A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1"></path><path d="M8 16a4 4 0 1 1 8 0v2H8z"></path><path d="M10 21h4"></path></svg>
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--panneau-or)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18 12h3M16.3 7.7l2.1-2.1"></path><path d="M8 16a4 4 0 1 1 8 0v2H8z"></path><path d="M10 21h4"></path></svg>
 <div style="display:flex;flex-direction:column;gap:4px">
-<span style="font-family:Fraunces, Georgia, serif;font-size:18px;font-weight:700;color:#F2C77A">{{t.learnTitle}}</span>
+<span style="font-family:Fraunces, Georgia, serif;font-size:18px;font-weight:700;color:var(--panneau-or)">{{t.learnTitle}}</span>
 <span style="font-size:14px;color:var(--panneau-doux)">{{t.learnText}}</span>
 </div>
 </div>

@@ -154,7 +154,7 @@
   // Miniature schématique d'une disposition (cartes « Mise en page ») : un rectangle par bloc
   // affiché, placé comme dans la grille de 4 colonnes ; n°1 doré, graphique brun.
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var MINI_COULEURS = { n1: ['#F2C46D', 'var(--cuivre)'], graph: ['var(--brun)', 'var(--brun)'] };
+  var MINI_COULEURS = { n1: ['var(--or-milieu)', 'var(--cuivre)'], graph: ['var(--brun)', 'var(--brun)'] };
   function miniature(el, layout) {
     if (!el || !layout) return;
     var blocs = root.Bento.placer(layout, null, 4);
