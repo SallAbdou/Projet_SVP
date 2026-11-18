@@ -50,8 +50,6 @@
       '<div class="pq-nav-tete">' +
       '<div class="pq-nav-marque" style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
       '<div style="display:flex;align-items:center;gap:10px">' +
-      '<span class="pq-nav-logo" style="width:38px;height:38px;border-radius:12px;background:var(--braise);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;flex:none">' +
-      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg></span>' +
       '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:var(--braise)">AI</span>n quotidien</span></div>' +
       '<span class="pq-nav-tagline" style="font-size:13px;color:var(--doux)">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
@@ -72,7 +70,7 @@
 
   // Sous 900 px, la nav latérale devient une barre en haut avec un bouton Menu (modèle disclosure).
   var CSS = '.pq-nav{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
-    // Bloc marque (logo, nom, accroche) centré dans la colonne latérale ; à gauche dans la barre mobile.
+    // Bloc marque (nom, accroche, sans logo) centré dans la colonne latérale ; à gauche dans la barre mobile.
     '.pq-nav-tete{display:flex;align-items:center;justify-content:center;gap:10px}' +
     '.pq-nav-marque{align-items:center;text-align:center}' +
     '.pq-nav-menu,.pq-nav-prenom{display:none}' +
@@ -84,7 +82,6 @@
     '.pq-nav-tete{justify-content:flex-start}' +
     '.pq-nav-marque{align-items:flex-start;text-align:left}' +
     '.pq-nav-tagline{display:none}' +
-    '.pq-nav-logo{width:32px!important;height:32px!important}' +
     '.pq-nav-nom{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
     '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
     '.pq-nav-nom span{color:var(--brun)!important}' +

@@ -82,9 +82,11 @@ var CONTRASTE = { source: [.320, .055, PATINE], 'source-fonce': [.250, .045, PAT
 // Survols : même teinte, plus foncée. Contrastes vérifiés par tests/charte.test.js.
 var IMPOSEES = {
   'etiquette-fond': '#ABBF9B', 'etiquette-texte': '#2C1910',
-  'lire-fond': '#A9642E', 'lire-survol': '#8A4F24', 'lire-texte': '#FFFFFF',
-  'petrir-btn-fond': '#F27016', 'petrir-btn-survol': '#E0650F', 'petrir-btn-texte': '#2C1910', 'petrir-btn-bord': '#F27016',
-  'petrir-pain': '#2C1910', 'petrir-grigne': '#F27016',
+  'lire-fond': '#A9642E', 'lire-survol': '#7A4420', 'lire-texte': '#FFFFFF',
+  // Lot 17 : survol de Pétrir nettement plus foncé, texte et pain passent en blanc ; bord orange un peu plus foncé.
+  'petrir-btn-fond': '#F27016', 'petrir-btn-survol': '#B4500A', 'petrir-btn-texte': '#2C1910', 'petrir-btn-survol-texte': '#FFFFFF',
+  'petrir-btn-bord': '#D9620F', 'petrir-btn-survol-bord': '#9E4608',
+  'petrir-pain': '#2C1910', 'petrir-pain-survol': '#FFFFFF', 'petrir-grigne': '#F27016', 'petrir-grigne-survol': '#B4500A',
   'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
   'linkedin-fond': '#0A66C2', 'linkedin-survol': '#004182', 'linkedin-texte': '#FFFFFF', 'linkedin-bord': '#0A66C2'
 };
