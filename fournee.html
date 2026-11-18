@@ -38,7 +38,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .jauges{display:flex;flex-direction:column;gap:7px;padding:12px 16px 14px;border-radius:14px;background:var(--creme);border:1px solid var(--bord-fort)}
 .jauges-total{margin:0 0 2px;font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.2;color:var(--brun)}
 .jauge{display:grid;grid-template-columns:7.5em minmax(0,1fr) 2.6em;align-items:center;gap:12px;font-size:13px;line-height:1.3;color:var(--texte)}
-.jauge-nom{font-weight:600}
+.jauge-nom{font-weight:600;min-width:0}
+/* Lot 16 : nom du critère en bouton d'aide (souligné en pointillés), bulle flottante placée par bulle.js. */
+.jauge-aide{display:inline-flex;align-items:center;min-height:24px;max-width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:600;text-align:left;text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:help}
+.jauge-aide:hover{color:var(--brun)}
+.jauge-aide:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+.bulle{position:fixed;z-index:60;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;left:0;top:0;max-width:min(300px,calc(100vw - 16px));padding:10px 12px;border-radius:10px;border:1px solid var(--bord-fort);background:var(--panneau);color:var(--panneau-texte);font-size:13px;font-weight:500;line-height:1.45;box-shadow:var(--ombre-2);pointer-events:none}
+.bulle[hidden]{display:none}
 .jauge-piste{display:block;height:12px;border-radius:999px;background:color-mix(in srgb,var(--brun) 14%,transparent);box-shadow:inset 0 0 0 1px var(--bord-fort);overflow:hidden}
 .jauge-plein{display:block;height:100%;border-radius:inherit;background:var(--brun)}
 .jauge-val{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
@@ -136,6 +142,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script>
 </head><body><div id="root"></div>
 <div id="pq-toast" aria-live="polite"></div>
+<div id="pq-bulle" class="bulle" aria-hidden="true" hidden></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
@@ -202,9 +209,9 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <p class="raison {{s.whyClass}}" style="margin:0;font-size:12.5px;color:var(--doux)"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
 <div class="only-L jauges" role="group" aria-labelledby="jt-{{s.id}}">
 <p id="jt-{{s.id}}" class="jauges-total">{{s.money}}</p>
-<div class="jauge"><span class="jauge-nom">{{s.j1Nom}}</span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="{{s.j1Style}}"></span></span><span class="jauge-val">{{s.j1Val}}</span></div>
-<div class="jauge"><span class="jauge-nom">{{s.j2Nom}}</span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="{{s.j2Style}}"></span></span><span class="jauge-val">{{s.j2Val}}</span></div>
-<div class="jauge"><span class="jauge-nom">{{s.j3Nom}}</span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="{{s.j3Style}}"></span></span><span class="jauge-val">{{s.j3Val}}</span></div>
+<div class="jauge"><span class="jauge-nom"><button type="button" class="jauge-aide" aria-describedby="ja1-{{s.id}}">{{s.j1Nom}}</button><span id="ja1-{{s.id}}" role="tooltip" class="pq-cache">{{s.j1Aide}}</span></span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="{{s.j1Style}}"></span></span><span class="jauge-val">{{s.j1Val}}</span></div>
+<div class="jauge"><span class="jauge-nom"><button type="button" class="jauge-aide" aria-describedby="ja2-{{s.id}}">{{s.j2Nom}}</button><span id="ja2-{{s.id}}" role="tooltip" class="pq-cache">{{s.j2Aide}}</span></span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="{{s.j2Style}}"></span></span><span class="jauge-val">{{s.j2Val}}</span></div>
+<div class="jauge"><span class="jauge-nom"><button type="button" class="jauge-aide" aria-describedby="ja3-{{s.id}}">{{s.j3Nom}}</button><span id="ja3-{{s.id}}" role="tooltip" class="pq-cache">{{s.j3Aide}}</span></span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="{{s.j3Style}}"></span></span><span class="jauge-val">{{s.j3Val}}</span></div>
 </div>
 <p class="score">{{s.money}}</p>
 <div class="tile-actions">
@@ -248,7 +255,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </main>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/comptoir.js"></script><script src="/charte.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/comptoir.js"></script><script src="/charte.js"></script><script src="/bulle.js"></script><script>
 // Puces et barres : classes et variables de la charte (charte.css, charte.js).
 function CHIP(etat) { return Charte.puce(etat) || 'pq-cache'; }
 // Feu tricolore de n8n vers les états de la boulangerie.
@@ -279,6 +286,7 @@ rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
 toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille de {name}', drag: 'Glisser pour déplacer',
 money: 'Monétisation {m}/15', jauges: { durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' }, sur5: '{v}/5',
+aides: { durabilite: 'Le sujet sera-t-il encore valable dans une semaine ?', propension: 'Ton client est-il prêt à payer pour être aidé là-dessus ? Y a-t-il une valeur ajoutée pour lui ? Est-ce que ça l’instruit ?', lienOffre: 'Le sujet mène-t-il à une offre payante, monétisable pour toi via tes posts LinkedIn ?' },
 knead: 'Pétrir', kneadSuite: ' un post', graphShow: 'Afficher le graphique', graphHide: 'Masquer le graphique', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
 undo: 'Annuler', toastSave: 'Mis de côté', toastUnsave: 'Retiré du garde-manger', toastSkip: 'Sujet ignoré', toastUndone: 'Action annulée',
 allDone: 'Tu as tout passé en revue pour aujourd’hui', bringBack: 'Tout faire revenir',
@@ -307,6 +315,7 @@ rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
 money: 'Monetisation {m}/15', jauges: { durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' }, sur5: '{v}/5',
+aides: { durabilite: 'Will the topic still hold up in a week?', propension: 'Is your client ready to pay for help on this? Does it add value for them? Does it teach them something?', lienOffre: 'Does the topic lead to a paid offer you can monetise through your LinkedIn posts?' },
 knead: 'Knead', kneadSuite: ' a post', graphShow: 'Show the chart', graphHide: 'Hide the chart', read: 'Read the source', save: 'Save for later', skip: 'Skip',
 undo: 'Undo', toastSave: 'Saved for later', toastUnsave: 'Removed from the pantry', toastSkip: 'Topic skipped', toastUndone: 'Undone',
 allDone: 'You have gone through everything for today', bringBack: 'Bring everything back',
@@ -563,7 +572,7 @@ var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', money: '', j1Nom: '', j2Nom: '', j3Nom: '', j1Val: '', j2Val: '', j3Val: '', j1Style: 'width: 0%', j2Style: 'width: 0%', j3Style: 'width: 0%', url: '#',
+chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', money: '', j1Nom: '', j2Nom: '', j3Nom: '', j1Aide: '', j2Aide: '', j3Aide: '', j1Val: '', j2Val: '', j3Val: '', j1Style: 'width: 0%', j2Style: 'width: 0%', j3Style: 'width: 0%', url: '#',
 knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
@@ -574,6 +583,7 @@ s.url = Bento.safeUrl(c.url);
 s.money = fill(t.money, { m: Bento.totalScore(c) });
 Bento.jauges(c).criteres.forEach(function (j, i) {
 s['j' + (i + 1) + 'Nom'] = t.jauges[j.cle];
+s['j' + (i + 1) + 'Aide'] = t.aides[j.cle];
 s['j' + (i + 1) + 'Val'] = fill(t.sur5, { v: num(j.valeur) });
 s['j' + (i + 1) + 'Style'] = 'width: ' + j.pct + '%';
 });

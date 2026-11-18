@@ -76,7 +76,7 @@ test('fournee.html : jauges de monétisation accessibles à la place de la ligne
   assert.ok(bloc, 'bloc de jauges absent ou mal placé');
   assert.match(bloc[1], /<p id="jt-\{\{s\.id\}\}" class="jauges-total">\{\{s\.money\}\}<\/p>/);
   for (const n of [1, 2, 3]) {
-    assert.match(bloc[1], new RegExp('<span class="jauge-nom">\{\{s\.j' + n + 'Nom\}\}</span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="\{\{s\.j' + n + 'Style\}\}"></span></span><span class="jauge-val">\{\{s\.j' + n + 'Val\}\}</span>'));
+    assert.match(bloc[1], new RegExp('<span class="jauge-nom"><button type="button" class="jauge-aide" aria-describedby="ja' + n + '-\{\{s\.id\}\}">\{\{s\.j' + n + 'Nom\}\}</button><span id="ja' + n + '-\{\{s\.id\}\}" role="tooltip" class="pq-cache">\{\{s\.j' + n + 'Aide\}\}</span></span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="\{\{s\.j' + n + 'Style\}\}"></span></span><span class="jauge-val">\{\{s\.j' + n + 'Val\}\}</span>'));
   }
   assert.match(h, /\.jauge-plein\{[^}]*background:var\(--brun\)/);
   assert.match(h, /jauges: \{ durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' \}/);
