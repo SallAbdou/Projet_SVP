@@ -64,3 +64,14 @@ test('profil.html : zone Affine ta fournée accessible, branchée sur retours.js
     assert.ok(h.includes(s), s);
   assert.ok(!h.includes('maxlength'), 'pas de maxlength : le dépassement doit pouvoir être expliqué');
 });
+
+test('profil.html (lot 15) : plus d’intro sous Apparence, nouvelle intro des retours en FR et EN', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const h = fs.readFileSync(path.join(__dirname, '..', 'profil.html'), 'utf8');
+  assert.doesNotMatch(h, /apparenceIntro/);
+  assert.doesNotMatch(h, /Choisis les couleurs du site/);
+  assert.doesNotMatch(h, /Dis-nous ce que tu veux voir/);
+  assert.match(h, /retourIntro: 'Si jamais ce que tu vois ne te convient pas, dis-nous comment l’améliorer !'/);
+  assert.match(h, /retourIntro: 'If what you see doesn’t suit you, tell us how to make it better!'/);
+});
