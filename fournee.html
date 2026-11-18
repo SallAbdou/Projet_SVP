@@ -68,8 +68,9 @@ a.act{text-decoration:none}a.act:hover{color:var(--texte)}
 .act[aria-pressed="true"] .ico-vide{display:none}
 .tile[data-tile="n1"] .act{background:var(--creme);border-color:var(--cuivre)}
 .tile[data-tile="n1"] .act[aria-pressed="true"]{background:var(--brun);color:var(--creme)}
-.act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--source);border-color:var(--source)!important;color:var(--sur-plein)}
-a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--source-fonce);border-color:var(--source-fonce)!important;color:var(--sur-plein)}
+.act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--lire-fond);border-color:var(--lire-fond)!important;color:var(--lire-texte)}
+a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--lire-survol);border-color:var(--lire-survol)!important;color:var(--lire-texte)}
+a.act[data-act="read"]:active{transform:translateY(1px)}
 @media (min-width:641px){.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0}}
 /* Actions sur une ligne : Mettre de côté et Ignorer en icônes seules ; selon la largeur réelle du bloc,
    Lire la source passe en icône (moins de 400 px) puis Pétrir un post devient Pétrir (moins de 280 px). */
@@ -170,7 +171,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <p class="only-L score-detail">{{s.scoreLine}}</p>
 <p class="score">{{s.money}}</p>
 <div class="tile-actions">
-<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
+<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
 <button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
 <button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="pq-sr">{{s.skipLabel}}</span></button>
 <a class="act" data-act="read" data-id="{{s.id}}" href="{{s.url}}" target="_blank" rel="noopener" aria-label="{{s.readLabel}}" title="{{s.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{s.read}}</span></a>

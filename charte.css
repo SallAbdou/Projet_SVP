@@ -16,8 +16,14 @@
   --petrir-fond:#FBE3B9;--petrir-texte:#744214;--barre-petrir:#BA7E2D;--pain-haut:#EEBE7C;--pain-bas:#BD7D41;--pain-grigne:#FBE7C0;--pain-texte:#2B160A;
   --or-texte:#2C1910;--or-texte-2:#4A2F22;--or-brun:#653312;--or-surface:#FFF6E4;--or-sur-plein:#FEFAF3;--or-bord:#AB722D;--or-source:#345E59;--or-source-fonce:#264A45;
   --source:#345E59;--source-fonce:#264A45;
-  --rassis-fond:#3A4147;--rassis-texte:#F4F7FB;--barre-rassis:#C5CBD1;--barre-rassis-contour:#6E767C;
-  --sur-plein:#FEFAF3;--sur-clair:#2B160A;--champ:#FFFDFA;--bord-champ:#896C55;--etiquette-fond:#4A2F22;--etiquette-texte:#F5EBDE;
+  --barre-rassis-contour:#6E767C;
+  --sur-plein:#FEFAF3;--sur-clair:#2B160A;--champ:#FFFDFA;--bord-champ:#896C55;
+  /* Lot 15 : couleurs imposées (tools/palette-oklch.js, IMPOSEES), héritées par classique et Nuit. */
+  --etiquette-fond:#ABBF9B;--etiquette-texte:#2C1910;
+  --lire-fond:#BD470C;--lire-survol:#9C3A0A;--lire-texte:#FFFFFF;
+  --petrir-btn-fond:#B20206;--petrir-btn-survol:#8C0105;--petrir-btn-texte:#FFFFFF;--petrir-btn-bord:#B20206;--petrir-pain:#FFFFFF;--petrir-grigne:#B20206;
+  --rassis-fond:#615945;--barre-rassis:#615945;--rassis-texte:#FFFFFF;
+  --linkedin-fond:#0A66C2;--linkedin-survol:#004182;--linkedin-texte:#FFFFFF;--linkedin-bord:#0A66C2;
   --panneau:#311D14;--panneau-texte:#F7EFE5;--panneau-doux:#E7DCCF;--panneau-or:#F2CB88;--ombre-teinte:#3D2013;
   --qr-fond:#FFFFFF;
   --maillard:linear-gradient(140deg,var(--or-haut) 0%,var(--or-milieu) 55%,var(--or-bas) 100%);
@@ -35,14 +41,14 @@
   --or-haut:#FBE3A8;--or-milieu:#F2C46D;--or-bas:#E3A54A;
   --braise:#C2410C;--braise-fonce:#9A3412;
   --sur-plein:#FFFDF8;--sur-clair:#2E1D12;--bord-champ:#8A6A48;
-  --etiquette-fond:#5E3412;--etiquette-texte:#FFF6E3;--focus:#C2410C;
+  --focus:#C2410C;
   --panneau:#2E1D12;--panneau-texte:#FBF5EA;--panneau-doux:#F0E5D2;
 }
 [data-theme="nuit"]{
   --fond:#140E0A;--creme:#1F1610;--sable:#281E17;--miel:#2F2419;--trait:#2D231C;--bord:#45362A;--bord-fort:#6D5541;--texte:#F5EBDE;
   --texte-2:#E4D7C7;--doux:#CDBAA6;--brun:#E3AF7C;--brun-fonce:#EFD3AC;--braise:#E5905A;--braise-fonce:#EBAB79;--dore:#E5905A;--focus:#EEBA70;
   --sur-titre:#E9AC76;--cuivre:#CE9869;--ok:#A3D7A3;--ok-fond:#1D2F1E;--erreur:#EFA598;--erreur-fond:#3F201B;--source:#85BEB6;--source-fonce:#A0CFC8;
-  --barre-rassis-contour:#858D94;--sur-plein:#140E0A;--champ:#0D0805;--bord-champ:#977E67;--etiquette-fond:#593C2B;--etiquette-texte:#F5EBDE;--panneau:#3A2A20;--panneau-texte:#F5EBDE;
+  --barre-rassis-contour:#858D94;--sur-plein:#140E0A;--champ:#0D0805;--bord-champ:#977E67;--panneau:#3A2A20;--panneau-texte:#F5EBDE;
   --panneau-doux:#E4D7C7;--panneau-or:#F2CB88;--ombre-teinte:#030101;
   color-scheme:dark;
 }
@@ -56,6 +62,10 @@
   --sur-plein:#FFFFFF;--sur-clair:#000000;--champ:#FFFFFF;--bord-champ:#000000;
   --etiquette-fond:#000000;--etiquette-texte:#FFFFFF;--focus:#000000;
   --panneau:#000000;--panneau-texte:#FFFFFF;--panneau-doux:#FFFFFF;--ombre-teinte:#000000;
+  --lire-fond:#033C36;--lire-survol:#012824;--lire-texte:#FFFFFF;
+  --petrir-btn-fond:#EEBE7C;--petrir-btn-survol:#FBE7C0;--petrir-btn-texte:#2B160A;--petrir-btn-bord:#BD7D41;--petrir-pain:#BD7D41;--petrir-grigne:#FBE7C0;
+  --rassis-fond:#3A4147;--barre-rassis:#C5CBD1;--rassis-texte:#F4F7FB;
+  --linkedin-fond:#FFFFFF;--linkedin-survol:#F2F2F2;--linkedin-texte:#000000;--linkedin-bord:#000000;
   --fond-page:var(--fond);
 }
 .pq-cache{display:none!important}
@@ -80,11 +90,11 @@
 .pour-toi>span{color:var(--brun-fonce);font-weight:600}
 .ampoule{flex:none;width:26px;height:26px;margin-top:-1px;color:var(--croute)}
 
-/* Bouton « Pétrir » : pastille dorée couleur croûte sur tout le site, fond uni sous le texte, petit pain
+/* Bouton « Pétrir » : pastille rouge imposée (lot 15) sur tout le site, fond uni sous le texte, petit pain blanc
    décoratif (svg.pain-ico, aria-hidden) à gauche du texte. S'enfonce légèrement à l'appui. */
-.btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--pain-bas);border-radius:999px;background:var(--pain-haut);color:var(--pain-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 var(--pain-grigne),var(--ombre-1);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease}
+.btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--petrir-btn-bord);border-radius:999px;background:var(--petrir-btn-fond);color:var(--petrir-btn-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--petrir-btn-texte) 22%,transparent),var(--ombre-1);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease}
 .btn-petrir .pain-ico{flex:none;width:22px;height:15px;overflow:visible}
-.btn-petrir:hover{background:var(--pain-grigne);color:var(--pain-texte)}
+.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol);color:var(--petrir-btn-texte)}
 .btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 4px color-mix(in srgb,var(--ombre-teinte) 28%,transparent)}
 .btn-petrir:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.btn-petrir{transition:none}.btn-petrir:active{transform:none}}
