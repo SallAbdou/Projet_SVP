@@ -114,7 +114,68 @@ WF2 et WF4 sélectionnent aujourd'hui **5 articles**. Le site propose 1, 3, 5 ou
 - n8n sélectionne 7 articles : tous les choix du site sont pleins ;
 - n8n garde 5 : rien à changer, le choix 7 montre simplement 5 news.
 
-## 7. Tester de bout en bout
+## 7. Retours de personnalisation
+
+Sur `/profil`, la zone « Affine ta fournée » permet à l'abonné d'écrire ce qu'il veut voir plus ou moins souvent (1 000 caractères au plus). En démo, ces retours restent dans le navigateur (`pq-retours`). En mode réel, le site les écrit et les relit **directement dans une table Supabase**, par l'API REST, avec le jeton de session de l'abonné.
+
+### Créer la table (SQL Editor de Supabase)
+
+```sql
+create table public.retours (
+  id bigint generated always as identity primary key,
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  abonne_id text,
+  texte text not null check (char_length(texte) between 1 and 1000),
+  cree_le timestamptz not null default now()
+);
+
+alter table public.retours enable row level security;
+
+create policy "insérer ses propres retours"
+on public.retours for insert
+to authenticated
+with check ((select auth.uid()) = user_id);
+
+create policy "lire ses propres retours"
+on public.retours for select
+to authenticated
+using ((select auth.uid()) = user_id);
+
+create index retours_user_cree_le on public.retours (user_id, cree_le desc);
+```
+
+- `user_id` est rempli par la base (`default auth.uid()`) : le site ne l'envoie pas, et la politique refuse toute ligne qui ne serait pas celle de l'abonné connecté.
+- Sans politique, RLS bloque tout : c'est voulu. Pas de politique de modification ni de suppression (l'abonné ne peut qu'ajouter et relire).
+
+### Ce que le site envoie
+
+```
+POST https://<votre-projet>.supabase.co/rest/v1/retours
+apikey: <clé publique>
+Authorization: Bearer <jeton de session de l'abonné>
+Content-Type: application/json
+Prefer: return=minimal
+
+{ "texte": "plus de sujets sur l'IA en PME, moins sur le hardware", "abonne_id": "…" }
+```
+
+Réponse attendue : `201` sans corps. Lecture des trois derniers : `GET …/rest/v1/retours?select=texte,cree_le&order=cree_le.desc&limit=3` avec les mêmes `apikey` et `Authorization`. En cas de `401`/`403`, le site dit que la session a expiré ; autre erreur ou plus de 8 s : « Envoi impossible pour l'instant », le texte reste dans le champ.
+
+`abonne_id` vient de la session (comme pour WF3, `app_metadata.abonne_id` d'abord). C'est une aide au rapprochement, pas une preuve : côté n8n, se fier plutôt à `user_id`, ou à l'`abonne_id` de `app_metadata` de cet utilisateur.
+
+### Test rapide
+
+Connecté sur le site en mode réel, envoyer un retour depuis `/profil` : il apparaît sous « Tes derniers retours ». Dans Supabase, *Table Editor* > `retours` : la ligne a le bon `user_id`. Avec un autre compte, le retour n'est pas visible.
+
+### Piste pour WF4 (« Choisir pour l'abonné »)
+
+Dans WF4, pour chaque abonné, avant le nœud Gemini :
+1. Nœud HTTP `GET https://<votre-projet>.supabase.co/rest/v1/retours?select=texte,cree_le&user_id=eq.<id Supabase de l'abonné>&cree_le=gte.<date d'il y a 30 jours>&order=cree_le.desc&limit=5`, avec `apikey` et `Authorization: Bearer` portant la clé `service_role` (identifiant n8n). La clé `service_role` ignore RLS : elle peut lire les retours de tous les abonnés, c'est pourquoi elle ne sort jamais de n8n.
+2. Ajouter au prompt « Choisir pour l'abonné » un paragraphe du type : « Retours récents de l'abonné sur ses fournées (du plus récent au plus ancien) : … Tiens-en compte pour choisir, sans jamais écarter un article majeur du jour. » S'il n'y a aucun retour, ne rien ajouter.
+
+**Rappel : la clé `service_role` ne va jamais dans le front** (ni dans `config.js`, ni dans le dépôt).
+
+## 8. Tester de bout en bout
 
 1. Remplir `config.js` (étape 1) sur une branche de test, déployer (ou servir en local et ajouter `localhost` dans Supabase et le CORS de WF3).
 2. Remplir le Tally avec une adresse à vous : vous devez arriver sur `/verifie-tes-mails`, puis recevoir l'e-mail d'invitation en français.
@@ -124,10 +185,10 @@ WF2 et WF4 sélectionnent aujourd'hui **5 articles**. Le site propose 1, 3, 5 ou
 6. « Mot de passe oublié » : recevoir l'e-mail, choisir un nouveau mot de passe.
 7. Lien expiré ou déjà utilisé : la page dit « Ce lien n'est plus valable ».
 
-## 8. Revenir en mode démo
+## 9. Revenir en mode démo
 
-Remettre `mode: 'demo'` dans `config.js` (et vider les trois champs avant tout commit sur `main`), puis redéployer. Ouvrir `https://team42svp.vercel.app/?demo=reset` pour repartir d'une démo propre. Les deux modes ne partagent rien : la démo est dans `localStorage` sous `pq-auth`, le mode réel sous `pq-auth-reel`.
+Remettre `mode: 'demo'` dans `config.js` (et vider les trois champs avant tout commit sur `main`), puis redéployer. Ouvrir `https://team42svp.vercel.app/?demo=reset` pour repartir d'une démo propre. Les deux modes ne partagent rien : la démo est dans `localStorage` sous `pq-auth` (et `pq-retours` pour les retours), le mode réel sous `pq-auth-reel` (les retours réels sont dans la table Supabase).
 
 ## Ce qui n'a pas pu être testé
 
-Le front a été testé avec un `fetch` simulé et avec de fausses adresses (le site retombe proprement sur l'exemple et affiche des erreurs claires). **Le vrai Supabase et le vrai n8n n'ont pas été testés** : la première vraie mise en route se fera avec ce guide.
+Le front a été testé avec un `fetch` simulé et avec de fausses adresses (le site retombe proprement sur l'exemple et affiche des erreurs claires). **Le vrai Supabase et le vrai n8n n'ont pas été testés** : la première vraie mise en route se fera avec ce guide. C'est vrai aussi de la table `retours` : le SQL et les politiques suivent la documentation Supabase (Row Level Security) mais n'ont pas été exécutés sur un vrai projet.
