@@ -49,3 +49,18 @@ test('valeur inconnue du questionnaire : affichée telle quelle', () => {
   assert.equal(l.prefs[2].valeur, 'Compliqué');
   assert.equal(l.prefs[3].valeur, 'Autre');
 });
+
+test('profil.html : zone Affine ta fournée accessible, branchée sur retours.js', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const h = fs.readFileSync(path.join(__dirname, '..', 'profil.html'), 'utf8');
+  assert.ok(h.indexOf('src="/retours.js"') > h.indexOf('src="/auth.js"'), 'retours.js chargé après auth.js');
+  assert.match(h, /<label for="retour-texte"/);
+  assert.match(h, /<textarea id="retour-texte"[^>]*aria-describedby="\{\{retourDecrit\}\}"/);
+  assert.match(h, /<textarea id="retour-texte"[^>]*onInput="\{\{saisirRetour\}\}"/);
+  assert.match(h, /<form[^>]*onSubmit="\{\{envoyerRetour\}\}"/);
+  assert.match(h, /role="status"/);
+  for (const s of ['Affine ta fournée', 'Envoyer mon retour', 'Tes derniers retours', 'Fine-tune your batch', 'Send my feedback', 'Your latest feedback'])
+    assert.ok(h.includes(s), s);
+  assert.ok(!h.includes('maxlength'), 'pas de maxlength : le dépassement doit pouvoir être expliqué');
+});
