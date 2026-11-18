@@ -6,14 +6,14 @@
 <link rel="stylesheet" href="/charte.css">
 <style>
 body{margin:0;background:var(--fond)}
-a{color:#8A4F1C}a:hover{color:#5E3412}
+a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
 <style>.four-pain-miche{transform-origin:48px 56px;animation:lever 1.6s ease-in-out infinite alternate}@keyframes lever{from{transform:scale(.86,.7)}to{transform:scale(1,1)}}@media (prefers-reduced-motion:reduce){.four-pain-miche{animation:none}}</style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
 <style>
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(180px,auto);grid-auto-flow:dense;gap:16px}
-.tile{container-type:inline-size;min-width:0;min-height:0;overflow:hidden;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.tile{container-type:inline-size;min-width:0;min-height:0;overflow:hidden;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
 .tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
 /* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
@@ -29,22 +29,25 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .news-title{margin:0;overflow-wrap:anywhere;font-family:Fraunces, Georgia, serif;font-size:18px;line-height:1.3}
 .tile-S .news-title{font-size:16px}
 .tile-L .news-title{font-size:24px}
-.rank{font-family:Fraunces, Georgia, serif;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;background:#2E1D12;color:#FBF5EA}
-.muted{font-size:13px;color:#6B5443}
+.rank{font-family:Fraunces, Georgia, serif;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;background:var(--texte);color:var(--fond)}
+.muted{font-size:13px;color:var(--doux)}
+.score{margin:0;font-family:Fraunces, Georgia, serif;font-size:15px;font-weight:700;line-height:1.3}
+.score-detail{margin:0;font-size:12.5px;color:var(--doux)}
+.score:empty,.score-detail:empty{display:none}
 /* Emplacement n°1 : doré « Maillard », la croûte bien dorée, pour repérer d'un coup d'œil la news la mieux notée. */
-.tile[data-tile="n1"]{background:linear-gradient(140deg,#FBE3A8 0%,#F2C46D 55%,#E3A54A 100%);border:2px solid #B87420;box-shadow:0 8px 22px rgba(184,116,32,.30)}
-.bento.editing .tile[data-tile="n1"]{border:2px dashed #8A4F1C}
-.tile[data-tile="n1"] .rank{background:#8A4F1C;color:#FBE3A8;box-shadow:0 0 0 2px #FBE3A8}
-.tile[data-tile="n1"] .tile-body p{color:#3B2416!important}
-.tile[data-tile="n1"] .tile-body a[target]{background:#FFF6E3;border-color:#B87420!important}
+.tile[data-tile="n1"]{--texte:#2A1710;--texte-2:#4A2F20;--doux:#4A2F20;--brun:#5E2E0E;--brun-fonce:#4B2E21;--creme:#FFF6E3;--sur-plein:#FFFAF3;--source:#6E2A5E;--source-fonce:#521F46;--bord-fort:#B87420;color:var(--sur-clair);background:var(--maillard);border:2px solid var(--cuivre);box-shadow:0 8px 22px rgba(184,116,32,.30)}
+.bento.editing .tile[data-tile="n1"]{border:2px dashed var(--brun)}
+.tile[data-tile="n1"] .rank{background:var(--brun);color:#FBE3A8;box-shadow:0 0 0 2px #FBE3A8}
+.tile[data-tile="n1"] .tile-body p{color:var(--sur-clair)!important}
+.tile[data-tile="n1"] .tile-body a[target]{background:#FFF6E3;border-color:var(--cuivre)!important}
 .tile[data-tile="n1"] .tile-tools .tool{background:#FFF6E3}
-.tile[data-tile="n1"] .tile-tools .tool[aria-pressed="true"]{background:#8A4F1C;color:#FFFDF8}
-.tile-tools{display:none;flex-wrap:wrap;gap:6px;padding-bottom:10px;border-bottom:1.5px dashed #D9C29C}
+.tile[data-tile="n1"] .tile-tools .tool[aria-pressed="true"]{background:var(--brun);color:var(--sur-plein)}
+.tile-tools{display:none;flex-wrap:wrap;gap:6px;padding-bottom:10px;border-bottom:1.5px dashed var(--bord-fort)}
 .bento.editing .tile-tools{display:flex}
-.bento.editing .tile{border:1.5px dashed #B5651D;box-shadow:0 2px 0 #E7D6B8}
+.bento.editing .tile{border:1.5px dashed var(--cuivre);box-shadow:0 2px 0 var(--bord)}
 .tool-sizes{display:inline-flex;gap:4px}
-.tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.tool[aria-pressed="true"]{background:#8A4F1C;border-color:#8A4F1C;color:#FFFDF8}
+.tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.tool[aria-pressed="true"]{background:var(--brun);border-color:var(--brun);color:var(--sur-plein)}
 .tool-drag{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:18px}
 .bento.editing .tile{cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .bento.editing .tile button{cursor:pointer}
@@ -56,17 +59,17 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:auto;padding-top:4px}
 .etiquette-source:empty{display:none}
 .bento.editing .tile-actions{display:none}
-.act{position:relative;flex:none;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.act:hover{border-color:#8A4F1C}
-a.act{text-decoration:none}a.act:hover{color:#2E1D12}
+.act{position:relative;flex:none;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid var(--bord-fort);background:var(--creme);color:var(--texte);font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.act:hover{border-color:var(--brun)}
+a.act{text-decoration:none}a.act:hover{color:var(--texte)}
 .act .ico-plein{display:none}
-.act[aria-pressed="true"]{background:#F3E6CF;border-color:#8A4F1C;color:#5E3412}
+.act[aria-pressed="true"]{background:var(--sable);border-color:var(--brun);color:var(--brun-fonce)}
 .act[aria-pressed="true"] .ico-plein{display:inline}
 .act[aria-pressed="true"] .ico-vide{display:none}
-.tile[data-tile="n1"] .act{background:#FFF6E3;border-color:#B87420}
-.tile[data-tile="n1"] .act[aria-pressed="true"]{background:#8A4F1C;color:#FFF6E3}
-.act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--source);border-color:var(--source)!important;color:#FFFFFF}
-a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--source-fonce);border-color:var(--source-fonce)!important;color:#FFFFFF}
+.tile[data-tile="n1"] .act{background:#FFF6E3;border-color:var(--cuivre)}
+.tile[data-tile="n1"] .act[aria-pressed="true"]{background:var(--brun);color:#FFF6E3}
+.act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--source);border-color:var(--source)!important;color:var(--sur-plein)}
+a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--source-fonce);border-color:var(--source-fonce)!important;color:var(--sur-plein)}
 @media (min-width:641px){.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0}}
 /* Actions sur une ligne : Mettre de côté et Ignorer en icônes seules ; selon la largeur réelle du bloc,
    Lire la source passe en icône (moins de 400 px) puis Pétrir un post devient Pétrir (moins de 280 px). */
@@ -77,46 +80,46 @@ a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="re
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
-.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:#2E1D12;color:#FBF5EA;font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
-.toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--croute);color:#2E1D12;font:inherit;font-weight:700;cursor:pointer}
-.toast-box button:focus-visible{outline:2px solid #FBF5EA;outline-offset:2px}
+.toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:0 10px 26px rgba(46,29,18,.30)}
+.toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--croute);color:var(--sur-clair);font:inherit;font-weight:700;cursor:pointer}
+.toast-box button:focus-visible{outline:2px solid var(--fond);outline-offset:2px}
 .mep-zone{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}
-.mep-titre{margin:0;font-weight:700;font-size:14px;color:#2E1D12}
+.mep-titre{margin:0;font-weight:700;font-size:14px;color:var(--texte)}
 .mep-groupe{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.mep{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:44px;padding:10px;border-radius:14px;border:1.5px solid #D9C29C;background:#FBF5EA;color:#2E1D12;font:inherit;text-align:left;cursor:pointer}
-.mep:hover{border-color:#8A4F1C}
-.mep[aria-checked="true"]{border:2px solid #8A4F1C;padding:9.5px;background:#FFFDF8;box-shadow:0 0 0 3px rgba(138,79,28,.15)}
-.mep[aria-checked="true"] .mep-nom::before{content:'✓ ';color:#8A4F1C}
-.mep-mini{display:block;padding:6px;border-radius:8px;background:#F3E6CF}
+.mep{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:44px;padding:10px;border-radius:14px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;text-align:left;cursor:pointer}
+.mep:hover{border-color:var(--brun)}
+.mep[aria-checked="true"]{border:2px solid var(--brun);padding:9.5px;background:var(--creme);box-shadow:0 0 0 3px rgba(138,79,28,.15)}
+.mep[aria-checked="true"] .mep-nom::before{content:'✓ ';color:var(--brun)}
+.mep-mini{display:block;padding:6px;border-radius:8px;background:var(--sable)}
 .mep-mini svg{display:block;width:100%;height:auto;max-height:84px}
 .mep-nom{font-weight:700;font-size:14px}
-.mep-desc{font-size:12.5px;color:#6B5443;line-height:1.35}
+.mep-desc{font-size:12.5px;color:var(--doux);line-height:1.35}
 .tile.dragging{opacity:.6;box-shadow:0 12px 28px rgba(46,29,18,.25);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (min-width:641px){.tile-S .only-M,.tile-S .only-L,.tile-M .only-L{display:none!important}}
 @media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile-S{grid-column:span 1}.tile-M,.tile-L{grid-column:span 2}}
 @media (max-width:640px){.bento{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto}.tile-S,.tile-M,.tile-L{grid-column:auto;grid-row:auto}.tile,.tile-body{overflow:visible}}
 </style>
-<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script>
 </head><body><div id="root"></div>
 <div id="pq-toast" aria-live="polite"></div>
 <script type="text/plain" id="tpl">
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
-<nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
-<p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+<p style="margin:0;color:var(--doux);font-size:16px">{{t.subtitle}}</p>
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#FFFDF8;border:1px dashed #D9C29C;color:#6B5443">{{t.sample}}</span>
+<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--creme);border:1px dashed var(--bord-fort);color:var(--doux)">{{t.sample}}</span>
 <button type="button" data-act="edit" aria-pressed="{{editPressed}}" onClick="{{toggleEdit}}" style="{{editBtnStyle}}">{{editLabel}}</button>
 </div>
 </header>
 <p role="status" style="{{loadingStyle}}">{{t.loading}}</p>
-<div role="status" style="{{waitStyle}}"><svg class="four-pain" width="96" height="72" viewBox="0 0 96 72" aria-hidden="true"><rect x="4" y="58" width="88" height="10" rx="5" fill="#8A4F1C"></rect><g class="four-pain-miche"><path d="M14 56c0-17 15-30 34-30s34 13 34 30z" fill="#D9A15B"></path><path d="M30 38l6 8M45 34l6 8M60 38l6 8" stroke="#8A4F1C" stroke-width="3" stroke-linecap="round"></path></g></svg><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800;color:#2E1D12">{{waitTitle}}</p><p style="margin:0;color:#6B5443">{{t.waiting}}</p></div>
+<div role="status" style="{{waitStyle}}"><svg class="four-pain" width="96" height="72" viewBox="0 0 96 72" aria-hidden="true"><rect x="4" y="58" width="88" height="10" rx="5" fill="var(--brun)"></rect><g class="four-pain-miche"><path d="M14 56c0-17 15-30 34-30s34 13 34 30z" fill="#D9A15B"></path><path d="M30 38l6 8M45 34l6 8M60 38l6 8" stroke="var(--brun)" stroke-width="3" stroke-linecap="round"></path></g></svg><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800;color:var(--texte)">{{waitTitle}}</p><p style="margin:0;color:var(--doux)">{{t.waiting}}</p></div>
 <p role="alert" style="{{errorStyle}}">{{t.loadError}}</p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 <div style="{{editBarStyle}}">
@@ -128,7 +131,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </sc-for>
 </div>
 </div>
-<p style="margin:0;flex:1 1 320px;font-size:14px;color:#5E3412">{{t.editHint}}</p>
+<p style="margin:0;flex:1 1 320px;font-size:14px;color:var(--brun-fonce)">{{t.editHint}}</p>
 <div role="group" aria-label="{{t.countLabel}}" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
 <span class="muted" style="margin-right:4px">{{t.countLabel}}</span>
 <button type="button" class="tool" data-count="1" data-act="count-1" onClick="{{setCount}}" aria-pressed="false">1</button>
@@ -139,7 +142,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <button type="button" class="tool" data-act="graph-toggle" aria-pressed="{{graphPressed}}" onClick="{{toggleGraph}}">{{graphLabel}}</button>
 <button type="button" class="tool" data-act="reset" onClick="{{resetLayout}}">{{t.reset}}</button>
 </div>
-<div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:#2E1D12">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--braise);color:#FFFFFF;font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
+<div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:var(--texte)">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
 <div data-bento class="bento {{gridClass}}" style="{{gridStyle}}">
 
 <sc-for list="{{slots}}" as="s" hint-placeholder-count="7">
@@ -155,15 +158,17 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </span>
 </div>
 <div class="tile-body">
-<div style="display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:12.5px;color:#4A3324">
+<div style="display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:12.5px;color:var(--texte-2)">
 <span class="rank" title="{{s.rankHint}}">{{s.rank}}</span>
 <span class="{{s.chip}}">{{s.state}}</span>
 <span class="etiquette-source">{{s.source}}</span>
 </div>
 <h2 id="tt-{{s.id}}" class="news-title">{{s.title}}</h2>
-<p class="only-M" style="margin:0;color:#5A4434;font-size:14px">{{s.summary}}</p>
-<p class="only-L pour-toi" style="margin:0"><svg class="ampoule" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v1.8M4.2 4.2l1.3 1.3M19.8 4.2l-1.3 1.3M1.5 11.5h1.8M20.7 11.5h1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M12 5a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 5z" fill="currentColor" stroke="#8A4F1C" stroke-width="1.2" stroke-linejoin="round"></path><path d="M9.6 20.6h4.8M10.6 22.8h2.8" stroke="#8A4F1C" stroke-width="1.6" stroke-linecap="round"></path></svg><span>{{s.forYou}}</span></p>
-<p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
+<p class="only-M" style="margin:0;color:var(--texte-2);font-size:14px">{{s.summary}}</p>
+<p class="only-L pour-toi" style="margin:0"><svg class="ampoule" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v1.8M4.2 4.2l1.3 1.3M19.8 4.2l-1.3 1.3M1.5 11.5h1.8M20.7 11.5h1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M12 5a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 5z" fill="currentColor" stroke="var(--brun)" stroke-width="1.2" stroke-linejoin="round"></path><path d="M9.6 20.6h4.8M10.6 22.8h2.8" stroke="var(--brun)" stroke-width="1.6" stroke-linecap="round"></path></svg><span>{{s.forYou}}</span></p>
+<p class="{{s.whyClass}}" style="margin:0;font-size:12.5px;color:var(--doux)"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
+<p class="only-L score-detail">{{s.scoreLine}}</p>
+<p class="score">{{s.money}}</p>
 <div class="tile-actions">
 <a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
 <button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
@@ -186,7 +191,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </span>
 </div>
 <div class="tile-head"><h2 id="tt-graph" class="tile-title">{{t.graphTitle}}</h2><span class="muted">{{t.graphSub}}</span></div>
-<div style="flex:1 1 auto;min-height:90px;display:flex;gap:10px;align-items:stretch;border-bottom:2px solid #E7D6B8;padding-bottom:4px">
+<div style="flex:1 1 auto;min-height:90px;display:flex;gap:10px;align-items:stretch;border-bottom:2px solid var(--bord);padding-bottom:4px">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <div style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px">
 <span style="font-size:12px;font-weight:700">{{b.value}}</span>
@@ -194,7 +199,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 </sc-for>
 </div>
-<div style="display:flex;gap:10px;font-size:11.5px;color:#4A3324;text-align:center">
+<div style="display:flex;gap:10px;font-size:11.5px;color:var(--texte-2);text-align:center">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <span style="flex:1 1 0;min-width:0;overflow-wrap:anywhere">{{b.label}}</span>
 </sc-for>
@@ -235,6 +240,7 @@ states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
 rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
 toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille de {name}', drag: 'Glisser pour déplacer',
+money: 'Monétisation {m}/15', scoreLine: 'Durabilité {d}/5 · Propension {p}/5 · Lien offre {o}/5',
 knead: 'Pétrir', kneadSuite: ' un post', graphShow: 'Afficher le graphique', graphHide: 'Masquer le graphique', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
 undo: 'Annuler', toastSave: 'Mis de côté', toastUnsave: 'Retiré du garde-manger', toastSkip: 'Sujet ignoré', toastUndone: 'Action annulée',
 allDone: 'Tu as tout passé en revue pour aujourd’hui', bringBack: 'Tout faire revenir',
@@ -262,6 +268,7 @@ states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
 rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
+money: 'Monetisation {m}/15', scoreLine: 'Shelf life {d}/5 · Shareability {p}/5 · Offer fit {o}/5',
 knead: 'Knead', kneadSuite: ' a post', graphShow: 'Show the chart', graphHide: 'Hide the chart', read: 'Read the source', save: 'Save for later', skip: 'Skip',
 undo: 'Undo', toastSave: 'Saved for later', toastUnsave: 'Removed from the pantry', toastSkip: 'Topic skipped', toastUndone: 'Undone',
 allDone: 'You have gone through everything for today', bringBack: 'Bring everything back',
@@ -499,16 +506,16 @@ return { id: id, nom: t.mep[id][0], desc: t.mep[id][1], checked: String(on), tab
 toggleSave: function (e) { self.agir(idOf(e), 'save', e.detail === 0); },
 skip: function (e) { self.agir(idOf(e), 'skip', e.detail === 0); },
 unskipAll: function () { self.toutFaireRevenir(); },
-emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
+emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: var(--miel)' : HIDE,
 editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
-editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--braise); background: ' + (st.editing ? 'var(--braise); color: #FFFFFF' : '#FFFDF8; color: var(--braise)') + '; font: inherit; font-weight: 700; cursor: pointer',
-loadingStyle: !data && !st.loadError ? 'margin: 0; color: #6B5443' : HIDE,
-waitStyle: data && data.etat === 'attente' && !st.loadError ? 'display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 40px 24px; border-radius: 18px; background: #F6E7CC' : HIDE,
+editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--braise); background: ' + (st.editing ? 'var(--braise); color: var(--sur-plein)' : 'var(--creme); color: var(--braise)') + '; font: inherit; font-weight: 700; cursor: pointer',
+loadingStyle: !data && !st.loadError ? 'margin: 0; color: var(--doux)' : HIDE,
+waitStyle: data && data.etat === 'attente' && !st.loadError ? 'display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 40px 24px; border-radius: 18px; background: var(--miel)' : HIDE,
 waitTitle: fill(t.waitTitle, { prenom: prenomCourant() }),
-exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:#6B5443;padding:6px 12px;border-radius:10px;border:1px dashed #D9C29C;align-self:flex-start' : HIDE,
-errorStyle: st.loadError ? 'margin: 0; padding: 14px 18px; border-radius: 14px; background: #F5DAD3; color: #8E2A1C; font-weight: 600' : HIDE,
-editBarStyle: ready && st.editing ? 'display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 14px 18px; border-radius: 16px; background: #F6E7CC' : HIDE,
+exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:var(--doux);padding:6px 12px;border-radius:10px;border:1px dashed var(--bord-fort);align-self:flex-start' : HIDE,
+errorStyle: st.loadError ? 'margin: 0; padding: 14px 18px; border-radius: 14px; background: var(--erreur-fond); color: var(--erreur); font-weight: 600' : HIDE,
+editBarStyle: ready && st.editing ? 'display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 14px 18px; border-radius: 16px; background: var(--miel)' : HIDE,
 gridClass: st.editing ? 'editing' : '',
 gridStyle: ready ? '' : HIDE,
 slots: SLOT_IDS.map(function (id) {
@@ -517,7 +524,7 @@ var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, url: '#',
+chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', scoreLine: '', money: '', url: '#',
 knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
@@ -525,6 +532,8 @@ var etat = FEU[c.feu];
 s.chip = CHIP(etat); s.state = t.states[etat]; s.source = c.source;
 s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
 s.url = Bento.safeUrl(c.url);
+s.money = fill(t.money, { m: Bento.totalScore(c) });
+s.scoreLine = fill(t.scoreLine, { d: c.durabilite || 0, p: c.propension || 0, o: c.lienOffre || 0 });
 s.readLabel = fill(t.readFull, { titre: c.titre });
 s.kneadHref = Bento.lienFournil(c.ref);
 s.saved = String(Store.estDeCote(store, c.ref));

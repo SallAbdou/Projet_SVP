@@ -256,6 +256,9 @@
       .slice(0, n);
   }
 
+  // La ligne « Pourquoi cette couleur » ne s'affiche pas sur le n°1 : son doré parle de lui-même.
+  function montreRaison(id) { return id !== 'n1'; }
+
   function lienFournil(ref) {
     return '/fournil?ref=' + encodeURIComponent(ref);
   }
@@ -295,7 +298,7 @@
     PRESETS: PRESETS, PRESET_PERSO: PRESET_PERSO,
     appliquerPreset: appliquerPreset, presetCourant: presetCourant, placer: placer,
     PERSO_KEY: PERSO_KEY, choisirMiseEnPage: choisirMiseEnPage, loadPerso: loadPerso, savePerso: savePerso,
-    totalScore: totalScore, pickTopics: pickTopics, lienFournil: lienFournil, safeUrl: safeUrl
+    totalScore: totalScore, montreRaison: montreRaison, pickTopics: pickTopics, lienFournil: lienFournil, safeUrl: safeUrl
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Bento;

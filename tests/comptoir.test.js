@@ -90,12 +90,15 @@ test('graphique prend les 6 derniers posts chiffrés, du plus ancien au plus ré
   assert.deepEqual(C.graphique([]), []);
 });
 
-test('analyse compare les impressions des sujets verts aux autres', () => {
+test('analyse : chaudGagne seulement si la moyenne des verts dépasse celle des autres', () => {
   const verts = [post('v1', 1, chiffres(1000), 'vert'), post('v2', 2, chiffres(1200), 'vert')];
-  assert.deepEqual(C.analyse(verts.concat([post('o', 3, chiffres(600)), post('s', 4, null)])), { ratio: 1.8 });
-  assert.deepEqual(C.analyse(verts), { ratio: null });
-  assert.deepEqual(C.analyse([post('o', 3, chiffres(600))]), { ratio: null });
-  assert.deepEqual(C.analyse(verts.concat([post('o', 3, chiffres(0))])), { ratio: null });
+  assert.deepEqual(C.analyse(verts.concat([post('o', 3, chiffres(600)), post('s', 4, null)])), { chaudGagne: true });
+  assert.deepEqual(C.analyse(verts), { chaudGagne: false });
+  assert.deepEqual(C.analyse([post('o', 3, chiffres(600))]), { chaudGagne: false });
+  assert.deepEqual(C.analyse(verts.concat([post('o', 3, chiffres(0))])), { chaudGagne: true });
+  assert.deepEqual(C.analyse([post('v', 1, chiffres(500), 'vert'), post('o', 3, chiffres(600))]), { chaudGagne: false });
+  assert.deepEqual(C.analyse([post('v', 1, chiffres(600), 'vert'), post('o', 3, chiffres(600))]), { chaudGagne: false });
+  assert.deepEqual(C.analyse([]), { chaudGagne: false });
 });
 
 test('sansChiffres ne compte que les posts publiés en attente', () => {
@@ -109,18 +112,17 @@ test('bilan additionne tout l historique', () => {
   assert.deepEqual(C.bilan([]), { posts: 0, contacts: 0 });
 });
 
-test('phraseAnalyse FR : appel à l’action, gras, virgule décimale', () => {
-  assert.deepEqual(C.phraseAnalyse(1.8, 'fr'), {
-    avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud',
-    apres: ' font en moyenne 1,8 fois plus d’audience que les autres.'
+test('phraseAnalyse FR : appel à l’action, gras, sans ratio', () => {
+  assert.deepEqual(C.phraseAnalyse(true, 'fr'), {
+    avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud',
+    apres: ' font plus d’audience que les autres.'
   });
-  assert.equal(C.phraseAnalyse(2, 'fr').apres, ' font en moyenne 2 fois plus d’audience que les autres.');
 });
 
-test('phraseAnalyse EN et ratio absent', () => {
-  assert.deepEqual(C.phraseAnalyse(1.8, 'en'), {
+test('phraseAnalyse EN, et null si les sujets chauds ne gagnent pas', () => {
+  assert.deepEqual(C.phraseAnalyse(true, 'en'), {
     avant: 'Serve them fast! Your posts on ', gras: 'piping hot',
-    apres: ' topics get on average 1.8 times more reach than the others.'
+    apres: ' topics get more reach than the others.'
   });
-  assert.equal(C.phraseAnalyse(null, 'fr'), null);
+  for (const v of [false, null, undefined, 1.8]) assert.equal(C.phraseAnalyse(v, 'fr'), null, String(v));
 });
