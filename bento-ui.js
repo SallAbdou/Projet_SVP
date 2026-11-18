@@ -154,7 +154,7 @@
   // Miniature schématique d'une disposition (cartes « Mise en page ») : un rectangle par bloc
   // affiché, placé comme dans la grille de 4 colonnes ; n°1 doré, graphique brun.
   var SVG_NS = 'http://www.w3.org/2000/svg';
-  var MINI_COULEURS = { n1: ['#F2C46D', '#B87420'], graph: ['#8A4F1C', '#8A4F1C'] };
+  var MINI_COULEURS = { n1: ['#F2C46D', 'var(--cuivre)'], graph: ['var(--brun)', 'var(--brun)'] };
   function miniature(el, layout) {
     if (!el || !layout) return;
     var blocs = root.Bento.placer(layout, null, 4);
@@ -165,15 +165,15 @@
     svg.setAttribute('viewBox', '0 0 ' + (4 * U) + ' ' + (rangees * U));
     svg.setAttribute('focusable', 'false');
     blocs.forEach(function (b) {
-      var c = MINI_COULEURS[b.id] || ['#FFFDF8', '#D9C29C'];
+      var c = MINI_COULEURS[b.id] || ['var(--creme)', 'var(--bord-fort)'];
       var r = document.createElementNS(SVG_NS, 'rect');
       r.setAttribute('x', b.col * U + G / 2);
       r.setAttribute('y', b.row * U + G / 2);
       r.setAttribute('width', b.w * U - G);
       r.setAttribute('height', b.h * U - G);
       r.setAttribute('rx', 1.6);
-      r.setAttribute('fill', c[0]);
-      r.setAttribute('stroke', c[1]);
+      r.style.fill = c[0];
+      r.style.stroke = c[1];
       r.setAttribute('stroke-width', 0.5);
       svg.appendChild(r);
     });

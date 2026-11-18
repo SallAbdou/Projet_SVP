@@ -6,13 +6,13 @@
 <link rel="stylesheet" href="/charte.css">
 <style>
 body{margin:0;background:var(--fond)}
-a{color:#8A4F1C}a:hover{color:#5E3412}
+a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .kpis{display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:14px}
-.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:var(--croute);color:#2E1D12;font-weight:700;text-decoration:none}
-.btn-plein:hover{background:#FFC85C;color:#2E1D12}
+.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:var(--croute);color:var(--sur-clair);font-weight:700;text-decoration:none}
+.btn-plein:hover{background:#FFC85C;color:var(--sur-clair)}
 .btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--braise);color:var(--braise);font-weight:700;font-size:14px;text-decoration:none}
-.btn-ligne:hover{background:var(--braise);color:#FFFFFF}
+.btn-ligne:hover{background:var(--braise);color:var(--sur-plein)}
 /* Four illustré : un seul lien vers la news n°1 de la fournée. */
 .four-lien{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 12px 14px;border-radius:16px;color:var(--texte);text-decoration:none;text-align:center;transition:background .2s,transform .2s}
 .four-lien:hover{background:var(--miel);color:var(--texte);transform:translateY(-2px)}
@@ -20,7 +20,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .four-svg{display:block;width:100%;max-width:220px;height:auto}
 .four-titre{font-weight:700;font-size:16.5px;line-height:1.35;overflow-wrap:anywhere}
 .four-cta{font-weight:700;font-size:14px;color:var(--braise)}
-.four-vapeur{fill:none;stroke:#D9C29C;stroke-width:4;stroke-linecap:round;opacity:0;animation:pq-four-vapeur 3s ease-out infinite}
+.four-vapeur{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:0;animation:pq-four-vapeur 3s ease-out infinite}
 .four-lueur{animation:pq-four-lueur 2.4s ease-in-out infinite alternate}
 @keyframes pq-four-vapeur{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
 @keyframes pq-four-lueur{from{opacity:.5}to{opacity:1}}
@@ -30,14 +30,14 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
-<nav data-nav data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav data-nav data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em"><span style="display:block">{{titleL1}}</span><span style="display:block">{{t.titleL2}}</span></h1>
-<p style="margin:0;color:#6B5443;font-size:16px"><span style="display:block">{{t.subtitle1}}</span><span style="display:block">{{t.subtitle2}}</span></p>
+<p style="margin:0;color:var(--doux);font-size:16px"><span style="display:block">{{t.subtitle1}}</span><span style="display:block">{{t.subtitle2}}</span></p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 </div>
 <span style="{{sampleStyle}}">{{t.sample}}</span>
@@ -47,7 +47,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <a href="/fournil" class="btn-ligne">{{t.waitCta}}</a>
 </div>
 <section aria-label="{{t.kpiLabel}}" aria-busy="{{busy}}" style="display:flex;flex-direction:column;gap:12px">
-<p style="margin:0;font-size:14px;color:#6B5443"><strong style="color:#2E1D12">{{t.kpiTitle}}</strong></p>
+<p style="margin:0;font-size:14px;color:var(--doux)"><strong style="color:var(--texte)">{{t.kpiTitle}}</strong></p>
 <div class="kpis">
 <sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
 <div style="{{k.box}}">
@@ -59,13 +59,13 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </div>
 </section>
 <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start">
-<section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
 <h2 id="vis-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.visTitle}}</h2>
-<span style="font-size:13px;color:#6B5443">{{t.visSub}}</span>
+<span style="font-size:13px;color:var(--doux)">{{t.visSub}}</span>
 </div>
 <div style="{{barsStyle}}">
-<div class="bars" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;align-items:end;height:220px;border-bottom:2px solid #E7D6B8;padding-bottom:4px">
+<div class="bars" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;align-items:end;height:220px;border-bottom:2px solid var(--bord);padding-bottom:4px">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <div role="img" aria-label="{{b.aria}}" style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
 <span style="font-size:12px;font-weight:700" aria-hidden="true">{{b.value}}</span>
@@ -73,7 +73,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </div>
 </sc-for>
 </div>
-<div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:#4A3324;text-align:center">
+<div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:var(--texte-2);text-align:center">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto">{{b.label}}</span>
 </sc-for>
@@ -83,26 +83,26 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <p style="margin:0;padding:12px 16px;border-radius:12px;background:var(--miel);color:var(--brun-fonce);{{insStyle}}">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
-<section aria-labelledby="next-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
+<section aria-labelledby="next-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
 <h2 id="next-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.nextTitle}}</h2>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
-<radialGradient id="pq-four-feu" cx="50%" cy="80%" r="75%"><stop offset="0" stop-color="#FFE08A"></stop><stop offset="0.45" stop-color="#FFB020"></stop><stop offset="1" stop-color="#F25C05"></stop></radialGradient>
+<radialGradient id="pq-four-feu" cx="50%" cy="80%" r="75%"><stop offset="0" stop-color="#FFE08A"></stop><stop offset="0.45" stop-color="var(--croute)"></stop><stop offset="1" stop-color="var(--braise-vive)"></stop></radialGradient>
 <linearGradient id="pq-four-pain" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE3A8"></stop><stop offset="0.55" stop-color="#F2C46D"></stop><stop offset="1" stop-color="#E3A54A"></stop></linearGradient>
 </defs><symbol id="pq-four" viewBox="0 0 200 170">
 <path class="four-vapeur" d="M78 40c-7-8 7-14 0-24" style="animation-delay:0s"></path>
 <path class="four-vapeur" d="M100 38c-7-8 7-14 0-24" style="animation-delay:1s"></path>
 <path class="four-vapeur" d="M122 40c-7-8 7-14 0-24" style="animation-delay:2s"></path>
-<rect x="34" y="154" width="18" height="10" rx="3" fill="#5E3412"></rect><rect x="148" y="154" width="18" height="10" rx="3" fill="#5E3412"></rect>
-<rect x="20" y="46" width="160" height="112" rx="16" fill="#8A4F1C"></rect>
-<rect x="20" y="46" width="160" height="24" rx="12" fill="#5E3412"></rect>
-<circle cx="44" cy="58" r="5" fill="#F3E6CF"></circle><circle cx="64" cy="58" r="5" fill="#F3E6CF"></circle><circle cx="156" cy="58" r="4" fill="#FFB020"></circle>
-<rect x="34" y="78" width="132" height="70" rx="10" fill="#2E1D12"></rect>
-<rect x="44" y="86" width="112" height="46" rx="8" fill="#9A3412"></rect>
+<rect x="34" y="154" width="18" height="10" rx="3" fill="var(--brun-fonce)"></rect><rect x="148" y="154" width="18" height="10" rx="3" fill="var(--brun-fonce)"></rect>
+<rect x="20" y="46" width="160" height="112" rx="16" fill="var(--brun)"></rect>
+<rect x="20" y="46" width="160" height="24" rx="12" fill="var(--brun-fonce)"></rect>
+<circle cx="44" cy="58" r="5" fill="var(--sable)"></circle><circle cx="64" cy="58" r="5" fill="var(--sable)"></circle><circle cx="156" cy="58" r="4" fill="var(--croute)"></circle>
+<rect x="34" y="78" width="132" height="70" rx="10" fill="var(--texte)"></rect>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="var(--braise-fonce)"></rect>
 <rect class="four-lueur" x="44" y="86" width="112" height="46" rx="8" fill="url(#pq-four-feu)"></rect>
-<path d="M60 130c0-15 18-26 40-26s40 11 40 26z" fill="url(#pq-four-pain)" stroke="#B87420" stroke-width="1.5"></path>
-<path d="M78 114l6 7M95 110l6 7M112 112l6 7" stroke="#8A4F1C" stroke-width="3" stroke-linecap="round"></path>
-<rect x="44" y="86" width="112" height="46" rx="8" fill="none" stroke="#D9C29C" stroke-width="2"></rect>
-<rect x="70" y="137" width="60" height="5" rx="2.5" fill="#D9C29C"></rect>
+<path d="M60 130c0-15 18-26 40-26s40 11 40 26z" fill="url(#pq-four-pain)" stroke="var(--cuivre)" stroke-width="1.5"></path>
+<path d="M78 114l6 7M95 110l6 7M112 112l6 7" stroke="var(--brun)" stroke-width="3" stroke-linecap="round"></path>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="none" stroke="var(--bord-fort)" stroke-width="2"></rect>
+<rect x="70" y="137" width="60" height="5" rx="2.5" fill="var(--bord-fort)"></rect>
 </symbol></svg>
 <a href="/fournee#n1" class="four-lien" aria-label="{{fourLabel}}" style="{{nextStyle}}">
 <svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
@@ -111,35 +111,35 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </a>
 <div role="status" style="{{fourAttenteStyle}}">
 <svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
-<p style="margin:0;font-size:14px;color:#6B5443">{{t.nextLoading}}</p>
+<p style="margin:0;font-size:14px;color:var(--doux)">{{t.nextLoading}}</p>
 </div>
 <div style="{{nextEmptyStyle}}">
-<p style="margin:0;font-size:14px;color:#6B5443">{{t.nextEmpty}}</p>
+<p style="margin:0;font-size:14px;color:var(--doux)">{{t.nextEmpty}}</p>
 <a href="/fournee" class="btn-plein" style="align-self:flex-start">{{t.nextEmptyCta}}</a>
 </div>
 </section>
-<section aria-labelledby="gain-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+<section aria-labelledby="gain-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
 <h2 id="gain-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.gainTitle}}</h2>
-<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:#6B5443">{{t.gainContacts}}</span><strong>{{gainContacts}}</strong></div>
-<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:#6B5443">{{t.gainPosts}}</span><strong>{{gainPosts}}</strong></div>
-<span style="font-size:12px;color:#6B5443">{{t.gainSince}}</span>
+<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:var(--doux)">{{t.gainContacts}}</span><strong>{{gainContacts}}</strong></div>
+<div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:var(--doux)">{{t.gainPosts}}</span><strong>{{gainPosts}}</strong></div>
+<span style="font-size:12px;color:var(--doux)">{{t.gainSince}}</span>
 </section>
 </div>
 </div>
-<section aria-labelledby="pantry-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:4px">
+<section aria-labelledby="pantry-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:4px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-bottom:8px">
 <h2 id="pantry-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.pantryTitle}}</h2>
 <a href="/garde-manger" style="font-weight:700;font-size:14px;display:inline-flex;align-items:center;min-height:44px">{{t.pantryAll}}</a>
 </div>
 <sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
-<div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid #F0E3CC">
-<div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;overflow-wrap:anywhere">{{p.titre}}</span><span style="font-size:12px;color:#6B5443">{{p.meta}}</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid var(--trait)">
+<div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;overflow-wrap:anywhere">{{p.titre}}</span><span style="font-size:12px;color:var(--doux)">{{p.meta}}</span></div>
 <span class="{{p.chip}}">{{p.state}}</span>
 <a href="{{p.href}}" class="btn-petrir" aria-label="{{p.kneadLabel}}">{{t.knead}}</a>
 </div>
 </sc-for>
 <div style="{{pantryEmptyStyle}}">
-<p style="margin:0;color:#6B5443">{{t.pantryEmpty}}</p>
+<p style="margin:0;color:var(--doux)">{{t.pantryEmpty}}</p>
 <a href="/fournee" class="btn-ligne">{{t.pantryEmptyCta}}</a>
 </div>
 </section>
@@ -150,7 +150,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 var HIDE = 'display: none';
 // Puces et barres : classes et variables de la charte (charte.css, charte.js).
 function CHIP(etat) { return Charte.puce(etat) || 'pq-cache'; }
-var SENS = { hausse: '#2F5E36', baisse: '#8E2A1C', stable: '#6B5443', nouveau: '#2F5E36' };
+var SENS = { hausse: 'var(--ok)', baisse: 'var(--erreur)', stable: 'var(--doux)', nouveau: 'var(--ok)' };
 var T = {
 fr: {
 navLabel: 'Navigation principale',
@@ -251,24 +251,24 @@ var chauffe = !charge || !!(data && data.etat === 'attente');
 var sauves = GardeManger.trier(store.sauves).slice(0, 3);
 return {
 t: t,
-exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:#6B5443;padding:6px 12px;border-radius:10px;border:1px dashed #D9C29C;align-self:flex-start' : HIDE,
+exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:var(--doux);padding:6px 12px;border-radius:10px;border:1px dashed var(--bord-fort);align-self:flex-start' : HIDE,
 eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
 titleL1: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
-sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #FFFDF8; border: 1px dashed #D9C29C; color: #6B5443' : HIDE,
-waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; border-radius: 14px; background: #FBE3C2; color: #5E3412; border: 1px solid #E9C48E' : HIDE,
+sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--creme); border: 1px dashed var(--bord-fort); color: var(--doux)' : HIDE,
+waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; border-radius: 14px; background: var(--miel); color: var(--brun-fonce); border: 1px solid #E9C48E' : HIDE,
 waitText: attente === 1 ? t.waitOne : remplir(t.waitMany, { n: attente }),
 kpis: champs.map(function (c, i) {
 var last = i === champs.length - 1;
 var e = k.ecarts[c];
 return {
 label: t.kpis[i], value: charge ? num(k.actuel[c]) : '…', sub: charge ? texteEcart(e, i === 0 ? 'nombre' : 'pourcent', t) : '',
-box: last ? 'background: var(--braise); color: #FFFFFF; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: #FFFDF8; border: 1px solid #E7D6B8; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
-labelStyle: last ? 'font-size: 13px; color: #FFFFFF' : 'font-size: 13px; color: #6B5443',
-subStyle: last ? 'font-size: 12px; color: #FFFFFF' : 'font-size: 12px; color: ' + SENS[e.sens]
+box: last ? 'background: var(--braise); color: var(--sur-plein); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: var(--creme); border: 1px solid var(--bord); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
+labelStyle: last ? 'font-size: 13px; color: var(--sur-plein)' : 'font-size: 13px; color: var(--doux)',
+subStyle: last ? 'font-size: 12px; color: var(--sur-plein)' : 'font-size: 12px; color: ' + SENS[e.sens]
 };
 }),
 barsStyle: charge && barres.length ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
-noBarsStyle: charge && barres.length ? HIDE : 'margin: 0; color: #6B5443',
+noBarsStyle: charge && barres.length ? HIDE : 'margin: 0; color: var(--doux)',
 noBars: charge ? t.noBars : t.loading,
 busy: String(!charge),
 bars: barres.map(function (b) {

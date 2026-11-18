@@ -6,56 +6,56 @@
 <link rel="stylesheet" href="/charte.css">
 <style>
 body{margin:0;background:var(--fond)}
-a{color:#8A4F1C}a:hover{color:#5E3412}
+a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
 <style>
-.pf-carte{max-width:760px;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+.pf-carte{max-width:760px;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 26px;display:flex;flex-direction:column;gap:14px}
 .pf-titre{margin:0;font-family:Fraunces, Georgia, serif;font-size:22px}
 .pf-liste{margin:0}
-.pf-ligne{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:4px 24px;padding:12px 0;border-top:1px solid #F0E5D2}
+.pf-ligne{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:4px 24px;padding:12px 0;border-top:1px solid var(--trait)}
 .pf-ligne:first-child{border-top:0;padding-top:4px}
-.pf-ligne dt{color:#6B5443;font-weight:600}
-.pf-ligne dd{margin:0;font-weight:600;color:#2E1D12;overflow-wrap:anywhere}
-.pf-note{margin:0;font-size:14px;color:#6B5443}
-.pf-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;background:#FFFDF8;color:#8A4F1C;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
-.pf-btn:hover{background:#F3E6CF;color:#5E3412}
-.pf-sortie{border-color:#D9C29C;color:#5E3412}
-.pf-intro{margin:0;color:#4A3426}
+.pf-ligne dt{color:var(--doux);font-weight:600}
+.pf-ligne dd{margin:0;font-weight:600;color:var(--texte);overflow-wrap:anywhere}
+.pf-note{margin:0;font-size:14px;color:var(--doux)}
+.pf-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--brun);background:var(--creme);color:var(--brun);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.pf-btn:hover{background:var(--sable);color:var(--brun-fonce)}
+.pf-sortie{border-color:var(--bord-fort);color:var(--brun-fonce)}
+.pf-intro{margin:0;color:var(--texte-2)}
 .pf-form{display:flex;flex-direction:column;gap:8px;margin:0}
-.pf-label{font-weight:700;color:#2E1D12}
-.pf-zone{width:100%;min-height:112px;resize:vertical;padding:12px 14px;border:1.5px solid #8A6A48;border-radius:12px;background:#FFFFFF;color:#2E1D12;font:inherit;line-height:1.5}
+.pf-label{font-weight:700;color:var(--texte)}
+.pf-zone{width:100%;min-height:112px;resize:vertical;padding:12px 14px;border:1.5px solid var(--bord-champ);border-radius:12px;background:var(--champ);color:var(--texte);font:inherit;line-height:1.5}
 .pf-zone:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
-.pf-zone[aria-invalid="true"]{border-color:#9A2F12}
+.pf-zone[aria-invalid="true"]{border-color:var(--erreur)}
 .pf-sous-zone{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.pf-erreur{margin:0;color:#9A2F12;font-weight:600;font-size:14px}
-.pf-compteur{margin:0 0 0 auto;font-size:13px;color:#6B5443;white-space:nowrap;font-variant-numeric:tabular-nums}
-.pf-compteur.trop{color:#9A2F12;font-weight:700}
-.pf-envoyer{background:#8A4F1C;color:#FFFDF8}
-.pf-envoyer:hover{background:#5E3412;color:#FFFDF8}
+.pf-erreur{margin:0;color:var(--erreur);font-weight:600;font-size:14px}
+.pf-compteur{margin:0 0 0 auto;font-size:13px;color:var(--doux);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pf-compteur.trop{color:var(--erreur);font-weight:700}
+.pf-envoyer{background:var(--brun);color:var(--sur-plein)}
+.pf-envoyer:hover{background:var(--brun-fonce);color:var(--sur-plein)}
 .pf-envoyer[aria-disabled="true"]{opacity:.65;cursor:progress}
-.pf-succes{margin:0;color:#2F5D2A;font-weight:600}
+.pf-succes{margin:0;color:var(--ok);font-weight:600}
 .pf-succes:empty{display:none}
 .pf-sous-titre{margin:8px 0 0;font-family:Fraunces, Georgia, serif;font-size:17px}
 .pf-retours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.pf-retours li{padding:10px 0;border-top:1px solid #F0E5D2}
+.pf-retours li{padding:10px 0;border-top:1px solid var(--trait)}
 .pf-retours li:first-child{border-top:0;padding-top:2px}
 .pf-retour-texte{margin:0;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.pf-retour-date{margin:2px 0 0;font-size:13px;color:#6B5443}
+.pf-retour-date{margin:2px 0 0;font-size:13px;color:var(--doux)}
 @media (max-width:640px){.pf-carte{padding:18px}.pf-ligne{grid-template-columns:1fr}}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/retours.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
-<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
-<nav data-nav data-page="profil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:#F3E6CF;border-right:1px solid #E7D6B8;padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav data-nav data-page="profil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{t.eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
-<p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
+<p style="margin:0;color:var(--doux);font-size:16px">{{t.subtitle}}</p>
 </div>
 </header>
 <section aria-labelledby="infos-t" class="pf-carte">
