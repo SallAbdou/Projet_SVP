@@ -74,6 +74,7 @@ test('charger et enregistrer, y compris stockage cassé', () => {
 test('CLES_DEMO couvre aussi le compte et le questionnaire', () => {
   assert.ok(S.CLES_DEMO.includes('pq-auth'));
   assert.ok(S.CLES_DEMO.includes('pq-questionnaire'));
+  assert.ok(S.CLES_DEMO.includes('pq-retours'));
 });
 
 test('retirerParamDemo', () => {
