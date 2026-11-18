@@ -150,8 +150,9 @@ test('états reconnaissables : mêmes puces dans tous les thèmes (Rassis : sauf
 // Lot 15 : couleurs imposées par l'équipe, identiques en Bronze, Boulangerie classique et Nuit.
 // Le Contraste élevé garde ses propres valeurs (celles d'avant le lot).
 const IMPOSEES = {
-  'etiquette-fond': '#ABBF9B', 'lire-fond': '#BD470C', 'lire-texte': '#FFFFFF',
-  'petrir-btn-fond': '#B20206', 'petrir-btn-texte': '#FFFFFF', 'petrir-pain': '#FFFFFF',
+  // Lot 16 : Pétrir en orange avec texte et pain brun foncé, Lire la source en brun cuivré.
+  'etiquette-fond': '#ABBF9B', 'lire-fond': '#A9642E', 'lire-texte': '#FFFFFF',
+  'petrir-btn-fond': '#F27016', 'petrir-btn-texte': '#2C1910', 'petrir-pain': '#2C1910', 'petrir-grigne': '#F27016',
   'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
   'linkedin-fond': '#0A66C2', 'linkedin-texte': '#FFFFFF'
 };
@@ -168,7 +169,7 @@ test('couleurs imposées en Bronze, Boulangerie classique et Nuit, écrites une 
   const [r, g, b] = rvb(t);
   assert.ok(r > g && g > b, 'brun attendu : ' + t);
   const P = require('../tools/palette-oklch.js');
-  assert.deepEqual(Object.keys(P.imposees).sort(), Object.keys(IMPOSEES).concat(['etiquette-texte', 'lire-survol', 'petrir-btn-survol', 'petrir-btn-bord', 'petrir-grigne', 'linkedin-survol', 'linkedin-bord']).sort());
+  assert.deepEqual(Object.keys(P.imposees).sort(), Object.keys(IMPOSEES).concat(['etiquette-texte', 'lire-survol', 'petrir-btn-survol', 'petrir-btn-bord', 'linkedin-survol', 'linkedin-bord']).sort());
   for (const [k, h] of Object.entries(P.imposees)) assert.equal(BLOCS.bronze[k], h, `générateur --${k}`);
 });
 
@@ -181,6 +182,19 @@ test('Contraste élevé garde ses propres valeurs pour les éléments aux couleu
   assert.equal(c['rassis-fond'], '#3A4147');
   assert.equal(c['lire-fond'], c.source);
   assert.equal(c['etiquette-fond'], '#000000');
+});
+
+test('Pétrir et Lire la source : le survol assombrit le fond, texte et pain gardent leur contraste', () => {
+  // Contraste élevé hors lot 16 : il garde son bouton Pétrir clair qui s'éclaircit au survol.
+  for (const nom of ['bronze', 'classique', 'nuit']) {
+    const v = THEMES[nom];
+    assert.ok(C.luminance(v['petrir-btn-survol']) < C.luminance(v['petrir-btn-fond']), nom + ' petrir survol');
+    assert.ok(C.luminance(v['lire-survol']) < C.luminance(v['lire-fond']), nom + ' lire survol');
+    // Le pain dessiné est rempli de --petrir-pain et cerné de la couleur du texte, sur le fond du bouton.
+    assert.ok(C.contraste(v['petrir-pain'], v['petrir-btn-fond']) >= 3, nom + ' pain sur fond');
+    assert.ok(C.contraste(v['petrir-pain'], v['petrir-btn-survol']) >= 3, nom + ' pain sur survol');
+  }
+  assert.equal(THEMES.bronze['petrir-btn-bord'], '#F27016');
 });
 
 test('boutons aux couleurs imposées : règles par variables, survol, appui et focus visibles', () => {

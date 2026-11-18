@@ -18,10 +18,10 @@
   --source:#345E59;--source-fonce:#264A45;
   --barre-rassis-contour:#6E767C;
   --sur-plein:#FEFAF3;--sur-clair:#2B160A;--champ:#FFFDFA;--bord-champ:#896C55;
-  /* Lot 15 : couleurs imposées (tools/palette-oklch.js, IMPOSEES), héritées par classique et Nuit. */
+  /* Lots 15 et 16 : couleurs imposées (tools/palette-oklch.js, IMPOSEES), héritées par classique et Nuit. */
   --etiquette-fond:#ABBF9B;--etiquette-texte:#2C1910;
-  --lire-fond:#BD470C;--lire-survol:#9C3A0A;--lire-texte:#FFFFFF;
-  --petrir-btn-fond:#B20206;--petrir-btn-survol:#8C0105;--petrir-btn-texte:#FFFFFF;--petrir-btn-bord:#B20206;--petrir-pain:#FFFFFF;--petrir-grigne:#B20206;
+  --lire-fond:#A9642E;--lire-survol:#8A4F24;--lire-texte:#FFFFFF;
+  --petrir-btn-fond:#F27016;--petrir-btn-survol:#E0650F;--petrir-btn-texte:#2C1910;--petrir-btn-bord:#F27016;--petrir-pain:#2C1910;--petrir-grigne:#F27016;
   --rassis-fond:#615945;--barre-rassis:#615945;--rassis-texte:#FFFFFF;
   --linkedin-fond:#0A66C2;--linkedin-survol:#004182;--linkedin-texte:#FFFFFF;--linkedin-bord:#0A66C2;
   --panneau:#311D14;--panneau-texte:#F7EFE5;--panneau-doux:#E7DCCF;--panneau-or:#F2CB88;--ombre-teinte:#3D2013;
