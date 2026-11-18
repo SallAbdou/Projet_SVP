@@ -7,8 +7,8 @@
 <link rel="stylesheet" href="/parcours.css">
 <style>
 .mail{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
-.mail-entete{display:flex;flex-direction:column;gap:2px;font-size:14px;color:#6B5443;border-bottom:1px solid #F3E6CF;padding-bottom:12px}
-.mail-entete strong{color:#2E1D12}
+.mail-entete{display:flex;flex-direction:column;gap:2px;font-size:14px;color:var(--doux);border-bottom:1px solid var(--sable);padding-bottom:12px}
+.mail-entete strong{color:var(--texte)}
 </style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script>
 <script>
@@ -28,7 +28,7 @@ if (window.PQ_MODE !== 'reel' && !adresseEnvoyee()) { window.__redirige = true; 
 <header class="entete" data-entete></header>
 <main class="contenu centre">
 <section class="carte" aria-labelledby="titre">
-<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#B5651D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--braise)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
 <h1 id="titre" class="titre">{{t.titre}}</h1>
 <p class="chapo" style="{{vue.adresse}}">{{intro}} <strong>{{email}}</strong>.</p>
 <p class="chapo" style="{{vue.generique}}">{{t.generique}}</p>
