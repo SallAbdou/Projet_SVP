@@ -20,8 +20,8 @@
   --sur-plein:#FEFAF3;--sur-clair:#2B160A;--champ:#FFFDFA;--bord-champ:#896C55;
   /* Lots 15 et 16 : couleurs imposées (tools/palette-oklch.js, IMPOSEES), héritées par classique et Nuit. */
   --etiquette-fond:#ABBF9B;--etiquette-texte:#2C1910;
-  --lire-fond:#A9642E;--lire-survol:#8A4F24;--lire-texte:#FFFFFF;
-  --petrir-btn-fond:#F27016;--petrir-btn-survol:#E0650F;--petrir-btn-texte:#2C1910;--petrir-btn-bord:#F27016;--petrir-pain:#2C1910;--petrir-grigne:#F27016;
+  --lire-fond:#A9642E;--lire-survol:#7A4420;--lire-texte:#FFFFFF;
+  --petrir-btn-fond:#F27016;--petrir-btn-survol:#B4500A;--petrir-btn-texte:#2C1910;--petrir-btn-survol-texte:#FFFFFF;--petrir-btn-bord:#D9620F;--petrir-btn-survol-bord:#9E4608;--petrir-pain:#2C1910;--petrir-pain-survol:#FFFFFF;--petrir-grigne:#F27016;--petrir-grigne-survol:#B4500A;
   --rassis-fond:#615945;--barre-rassis:#615945;--rassis-texte:#FFFFFF;
   --linkedin-fond:#0A66C2;--linkedin-survol:#004182;--linkedin-texte:#FFFFFF;--linkedin-bord:#0A66C2;
   --panneau:#311D14;--panneau-texte:#F7EFE5;--panneau-doux:#E7DCCF;--panneau-or:#F2CB88;--ombre-teinte:#3D2013;
@@ -63,7 +63,7 @@
   --etiquette-fond:#000000;--etiquette-texte:#FFFFFF;--focus:#000000;
   --panneau:#000000;--panneau-texte:#FFFFFF;--panneau-doux:#FFFFFF;--ombre-teinte:#000000;
   --lire-fond:#033C36;--lire-survol:#012824;--lire-texte:#FFFFFF;
-  --petrir-btn-fond:#EEBE7C;--petrir-btn-survol:#FBE7C0;--petrir-btn-texte:#2B160A;--petrir-btn-bord:#BD7D41;--petrir-pain:#BD7D41;--petrir-grigne:#FBE7C0;
+  --petrir-btn-fond:#EEBE7C;--petrir-btn-survol:#FBE7C0;--petrir-btn-texte:#2B160A;--petrir-btn-survol-texte:#2B160A;--petrir-btn-bord:#BD7D41;--petrir-btn-survol-bord:#BD7D41;--petrir-pain:#BD7D41;--petrir-pain-survol:#BD7D41;--petrir-grigne:#FBE7C0;--petrir-grigne-survol:#FBE7C0;
   --rassis-fond:#3A4147;--barre-rassis:#C5CBD1;--rassis-texte:#F4F7FB;
   --linkedin-fond:#FFFFFF;--linkedin-survol:#F2F2F2;--linkedin-texte:#000000;--linkedin-bord:#000000;
   --fond-page:var(--fond);
@@ -92,9 +92,10 @@
 
 /* Bouton « Pétrir » : pastille rouge imposée (lot 15) sur tout le site, fond uni sous le texte, petit pain blanc
    décoratif (svg.pain-ico, aria-hidden) à gauche du texte. S'enfonce légèrement à l'appui. */
-.btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--petrir-btn-bord);border-radius:999px;background:var(--petrir-btn-fond);color:var(--petrir-btn-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--petrir-btn-texte) 22%,transparent),var(--ombre-1);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease}
+.btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--petrir-btn-bord);border-radius:999px;background:var(--petrir-btn-fond);color:var(--petrir-btn-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sur-plein) 28%,transparent),0 2px 8px color-mix(in srgb,var(--petrir-btn-bord) 28%,transparent);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease,border-color .12s ease,color .12s ease}
 .btn-petrir .pain-ico{flex:none;width:22px;height:15px;overflow:visible}
-.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol);color:var(--petrir-btn-texte)}
+.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol-bord);color:var(--petrir-btn-survol-texte)}
+.btn-petrir:hover .pain-ico path:first-child{fill:var(--petrir-pain-survol)}.btn-petrir:hover .pain-ico path+path{stroke:var(--petrir-grigne-survol)}
 .btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 4px color-mix(in srgb,var(--ombre-teinte) 28%,transparent)}
 .btn-petrir:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.btn-petrir{transition:none}.btn-petrir:active{transform:none}}

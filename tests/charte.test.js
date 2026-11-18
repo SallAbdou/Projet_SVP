@@ -86,7 +86,7 @@ const TEXTE = [
   ['sur-clair', 'or-milieu'], ['sur-clair', 'pain-haut'], ['brun-fonce', 'miel'], ['sur-clair', 'panneau-or'],
   // Lot 15 : boutons et étiquettes aux couleurs imposées, au repos et au survol.
   ['lire-texte', 'lire-fond'], ['lire-texte', 'lire-survol'],
-  ['petrir-btn-texte', 'petrir-btn-fond'], ['petrir-btn-texte', 'petrir-btn-survol'],
+  ['petrir-btn-texte', 'petrir-btn-fond'], ['petrir-btn-survol-texte', 'petrir-btn-survol'],
   ['linkedin-texte', 'linkedin-fond'], ['linkedin-texte', 'linkedin-survol']
 ];
 const GRAPHIQUE = [
@@ -169,7 +169,7 @@ test('couleurs imposées en Bronze, Boulangerie classique et Nuit, écrites une 
   const [r, g, b] = rvb(t);
   assert.ok(r > g && g > b, 'brun attendu : ' + t);
   const P = require('../tools/palette-oklch.js');
-  assert.deepEqual(Object.keys(P.imposees).sort(), Object.keys(IMPOSEES).concat(['etiquette-texte', 'lire-survol', 'petrir-btn-survol', 'petrir-btn-bord', 'linkedin-survol', 'linkedin-bord']).sort());
+  assert.deepEqual(Object.keys(P.imposees).sort(), Object.keys(IMPOSEES).concat(['etiquette-texte', 'lire-survol', 'petrir-btn-survol', 'petrir-btn-bord', 'petrir-btn-survol-texte', 'petrir-btn-survol-bord', 'petrir-pain-survol', 'petrir-grigne-survol', 'linkedin-survol', 'linkedin-bord']).sort());
   for (const [k, h] of Object.entries(P.imposees)) assert.equal(BLOCS.bronze[k], h, `générateur --${k}`);
 });
 
@@ -192,13 +192,21 @@ test('Pétrir et Lire la source : le survol assombrit le fond, texte et pain gar
     assert.ok(C.luminance(v['lire-survol']) < C.luminance(v['lire-fond']), nom + ' lire survol');
     // Le pain dessiné est rempli de --petrir-pain et cerné de la couleur du texte, sur le fond du bouton.
     assert.ok(C.contraste(v['petrir-pain'], v['petrir-btn-fond']) >= 3, nom + ' pain sur fond');
-    assert.ok(C.contraste(v['petrir-pain'], v['petrir-btn-survol']) >= 3, nom + ' pain sur survol');
+    assert.ok(C.contraste(v['petrir-pain-survol'], v['petrir-btn-survol']) >= 3, nom + ' pain sur survol');
+    // Lot 17 : l'assombrissement doit se voir (écart de luminance d'au moins 1,5 entre repos et survol).
+    assert.ok(C.contraste(v['petrir-btn-fond'], v['petrir-btn-survol']) >= 1.5, nom + ' petrir survol visible');
+    assert.ok(C.contraste(v['lire-fond'], v['lire-survol']) >= 1.5, nom + ' lire survol visible');
+    // Bord : même teinte orange, un peu plus foncée que le fond, sans liseré brun.
+    assert.ok(C.luminance(v['petrir-btn-bord']) < C.luminance(v['petrir-btn-fond']), nom + ' bord plus foncé');
+    assert.ok(C.contraste(v['petrir-btn-bord'], v['petrir-btn-fond']) < 1.5, nom + ' bord proche du fond');
   }
-  assert.equal(THEMES.bronze['petrir-btn-bord'], '#F27016');
+  assert.equal(THEMES.bronze['petrir-btn-bord'], '#D9620F');
 });
 
 test('boutons aux couleurs imposées : règles par variables, survol, appui et focus visibles', () => {
-  assert.match(css, /\.btn-petrir:hover\{[^}]*background:var\(--petrir-btn-survol\)/);
+  assert.match(css, /\.btn-petrir:hover\{[^}]*background:var\(--petrir-btn-survol\)[^}]*border-color:var\(--petrir-btn-survol-bord\)[^}]*color:var\(--petrir-btn-survol-texte\)/);
+  assert.match(css, /\.btn-petrir:hover \.pain-ico path:first-child\{fill:var\(--petrir-pain-survol\)\}/);
+  assert.doesNotMatch(css, /\.btn-petrir\{[^}]*inset 0 1px 0 color-mix\(in srgb,var\(--petrir-btn-texte\)/);
   const fe = fs.readFileSync(path.join(RACINE, 'fournee.html'), 'utf8');
   assert.match(fe, /\.act\[data-act="read"\][^{]*\{[^}]*background:var\(--lire-fond\)[^}]*color:var\(--lire-texte\)/);
   assert.match(fe, /a\.act\[data-act="read"\]:hover[^{]*\{[^}]*background:var\(--lire-survol\)/);
