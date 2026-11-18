@@ -116,26 +116,23 @@
     return posts.reduce(function (s, p) { return s + (Number(p.chiffres.impressions) || 0); }, 0) / posts.length;
   }
 
-  // Impressions moyennes des sujets verts divisées par celles des autres, arrondies à une décimale.
+  // Vrai seulement si les sujets verts ont en moyenne plus d'impressions que les autres (les deux groupes doivent avoir des chiffres).
   function analyse(posts) {
     var avec = chiffres(posts);
     var verts = moyenne(avec.filter(function (p) { return p.feu === 'vert'; }));
     var autres = moyenne(avec.filter(function (p) { return p.feu !== 'vert'; }));
-    if (verts === null || !autres) return { ratio: null };
-    return { ratio: Math.round(verts / autres * 10) / 10 };
+    return { chaudGagne: verts !== null && autres !== null && verts > autres };
   }
 
   // Phrase d'analyse en trois morceaux (le gabarit échappe tout : le gras est un <strong> du gabarit).
   var PHRASES = {
-    fr: { avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud', apres: ' font en moyenne {r} fois plus d’audience que les autres.' },
-    en: { avant: 'Serve them fast! Your posts on ', gras: 'piping hot', apres: ' topics get on average {r} times more reach than the others.' }
+    fr: { avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud', apres: ' font plus d’audience que les autres.' },
+    en: { avant: 'Serve them fast! Your posts on ', gras: 'piping hot', apres: ' topics get more reach than the others.' }
   };
-  function phraseAnalyse(ratio, lang) {
-    if (typeof ratio !== 'number' || isNaN(ratio)) return null;
+  function phraseAnalyse(chaudGagne, lang) {
+    if (chaudGagne !== true) return null;
     var p = PHRASES[lang] || PHRASES.fr;
-    var r = String(ratio);
-    if (p === PHRASES.fr) r = r.replace('.', ',');
-    return { avant: p.avant, gras: p.gras, apres: p.apres.replace('{r}', r) };
+    return { avant: p.avant, gras: p.gras, apres: p.apres };
   }
 
   function sansChiffres(posts) {

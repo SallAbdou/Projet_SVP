@@ -80,7 +80,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </div>
 </div>
 <p style="{{noBarsStyle}}">{{noBars}}</p>
-<p style="margin:0;padding:12px 16px;border-radius:12px;background:#F6E7CC;color:#5E3412;font-size:14px">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
+<p style="margin:0;padding:12px 16px;border-radius:12px;background:var(--miel);color:var(--brun-fonce);{{insStyle}}">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
 <section aria-labelledby="next-t" style="background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
@@ -155,7 +155,7 @@ var T = {
 fr: {
 navLabel: 'Navigation principale',
 eyebrowTail: 'tes 30 derniers jours', exemple: 'Fournée d’exemple : n8n ne répond pas',
-title: 'Bonjour {prenom},', titleAnon: 'Bonjour,', titleL2: 'Regardons ensemble ce que tes fournées ont généré',
+title: 'Bonjour {prenom},', titleAnon: 'Bonjour,', titleL2: 'Voici ce que tes fournées ont généré',
 subtitle1: 'Chaque matin, on cook les nouveautés IA pour toi.', subtitle2: 'Tu choisis ce que tu sers à ton audience.',
 sample: 'Inclut des données d’exemple',
 waitOne: '1 post attend ses chiffres', waitMany: '{n} posts attendent leurs chiffres', waitCta: 'Reporter mes chiffres',
@@ -167,7 +167,7 @@ bar: '{label} : {n} impressions, sujet {etat}',
 etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
 noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
 insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
-nextTitle: 'Tout juste sorti du four', fourCta: 'Voir dans la fournée →', fourLabel: 'Voir la première news du jour : {titre}',
+nextTitle: 'Tout juste sorti du four', fourCta: 'Voir ma fournée →', fourLabel: 'Voir la première news du jour : {titre}',
 nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
 gainTitle: 'Ce que ta veille a rapporté', gainContacts: 'Prises de contact', gainPosts: 'Posts publiés grâce à la fournée', gainSince: 'Depuis le début',
 pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger →', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
@@ -177,7 +177,7 @@ pantryEmpty: 'Rien de côté pour l’instant.', pantryEmptyCta: 'Aller à la fo
 en: {
 navLabel: 'Main navigation',
 eyebrowTail: 'your last 30 days', exemple: 'Sample batch: n8n is not responding',
-title: 'Hi {prenom},', titleAnon: 'Hi,', titleL2: 'Let’s look at what your batches brought in',
+title: 'Hi {prenom},', titleAnon: 'Hi,', titleL2: 'Here’s what your batches brought in',
 subtitle1: 'Every morning, we cook the latest AI news for you.', subtitle2: 'You choose what to serve your audience.',
 sample: 'Includes sample data',
 waitOne: '1 post is waiting for its figures', waitMany: '{n} posts are waiting for their figures', waitCta: 'Report my figures',
@@ -189,7 +189,7 @@ bar: '{label}: {n} impressions, topic {etat}',
 etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
 noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
 insightNeutral: 'Publish and report your figures to see what works best.',
-nextTitle: 'Fresh out of the oven', fourCta: 'See it in the batch →', fourLabel: 'See today’s first news: {titre}',
+nextTitle: 'Fresh out of the oven', fourCta: 'See my batch →', fourLabel: 'See today’s first news: {titre}',
 nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
 gainTitle: 'What your watch brought in', gainContacts: 'Contact requests', gainPosts: 'Posts published thanks to the batch', gainSince: 'Since the start',
 pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry →', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
@@ -239,7 +239,7 @@ var exemples = Comptoir.depuisExemples(st.exemples || [], maintenant);
 var posts = Comptoir.fusionner(exemples, Comptoir.depuisPublies(store.publies, articles, store.sauves));
 var k = Comptoir.kpis(posts, maintenant);
 var barres = Comptoir.graphique(posts);
-var ratio = Comptoir.analyse(posts).ratio;
+var chaudGagne = Comptoir.analyse(posts).chaudGagne;
 var attente = Comptoir.sansChiffres(posts);
 var bilan = Comptoir.bilan(posts);
 var u = null;
@@ -278,7 +278,8 @@ aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.fe
 barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; box-shadow: ' + (Charte.contourBarre(b.feu) || 'none') + '; border-radius: 14px 14px 4px 4px'
 };
 }),
-ins: !charge ? { avant: t.loading, gras: '', apres: '' } : Comptoir.phraseAnalyse(ratio, lang) || { avant: t.insightNeutral, gras: '', apres: '' },
+ins: !charge ? { avant: t.loading, gras: '', apres: '' } : Comptoir.phraseAnalyse(chaudGagne, lang) || { avant: t.insightNeutral, gras: '', apres: '' },
+insStyle: charge && chaudGagne ? 'font-size:16px;font-weight:700' : 'font-size:14px',
 // Four : lien vers la news n°1 quand la fournée est prête, four qui chauffe sans lien pendant l'attente.
 nextStyle: news ? '' : HIDE,
 fourAttenteStyle: !news && chauffe ? 'display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center' : HIDE,
