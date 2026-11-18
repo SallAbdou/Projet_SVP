@@ -98,7 +98,80 @@
     };
   }
 
+  function ok() { return { ok: true, erreur: null }; }
+  function ko(code) { return { ok: false, erreur: code }; }
+  function pour(liste) { return liste.map(function (r) { return { texte: r.texte, cree_le: r.cree_le }; }); }
+
+  /* ---- Démo : deps = { storage, utilisateur: () => u|null, maintenant: () => iso } ---- */
+  function avecStockage(deps) {
+    function charger() {
+      try { return normaliser(JSON.parse(deps.storage.getItem(CLE))); } catch (err) { return normaliser(null); }
+    }
+    return {
+      envoyerRetour: function (texte) {
+        var erreur = valider(texte);
+        if (erreur) return Promise.resolve(ko(erreur));
+        var u = deps.utilisateur();
+        var cle = cleCompte(u);
+        if (!cle) return Promise.resolve(ko('session'));
+        try { deps.storage.setItem(CLE, JSON.stringify(ajouter(charger(), cle, enregistrement(texte, deps.maintenant(), u.abonneId)))); } catch (err) { return Promise.resolve(ko('reseau')); }
+        return Promise.resolve(ok());
+      },
+      derniersRetours: function (n) {
+        var cle = cleCompte(deps.utilisateur());
+        return Promise.resolve(cle ? pour(derniers(lister(charger(), cle), n)) : []);
+      }
+    };
+  }
+
+  /* ---- Réel : deps = { fetch, jeton: () => Promise<string|null>, utilisateur: () => u|null } ---- */
+  var Cfg = typeof module === 'object' && module.exports ? require('./config.js') : root.Config;
+
+  function avecSupabase(config, deps) {
+    var delai = config.delaiReseauMs || 8000;
+    function appeler(req) { return Cfg.fetchAvecDelai(deps.fetch, req.url, req.options, delai); }
+    return {
+      envoyerRetour: function (texte) {
+        var erreur = valider(texte);
+        if (erreur) return Promise.resolve(ko(erreur));
+        var u = deps.utilisateur();
+        return Promise.resolve().then(deps.jeton).then(function (jeton) {
+          if (!jeton) return ko('session');
+          return appeler(requeteEnvoi(config, jeton, enregistrement(texte, '', u && u.abonneId))).then(function (rep) {
+            if (rep.status === 401 || rep.status === 403) return ko('session');
+            return rep.ok ? ok() : ko('reseau');
+          });
+        }).catch(function () { return ko('reseau'); });
+      },
+      // Rejetée en cas de panne : la page affiche « Impossible d'afficher tes retours ».
+      derniersRetours: function (n) {
+        return Promise.resolve().then(deps.jeton).then(function (jeton) {
+          if (!jeton) return [];
+          return appeler(requeteLecture(config, jeton, n)).then(function (rep) {
+            if (!rep.ok) throw new Error('HTTP ' + rep.status);
+            return rep.json();
+          }).then(function (l) { return pour(derniers(l, n)); });
+        });
+      }
+    };
+  }
+
+  var actif = null;
+  if (typeof module !== 'object' || !module.exports) {
+    var utilisateur = function () { try { return root.Auth.utilisateurCourant(); } catch (err) { return null; } };
+    if (root.PQ_MODE === 'reel' && root.PQ_CONFIG && root.Auth) {
+      actif = avecSupabase(root.PQ_CONFIG, { fetch: function (u, o) { return root.fetch(u, o); }, jeton: root.Auth.jetonValide, utilisateur: utilisateur });
+    } else {
+      var st = null;
+      try { st = root.localStorage; } catch (err) {}
+      actif = avecStockage({ storage: st || { getItem: function () { return null; }, setItem: function () { throw new Error('stockage'); } }, utilisateur: utilisateur, maintenant: function () { return new Date().toISOString(); } });
+    }
+  }
+
   var Retours = {
+    avecStockage: avecStockage, avecSupabase: avecSupabase,
+    envoyerRetour: actif ? actif.envoyerRetour : null,
+    derniersRetours: actif ? actif.derniersRetours : null,
     pur: {
       CLE: CLE, MAX: MAX, nettoyer: nettoyer, valider: valider, enregistrement: enregistrement, derniers: derniers,
       dateRelative: dateRelative, cleCompte: cleCompte, normaliser: normaliser, ajouter: ajouter, lister: lister,

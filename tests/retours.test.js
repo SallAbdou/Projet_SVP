@@ -87,3 +87,99 @@ test('requeteLecture : GET des n derniers, en-têtes apikey et Authorization', (
   assert.equal(r.options.method, 'GET');
   assert.deepEqual(r.options.headers, { apikey: 'pub', Authorization: 'Bearer jwt' });
 });
+
+/* ---- Enveloppes : démo (stockage) et réel (fetch simulé) ---- */
+function memoire() {
+  const m = {};
+  return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; }, m };
+}
+const LEA = { email: 'lea@demo.painquotidien.fr', abonneId: 'demoLea0000000001' };
+const TOM = { email: 'tom@x.fr', abonneId: 't1' };
+
+test('démo : envoi valide enregistré puis relu', async () => {
+  const st = memoire();
+  const d = R.avecStockage({ storage: st, utilisateur: () => LEA, maintenant: () => '2026-11-18T10:00:00.000Z' });
+  assert.deepEqual(await d.envoyerRetour('  Plus de PME  '), { ok: true, erreur: null });
+  assert.deepEqual(await d.derniersRetours(3), [{ texte: 'Plus de PME', cree_le: '2026-11-18T10:00:00.000Z' }]);
+  assert.ok(st.getItem('pq-retours').includes('demoLea0000000001'));
+});
+
+test('démo : texte vide refusé, rien enregistré', async () => {
+  const st = memoire();
+  const d = R.avecStockage({ storage: st, utilisateur: () => LEA, maintenant: () => 'x' });
+  assert.deepEqual(await d.envoyerRetour('   '), { ok: false, erreur: 'vide' });
+  assert.deepEqual(await d.envoyerRetour('x'.repeat(1001)), { ok: false, erreur: 'trop-long' });
+  assert.equal(st.getItem('pq-retours'), null);
+});
+
+test('démo : sans utilisateur connecté, erreur session et liste vide', async () => {
+  const d = R.avecStockage({ storage: memoire(), utilisateur: () => null, maintenant: () => 'x' });
+  assert.deepEqual(await d.envoyerRetour('ok'), { ok: false, erreur: 'session' });
+  assert.deepEqual(await d.derniersRetours(3), []);
+});
+
+test('démo : chaque compte ne voit que ses retours', async () => {
+  const st = memoire();
+  let u = LEA;
+  const d = R.avecStockage({ storage: st, utilisateur: () => u, maintenant: () => '2026-11-18T10:00:00.000Z' });
+  await d.envoyerRetour('de Léa');
+  u = TOM;
+  await d.envoyerRetour('de Tom');
+  assert.deepEqual((await d.derniersRetours(3)).map(r => r.texte), ['de Tom']);
+  u = LEA;
+  assert.deepEqual((await d.derniersRetours(3)).map(r => r.texte), ['de Léa']);
+});
+
+test('démo : données abîmées dans pq-retours, on repart proprement', async () => {
+  const st = memoire();
+  st.setItem('pq-retours', '{pas du json');
+  const d = R.avecStockage({ storage: st, utilisateur: () => LEA, maintenant: () => '2026-11-18T10:00:00.000Z' });
+  assert.deepEqual(await d.derniersRetours(3), []);
+  assert.equal((await d.envoyerRetour('ok')).ok, true);
+});
+
+function reponse(status, corps) { return { status, ok: status >= 200 && status < 300, json: () => Promise.resolve(corps) }; }
+function reel(fetchFn, jeton, config) {
+  return R.avecSupabase(config || CFG, { fetch: fetchFn, jeton: () => Promise.resolve(jeton === undefined ? 'jwt' : jeton), utilisateur: () => LEA });
+}
+
+test('réel : 201 accepté, requête REST conforme', async () => {
+  const appels = [];
+  const r = reel((u, o) => { appels.push([u, o]); return Promise.resolve(reponse(201)); });
+  assert.deepEqual(await r.envoyerRetour(' Plus de PME '), { ok: true, erreur: null });
+  assert.equal(appels.length, 1);
+  assert.equal(appels[0][0], 'https://p.supabase.co/rest/v1/retours');
+  assert.equal(appels[0][1].headers.Authorization, 'Bearer jwt');
+  assert.deepEqual(JSON.parse(appels[0][1].body), { texte: 'Plus de PME', abonne_id: 'demoLea0000000001' });
+});
+
+test('réel : 401 ou 403 donne session, 500 ou panne donne reseau', async () => {
+  assert.equal((await reel(() => Promise.resolve(reponse(401))).envoyerRetour('a')).erreur, 'session');
+  assert.equal((await reel(() => Promise.resolve(reponse(403))).envoyerRetour('a')).erreur, 'session');
+  assert.equal((await reel(() => Promise.resolve(reponse(500))).envoyerRetour('a')).erreur, 'reseau');
+  assert.equal((await reel(() => Promise.reject(new TypeError('Failed to fetch'))).envoyerRetour('a')).erreur, 'reseau');
+});
+
+test('réel : pas de jeton, jeton en panne ou texte vide, sans appel réseau', async () => {
+  let n = 0;
+  const f = () => { n++; return Promise.resolve(reponse(201)); };
+  assert.deepEqual(await reel(f, null).envoyerRetour('a'), { ok: false, erreur: 'session' });
+  assert.deepEqual(await reel(f).envoyerRetour('  '), { ok: false, erreur: 'vide' });
+  const panne = R.avecSupabase(CFG, { fetch: f, jeton: () => Promise.reject(new Error('x')), utilisateur: () => LEA });
+  assert.deepEqual(await panne.envoyerRetour('a'), { ok: false, erreur: 'reseau' });
+  assert.equal(n, 0);
+});
+
+test('réel : délai dépassé donne reseau', async () => {
+  const r = reel(() => new Promise(() => {}), 'jwt', Object.assign({}, CFG, { delaiReseauMs: 20 }));
+  assert.deepEqual(await r.envoyerRetour('a'), { ok: false, erreur: 'reseau' });
+});
+
+test('réel : lecture des derniers retours, panne rejetée', async () => {
+  const lus = [];
+  const ok = reel((u) => { lus.push(u); return Promise.resolve(reponse(200, [{ texte: 'a', cree_le: '2026-11-18T10:00:00+00:00' }])); });
+  assert.deepEqual(await ok.derniersRetours(3), [{ texte: 'a', cree_le: '2026-11-18T10:00:00+00:00' }]);
+  assert.ok(lus[0].endsWith('limit=3'));
+  await assert.rejects(reel(() => Promise.resolve(reponse(500))).derniersRetours(3));
+  assert.deepEqual(await reel(() => Promise.resolve(reponse(200)), null).derniersRetours(3), []);
+});
