@@ -49,12 +49,10 @@ var BRONZE_THEME = {
   'or-source': [.450, .048, PATINE], 'or-source-fonce': [.380, .042, PATINE],
   // Patine : « Lire la source ».
   source: [.450, .048, PATINE], 'source-fonce': [.380, .042, PATINE],
-  // Cendre : Rassis, froid et éteint.
-  'rassis-fond': [.370, .014, CENDRE], 'rassis-texte': [.975, .006, CENDRE],
-  'barre-rassis': [.840, .010, CENDRE], 'barre-rassis-contour': [.560, .014, CENDRE],
+  // Cendre : liseré des barres Rassis (le fond Rassis est imposé, voir IMPOSEES).
+  'barre-rassis-contour': [.560, .014, CENDRE],
   // Surfaces et panneaux.
   'sur-plein': [.985, .010, MIE], 'sur-clair': [.225, .040, BRUN], champ: [.995, .004, MIE], 'bord-champ': [.555, .050, 60],
-  'etiquette-fond': [.335, .045, BRUN - 2], 'etiquette-texte': [.945, .020, FARINE],
   panneau: [.255, .035, BRUN - 5], 'panneau-texte': [.955, .016, FARINE], 'panneau-doux': [.900, .022, FARINE - 3],
   'panneau-or': [.860, .095, OR - 2],
   // Teinte des ombres et voiles : brun profond plutôt que gris.
@@ -71,7 +69,7 @@ var NUIT = {
   source: [.760, .060, PATINE], 'source-fonce': [.820, .050, PATINE],
   'barre-rassis-contour': [.640, .014, CENDRE],
   'sur-plein': [.170, .014, 55], champ: [.140, .012, 55], 'bord-champ': [.610, .045, 65],
-  'etiquette-fond': [.385, .050, BRUN], 'etiquette-texte': [.945, .020, FARINE], focus: [.820, .110, 75],
+  focus: [.820, .110, 75],
   panneau: [.300, .030, BRUN], 'panneau-texte': [.945, .020, FARINE], 'panneau-doux': [.885, .026, FARINE - 3],
   'panneau-or': [.860, .095, OR - 2], 'ombre-teinte': [.080, .010, 55]
 };
@@ -79,11 +77,23 @@ var NUIT = {
 // Contraste élevé : seule la source change (patine très foncée), le reste est écrit à la main dans la charte.
 var CONTRASTE = { source: [.320, .055, PATINE], 'source-fonce': [.250, .045, PATINE] };
 
+// Lot 15 : couleurs imposées par l'équipe, hors rampes OKLCH, écrites telles quelles dans le bloc Bronze
+// (Boulangerie classique et Nuit en héritent ; Contraste élevé garde ses propres valeurs).
+// Survols : même teinte, plus foncée. Contrastes vérifiés par tests/charte.test.js.
+var IMPOSEES = {
+  'etiquette-fond': '#ABBF9B', 'etiquette-texte': '#2C1910',
+  'lire-fond': '#BD470C', 'lire-survol': '#9C3A0A', 'lire-texte': '#FFFFFF',
+  'petrir-btn-fond': '#B20206', 'petrir-btn-survol': '#8C0105', 'petrir-btn-texte': '#FFFFFF', 'petrir-btn-bord': '#B20206',
+  'petrir-pain': '#FFFFFF', 'petrir-grigne': '#B20206',
+  'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
+  'linkedin-fond': '#0A66C2', 'linkedin-survol': '#004182', 'linkedin-texte': '#FFFFFF', 'linkedin-bord': '#0A66C2'
+};
+
 function enHex(spec) { var r = {}; Object.keys(spec).forEach(function (k) { r[k] = hex(spec[k][0], spec[k][1], spec[k][2]); }); return r; }
-var Palette = { hex: hex, bronze: enHex(BRONZE_THEME), nuit: enHex(NUIT), contraste: enHex(CONTRASTE) };
+var Palette = { hex: hex, bronze: enHex(BRONZE_THEME), nuit: enHex(NUIT), contraste: enHex(CONTRASTE), imposees: IMPOSEES };
 if (typeof module === 'object' && module.exports) module.exports = Palette;
 if (typeof require === 'function' && require.main === module) {
-  ['bronze', 'nuit', 'contraste'].forEach(function (t) {
+  ['bronze', 'nuit', 'contraste', 'imposees'].forEach(function (t) {
     console.log('/* ' + t + ' */\n' + Object.keys(Palette[t]).map(function (k) { return '--' + k + ':' + Palette[t][k]; }).join(';'));
   });
 }

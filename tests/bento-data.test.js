@@ -40,3 +40,54 @@ test('montreRaison : le n°1 doré ne commente pas sa couleur, les autres oui', 
   assert.equal(B.montreRaison('n1'), false);
   for (const id of ['n2', 'n3', 'n4', 'n5', 'n6', 'n7']) assert.equal(B.montreRaison(id), true, id);
 });
+
+test('jauges : trois critères de 0 à 5 avec pourcentage de remplissage, total sur 15', () => {
+  const j = B.jauges({ durabilite: 4, propension: 5, lienOffre: 4 });
+  assert.deepEqual(j.criteres.map(c => [c.cle, c.valeur, c.pct]), [['durabilite', 4, 80], ['propension', 5, 100], ['lienOffre', 4, 80]]);
+  assert.equal(j.total, 13);
+  assert.equal(j.max, 15);
+  assert.equal(j.totalPct, 87);
+});
+
+test('jauges : valeurs absentes, négatives, trop grandes ou non numériques bornées entre 0 et 5', () => {
+  const j = B.jauges({ durabilite: -2, propension: 9, lienOffre: 'x' });
+  assert.deepEqual(j.criteres.map(c => [c.valeur, c.pct]), [[0, 0], [5, 100], [0, 0]]);
+  assert.equal(j.total, 5);
+  const v = B.jauges();
+  assert.equal(v.total, 0);
+  assert.deepEqual(v.criteres.map(c => c.pct), [0, 0, 0]);
+  assert.equal(B.jauges({ durabilite: 2.5 }).criteres[0].pct, 50);
+});
+
+test('rangees : nombre de rangées occupées par la grille affichée', () => {
+  const d = B.defaultLayout();
+  assert.equal(B.rangees(d, 7, 4), 3);
+  assert.equal(B.rangees(B.basculerGraphique(d), 7, 4), 4);
+  assert.equal(B.rangees(B.appliquerPreset(d, 'informative'), 7, 4), 3);
+  assert.equal(B.rangees(B.appliquerPreset(d, 'concentree'), 7, 4), 2);
+  assert.equal(B.rangees(d, 0, 4), 0);
+  assert.equal(B.rangees(d, 7, 2), 6);
+});
+
+test('fournee.html : jauges de monétisation accessibles à la place de la ligne de détail', () => {
+  const h = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'fournee.html'), 'utf8');
+  assert.doesNotMatch(h, /scoreLine|score-detail|Durabilité \{d\}\/5/);
+  const bloc = /<div class="only-L jauges" role="group" aria-labelledby="jt-\{\{s\.id\}\}">([\s\S]*?)<\/div>\r?\n<p class="score">/.exec(h);
+  assert.ok(bloc, 'bloc de jauges absent ou mal placé');
+  assert.match(bloc[1], /<p id="jt-\{\{s\.id\}\}" class="jauges-total">\{\{s\.money\}\}<\/p>/);
+  for (const n of [1, 2, 3]) {
+    assert.match(bloc[1], new RegExp('<span class="jauge-nom">\{\{s\.j' + n + 'Nom\}\}</span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="\{\{s\.j' + n + 'Style\}\}"></span></span><span class="jauge-val">\{\{s\.j' + n + 'Val\}\}</span>'));
+  }
+  assert.match(h, /\.jauge-plein\{[^}]*background:var\(--brun\)/);
+  assert.match(h, /jauges: \{ durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' \}/);
+  assert.match(h, /jauges: \{ durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' \}/);
+});
+
+test('fournee.html : mode sans défilement réservé aux grilles de 3 rangées, sans couper le contenu', () => {
+  const h = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'fournee.html'), 'utf8');
+  assert.match(h, /<main class="\{\{mainClass\}\}"/);
+  assert.match(h, /mainClass: ready && !st\.editing && available > 0 && Bento\.rangees\(layout, available, 4\) <= 3 \? 'fournee-tient' : ''/);
+  assert.match(h, /@media \(min-width:1101px\) and \(min-height:700px\)\{\r?\nmain\.fournee-tient\{min-height:100vh/);
+  assert.match(h, /main\.fournee-tient \.bento\{[^}]*grid-auto-rows:minmax\(min-content,1fr\)/);
+  assert.match(h, /main\.fournee-tient \.news-title[^{]*\{[^}]*-webkit-line-clamp:2/);
+});

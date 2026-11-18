@@ -83,7 +83,11 @@ const TEXTE = [
   ['or-texte', 'or-haut'], ['or-texte', 'or-milieu'], ['or-texte', 'or-bas'], ['or-texte', 'or-surface'],
   ['or-texte-2', 'or-haut'], ['or-texte-2', 'or-bas'], ['or-texte-2', 'or-surface'], ['or-brun', 'or-surface'], ['or-brun', 'or-haut'],
   ['or-surface', 'or-brun'], ['or-sur-plein', 'or-source'], ['or-sur-plein', 'or-source-fonce'],
-  ['sur-clair', 'or-milieu'], ['sur-clair', 'pain-haut'], ['brun-fonce', 'miel'], ['sur-clair', 'panneau-or']
+  ['sur-clair', 'or-milieu'], ['sur-clair', 'pain-haut'], ['brun-fonce', 'miel'], ['sur-clair', 'panneau-or'],
+  // Lot 15 : boutons et étiquettes aux couleurs imposées, au repos et au survol.
+  ['lire-texte', 'lire-fond'], ['lire-texte', 'lire-survol'],
+  ['petrir-btn-texte', 'petrir-btn-fond'], ['petrir-btn-texte', 'petrir-btn-survol'],
+  ['linkedin-texte', 'linkedin-fond'], ['linkedin-texte', 'linkedin-survol']
 ];
 const GRAPHIQUE = [
   ['braise', 'sable'], ['source', 'creme'], ['barre-petrir', 'creme'], ['barre-rassis-contour', 'creme'],
@@ -135,16 +139,64 @@ test('Nuit : fond sombre, texte clair', () => {
   assert.ok(C.luminance(THEMES.nuit.texte) > 0.7, THEMES.nuit.texte);
 });
 
-test('états reconnaissables : mêmes puces dans tous les thèmes', () => {
+test('états reconnaissables : mêmes puces dans tous les thèmes (Rassis : sauf Contraste élevé)', () => {
   for (const nom of Object.keys(THEMES)) {
     assert.equal(THEMES[nom]['petrir-fond'], VARS['petrir-fond'], nom);
-    assert.equal(THEMES[nom]['rassis-fond'], VARS['rassis-fond'], nom);
     assert.equal(THEMES[nom].croute, VARS.croute, nom);
   }
+  for (const nom of ['classique', 'nuit']) assert.equal(THEMES[nom]['rassis-fond'], VARS['rassis-fond'], nom);
 });
 
-test('Rassis en gris chaud clair dans les graphiques, plus de noir', () => {
-  assert.ok(C.luminance(VARS['barre-rassis']) > 0.5, VARS['barre-rassis']);
+// Lot 15 : couleurs imposées par l'équipe, identiques en Bronze, Boulangerie classique et Nuit.
+// Le Contraste élevé garde ses propres valeurs (celles d'avant le lot).
+const IMPOSEES = {
+  'etiquette-fond': '#ABBF9B', 'lire-fond': '#BD470C', 'lire-texte': '#FFFFFF',
+  'petrir-btn-fond': '#B20206', 'petrir-btn-texte': '#FFFFFF', 'petrir-pain': '#FFFFFF',
+  'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
+  'linkedin-fond': '#0A66C2', 'linkedin-texte': '#FFFFFF'
+};
+test('couleurs imposées en Bronze, Boulangerie classique et Nuit, écrites une seule fois', () => {
+  for (const nom of ['bronze', 'classique', 'nuit']) {
+    for (const [k, h] of Object.entries(IMPOSEES)) assert.equal(THEMES[nom][k], h, `${nom} --${k}`);
+  }
+  for (const nom of ['classique', 'nuit']) {
+    for (const k of Object.keys(IMPOSEES)) assert.equal((BLOCS[nom] || {})[k], undefined, `${nom} ne doit pas redéfinir --${k}`);
+  }
+  // Étiquette : texte brun foncé sur le vert imposé.
+  const t = THEMES.bronze['etiquette-texte'];
+  assert.ok(C.luminance(t) < 0.03, t);
+  const [r, g, b] = rvb(t);
+  assert.ok(r > g && g > b, 'brun attendu : ' + t);
+  const P = require('../tools/palette-oklch.js');
+  assert.deepEqual(Object.keys(P.imposees).sort(), Object.keys(IMPOSEES).concat(['etiquette-texte', 'lire-survol', 'petrir-btn-survol', 'petrir-btn-bord', 'petrir-grigne', 'linkedin-survol', 'linkedin-bord']).sort());
+  for (const [k, h] of Object.entries(P.imposees)) assert.equal(BLOCS.bronze[k], h, `générateur --${k}`);
+});
+
+test('Contraste élevé garde ses propres valeurs pour les éléments aux couleurs imposées', () => {
+  const c = BLOCS.contraste || {};
+  for (const k of Object.keys(IMPOSEES).filter(k => !/texte$/.test(k))) {
+    assert.ok(c[k], 'Contraste élevé doit définir --' + k);
+    assert.notEqual(c[k], IMPOSEES[k], k);
+  }
+  assert.equal(c['rassis-fond'], '#3A4147');
+  assert.equal(c['lire-fond'], c.source);
+  assert.equal(c['etiquette-fond'], '#000000');
+});
+
+test('boutons aux couleurs imposées : règles par variables, survol, appui et focus visibles', () => {
+  assert.match(css, /\.btn-petrir:hover\{[^}]*background:var\(--petrir-btn-survol\)/);
+  const fe = fs.readFileSync(path.join(RACINE, 'fournee.html'), 'utf8');
+  assert.match(fe, /\.act\[data-act="read"\][^{]*\{[^}]*background:var\(--lire-fond\)[^}]*color:var\(--lire-texte\)/);
+  assert.match(fe, /a\.act\[data-act="read"\]:hover[^{]*\{[^}]*background:var\(--lire-survol\)/);
+  const gm = fs.readFileSync(path.join(RACINE, 'garde-manger.html'), 'utf8');
+  assert.match(gm, /\.gm-source\{[^}]*background:var\(--lire-fond\)[^}]*color:var\(--lire-texte\)/);
+  assert.match(gm, /a\.gm-source:hover\{[^}]*background:var\(--lire-survol\)/);
+  const fo = fs.readFileSync(path.join(RACINE, 'fournil.html'), 'utf8');
+  assert.match(fo, /\.fo-btn-linkedin\{[^}]*background:var\(--linkedin-fond\)[^}]*color:var\(--linkedin-texte\)/);
+  assert.match(fo, /\.fo-btn-linkedin:hover:not\(:disabled\)\{[^}]*background:var\(--linkedin-survol\)/);
+  assert.match(fo, /\.fo-btn:focus-visible\{[^}]*outline:3px solid var\(--focus\)/);
+  assert.match(fo, /\.fo-btn:active:not\(:disabled\)\{[^}]*transform/);
+  assert.match(fo, /class="fo-btn fo-btn-linkedin" data-focus="publier"/);
 });
 
 // Teinte approximative en degrés (HSV), suffisante pour distinguer vert, bronze et prune.
@@ -157,13 +209,12 @@ function teinte(hex) {
 }
 const rvb = hex => [1, 3, 5].map(i => parseInt(hex.substr(i, 2), 16));
 
-test('« Lire la source » en vert-de-gris (patine du bronze) dans tous les thèmes, loin de la braise', () => {
+test('patine vert-de-gris (--source) dans tous les thèmes ; Contraste élevé s’en sert pour Lire la source', () => {
   for (const [nom, t] of Object.entries(THEMES)) {
     for (const k of ['source', 'source-fonce']) {
       const h = teinte(t[k]);
       assert.ok(h >= 150 && h <= 200, `${nom} ${k} ${t[k]} teinte ${Math.round(h)}`);
     }
-    assert.ok(Math.abs(teinte(t.source) - teinte(t.braise)) > 100, nom);
   }
 });
 
@@ -179,12 +230,10 @@ test('accents adoucis : ni orange fluo ni jaune fluo', () => {
   for (const k of ['braise-vive', 'croute', 'eclair', 'barre-petrir']) assert.ok(sat(VARS[k]) < 0.82, `${k} ${VARS[k]} saturation ${sat(VARS[k]).toFixed(2)}`);
 });
 
-test('Rassis froid et éteint, sans noir ni blanc purs', () => {
-  const f = VARS['rassis-fond'], t = VARS['rassis-texte'];
-  assert.ok(C.luminance(f) > 0.03 && C.luminance(f) < 0.1, f);
-  assert.notEqual(t.toUpperCase(), '#FFFFFF');
-  const [r, , b] = rvb(f);
-  assert.ok(b >= r, 'Rassis doit tirer vers le froid : ' + f);
+test('barres Rassis : liseré d’au moins 3:1 dans les thèmes où le fond imposé se détache peu', () => {
+  for (const [nom, t] of Object.entries(THEMES)) {
+    if (C.contraste(t['barre-rassis'], t.creme) < 3) assert.ok(C.contraste(t['barre-rassis-contour'], t.creme) >= 3, nom);
+  }
 });
 
 test('profondeur : fond de page en léger dégradé et ombres teintées brun, unis en contraste élevé', () => {
@@ -199,11 +248,11 @@ test('profondeur : fond de page en léger dégradé et ombres teintées brun, un
   assert.match(fs.readFileSync(path.join(RACINE, 'parcours.css'), 'utf8'), /body\{[^}]*background:var\(--fond-page\)/);
 });
 
-test('bouton Pétrir en pastille dorée : fond uni sous le texte, petit pain décoratif, appui, focus, sans animation si réduit', () => {
+test('bouton Pétrir en pastille rouge imposée : fond uni sous le texte, petit pain blanc décoratif, appui, focus, sans animation si réduit', () => {
   assert.match(css, /\.btn-petrir\{[^}]*border-radius:999px/);
-  assert.match(css, /\.btn-petrir\{[^}]*background:var\(--pain-haut\)/);
-  assert.match(css, /\.btn-petrir\{[^}]*border:1\.5px solid var\(--pain-bas\)/);
-  assert.match(css, /\.btn-petrir\{[^}]*color:var\(--pain-texte\)/);
+  assert.match(css, /\.btn-petrir\{[^}]*background:var\(--petrir-btn-fond\)/);
+  assert.match(css, /\.btn-petrir\{[^}]*border:1\.5px solid var\(--petrir-btn-bord\)/);
+  assert.match(css, /\.btn-petrir\{[^}]*color:var\(--petrir-btn-texte\)/);
   assert.match(css, /\.btn-petrir\{[^}]*min-height:44px/);
   assert.doesNotMatch(css, /\.btn-petrir::before/);
   assert.doesNotMatch(css, /\.btn-petrir\{[^}]*gradient/);
@@ -213,7 +262,11 @@ test('bouton Pétrir en pastille dorée : fond uni sous le texte, petit pain dé
     const h = fs.readFileSync(path.join(RACINE, p), 'utf8');
     const boutons = h.match(/<a [^>]*class="btn-petrir[^"]*"[^>]*>[\s\S]*?<\/a>/g) || [];
     assert.equal(boutons.length, n, p);
-    for (const b of boutons) assert.match(b, /^<a [^>]*><svg class="pain-ico"[^>]*aria-hidden="true"[^>]*focusable="false"/, p);
+    for (const b of boutons) {
+      assert.match(b, /^<a [^>]*><svg class="pain-ico"[^>]*aria-hidden="true"[^>]*focusable="false"/, p);
+      assert.match(b, /fill="var\(--petrir-pain\)"/, p);
+      assert.match(b, /stroke="var\(--petrir-grigne\)"/, p);
+    }
   }
   assert.match(css, /\.btn-petrir:active\{[^}]*transform/);
   assert.match(css, /\.btn-petrir:focus-visible\{[^}]*outline:3px solid var\(--focus\)/);

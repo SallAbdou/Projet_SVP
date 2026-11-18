@@ -18,8 +18,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 a.gm-knead:hover{background:var(--braise-fonce);color:var(--sur-plein)}
 .gm-sec{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--bord-fort);background:var(--creme);color:var(--texte);font:inherit;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}
 .gm-sec:hover{border-color:var(--brun);color:var(--texte)}
-.gm-source{background:var(--source);border-color:var(--source);color:var(--sur-plein)}
-a.gm-source:hover{background:var(--source-fonce);border-color:var(--source-fonce);color:var(--sur-plein)}
+.gm-source{background:var(--lire-fond);border-color:var(--lire-fond);color:var(--lire-texte)}
+a.gm-source:hover{background:var(--lire-survol);border-color:var(--lire-survol);color:var(--lire-texte)}
+a.gm-source:active{transform:translateY(1px)}
 @media (max-width:640px){.gm-item{padding:16px}.gm-actions{justify-content:flex-start}}
 /* Filtres aux couleurs des états : contour et pastille de la couleur, rempli et coché quand actif. */
 .gm-filtre{--f:var(--brun-fonce);--f-texte:var(--sur-plein);display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:2px solid var(--f);background:var(--creme);color:var(--texte);font:inherit;font-weight:600;cursor:pointer}
@@ -74,7 +75,7 @@ a.gm-source:hover{background:var(--source-fonce);border-color:var(--source-fonce
 </div>
 </div>
 <div class="gm-actions">
-<a href="{{i.kneadHref}}" data-act="knead" data-id="{{i.ref}}" aria-label="{{i.kneadLabel}}" class="btn-petrir"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.knead}}</a>
+<a href="{{i.kneadHref}}" data-act="knead" data-id="{{i.ref}}" aria-label="{{i.kneadLabel}}" class="btn-petrir"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.knead}}</a>
 <a href="{{i.url}}" target="_blank" rel="noopener" data-act="read" data-id="{{i.ref}}" aria-label="{{i.readLabel}}" class="gm-sec gm-source"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:6px"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>{{t.read}}</a>
 <button type="button" data-act="remove" data-id="{{i.ref}}" aria-label="{{i.removeLabel}}" onClick="{{retirer}}" class="gm-sec">{{t.remove}}</button>
 </div>

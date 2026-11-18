@@ -18,6 +18,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .fo-btn-plein{border-color:var(--braise);background:var(--braise);color:var(--sur-plein)}
 .fo-btn-plein:hover{border-color:var(--braise-fonce);background:var(--braise-fonce);color:var(--sur-plein)}
 .fo-btn:disabled{opacity:.5;cursor:not-allowed}
+.fo-btn:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.fo-btn:active:not(:disabled){transform:translateY(1px)}
+.fo-btn-linkedin{border-color:var(--linkedin-bord);background:var(--linkedin-fond);color:var(--linkedin-texte)}
+.fo-btn-linkedin:hover:not(:disabled){border-color:var(--linkedin-survol);background:var(--linkedin-survol);color:var(--linkedin-texte)}
 .fo-lien{background:none;border:0;padding:0 4px;min-height:44px;font:inherit;font-size:13px;font-weight:700;color:var(--brun);cursor:pointer;align-self:flex-start}
 .fo-select{min-height:44px;padding:0 12px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;font-weight:500}
 .fo-choix{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:16px 20px;border-bottom:1px solid var(--trait)}
@@ -58,7 +62,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-choix">
 <span class="{{c.chip}}">{{c.etat}}</span>
 <div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:var(--doux)">{{c.source}}</span></div>
-<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.petrir}}</a>
+<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.petrir}}</a>
 </div>
 </sc-for>
 </div>
@@ -68,7 +72,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-choix">
 <span class="{{c.chip}}">{{c.etat}}</span>
 <div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:var(--doux)">{{c.source}}</span></div>
-<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--pain-bas)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--pain-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.petrir}}</a>
+<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.petrir}}</a>
 </div>
 </sc-for>
 </div>
@@ -116,7 +120,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path></svg>{{t.regen}}</button>
 <button type="button" class="fo-btn fo-btn-plein" data-focus="copier" onClick="{{copier}}" {{desactive}}>
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a1 1 0 0 1 1-1h10"></path></svg>{{t.copy}}</button>
-<button type="button" class="fo-btn" data-focus="publier" onClick="{{ouvrirModale}}" {{desactive}}>{{t.publish}}</button>
+<button type="button" class="fo-btn fo-btn-linkedin" data-focus="publier" onClick="{{ouvrirModale}}" {{desactive}}>{{t.publish}}</button>
 </div>
 </div>
 <aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:18px">
