@@ -28,7 +28,10 @@
   function puce(etat) { var f = famille(etat); return f ? 'puce puce-' + f : ''; }
   function barre(etat) { var f = famille(etat); return f ? 'var(--barre-' + f + ')' : ''; }
 
-  var Charte = { luminance: luminance, contraste: contraste, puce: puce, barre: barre };
+  // Rassis est gris clair dans les graphiques : un contour plus sombre le détache du fond (3:1).
+  function contourBarre(etat) { return famille(etat) === 'rassis' ? 'inset 0 0 0 2px var(--barre-rassis-contour)' : ''; }
+
+  var Charte = { luminance: luminance, contraste: contraste, puce: puce, barre: barre, contourBarre: contourBarre };
   if (typeof module === 'object' && module.exports) module.exports = Charte;
   else root.Charte = Charte;
 })(this);
