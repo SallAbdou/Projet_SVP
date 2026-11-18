@@ -4,12 +4,12 @@
 (function (root) {
   var TEXTES = {
     fr: {
-      tagline: 'On pétrit l’actu IA pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
+      tagline: 'L’actu IA, pétrie pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
       liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', profil: 'Mon profil' },
       compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu'
     },
     en: {
-      tagline: 'We knead the AI news for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
+      tagline: 'AI news, kneaded for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
       liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', profil: 'My profile' },
       compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu'
     }
@@ -17,7 +17,7 @@
 
   var PAGES = [
     { id: 'comptoir', href: '/comptoir', icone: '<path d="M3 10h18v10H3z"></path><path d="M5 10l2-5h10l2 5"></path>' },
-    { id: 'fournee', href: '/fournee', icone: '<path d="M4 7h16M4 12h16M4 17h10"></path>' },
+    { id: 'fournee', href: '/fournee', nom: 'flamme', icone: '<path d="M12 3c.6 3.4 5 5.6 5 10.5a5 5 0 0 1-10 0c0-2.4 1.3-3.9 2.6-5.1.3 1.7 1.2 2.8 2.3 3.1C11.3 9 11 6 12 3z"></path>' },
     { id: 'fournil', href: '/fournil', icone: '<rect x="3" y="4" width="18" height="16" rx="3"></rect><rect x="7" y="9" width="10" height="7" rx="2"></rect>' },
     { id: 'garde-manger', href: '/garde-manger', icone: '<path d="M6 3h12v18l-6-4-6 4z"></path>' },
     { id: 'profil', href: '/profil', icone: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>' }
@@ -40,7 +40,7 @@
         ? '<span data-compteur aria-label="' + esc(o.compteurGardeManger + ' ' + t.compteur[o.compteurGardeManger > 1 ? 1 : 0]) + '" style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:#E9D2A9;color:#5E3412">' + o.compteurGardeManger + '</span>'
         : '';
       return '<a href="' + p.href + '"' + (actif ? ' aria-current="page"' : '') + ' style="' + (actif ? LIEN_ACTIF : LIEN) + '">' +
-        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p.icone + '</svg>' +
+        '<svg width="18" height="18"' + (p.nom ? ' data-icone="' + p.nom + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p.icone + '</svg>' +
         esc(t.liens[p.id]) + compteur + '</a>';
     }).join('');
     var fr = o.lang !== 'en';
