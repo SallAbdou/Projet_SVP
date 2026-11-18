@@ -284,3 +284,9 @@ test('Rassis se détache du fond clair (Bronze et classique) ; en Nuit son liser
   }
   assert.match(css, /\.puce-rassis\{box-shadow:inset 0 0 0 1px color-mix\(in srgb,var\(--rassis-texte\)/);
 });
+
+test('mini-tuile dorée de la landing : titre et rang en couleurs du n°1, lisibles dans tous les thèmes', () => {
+  const p = fs.readFileSync(path.join(RACINE, 'parcours.css'), 'utf8');
+  assert.match(p, /\.mini-titre\{[^}]*color:var\(--or-texte\)/);
+  assert.match(p, /\.mini-tuile\.or \.mini-rang\{background:var\(--or-brun\);color:var\(--or-surface\)\}/);
+});
