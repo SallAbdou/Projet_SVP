@@ -21,10 +21,31 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .pf-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #8A4F1C;background:#FFFDF8;color:#8A4F1C;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
 .pf-btn:hover{background:#F3E6CF;color:#5E3412}
 .pf-sortie{border-color:#D9C29C;color:#5E3412}
+.pf-intro{margin:0;color:#4A3426}
+.pf-form{display:flex;flex-direction:column;gap:8px;margin:0}
+.pf-label{font-weight:700;color:#2E1D12}
+.pf-zone{width:100%;min-height:112px;resize:vertical;padding:12px 14px;border:1.5px solid #8A6A48;border-radius:12px;background:#FFFFFF;color:#2E1D12;font:inherit;line-height:1.5}
+.pf-zone:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
+.pf-zone[aria-invalid="true"]{border-color:#9A2F12}
+.pf-sous-zone{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pf-erreur{margin:0;color:#9A2F12;font-weight:600;font-size:14px}
+.pf-compteur{margin:0 0 0 auto;font-size:13px;color:#6B5443;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pf-compteur.trop{color:#9A2F12;font-weight:700}
+.pf-envoyer{background:#8A4F1C;color:#FFFDF8}
+.pf-envoyer:hover{background:#5E3412;color:#FFFDF8}
+.pf-envoyer[aria-disabled="true"]{opacity:.65;cursor:progress}
+.pf-succes{margin:0;color:#2F5D2A;font-weight:600}
+.pf-succes:empty{display:none}
+.pf-sous-titre{margin:8px 0 0;font-family:Fraunces, Georgia, serif;font-size:17px}
+.pf-retours{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pf-retours li{padding:10px 0;border-top:1px solid #F0E5D2}
+.pf-retours li:first-child{border-top:0;padding-top:2px}
+.pf-retour-texte{margin:0;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pf-retour-date{margin:2px 0 0;font-size:13px;color:#6B5443}
 @media (max-width:640px){.pf-carte{padding:18px}.pf-ligne{grid-template-columns:1fr}}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
-<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/retours.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:#2E1D12;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
@@ -51,6 +72,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <p class="pf-note">{{t.source}}</p>
 <a href="/questionnaire" class="pf-btn" data-focus="profil-modifier">{{t.redo}}</a>
 </section>
+<section aria-labelledby="retour-t" class="pf-carte">
+<h2 id="retour-t" class="pf-titre">{{t.retourT}}</h2>
+<p class="pf-intro">{{t.retourIntro}}</p>
+<form class="pf-form" novalidate onSubmit="{{envoyerRetour}}">
+<label for="retour-texte" class="pf-label">{{t.retourLabel}}</label>
+<p id="retour-aide" class="pf-note">{{t.retourAide}}</p>
+<textarea id="retour-texte" class="pf-zone" rows="4" aria-describedby="{{retourDecrit}}" aria-invalid="{{retourInvalide}}" onInput="{{saisirRetour}}">{{retour}}</textarea>
+<div class="pf-sous-zone"><p id="retour-erreur" class="pf-erreur" style="{{erreurStyle}}">{{erreurTexte}}</p><p id="retour-compteur" class="pf-compteur {{compteurClasse}}">{{compteur}}</p></div>
+<button type="submit" class="pf-btn pf-envoyer" data-focus="retour-envoyer" aria-disabled="{{envoiEnCours}}">{{boutonTexte}}</button>
+<p role="status" aria-live="polite" class="pf-succes">{{succes}}</p>
+</form>
+<h3 class="pf-sous-titre">{{t.derniersT}}</h3>
+<ul class="pf-retours" style="{{listeStyle}}"><sc-for list="{{derniers}}" as="r" hint-placeholder-count="2"><li><p class="pf-retour-texte">{{r.texte}}</p><p class="pf-retour-date">{{r.date}}</p></li></sc-for></ul>
+<p class="pf-note" style="{{listeVideStyle}}">{{listeVide}}</p>
+</section>
 <button type="button" class="pf-btn pf-sortie" data-focus="profil-logout" onClick="{{deconnexion}}">{{t.logout}}</button>
 </main>
 </div>
@@ -62,24 +98,99 @@ fr: {
 navLabel: 'Navigation principale', eyebrow: 'Ton compte', title: 'Mon profil',
 subtitle: 'Ce que ta fournée sait de toi pour choisir tes sujets chaque matin.',
 infos: 'Informations', prefs: 'Préférences',
-source: 'Tes préférences viennent du questionnaire d’inscription.', redo: 'Modifier mes préférences', logout: 'Se déconnecter'
+source: 'Tes préférences viennent du questionnaire d’inscription.', redo: 'Modifier mes préférences', logout: 'Se déconnecter',
+retourT: 'Affine ta fournée',
+retourIntro: 'Dis-nous ce que tu veux voir plus ou moins souvent : l’IA en tiendra compte pour choisir tes prochains sujets.',
+retourLabel: 'Ton retour', retourAide: 'Ex. : plus de sujets sur l’IA en PME, moins sur le hardware',
+max: '1 000', envoyer: 'Envoyer mon retour', envoi: 'Envoi…',
+succes: 'Merci, ton retour est enregistré. Il comptera pour tes prochaines fournées.',
+erreurs: {
+vide: 'Écris quelques mots avant d’envoyer.',
+'trop-long': 'Ton retour dépasse 1 000 caractères : raccourcis-le un peu.',
+reseau: 'Envoi impossible pour l’instant (connexion ou serveur). Ton texte est gardé : réessaie dans un moment.',
+session: 'Ta session a expiré : reconnecte-toi, ton texte sera à réécrire.'
+},
+derniersT: 'Tes derniers retours', listeVide: 'Aucun retour pour l’instant.', listeErreur: 'Impossible d’afficher tes retours pour l’instant.'
 },
 en: {
 navLabel: 'Main navigation', eyebrow: 'Your account', title: 'My profile',
 subtitle: 'What your batch knows about you to pick your topics every morning.',
 infos: 'Details', prefs: 'Preferences',
-source: 'Your preferences come from the sign-up questionnaire.', redo: 'Edit my preferences', logout: 'Log out'
+source: 'Your preferences come from the sign-up questionnaire.', redo: 'Edit my preferences', logout: 'Log out',
+retourT: 'Fine-tune your batch',
+retourIntro: 'Tell us what you want to see more or less often: the AI will use it to pick your next topics.',
+retourLabel: 'Your feedback', retourAide: 'E.g. more topics on AI in small businesses, less on hardware',
+max: '1,000', envoyer: 'Send my feedback', envoi: 'Sending…',
+succes: 'Thanks, your feedback is saved. It will count for your next batches.',
+erreurs: {
+vide: 'Write a few words before sending.',
+'trop-long': 'Your feedback is over 1,000 characters: please shorten it.',
+reseau: 'Could not send right now (connection or server). Your text is kept: try again in a moment.',
+session: 'Your session has expired: log in again, you will need to rewrite your text.'
+},
+derniersT: 'Your latest feedback', listeVide: 'No feedback yet.', listeErreur: 'Your feedback can’t be shown right now.'
 }
 };
+var CACHE = 'display: none';
 class Component extends DCLogic {
-constructor(props) { super(props); this.state = { lang: 'fr' }; }
+constructor(props) {
+super(props);
+// retour : saisie en cours ; succes : booléen (texte traduit au rendu) ; derniers : null tant que la liste charge.
+this.state = { lang: 'fr', retour: '', retourErreur: null, succes: false, envoi: false, derniers: null, derniersErreur: false };
+this.chargerDerniers();
+}
+chargerDerniers() {
+var self = this;
+Retours.derniersRetours(3).then(function (l) { self.setState({ derniers: l, derniersErreur: false }); },
+function () { self.setState({ derniers: [], derniersErreur: true }); });
+}
+// Erreur : le focus va (une fois) sur le champ, curseur à la fin. Succès : il reste sur le bouton, la zone live parle.
+afterRender(root) {
+if (!this.focusRetour) return;
+this.focusRetour = false;
+var el = root.querySelector('#retour-texte');
+if (!el) return;
+el.focus();
+try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {}
+}
 renderVals() {
-var lang = (this.state && this.state.lang) || 'fr';
+var self = this;
+var s = this.state;
+var lang = s.lang || 'fr';
+var t = T[lang];
 var u = null;
 try { u = Auth.utilisateurCourant(); } catch (e) {}
 var l = Profil.lignes(u, lang, Questionnaire.libelle);
+var maintenant = new Date();
+var derniers = (s.derniers || []).map(function (r) { return { texte: r.texte, date: Retours.pur.dateRelative(r.cree_le, maintenant, lang) }; });
+var erreur = s.retourErreur ? t.erreurs[s.retourErreur] || t.erreurs.reseau : '';
+var vide = s.derniers !== null && !derniers.length;
 return {
-t: T[lang], infos: l.infos, prefs: l.prefs,
+t: t, infos: l.infos, prefs: l.prefs,
+retour: s.retour,
+retourDecrit: (erreur ? 'retour-erreur ' : '') + 'retour-aide retour-compteur',
+retourInvalide: erreur ? 'true' : 'false',
+erreurTexte: erreur, erreurStyle: erreur ? '' : CACHE,
+compteur: s.retour.length + ' / ' + t.max,
+compteurClasse: s.retour.length > Retours.pur.MAX ? 'trop' : '',
+envoiEnCours: s.envoi ? 'true' : 'false',
+boutonTexte: s.envoi ? t.envoi : t.envoyer,
+succes: s.succes ? t.succes : '',
+derniers: derniers, listeStyle: derniers.length ? '' : CACHE,
+listeVide: s.derniersErreur ? t.listeErreur : t.listeVide, listeVideStyle: vide ? '' : CACHE,
+saisirRetour: function (e) { self.setState({ retour: e.target.value, retourErreur: null, succes: false }); },
+envoyerRetour: function () {
+if (self.state.envoi) return;
+var texte = self.state.retour;
+var err = Retours.pur.valider(texte);
+if (err) { self.focusRetour = true; self.setState({ retourErreur: err, succes: false }); return; }
+self.setState({ envoi: true, retourErreur: null, succes: false });
+Retours.envoyerRetour(texte).then(function (r) {
+if (r.ok) { self.setState({ envoi: false, retour: '', succes: true }); self.chargerDerniers(); return; }
+self.focusRetour = true;
+self.setState({ envoi: false, retourErreur: r.erreur });
+});
+},
 deconnexion: function () { try { Auth.seDeconnecter(); } catch (e) {} window.location.href = '/'; }
 };
 }
