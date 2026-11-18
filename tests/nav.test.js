@@ -83,3 +83,11 @@ test('icône flamme pour la fournée du jour, même taille que les autres', () =
   const lien = html({}).split('<a href="/fournee"')[1].split('</a>')[0];
   assert.match(lien, /<svg width="18" height="18"[^>]*data-icone="flamme"[^>]*stroke-width="2"/);
 });
+
+test('bloc marque (logo, nom, accroche) centré dans la colonne, à gauche dans la barre mobile', () => {
+  const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'nav.js'), 'utf8');
+  assert.match(html({}), /<div class="pq-nav-marque"[^>]*>[\s\S]*pq-nav-nom[\s\S]*pq-nav-tagline/);
+  assert.match(src, /'\.pq-nav-tete\{[^}]*justify-content:center/);
+  assert.match(src, /'\.pq-nav-marque\{[^}]*align-items:center[^}]*text-align:center/);
+  assert.match(src, /@media \(max-width:899\.98px\)\{'[\s\S]*'\.pq-nav-tete\{justify-content:flex-start\}'[\s\S]*'\.pq-nav-marque\{align-items:flex-start;text-align:left\}'/);
+});
