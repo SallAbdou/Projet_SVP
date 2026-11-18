@@ -82,9 +82,9 @@ var CONTRASTE = { source: [.320, .055, PATINE], 'source-fonce': [.250, .045, PAT
 // Survols : même teinte, plus foncée. Contrastes vérifiés par tests/charte.test.js.
 var IMPOSEES = {
   'etiquette-fond': '#ABBF9B', 'etiquette-texte': '#2C1910',
-  'lire-fond': '#BD470C', 'lire-survol': '#9C3A0A', 'lire-texte': '#FFFFFF',
-  'petrir-btn-fond': '#B20206', 'petrir-btn-survol': '#8C0105', 'petrir-btn-texte': '#FFFFFF', 'petrir-btn-bord': '#B20206',
-  'petrir-pain': '#FFFFFF', 'petrir-grigne': '#B20206',
+  'lire-fond': '#A9642E', 'lire-survol': '#8A4F24', 'lire-texte': '#FFFFFF',
+  'petrir-btn-fond': '#F27016', 'petrir-btn-survol': '#E0650F', 'petrir-btn-texte': '#2C1910', 'petrir-btn-bord': '#F27016',
+  'petrir-pain': '#2C1910', 'petrir-grigne': '#F27016',
   'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
   'linkedin-fond': '#0A66C2', 'linkedin-survol': '#004182', 'linkedin-texte': '#FFFFFF', 'linkedin-bord': '#0A66C2'
 };
