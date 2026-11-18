@@ -189,6 +189,8 @@ Dans WF4, pour chaque abonné, avant le nœud Gemini :
 
 Remettre `mode: 'demo'` dans `config.js` (et vider les trois champs avant tout commit sur `main`), puis redéployer. Ouvrir `https://team42svp.vercel.app/?demo=reset` pour repartir d'une démo propre. Les deux modes ne partagent rien : la démo est dans `localStorage` sous `pq-auth` (et `pq-retours` pour les retours), le mode réel sous `pq-auth-reel` (les retours réels sont dans la table Supabase).
 
+Thème de couleur (« Mon profil », section « Apparence ») : dans les deux modes, il reste dans le navigateur, sous `pq-theme`, rangé par e-mail du compte (ou `abonne_id`). Plus tard, on pourra le ranger dans `user_metadata.theme` de Supabase pour le retrouver sur tous les appareils ; rien à faire pour l'instant.
+
 ## Ce qui n'a pas pu être testé
 
 Le front a été testé avec un `fetch` simulé et avec de fausses adresses (le site retombe proprement sur l'exemple et affiche des erreurs claires). **Le vrai Supabase et le vrai n8n n'ont pas été testés** : la première vraie mise en route se fera avec ce guide. C'est vrai aussi de la table `retours` : le SQL et les politiques suivent la documentation Supabase (Row Level Security) mais n'ont pas été exécutés sur un vrai projet.

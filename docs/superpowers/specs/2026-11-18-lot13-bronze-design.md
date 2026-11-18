@@ -106,3 +106,37 @@ Mise en œuvre :
 
 - Pages publiques (accueil, connexion, questionnaire…) : elles prennent la palette Bronze par les variables existantes mais ne proposent pas de choix de thème et leurs couleurs en dur ne sont pas migrées.
 - Synchronisation du thème entre appareils (mode réel) : plus tard via `user_metadata`.
+
+## Contrastes retenus (calculés par `Charte.contraste`, vérifiés par `tests/charte.test.js`)
+
+| Couple | bronze | classique | nuit | contraste |
+|---|---|---|---|---|
+| `texte` sur `fond` | #2A1710 / #F6EDE1 : 14.75 | #2E1D12 / #FBF5EA : 14.88 | #F5EADB / #16100C : 15.87 | #000000 / #FFFFFF : 21 |
+| `doux` sur `fond` | #67493A / #F6EDE1 : 6.99 | #6B5443 / #FBF5EA : 6.51 | #CDB7A0 / #16100C : 9.77 | #2B2B2B / #FFFFFF : 14.16 |
+| `doux` sur `creme` | #67493A / #FFFAF3 : 7.8 | #6B5443 / #FFFDF8 : 6.95 | #CDB7A0 / #211812 : 9.03 | #2B2B2B / #FFFFFF : 14.16 |
+| `brun` sur `creme` | #8A4A1F / #FFFAF3 : 6.57 | #8A4F1C / #FFFDF8 : 6.42 | #EAA866 / #211812 : 8.55 | #5C2600 / #FFFFFF : 12.12 |
+| `sur-titre` sur `fond` | #96461A / #F6EDE1 : 5.68 | #B23A0B / #FBF5EA : 5.52 | #F0A660 / #16100C : 9.28 | #7A2400 / #FFFFFF : 10.1 |
+| `braise` sur `fond` | #B83D0B / #F6EDE1 : 4.88 | #C2410C / #FBF5EA : 4.77 | #F2793A / #16100C : 6.8 | #9E2E08 / #FFFFFF : 7.37 |
+| `sur-plein` sur `braise` | #FFFAF3 / #B83D0B : 5.45 | #FFFDF8 / #C2410C : 5.09 | #1A100A / #F2793A : 6.75 | #FFFFFF / #9E2E08 : 7.37 |
+| `sur-plein` sur `source` | #FFFAF3 / #6E2A5E : 9.38 | #FFFDF8 / #6E2A5E : 9.58 | #1A100A / #DDA8CF : 9.42 | #FFFFFF / #4A1240 : 14.47 |
+| `etiquette-texte` sur `etiquette-fond` | #F6EBDA / #4B2E21 : 10.41 | #FFF6E3 / #5E3412 : 9.89 | #F6EBDA / #5A3826 : 8.78 | #FFFFFF / #000000 : 21 |
+| `sur-clair` sur `or-bas` | #2A1408 / #D49B55 : 7.17 | #2E1D12 / #E3A54A : 7.49 | #2A1408 / #D49B55 : 7.17 | #000000 / #D49B55 : 8.62 |
+| `pain-texte` sur `pain-bas` | #1E0E05 / #BA7230 : 4.94 | #1E0E05 / #BA7230 : 4.94 | #1E0E05 / #BA7230 : 4.94 | #1E0E05 / #BA7230 : 4.94 |
+| `pain-texte` sur `pain-grigne` | #1E0E05 / #F8DDA6 : 14.18 | #1E0E05 / #F8DDA6 : 14.18 | #1E0E05 / #F8DDA6 : 14.18 | #1E0E05 / #F8DDA6 : 14.18 |
+| `petrir-texte` sur `petrir-fond` | #7A3E00 / #FFE7B0 : 6.88 | #7A3E00 / #FFE7B0 : 6.88 | #7A3E00 / #FFE7B0 : 6.88 | #7A3E00 / #FFE7B0 : 6.88 |
+| `chaud-texte` sur `braise-vive` | #1F1208 / #F25C05 : 5.49 | #1F1208 / #F25C05 : 5.49 | #1F1208 / #F25C05 : 5.49 | #1F1208 / #F25C05 : 5.49 |
+| `rassis-texte` sur `rassis-fond` | #FFFFFF / #1C1714 : 17.77 | #FFFFFF / #1C1714 : 17.77 | #FFFFFF / #1C1714 : 17.77 | #FFFFFF / #1C1714 : 17.77 |
+| `focus` sur `fond` | #B83D0B / #F6EDE1 : 4.88 | #C2410C / #FBF5EA : 4.77 | #F2B36B / #16100C : 10.27 | #000000 / #FFFFFF : 21 |
+| `bord-champ` sur `champ` | #8A6A48 / #FFFFFF : 4.96 | #8A6A48 / #FFFFFF : 4.96 | #9C8166 / #120D0A : 5.28 | #000000 / #FFFFFF : 21 |
+| `pain-bas` sur `fond` | #BA7230 / #F6EDE1 : 3.27 | #BA7230 / #FBF5EA : 3.49 | #BA7230 / #16100C : 4.97 | #BA7230 / #FFFFFF : 3.79 |
+
+Seuils : 4,5:1 pour le texte, 3:1 pour `focus`, `bord-champ` et la silhouette du pain (`pain-bas` sur `fond`). Contraste élevé : texte courant au moins 7:1 (testé).
+
+## Décisions prises en cours de route
+
+- Bronze : braise assombrie à `#B83D0B` (au lieu de `#C2410C`) pour garder 4,5:1 sur le fond champagne, plus foncé que l'ancien crème.
+- Cuivre `#9E5A22` (Bronze) et `#9A5B23` (Classique) : l'ancien `#B87420` sous l'initiale de l'aperçu LinkedIn ne faisait que 3,7:1 avec le texte clair.
+- Encadrés sombres (« Tes choix d'aujourd'hui… », « Avant d'enfourner ») : variables `--panneau`, `--panneau-texte`, `--panneau-doux`, restées sombres en Nuit.
+- Le n°1 redéfinit localement ses variables de texte et de prune : il reste un bloc clair et doré dans tous les thèmes (testé).
+- Fond « miel » pour le sélecteur de langue de la nav (le gris `--trait` du Contraste élevé ne passait pas).
+- Ligne d'actions des petits blocs S sur deux lignes à 1180 px de large (quatre colonnes étroites) : déjà le cas avant ce lot (mesuré aussi sur la version d'avant), non corrigé ici.
