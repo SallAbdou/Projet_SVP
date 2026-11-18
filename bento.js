@@ -2,13 +2,15 @@
    Aucun accès au DOM, utilisable dans le navigateur (window.Bento) et sous Node (tests).
    L'utilisatrice arrange des emplacements : n1 reçoit la news la mieux notée du jour, n2 la suivante, etc. */
 (function (root) {
-  // Ordre par défaut choisi pour qu'avec 5 news la grille de 4 colonnes se remplisse sans trou.
-  var TILE_IDS = ['n1', 'n2', 'n3', 'graph', 'n4', 'n5', 'n6', 'n7'];
-  var DEFAULT_SIZES = { n1: 'L', n2: 'M', n3: 'M', graph: 'M', n4: 'S', n5: 'S', n6: 'S', n7: 'S' };
+  // Ordre et tailles par défaut : avec 5 news la grille de 4 colonnes se remplit sans trou, graphique
+  // masqué (par défaut) ou affiché (il est rangé en tête, en grand).
+  var TILE_IDS = ['graph', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7'];
+  var DEFAULT_SIZES = { graph: 'L', n1: 'L', n2: 'M', n3: 'M', n4: 'M', n5: 'M', n6: 'S', n7: 'S' };
   var SIZES = ['S', 'M', 'L'];
   var COUNTS = [1, 3, 5, 7];
   var DEFAULT_COUNT = 5;
-  var VERSION = 2;
+  // Version 3 : champ graphique (graphique « Tes derniers posts » affiché ou non). La version 2 est migrée.
+  var VERSION = 3;
   var STORAGE_KEY = 'pq-layout';
   var PERSO_KEY = 'pq-layout-perso';
 
@@ -18,6 +20,7 @@
     return {
       version: VERSION,
       newsCount: layout.newsCount,
+      graphique: layout.graphique === true,
       tiles: layout.tiles.map(function (t) { return { id: t.id, size: t.size }; })
     };
   }
@@ -26,12 +29,28 @@
     return {
       version: VERSION,
       newsCount: DEFAULT_COUNT,
+      graphique: false,
       tiles: TILE_IDS.map(function (id) { return { id: id, size: DEFAULT_SIZES[id] }; })
     };
   }
 
+  // Anciennes mises en page prédéfinies (version 2, graphique toujours affiché), repérées par
+  // « nombre de news : blocs affichés » et remplacées par la nouvelle mise en page de même nom.
+  var ANCIENS_V2 = {
+    '3:n1L n2S n3S graphM': 'concentree',
+    '5:n1L n2M n3M graphM n4S n5S': 'equilibree',
+    '7:n1M n2M n3M graphM n4S n5S n6S n7S': 'informative',
+    '3:graphL n1M n2S n3S': 'graphique'
+  };
+  function signatureV2(l) {
+    return l.newsCount + ':' + l.tiles.filter(function (t) {
+      var k = rankOf(t.id);
+      return k === null || k <= l.newsCount;
+    }).map(function (t) { return t.id + t.size; }).join(' ');
+  }
+
   function normalizeLayout(raw) {
-    if (!raw || typeof raw !== 'object' || raw.version !== VERSION || !Array.isArray(raw.tiles)) return defaultLayout();
+    if (!raw || typeof raw !== 'object' || (raw.version !== 2 && raw.version !== VERSION) || !Array.isArray(raw.tiles)) return defaultLayout();
     var seen = {};
     var tiles = [];
     raw.tiles.forEach(function (t) {
@@ -42,7 +61,9 @@
     TILE_IDS.forEach(function (id) {
       if (!seen[id]) tiles.push({ id: id, size: DEFAULT_SIZES[id] });
     });
-    return { version: VERSION, newsCount: has(COUNTS, raw.newsCount) ? raw.newsCount : DEFAULT_COUNT, tiles: tiles };
+    var l = { version: VERSION, newsCount: has(COUNTS, raw.newsCount) ? raw.newsCount : DEFAULT_COUNT, graphique: raw.version === VERSION && raw.graphique === true, tiles: tiles };
+    var ancien = raw.version === 2 ? ANCIENS_V2[signatureV2(l)] : null;
+    return ancien ? appliquerPreset(l, ancien) : l;
   }
 
   function rankOf(id) {
@@ -50,10 +71,10 @@
     return m ? Number(m[1]) : null;
   }
 
-  // graph est toujours affiché ; nK l'est si K <= nombre choisi et si la fournée a au moins K sujets.
+  // graph est affiché si la disposition le demande ; nK l'est si K <= nombre choisi et si la fournée a au moins K sujets.
   function isShown(layout, id, available) {
     var k = rankOf(id);
-    if (k === null) return true;
+    if (k === null) return layout.graphique === true;
     var max = available == null ? Infinity : available;
     return k <= layout.newsCount && k <= max;
   }
@@ -94,6 +115,12 @@
     return next;
   }
 
+  function basculerGraphique(layout) {
+    var next = copy(layout);
+    next.graphique = !next.graphique;
+    return next;
+  }
+
   function setNewsCount(layout, n) {
     var next = copy(layout);
     if (has(COUNTS, n)) next.newsCount = n;
@@ -101,20 +128,21 @@
   }
 
   /* Mises en page prédéfinies (panneau « Mise en page » du mode Personnaliser).
-     shown : emplacements affichés dans l'ordre ; les autres suivent dans l'ordre par défaut.
-     Chaque préréglage remplit la grille de 4 colonnes sans trou (vérifié par les tests). */
+     shown : premiers emplacements dans l'ordre ; les autres suivent dans l'ordre par défaut.
+     Chaque préréglage remplit la grille de 4 colonnes sans trou, et ceux qui masquent le graphique
+     restent sans trou quand on l'affiche (graphique L en tête), vérifié par les tests. */
   var PRESET_DEFS = [
-    { id: 'concentree', newsCount: 3, shown: [['n1', 'L'], ['n2', 'S'], ['n3', 'S'], ['graph', 'M']] },
-    { id: 'equilibree', newsCount: 5, shown: [['n1', 'L'], ['n2', 'M'], ['n3', 'M'], ['graph', 'M'], ['n4', 'S'], ['n5', 'S']] },
-    { id: 'informative', newsCount: 7, shown: [['n1', 'M'], ['n2', 'M'], ['n3', 'M'], ['graph', 'M'], ['n4', 'S'], ['n5', 'S'], ['n6', 'S'], ['n7', 'S']] },
-    { id: 'graphique', newsCount: 3, shown: [['graph', 'L'], ['n1', 'M'], ['n2', 'S'], ['n3', 'S']] }
+    { id: 'concentree', newsCount: 3, graphique: false, shown: [['graph', 'L'], ['n1', 'L'], ['n2', 'M'], ['n3', 'M']] },
+    { id: 'equilibree', newsCount: 5, graphique: false, shown: [['graph', 'L'], ['n1', 'L'], ['n2', 'M'], ['n3', 'M'], ['n4', 'M'], ['n5', 'M']] },
+    { id: 'informative', newsCount: 7, graphique: false, shown: [['graph', 'L'], ['n1', 'L'], ['n2', 'M'], ['n3', 'M'], ['n4', 'S'], ['n5', 'S'], ['n6', 'S'], ['n7', 'S']] },
+    { id: 'graphique', newsCount: 3, graphique: true, shown: [['graph', 'L'], ['n1', 'M'], ['n2', 'S'], ['n3', 'S']] }
   ];
   var PRESET_PERSO = 'personnalisee';
   var PRESETS = PRESET_DEFS.map(function (d) {
     var tiles = d.shown.map(function (s) { return { id: s[0], size: s[1] }; });
     var pris = d.shown.map(function (s) { return s[0]; });
     TILE_IDS.forEach(function (id) { if (!has(pris, id)) tiles.push({ id: id, size: DEFAULT_SIZES[id] }); });
-    return { id: d.id, newsCount: d.newsCount, tiles: tiles };
+    return { id: d.id, newsCount: d.newsCount, graphique: d.graphique, tiles: tiles };
   });
 
   function presetParId(id) {
@@ -124,11 +152,11 @@
 
   function appliquerPreset(layout, id) {
     var p = presetParId(id);
-    return copy(p ? { newsCount: p.newsCount, tiles: p.tiles } : layout);
+    return copy(p ? { newsCount: p.newsCount, graphique: p.graphique, tiles: p.tiles } : layout);
   }
 
   function memeDisposition(a, b) {
-    if (a.newsCount !== b.newsCount || a.tiles.length !== b.tiles.length) return false;
+    if (a.newsCount !== b.newsCount || (a.graphique === true) !== (b.graphique === true) || a.tiles.length !== b.tiles.length) return false;
     for (var i = 0; i < a.tiles.length; i++) {
       if (a.tiles[i].id !== b.tiles[i].id || a.tiles[i].size !== b.tiles[i].size) return false;
     }
@@ -196,7 +224,7 @@
   function loadPerso(storage) {
     try {
       var raw = JSON.parse(storage.getItem(PERSO_KEY));
-      return raw && raw.version === VERSION && Array.isArray(raw.tiles) ? normalizeLayout(raw) : null;
+      return raw && (raw.version === 2 || raw.version === VERSION) && Array.isArray(raw.tiles) ? normalizeLayout(raw) : null;
     } catch (e) {
       return null;
     }
@@ -259,6 +287,7 @@
 
   var Bento = {
     departGlisser: departGlisser, cibleAncre: cibleAncre,
+    VERSION: VERSION, basculerGraphique: basculerGraphique,
     TILE_IDS: TILE_IDS, SIZES: SIZES, COUNTS: COUNTS, STORAGE_KEY: STORAGE_KEY,
     defaultLayout: defaultLayout, normalizeLayout: normalizeLayout,
     moveTile: moveTile, stepTile: stepTile, setSize: setSize, rankOf: rankOf, isShown: isShown,

@@ -13,7 +13,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
 <style>
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(180px,auto);grid-auto-flow:dense;gap:16px}
-.tile{min-width:0;min-height:0;overflow:hidden;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.tile{container-type:inline-size;min-width:0;min-height:0;overflow:hidden;background:#FFFDF8;border:1px solid #E7D6B8;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
 .tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
 /* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
@@ -53,11 +53,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile-tools .tool-drag{font-size:14px}
 .tile-tools .tool-sizes{gap:2px}
 @media (pointer:coarse){.tile-tools{flex-wrap:wrap}.tile-tools .tool{min-height:44px;min-width:44px;height:auto;font-size:inherit}}
-.tile-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;padding-top:4px}
+.tile-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:auto;padding-top:4px}
+.etiquette-source:empty{display:none}
 .bento.editing .tile-actions{display:none}
-.act-knead{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;background:var(--braise);color:#FFFDF8;font-weight:700;font-size:14px;text-decoration:none}
-a.act-knead:hover{background:var(--braise-fonce);color:#FFFDF8}
-.act{position:relative;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.act{position:relative;flex:none;min-height:36px;min-width:36px;padding:0 12px;gap:6px;border-radius:999px;border:1.5px solid #D9C29C;background:#FFFDF8;color:#2E1D12;font:inherit;font-weight:700;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .act:hover{border-color:#8A4F1C}
 a.act{text-decoration:none}a.act:hover{color:#2E1D12}
 .act .ico-plein{display:none}
@@ -68,8 +67,12 @@ a.act{text-decoration:none}a.act:hover{color:#2E1D12}
 .tile[data-tile="n1"] .act[aria-pressed="true"]{background:#8A4F1C;color:#FFF6E3}
 .act[data-act="read"],.tile[data-tile="n1"] .tile-body a.act[data-act="read"]{background:var(--source);border-color:var(--source)!important;color:#FFFFFF}
 a.act[data-act="read"]:hover,.tile[data-tile="n1"] .tile-body a.act[data-act="read"]:hover{background:var(--source-fonce);border-color:var(--source-fonce)!important;color:#FFFFFF}
-@media (min-width:641px){.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0;gap:6px}}
-@media (min-width:641px){.tile-S .act{padding:0}.tile-S .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (min-width:641px){.tile-S .tile-body{gap:6px}.tile-S .tile-actions{padding-top:0}}
+/* Actions sur une ligne : Mettre de côté et Ignorer en icônes seules ; selon la largeur réelle du bloc,
+   Lire la source passe en icône (moins de 400 px) puis Pétrir un post devient Pétrir (moins de 280 px). */
+.act[data-act="save"],.act[data-act="skip"]{padding:0}
+@container (max-width:399.98px){.act[data-act="read"]{padding:0}.act[data-act="read"] .act-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@container (max-width:279.98px){.act-suite{display:none}.act-knead{padding:0 14px}}
 @media (pointer:coarse){.act{min-height:44px;min-width:44px}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -133,6 +136,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <button type="button" class="tool" data-count="5" data-act="count-5" onClick="{{setCount}}" aria-pressed="false">5</button>
 <button type="button" class="tool" data-count="7" data-act="count-7" onClick="{{setCount}}" aria-pressed="false">7</button>
 </div>
+<button type="button" class="tool" data-act="graph-toggle" aria-pressed="{{graphPressed}}" onClick="{{toggleGraph}}">{{graphLabel}}</button>
 <button type="button" class="tool" data-act="reset" onClick="{{resetLayout}}">{{t.reset}}</button>
 </div>
 <div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:#2E1D12">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--braise);color:#FFFFFF;font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
@@ -154,18 +158,16 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <div style="display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:12.5px;color:#4A3324">
 <span class="rank" title="{{s.rankHint}}">{{s.rank}}</span>
 <span class="{{s.chip}}">{{s.state}}</span>
-<span>{{s.source}}</span>
+<span class="etiquette-source">{{s.source}}</span>
 </div>
 <h2 id="tt-{{s.id}}" class="news-title">{{s.title}}</h2>
 <p class="only-M" style="margin:0;color:#5A4434;font-size:14px">{{s.summary}}</p>
-<p class="only-L pour-toi" style="margin:0;font-size:13.5px;color:#8A4F1C;font-weight:600"><svg class="ampoule" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v1.8M4.2 4.2l1.3 1.3M19.8 4.2l-1.3 1.3M1.5 11.5h1.8M20.7 11.5h1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M12 5a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 5z" fill="currentColor" stroke="#8A4F1C" stroke-width="1.2" stroke-linejoin="round"></path><path d="M9.6 20.6h4.8M10.6 22.8h2.8" stroke="#8A4F1C" stroke-width="1.6" stroke-linecap="round"></path></svg><span>{{s.forYou}}</span></p>
+<p class="only-L pour-toi" style="margin:0;font-size:13.5px"><svg class="ampoule" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v1.8M4.2 4.2l1.3 1.3M19.8 4.2l-1.3 1.3M1.5 11.5h1.8M20.7 11.5h1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M12 5a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 5z" fill="currentColor" stroke="#8A4F1C" stroke-width="1.2" stroke-linejoin="round"></path><path d="M9.6 20.6h4.8M10.6 22.8h2.8" stroke="#8A4F1C" stroke-width="1.6" stroke-linecap="round"></path></svg><span>{{s.forYou}}</span></p>
 <p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
-<p class="only-L" style="margin:0;font-size:12.5px;color:#6B5443">{{s.scoreLine}}</p>
-<strong style="font-family:Fraunces, Georgia, serif;font-size:17px">{{s.money}}</strong>
 <div class="tile-actions">
-<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="act-knead">{{s.knead}}</a>
-<button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="act-label">{{s.saveLabel}}</span></button>
-<button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="act-label">{{s.skipLabel}}</span></button>
+<a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
+<button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
+<button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="pq-sr">{{s.skipLabel}}</span></button>
 <a class="act" data-act="read" data-id="{{s.id}}" href="{{s.url}}" target="_blank" rel="noopener" aria-label="{{s.readLabel}}" title="{{s.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{s.read}}</span></a>
 </div>
 </div>
@@ -214,7 +216,7 @@ var T = {
 fr: {
 navLabel: 'Navigation principale',
 eyebrowTail: 'choisi pour toi par l’IA', title: 'La fournée du jour',
-subtitle: 'Les sujets tout juste sortis du four, du mieux noté au moins bien noté. Arrange ta page comme tu veux.',
+subtitle: 'Les sujets croustillants, tout juste sortis du four.',
 sample: 'Données d’exemple', customize: 'Personnaliser', done: 'Terminer',
 loading: 'Mise au four…', loadError: 'Impossible de charger la fournée. Recharge la page.', exemple: 'Fournée d’exemple : n8n ne répond pas',
 waiting: 'Encore quelques secondes : on choisit tes sujets du jour.', waitTitle: 'Ta fournée est au four, {prenom}', why: 'Pourquoi cette couleur :',
@@ -222,9 +224,9 @@ editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la
 countLabel: 'News affichées', reset: 'Disposition par défaut',
 mepTitre: 'Mise en page', toastMep: 'Mise en page « {nom} » appliquée', mepVide: 'Déplace ou redimensionne un bloc pour créer ta mise en page',
 mep: {
-concentree: ['Concentrée', '3 news, la n°1 en grand, et ton graphique'],
+concentree: ['Concentrée', '3 news, la n°1 en grand'],
 equilibree: ['Équilibrée', '5 news, la disposition par défaut'],
-informative: ['Informative', '7 news en blocs compacts, et ton graphique'],
+informative: ['Informative', '7 news, la n°1 en grand puis des blocs compacts'],
 graphique: ['Graphique en avant', 'Ton graphique en grand, puis 3 news'],
 personnalisee: ['Personnalisée', 'Ta disposition à toi : déplace ou redimensionne un bloc']
 },
@@ -233,8 +235,7 @@ states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
 rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
 toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille de {name}', drag: 'Glisser pour déplacer',
-money: 'Monétisation {m}/15', scoreLine: 'Durabilité {d}/5 · Propension {p}/5 · Lien offre {o}/5',
-knead: 'Pétrir un post', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
+knead: 'Pétrir', kneadSuite: ' un post', graphShow: 'Afficher le graphique', graphHide: 'Masquer le graphique', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
 undo: 'Annuler', toastSave: 'Mis de côté', toastUnsave: 'Retiré du garde-manger', toastSkip: 'Sujet ignoré', toastUndone: 'Action annulée',
 allDone: 'Tu as tout passé en revue pour aujourd’hui', bringBack: 'Tout faire revenir',
 graphTitle: 'Tes derniers posts', graphSub: 'impressions par post'
@@ -242,7 +243,7 @@ graphTitle: 'Tes derniers posts', graphSub: 'impressions par post'
 en: {
 navLabel: 'Main navigation',
 eyebrowTail: 'picked for you by AI', title: 'Today’s batch',
-subtitle: 'Topics fresh out of the oven, from best to least rated. Arrange your page the way you like.',
+subtitle: 'Crispy topics, fresh out of the oven.',
 sample: 'Sample data', customize: 'Customise', done: 'Done',
 loading: 'Baking…', loadError: 'Could not load the batch. Reload the page.', exemple: 'Sample batch: n8n is not responding',
 waiting: 'Just a few more seconds: we are picking today’s topics.', waitTitle: 'Your batch is in the oven, {prenom}', why: 'Why this colour:',
@@ -250,9 +251,9 @@ editHint: 'Each slot gets that day’s news of the same rank every morning (#1 =
 countLabel: 'News shown', reset: 'Default layout',
 mepTitre: 'Layout', toastMep: 'Layout “{nom}” applied', mepVide: 'Move or resize a block to create your own layout',
 mep: {
-concentree: ['Focused', '3 news, #1 large, plus your chart'],
+concentree: ['Focused', '3 news, #1 large'],
 equilibree: ['Balanced', '5 news, the default layout'],
-informative: ['Informative', '7 news in compact blocks, plus your chart'],
+informative: ['Informative', '7 news, #1 large then compact blocks'],
 graphique: ['Chart first', 'Your chart large, then 3 news'],
 personnalisee: ['Custom', 'Your own layout: move or resize a block']
 },
@@ -261,8 +262,7 @@ states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
 rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
-money: 'Monetisation {m}/15', scoreLine: 'Shelf life {d}/5 · Shareability {p}/5 · Offer fit {o}/5',
-knead: 'Knead a post', read: 'Read the source', save: 'Save for later', skip: 'Skip',
+knead: 'Knead', kneadSuite: ' a post', graphShow: 'Show the chart', graphHide: 'Hide the chart', read: 'Read the source', save: 'Save for later', skip: 'Skip',
 undo: 'Undo', toastSave: 'Saved for later', toastUnsave: 'Removed from the pantry', toastSkip: 'Topic skipped', toastUndone: 'Undone',
 allDone: 'You have gone through everything for today', bringBack: 'Bring everything back',
 graphTitle: 'Your latest posts', graphSub: 'impressions per post'
@@ -474,6 +474,9 @@ tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layo
 tileSize: function (e) { var id = idOf(e), s = e.currentTarget.getAttribute('data-size'); self.updateLayout(Bento.setSize(layout, id, s), { id: id, act: 'size-' + s }); },
 setCount: function (e) { var n = Number(e.currentTarget.getAttribute('data-count')); self.updateLayout(Bento.setNewsCount(layout, n), { act: 'count-' + n }); },
 resetLayout: function () { self.choisirMep('equilibree', 'reset'); },
+toggleGraph: function () { self.updateLayout(Bento.basculerGraphique(layout), { act: 'graph-toggle' }); },
+graphPressed: String(layout.graphique === true),
+graphLabel: layout.graphique === true ? t.graphHide : t.graphShow,
 choisirMep: function (e) { self.choisirMep(e.currentTarget.getAttribute('data-mep')); },
 // Groupe de boutons radio : les flèches cochent la carte voisine (en boucle), Début et Fin les extrémités.
 clavierMep: function (e) {
@@ -514,15 +517,13 @@ var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, scoreLine: '', money: '', url: '#',
-knead: t.knead, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
+chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, url: '#',
+knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
 };
 if (c) {
 var etat = FEU[c.feu];
 s.chip = CHIP(etat); s.state = t.states[etat]; s.source = c.source;
 s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
-s.scoreLine = fill(t.scoreLine, { d: c.durabilite, p: c.propension, o: c.lienOffre });
-s.money = fill(t.money, { m: Bento.totalScore(c) });
 s.url = Bento.safeUrl(c.url);
 s.readLabel = fill(t.readFull, { titre: c.titre });
 s.kneadHref = Bento.lienFournil(c.ref);
@@ -534,7 +535,7 @@ g: toolLabels(t, t.graphName),
 bars: barres.map(function (b) {
 return {
 value: num(b.impressions), label: b.label,
-barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; border-radius: 10px 10px 3px 3px'
+barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; box-shadow: ' + (Charte.contourBarre(b.feu) || 'none') + '; border-radius: 10px 10px 3px 3px'
 };
 })
 };

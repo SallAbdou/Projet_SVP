@@ -3,32 +3,37 @@ const assert = require('node:assert/strict');
 const B = require('../bento.js');
 
 const ids = l => l.tiles.map(t => t.id);
-const withOrder = (order, newsCount) => B.normalizeLayout({ version: 2, newsCount, tiles: order.map(id => ({ id, size: 'S' })) });
+const withOrder = (order, newsCount) => B.normalizeLayout({ version: 3, graphique: true, newsCount, tiles: order.map(id => ({ id, size: 'S' })) });
 
-test('disposition par défaut en emplacements', () => {
+test('disposition par défaut en emplacements, graphique masqué', () => {
   const l = B.defaultLayout();
-  assert.equal(l.version, 2);
+  assert.equal(B.VERSION, 3);
+  assert.equal(l.version, 3);
   assert.equal(l.newsCount, 5);
-  assert.deepEqual(ids(l), ['n1', 'n2', 'n3', 'graph', 'n4', 'n5', 'n6', 'n7']);
-  assert.deepEqual(l.tiles.map(t => t.size), ['L', 'M', 'M', 'M', 'S', 'S', 'S', 'S']);
+  assert.equal(l.graphique, false);
+  assert.deepEqual(ids(l), ['graph', 'n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7']);
+  assert.deepEqual(l.tiles.map(t => t.size), ['L', 'L', 'M', 'M', 'M', 'M', 'S', 'S']);
   assert.ok(l.tiles.every(t => Object.keys(t).join() === 'id,size'));
 });
 
 test('normalizeLayout répare une disposition abîmée', () => {
-  const l = B.normalizeLayout({ version: 2, newsCount: 4, tiles: [
+  const l = B.normalizeLayout({ version: 3, newsCount: 4, tiles: [
     { id: 'graph', size: 'XL' },
     { id: 'inconnue', size: 'S' },
     { id: 'graph', size: 'S' },
     { id: 'n7', size: 'L', visible: false }
   ] });
-  assert.deepEqual(l.tiles.slice(0, 2), [{ id: 'graph', size: 'M' }, { id: 'n7', size: 'L' }]);
+  assert.deepEqual(l.tiles.slice(0, 2), [{ id: 'graph', size: 'L' }, { id: 'n7', size: 'L' }]);
   assert.deepEqual(ids(l).slice(2), ['n1', 'n2', 'n3', 'n4', 'n5', 'n6']);
   assert.equal(l.newsCount, 5);
+  assert.equal(l.graphique, false);
+  assert.equal(B.normalizeLayout({ version: 3, graphique: 'oui', tiles: [] }).graphique, false);
+  assert.equal(B.normalizeLayout({ version: 3, graphique: true, tiles: [] }).graphique, true);
 });
 
 test('normalizeLayout rejette les entrées non exploitables, dont la version 1', () => {
   const v1 = { version: 1, newsCount: 3, tiles: [{ id: 'news', size: 'L', visible: true }] };
-  for (const raw of [null, 'x', 42, v1, { version: 2 }, { version: 3, tiles: [] }]) {
+  for (const raw of [null, 'x', 42, v1, { version: 2 }, { version: 3 }, { version: 4, tiles: [] }]) {
     assert.deepEqual(B.normalizeLayout(raw), B.defaultLayout());
   }
 });
@@ -39,40 +44,54 @@ test('rankOf', () => {
   assert.equal(B.rankOf('graph'), null);
 });
 
-test('isShown selon le nombre choisi et les sujets disponibles', () => {
+test('isShown selon le nombre choisi, les sujets disponibles et le graphique', () => {
   const l = B.setNewsCount(B.defaultLayout(), 3);
   assert.equal(B.isShown(l, 'n3'), true);
   assert.equal(B.isShown(l, 'n4'), false);
-  assert.equal(B.isShown(l, 'graph'), true);
+  assert.equal(B.isShown(l, 'graph'), false);
   assert.equal(B.isShown(l, 'n3', 2), false);
-  assert.equal(B.isShown(l, 'graph', 0), true);
+  const g = B.basculerGraphique(l);
+  assert.equal(B.isShown(g, 'graph'), true);
+  assert.equal(B.isShown(g, 'graph', 0), true);
 });
 
-test('stepTile saute les emplacements cachés', () => {
-  const l = B.setNewsCount(B.defaultLayout(), 3);
-  assert.deepEqual(ids(B.stepTile(l, 'graph', -1)).slice(0, 4), ['n1', 'n2', 'graph', 'n3']);
-  assert.deepEqual(ids(B.stepTile(l, 'n3', 1)).slice(0, 4), ['n1', 'n2', 'graph', 'n3']);
+test('basculerGraphique inverse le champ sans muter l’entrée', () => {
+  const l = B.defaultLayout();
+  const g = B.basculerGraphique(l);
+  assert.equal(g.graphique, true);
+  assert.equal(l.graphique, false);
+  assert.deepEqual(B.basculerGraphique(g), l);
+  assert.deepEqual(B.normalizeLayout(JSON.parse(JSON.stringify(g))), g);
+});
+
+test('stepTile saute les emplacements cachés, graphique compris', () => {
+  const l = B.basculerGraphique(B.setNewsCount(B.defaultLayout(), 3));
+  assert.deepEqual(ids(B.stepTile(l, 'graph', 1)).slice(0, 4), ['n1', 'graph', 'n2', 'n3']);
+  assert.deepEqual(ids(B.stepTile(l, 'n1', -1)).slice(0, 4), ['n1', 'graph', 'n2', 'n3']);
   const gap = withOrder(['n1', 'n4', 'n5', 'n2', 'n3', 'graph', 'n6', 'n7'], 3);
   const down = ids(B.stepTile(gap, 'n1', 1));
   assert.ok(down.indexOf('n2') < down.indexOf('n1'));
   assert.equal(down.indexOf('n1'), down.indexOf('n2') + 1);
   const up = ids(B.stepTile(gap, 'n2', -1));
   assert.equal(up.indexOf('n2'), up.indexOf('n1') - 1);
-  assert.deepEqual(B.stepTile(l, 'n1', -1), l);
-  assert.deepEqual(B.stepTile(l, 'graph', 1), l, 'graph est le dernier affiché avec 3 news');
-  const few = ids(B.stepTile(B.defaultLayout(), 'graph', -1, 2));
-  assert.deepEqual(few.slice(0, 3), ['n1', 'graph', 'n2'], 'n3 caché faute de sujet');
+  assert.deepEqual(B.stepTile(l, 'graph', -1), l);
+  assert.deepEqual(B.stepTile(l, 'n3', 1), l, 'n3 est le dernier affiché avec 3 news');
+  const masque = B.setNewsCount(B.defaultLayout(), 3);
+  assert.deepEqual(B.stepTile(masque, 'n1', -1), masque, 'le graphique masqué est sauté');
+  const fin = B.moveTile(B.basculerGraphique(B.defaultLayout()), 'graph', 3);
+  assert.deepEqual(ids(B.stepTile(fin, 'graph', -1, 2)).slice(0, 3), ['n1', 'graph', 'n2'], 'n3 caché faute de sujet');
 });
 
 test('moveTile, setSize, setNewsCount sans muter l’entrée', () => {
   const l = B.defaultLayout();
-  assert.deepEqual(ids(B.moveTile(l, 'graph', 0)).slice(0, 2), ['graph', 'n1']);
+  assert.deepEqual(ids(B.moveTile(l, 'n1', 0)).slice(0, 2), ['n1', 'graph']);
   assert.equal(ids(B.moveTile(l, 'n1', 99)).at(-1), 'n1');
   assert.equal(B.setSize(l, 'n4', 'L').tiles[4].size, 'L');
   assert.deepEqual(B.setSize(l, 'n4', 'XXL'), l);
   assert.equal(B.setNewsCount(l, 7).newsCount, 7);
   assert.equal(B.setNewsCount(l, 4).newsCount, 5);
-  assert.equal(l.tiles[0].id, 'n1');
+  assert.equal(B.setSize(B.basculerGraphique(l), 'n4', 'S').graphique, true);
+  assert.equal(l.tiles[0].id, 'graph');
 });
 
 test('load et save avec un stockage normal', () => {

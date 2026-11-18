@@ -72,3 +72,14 @@ test('liens, langue et déconnexion dans le panneau, prénom dans la barre', () 
   for (const x of ['href="/comptoir"', 'data-lang="en"', 'data-logout']) assert.ok(panneau.includes(x), x);
   assert.ok(/class="pq-nav-prenom"[^>]*>Sam</.test(barre));
 });
+
+test('accroche sous le logo : « L’actu IA, pétrie pour toi. »', () => {
+  assert.ok(html({}).includes('>L’actu IA, pétrie pour toi.<'));
+  assert.ok(html({ lang: 'en' }).includes('>AI news, kneaded for you.<'));
+  assert.ok(!html({}).includes('On pétrit'));
+});
+
+test('icône flamme pour la fournée du jour, même taille que les autres', () => {
+  const lien = html({}).split('<a href="/fournee"')[1].split('</a>')[0];
+  assert.match(lien, /<svg width="18" height="18"[^>]*data-icone="flamme"[^>]*stroke-width="2"/);
+});

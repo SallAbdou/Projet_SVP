@@ -135,7 +135,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid #F0E3CC">
 <div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;overflow-wrap:anywhere">{{p.titre}}</span><span style="font-size:12px;color:#6B5443">{{p.meta}}</span></div>
 <span class="{{p.chip}}">{{p.state}}</span>
-<a href="{{p.href}}" class="btn-ligne" aria-label="{{p.kneadLabel}}">{{t.knead}}</a>
+<a href="{{p.href}}" class="btn-petrir" aria-label="{{p.kneadLabel}}">{{t.knead}}</a>
 </div>
 </sc-for>
 <div style="{{pantryEmptyStyle}}">
@@ -275,7 +275,7 @@ bars: barres.map(function (b) {
 return {
 value: num(b.impressions), label: b.label,
 aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.feu] }),
-barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; border-radius: 14px 14px 4px 4px'
+barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; box-shadow: ' + (Charte.contourBarre(b.feu) || 'none') + '; border-radius: 14px 14px 4px 4px'
 };
 }),
 ins: !charge ? { avant: t.loading, gras: '', apres: '' } : Comptoir.phraseAnalyse(ratio, lang) || { avant: t.insightNeutral, gras: '', apres: '' },
