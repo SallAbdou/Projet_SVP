@@ -45,12 +45,12 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
 <header style="display:flex;flex-direction:column;gap:6px;max-width:780px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{t.eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em"><span style="display:block">{{t.titre1}}</span><span style="display:block">{{t.titre2}}</span></h1>
 <p style="margin:0;color:#6B5443;font-size:16px">{{t.subtitle}}</p>
 </header>
 <p role="status" style="{{chargementStyle}}">{{t.chargement}}</p>
 <section aria-labelledby="choix-t" style="{{choixStyle}}">
-<h2 id="choix-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.choixTitre}}</h2>
+<h2 id="choix-t" class="pq-sr">{{t.choixTitre}}</h2>
 <p style="{{introuvableStyle}}">{{t.introuvable}}</p>
 <h3 style="{{jourTitreStyle}}">{{t.choixJour}}</h3>
 <div style="{{jourStyle}}">
@@ -58,7 +58,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-choix">
 <span class="{{c.chip}}">{{c.etat}}</span>
 <div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:#6B5443">{{c.source}}</span></div>
-<a href="{{c.href}}" class="fo-btn fo-btn-plein" aria-label="{{c.label}}">{{t.petrir}}</a>
+<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}">{{t.petrir}}</a>
 </div>
 </sc-for>
 </div>
@@ -68,7 +68,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-choix">
 <span class="{{c.chip}}">{{c.etat}}</span>
 <div style="flex:999 1 260px;min-width:0;display:flex;flex-direction:column"><span style="font-family:Fraunces, Georgia, serif;font-weight:700;font-size:17px;overflow-wrap:anywhere">{{c.titre}}</span><span style="font-size:13px;color:#6B5443">{{c.source}}</span></div>
-<a href="{{c.href}}" class="fo-btn fo-btn-plein" aria-label="{{c.label}}">{{t.petrir}}</a>
+<a href="{{c.href}}" class="btn-petrir" aria-label="{{c.label}}">{{t.petrir}}</a>
 </div>
 </sc-for>
 </div>
@@ -192,8 +192,8 @@ var CHAMP_MAJ = { impressions: 'Impressions', reactions: 'Reactions', republicat
 var T = {
 fr: {
 navLabel: 'Navigation principale',
-eyebrow: 'Studio LinkedIn', title: 'Le fournil · l’IA pétrit, tu enfournes',
-subtitle: 'Un premier jet rédigé à partir du sujet choisi. Tu ajustes, tu copies, tu publies.',
+eyebrow: 'Studio LinkedIn', titre1: 'Le fournil', titre2: 'L’IA pétrit, tu enfournes',
+subtitle: 'Ton post déjà rédigé, à partir du sujet que tu as choisi. Tu ajustes, tu copies, tu publies.',
 chargement: 'Le fournil chauffe…',
 choixTitre: 'Sur quel sujet veux-tu écrire ?', introuvable: 'Ce sujet n’est plus disponible. Choisis-en un autre.',
 choixJour: 'Les news du jour', choixCotes: 'Mis de côté', choixVide: 'Aucun sujet pour l’instant : commence par la fournée du jour.', allerFournee: 'Aller à la fournée du jour',
@@ -223,8 +223,8 @@ apiNote: 'En V1, la saisie est manuelle. La lecture automatique des statistiques
 },
 en: {
 navLabel: 'Main navigation',
-eyebrow: 'LinkedIn studio', title: 'The kitchen · AI kneads, you bake',
-subtitle: 'A first draft written from the topic you picked. You adjust, copy and post.',
+eyebrow: 'LinkedIn studio', titre1: 'The kitchen', titre2: 'AI kneads, you bake',
+subtitle: 'Your post already written, from the topic you picked. You adjust, copy and post.',
 chargement: 'Warming up the oven…',
 choixTitre: 'What do you want to write about?', introuvable: 'This topic is no longer available. Pick another one.',
 choixJour: 'Today’s news', choixCotes: 'Saved', choixVide: 'No topic yet: start with today’s batch.', allerFournee: 'Go to today’s batch',
@@ -421,7 +421,7 @@ if (st.sujet) {
 var a = st.sujet.article;
 var feu = CHIP[a.feu] ? a.feu : 'rouge';
 sujet = { chip: CHIP[feu], etat: t.feux[feu], titre: a.titre || '', source: a.source || '', pourToi: a.pourToi || '',
-pourToiStyle: a.pourToi ? 'font-size: 14px; color: #4A3324; font-weight: 600' : HIDE };
+pourToiStyle: a.pourToi ? 'font-size: 14px' : HIDE };
 }
 var c = Fournil.checklist(st.texte, st.langue);
 var ap = Fournil.apercu(st.texte);
