@@ -82,3 +82,12 @@ test('fournee.html : jauges de monétisation accessibles à la place de la ligne
   assert.match(h, /jauges: \{ durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' \}/);
   assert.match(h, /jauges: \{ durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' \}/);
 });
+
+test('fournee.html : mode sans défilement réservé aux grilles de 3 rangées, sans couper le contenu', () => {
+  const h = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'fournee.html'), 'utf8');
+  assert.match(h, /<main class="\{\{mainClass\}\}"/);
+  assert.match(h, /mainClass: ready && !st\.editing && available > 0 && Bento\.rangees\(layout, available, 4\) <= 3 \? 'fournee-tient' : ''/);
+  assert.match(h, /@media \(min-width:1101px\) and \(min-height:700px\)\{\r?\nmain\.fournee-tient\{min-height:100vh/);
+  assert.match(h, /main\.fournee-tient \.bento\{[^}]*grid-auto-rows:minmax\(min-content,1fr\)/);
+  assert.match(h, /main\.fournee-tient \.news-title[^{]*\{[^}]*-webkit-line-clamp:2/);
+});
