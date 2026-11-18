@@ -103,10 +103,14 @@ test('chaque page charge /charte.css avant toute autre feuille de style', () => 
 test('ampoule « éclair de génie » : couleur et classes dans la charte, décorative devant chaque Pour toi', () => {
   assert.match(css, /--eclair:\s*#[0-9A-Fa-f]{6}/);
   assert.match(css, /\.pour-toi\{/);
-  assert.match(css, /\.ampoule\{[^}]*width:20px[^}]*var\(--croute\)/);
+  assert.match(css, /\.ampoule\{[^}]*width:26px;height:26px[^}]*var\(--croute\)/);
+  assert.match(css, /\.pour-toi\{[^}]*font-size:17px/);
   assert.match(css, /\.pour-toi>span\{[^}]*var\(--brun-fonce\)[^}]*font-weight:600/);
   for (const p of ['fournee.html', 'fournil.html']) {
     const h = fs.readFileSync(path.join(RACINE, p), 'utf8');
     assert.match(h, /<svg class="ampoule"[^>]*aria-hidden="true"[^>]*focusable="false"/, p);
+    // La charte décide de la taille : aucune taille en ligne sur la ligne « Pour toi ».
+    assert.doesNotMatch(h, /class="[^"]*pour-toi"[^>]*font-size/, p);
+    assert.doesNotMatch(h, /pourToiStyle: a\.pourToi \? 'font-size/, p);
   }
 });

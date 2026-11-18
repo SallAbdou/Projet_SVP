@@ -421,7 +421,7 @@ if (st.sujet) {
 var a = st.sujet.article;
 var feu = CHIP[a.feu] ? a.feu : 'rouge';
 sujet = { chip: CHIP[feu], etat: t.feux[feu], titre: a.titre || '', source: a.source || '', pourToi: a.pourToi || '',
-pourToiStyle: a.pourToi ? 'font-size: 14px' : HIDE };
+pourToiStyle: a.pourToi ? '' : HIDE };
 }
 var c = Fournil.checklist(st.texte, st.langue);
 var ap = Fournil.apercu(st.texte);

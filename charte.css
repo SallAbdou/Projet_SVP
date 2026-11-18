@@ -32,10 +32,10 @@
 .puce-rassis{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
 
 /* Ampoule « éclair de génie » devant « Pour toi » (SVG décoratif, plein, jaune croûte), alignée sur la première ligne. */
-.pour-toi{display:flex;align-items:flex-start;gap:8px}
+.pour-toi{display:flex;align-items:flex-start;gap:8px;font-size:17px;line-height:1.4}
 .pour-toi:has(> span:empty){display:none}
 .pour-toi>span{color:var(--brun-fonce);font-weight:600}
-.ampoule{flex:none;width:20px;height:20px;color:var(--croute)}
+.ampoule{flex:none;width:26px;height:26px;margin-top:-1px;color:var(--croute)}
 
 /* Bouton « Pétrir » : un seul style plein braise sur tout le site. */
 .btn-petrir{display:inline-flex;align-items:center;justify-content:center;flex:none;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:var(--braise);color:#FFFDF8;font:inherit;font-weight:700;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer}
