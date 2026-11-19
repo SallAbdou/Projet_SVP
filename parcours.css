@@ -31,6 +31,8 @@ p{margin:0}
 .sur-titre{font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)}
 .titre{font-size:34px;font-weight:800}
 .chapo{color:var(--doux);font-size:17px}
+/* Groupe de mots qui passe à la ligne d'un seul tenant (et se replie seul s'il dépasse la ligne). */
+.groupe{display:inline-block}
 .liens-bas{display:flex;flex-wrap:wrap;gap:4px 18px;justify-content:space-between;align-items:center}
 .liens-bas a,.lien{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
 
