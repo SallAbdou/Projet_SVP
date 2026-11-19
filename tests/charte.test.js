@@ -301,6 +301,17 @@ test('texte masqué visuellement et étiquette de source dans la charte', () => 
   assert.match(css, /\.etiquette-source\{[^}]*var\(--etiquette-fond\)[^}]*var\(--etiquette-texte\)/);
 });
 
+test('étiquette de source : même forme que les puces d’état (lot 20)', () => {
+  const regle = sel => { const i = css.indexOf('\n' + sel + '{'); assert.ok(i >= 0, sel); const d = i + sel.length + 2; return css.slice(d, css.indexOf('}', d)); };
+  const prop = (r, p) => { const m = r.match(new RegExp('(^|;)' + p + ':([^;]+)')); return m && m[2]; };
+  const puce = regle('.puce'), etq = regle('.etiquette-source');
+  for (const p of ['font-size', 'font-weight', 'line-height', 'padding', 'border-radius', 'white-space']) {
+    assert.equal(prop(etq, p), prop(puce, p), p);
+  }
+  assert.match(etq, /background:var\(--etiquette-fond\)/);
+  assert.match(etq, /color:var\(--etiquette-texte\)/);
+});
+
 test('animation Tout chaud coupée sous prefers-reduced-motion', () => {
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.puce-chaud/);
 });

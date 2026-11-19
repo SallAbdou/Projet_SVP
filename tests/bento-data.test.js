@@ -91,3 +91,14 @@ test('fournee.html : mode sans défilement réservé aux grilles de 3 rangées, 
   assert.match(h, /main\.fournee-tient \.bento\{[^}]*grid-auto-rows:minmax\(min-content,1fr\)/);
   assert.match(h, /main\.fournee-tient \.news-title[^{]*\{[^}]*-webkit-line-clamp:2/);
 });
+
+test('fournee.html : le résumé s’affiche en entier, jamais tronqué (lot 20)', () => {
+  const h = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'fournee.html'), 'utf8');
+  const style = h.split('<style').slice(1).map(b => b.slice(0, b.indexOf('</style>'))).join(' ');
+  // Aucune règle ne pose de line-clamp ni d'ellipse sur .resume.
+  const regles = style.match(/[^{}]+\{[^{}]*\}/g) || [];
+  regles.filter(r => /\.resume\b/.test(r.split('{')[0])).forEach(r => {
+    assert.doesNotMatch(r, /line-clamp|text-overflow|overflow:hidden/, r.trim());
+  });
+  assert.match(style, /\.news-title[^{]*\{[^}]*-webkit-line-clamp:2/);
+});
