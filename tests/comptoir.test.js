@@ -114,14 +114,14 @@ test('bilan additionne tout l historique', () => {
 
 test('phraseAnalyse FR : appel à l’action, gras, sans ratio', () => {
   assert.deepEqual(C.phraseAnalyse(true, 'fr'), {
-    avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud',
+    avant: 'Sers-les vite : tes posts sur des sujets ', gras: 'tout chaud',
     apres: ' font plus d’audience que les autres.'
   });
 });
 
 test('phraseAnalyse EN, et null si les sujets chauds ne gagnent pas', () => {
   assert.deepEqual(C.phraseAnalyse(true, 'en'), {
-    avant: 'Serve them fast! Your posts on ', gras: 'piping hot',
+    avant: 'Serve them fast: your posts on ', gras: 'piping hot',
     apres: ' topics get more reach than the others.'
   });
   for (const v of [false, null, undefined, 1.8]) assert.equal(C.phraseAnalyse(v, 'fr'), null, String(v));

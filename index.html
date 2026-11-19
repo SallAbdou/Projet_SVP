@@ -3,7 +3,7 @@
 <title>Votre pAIn quotidien · l'actu IA qui compte pour ton métier</title>
 <meta name="pq-titre-en" content="Votre pAIn quotidien · the AI news that matters for your job">
 <meta name="description" content="Chaque matin, l'actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <link rel="stylesheet" href="/parcours.css">
 </head><body><div id="root"></div>
@@ -24,12 +24,12 @@
 <figure style="margin:0;display:flex;flex-direction:column;gap:10px">
 <div class="mini-bento" role="img" aria-label="{{t.apercuLabel}}">
 <div class="mini-tuile or"><span class="mini-rang">{{t.n1}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span><span class="mini-titre">{{t.exemple1}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
-<div class="mini-tuile large"><span class="mini-rang">{{t.n2}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="mini-ligne"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="mini-ligne"></span></div>
-<div class="mini-tuile large"><span class="mini-rang">{{t.n5}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n6}}</span><span class="mini-ligne"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n7}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">{{t.n2}}</span><span class="mini-texte">{{t.titre2}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="mini-texte">{{t.titre3}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="mini-texte">{{t.titre4}}</span></div>
+<div class="mini-tuile large"><span class="mini-rang">{{t.n5}}</span><span class="mini-texte">{{t.titre5}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n6}}</span><span class="mini-texte">{{t.titre6}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n7}}</span><span class="mini-texte">{{t.titre7}}</span></div>
 </div>
 <figcaption style="font-size:14px;color:var(--doux)">{{t.apercuLegende}}</figcaption>
 </figure>
@@ -73,6 +73,8 @@ cta: 'Goûter ma fournée', ctaConnecte: 'Voir ma fournée du jour', dejaCompte:
 apercuLabel: 'Aperçu de la fournée du jour : la news n°1 en grand, en doré, puis les 6 suivantes',
 apercuLegende: 'Ta fournée du jour : la news la mieux notée en doré, les suivantes autour.',
 n1: 'n°1', chaud: 'Tout chaud', n2: 'n°2', n3: 'n°3', n4: 'n°4', n5: 'n°5', n6: 'n°6', n7: 'n°7', exemple1: 'Les agents IA entrent dans les PME',
+// Titres n°2 à n°7 repris de la fournée de démo (data/fournee.json).
+titre2: 'Comment les PME mesurent le retour sur investissement de l’IA', titre3: 'Un modèle open source rivalise avec les leaders du marché', titre4: 'Un modèle OCR lit les factures et contrats scannés', titre5: 'Les assistants de code arrivent dans les outils no-code', titre6: 'Les marchés réagissent aux résultats d’un grand fabricant de puces', titre7: 'Le RGPD face aux modèles de langage',
 commentTitre: 'Comment ça marche',
 etapes: [
 ['On collecte', 'Toutes les 3 heures, on ramasse l’actu IA dans des dizaines de sources fiables.'],
@@ -92,6 +94,7 @@ cta: 'Taste my batch', ctaConnecte: 'See today’s batch', dejaCompte: 'I alread
 apercuLabel: 'Preview of today’s batch: news number 1 large and golden, then the 6 next ones',
 apercuLegende: 'Your daily batch: the best rated news in gold, the next ones around it.',
 n1: '#1', chaud: 'Piping hot', n2: '#2', n3: '#3', n4: '#4', n5: '#5', n6: '#6', n7: '#7', exemple1: 'AI agents are moving into small businesses',
+titre2: 'How small businesses measure the return on AI', titre3: 'An open source model rivals the market leaders', titre4: 'An OCR model reads scanned invoices and contracts', titre5: 'Coding assistants arrive in no-code tools', titre6: 'Markets react to a major chipmaker’s results', titre7: 'GDPR meets language models',
 commentTitre: 'How it works',
 etapes: [
 ['We gather', 'Every 3 hours, we collect AI news from dozens of reliable sources.'],
