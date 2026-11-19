@@ -91,8 +91,6 @@ Go through every group and note each sign you find with where it lives. Each lin
 
 ## Right to left
 
-The fixes are explained in [rtl.md](rtl.md).
-
 - Arabic or Hebrew text aligned left, or a page without `dir="rtl"` and `lang` → set both on the root and align to the start
 - The sidebar, logo and back arrow still on the left of an Arabic screen → mirror the layout with logical properties
 - `ml-*`, `mr-*`, `left-*` and `text-left` in an RTL screen → `ms-*`, `me-*`, `start-*` and `text-start`
