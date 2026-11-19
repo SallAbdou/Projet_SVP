@@ -30,7 +30,7 @@
 <section class="carte" aria-labelledby="invit-t" style="text-align:center;align-items:center">
 <p class="sur-titre">{{t.eyebrow}}</p>
 <h1 id="invit-t" class="titre">{{t.titre}}</h1>
-<p class="chapo">{{t.chapo}}</p>
+<p class="chapo">{{t.chapoDebut}} <span class="groupe">{{t.chapoListe}}</span></p>
 <a class="bouton" href="{{ctaHref}}" data-focus="cta">{{t.cta}}</a>
 <div class="liens-bas" style="width:100%">
 <a href="/">{{t.retour}}</a>
@@ -45,12 +45,12 @@
 var T = {
 fr: {
 exemple1: 'Les agents IA entrent dans les PME', eyebrow: 'Ta fournée du jour',
-titre: 'Ta fournée t’attend.', chapo: '2 minutes pour la régler à ton goût : ton métier, tes thèmes, ton niveau.',
+titre: 'Ta fournée t’attend.', chapoDebut: '2 minutes pour la régler à ton goût :', chapoListe: 'ton métier, tes thèmes, ton niveau.',
 cta: 'Régler ma fournée', retour: '← Retour à l’accueil', dejaCompte: 'J’ai déjà un compte'
 },
 en: {
 exemple1: 'AI agents are moving into small businesses', eyebrow: 'Your daily batch',
-titre: 'Your batch is waiting.', chapo: '2 minutes to make it just the way you like: your job, your topics, your level.',
+titre: 'Your batch is waiting.', chapoDebut: '2 minutes to make it just the way you like:', chapoListe: 'your job, your topics, your level.',
 cta: 'Set up my batch', retour: '← Back to home', dejaCompte: 'I already have an account'
 }
 };
