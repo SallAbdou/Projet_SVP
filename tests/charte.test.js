@@ -301,8 +301,20 @@ test('texte masqué visuellement et étiquette de source dans la charte', () => 
   assert.match(css, /\.etiquette-source\{[^}]*var\(--etiquette-fond\)[^}]*var\(--etiquette-texte\)/);
 });
 
-test('animation Tout chaud coupée sous prefers-reduced-motion', () => {
-  assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.puce-chaud/);
+test('Tout chaud : pastille calme, sans animation ni lueur, point braise fixe (lot 19)', () => {
+  const regle = css.match(/\.puce-chaud\{[^}]*\}/)[0];
+  const point = css.match(/\.puce-chaud::before\{[^}]*\}/)[0];
+  for (const r of [regle, point]) {
+    assert.doesNotMatch(r, /animation|box-shadow|gradient/, r);
+  }
+  assert.match(regle, /background:var\(--croute\)/);
+  assert.match(point, /background:var\(--braise-vive\)/);
+  assert.doesNotMatch(css, /@keyframes pq-braise/);
+});
+
+test('barre Tout chaud du comptoir : teinte pleine, pas de dégradé (lot 19)', () => {
+  assert.match(css, /--barre-chaud:var\(--braise-vive\);/);
+  assert.doesNotMatch(css, /--chaud-degrade/);
 });
 
 test('chaque page charge /charte.css avant toute autre feuille de style', () => {
