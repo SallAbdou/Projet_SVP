@@ -9,6 +9,7 @@
     webhookFournee: '',      // adresse https du webhook WF3
     tallyUrl: 'https://tally.so/r/RWWqKd',
     siteUrl: 'https://team42svp.vercel.app',
+    contactAccessibilite: '', // À COMPLÉTER : adresse e-mail de contact de la déclaration d'accessibilité (/accessibilite)
     delaiReseauMs: 8000
   };
 

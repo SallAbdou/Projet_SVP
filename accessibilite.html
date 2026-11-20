@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
+<title>Accessibilité · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="Accessibility · Votre pAIn quotidien">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/charte.css">
+<link rel="stylesheet" href="/parcours.css">
+<style>.texte h2{font-size:22px;margin-top:6px}.texte ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}.texte strong{color:var(--brun-fonce)}.statut{display:inline-block;padding:4px 12px;border-radius:999px;border:1.5px solid var(--bord-fort);background:var(--creme);font-weight:700;color:var(--brun-fonce)}.dates{margin:0;color:var(--doux);font-size:14px}</style>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete></header>
+<main id="contenu" tabindex="-1" class="contenu centre">
+<article class="carte carte-large texte" aria-labelledby="titre">
+<p class="sur-titre">{{t.eyebrow}}</p>
+<h1 id="titre" class="titre">{{t.titre}}</h1>
+<p class="chapo">{{t.chapo}}</p>
+<p class="dates">{{t.dates}}</p>
+<h2>{{t.engagementT}}</h2><p>{{t.engagement}}</p>
+<h2>{{t.etatT}}</h2>
+<p><span class="statut">{{t.statut}}</span></p>
+<p>{{t.etat}}</p>
+<ul><sc-for list="{{methode}}" as="m"><li>{{m.texte}}</li></sc-for></ul>
+<h2>{{t.limitesT}}</h2>
+<p>{{t.limitesIntro}}</p>
+<ul><sc-for list="{{nonTeste}}" as="n"><li>{{n.texte}}</li></sc-for></ul>
+<p>{{t.demoIntro}}</p>
+<ul><sc-for list="{{demo}}" as="d"><li>{{d.texte}}</li></sc-for></ul>
+<h2>{{t.fonctionsT}}</h2>
+<ul><sc-for list="{{fonctions}}" as="f"><li><strong>{{f.nom}}</strong> : {{f.texte}}</li></sc-for></ul>
+<h2>{{t.envT}}</h2>
+<ul><sc-for list="{{env}}" as="e"><li>{{e.texte}}</li></sc-for></ul>
+<h2>{{t.contactT}}</h2>
+<p>{{t.contactIntro}}</p>
+<ul>
+<li>{{t.contactProfil}} <a href="/profil">{{t.contactProfilLien}}</a>.</li>
+<li>{{t.contactMail}} <a href="{{mailHref}}" style="{{mailStyle}}">{{mail}}</a><span style="{{aVenirStyle}}">{{t.aVenir}}</span></li>
+</ul>
+<p>{{t.recours}}</p>
+<div class="liens-bas"><a href="/">{{t.accueil}}</a><a href="/confidentialite">{{t.confidentialite}}</a></div>
+</article>
+</main>
+<footer class="pied" data-pied></footer>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var T = {
+fr: {
+eyebrow: 'Pour tout le monde', titre: 'Accessibilité',
+chapo: 'Ce que nous avons fait pour que le site soit utilisable par tous, ce qui reste à vérifier, et comment nous signaler un problème.',
+dates: 'Déclaration établie le 20 novembre 2026, mise à jour le 20 novembre 2026.',
+engagementT: 'Notre engagement',
+engagement: 'Votre pAIn quotidien est conçu pour être accessible. Le référentiel visé est WCAG 2.2, niveau AA. Le site n’utilise aucune surcouche (« overlay ») d’accessibilité : les corrections sont faites dans le code. Cette déclaration est une démarche volontaire : le projet, porté par une équipe étudiante, n’est pas soumis à une obligation légale en la matière.',
+etatT: 'État de conformité',
+statut: 'Partiellement conforme',
+etat: 'Le site est partiellement conforme aux WCAG 2.2 niveau AA. Un audit a été fait le 20 novembre 2026 sur les 16 pages que comptait alors le site, y compris les états ouverts (chat, fenêtres, mode Personnaliser). Les 20 problèmes relevés ont été corrigés, mais certains contrôles n’ont pas encore été faits (voir plus bas) : nous ne pouvons donc pas déclarer le site totalement conforme. Nous ne donnons pas de taux de conformité, faute d’un audit complet critère par critère. Méthode :',
+methode: [
+'audit manuel au clavier seul (Tab, Maj+Tab, Entrée, Espace, Échap, flèches) ;',
+'zoom à 200 % et espacement du texte augmenté (interligne, lettres, mots, paragraphes) ;',
+'contrastes mesurés à la main, y compris sur les fonds en dégradé ;',
+'extension axe DevTools dans Firefox, puis axe-core 4.10.2 : aucune violation après corrections ;',
+'tests automatiques dans le dépôt du projet, lancés à chaque modification (langue, titres, lien d’évitement, noms des boutons, contrastes des thèmes, zoom jamais bloqué).'
+],
+limitesT: 'Contenus non accessibles ou non vérifiés',
+limitesIntro: 'Pas encore testé, donc sans garantie :',
+nonTeste: [
+'lecture avec un vrai lecteur d’écran (NVDA, Narrateur, VoiceOver, TalkBack) ; en particulier, les messages annoncés après une action (réponse de Miette, thème appliqué, retour envoyé) n’ont été vérifiés que dans le code ;',
+'zoom du texte seul à 200 % (sans zoomer la page entière) ;',
+'mode Contraste élevé de Windows (couleurs forcées) ;',
+'contrastes des thèmes Nuit et Contraste élevé : vérifiés par les tests automatiques, pas remesurés à la main lors de l’audit ;',
+'usage sur un vrai téléphone tactile.'
+],
+demoIntro: 'Limites liées au mode démo :',
+demo: [
+'les e-mails (inscription, mot de passe oublié) ne partent pas : ils s’affichent dans une boîte de démo à l’écran ;',
+'les articles de la fournée sont des exemples fixes, pas l’actualité du jour ;',
+'tes données restent dans ce navigateur : un retour écrit en démo n’est lu par personne ;',
+'la page « QR code », support de présentation à imprimer, n’existe qu’en français et n’a pas de pied de page.'
+],
+fonctionsT: 'Fonctions d’accessibilité proposées',
+fonctions: [
+{ nom: 'Lien d’évitement', texte: 'première touche Tab sur chaque page, « Aller au contenu » mène directement au contenu principal.' },
+{ nom: 'Thème Contraste élevé', texte: 'dans Mon profil, avec les thèmes Bronze, Boulangerie classique et Nuit.' },
+{ nom: 'Case « Animations activées »', texte: 'dans Mon profil : décochée, elle coupe les animations décoratives. Le réglage « réduire les animations » de ton appareil est aussi respecté.' },
+{ nom: 'Pause de « Tout chaud »', texte: 'un bouton met en pause l’animation de la pastille « Tout chaud ».' },
+{ nom: 'Grille au clavier', texte: 'en mode Personnaliser de la fournée, boutons pour monter, descendre et redimensionner chaque bloc, et flèches pour choisir une mise en page. Le glisser-déposer n’est jamais obligatoire.' },
+{ nom: 'Deux langues', texte: 'français et anglais, au choix en haut de chaque page.' }
+],
+envT: 'Environnement de test',
+env: [
+'Windows 11 ; Chromium (navigateur intégré de l’outil de développement) et Firefox avec axe DevTools ;',
+'fenêtres de 1280 × 800 px et de 640 px (équivalent d’un zoom à 200 %), et largeur de téléphone de 390 px ;',
+'les quatre thèmes ; compte de démo pour les pages connectées.'
+],
+contactT: 'Signaler un problème',
+contactIntro: 'Si un contenu ou une fonction ne t’est pas accessible, dis-le nous : nous chercherons une solution ou une autre façon de t’apporter l’information.',
+contactProfil: 'Avec un compte : écris-nous depuis l’encadré « Affine ta fournée » de', contactProfilLien: 'ton profil',
+contactMail: 'Par e-mail :', aVenir: 'adresse à venir.',
+recours: 'Le site n’étant soumis à aucune obligation légale d’accessibilité, il n’y a pas de procédure de recours officielle : chaque signalement sera lu et traité par l’équipe.',
+accueil: '← Accueil', confidentialite: 'Confidentialité'
+},
+en: {
+eyebrow: 'For everyone', titre: 'Accessibility',
+chapo: 'What we did so the site works for everyone, what is still to be checked, and how to report a problem.',
+dates: 'Statement written on 20 November 2026, updated on 20 November 2026.',
+engagementT: 'Our commitment',
+engagement: 'Votre pAIn quotidien is designed to be accessible. Our target is WCAG 2.2, level AA. The site uses no accessibility overlay: fixes are made in the code. This statement is voluntary: the project, run by a student team, has no legal obligation on this matter.',
+etatT: 'Compliance status',
+statut: 'Partially compliant',
+etat: 'The site is partially compliant with WCAG 2.2 level AA. An audit was carried out on 20 November 2026 on the 16 pages the site had at the time, including open states (chat, dialogs, Customise mode). The 20 issues found were fixed, but some checks have not been done yet (see below), so we cannot claim full compliance. We give no compliance rate, since no full criterion by criterion audit was done. Method:',
+methode: [
+'manual audit with the keyboard only (Tab, Shift+Tab, Enter, Space, Escape, arrows);',
+'200% zoom and increased text spacing (line height, letters, words, paragraphs);',
+'contrast measured by hand, including on gradient backgrounds;',
+'axe DevTools extension in Firefox, then axe-core 4.10.2: no violation after fixes;',
+'automated tests in the project repository, run on every change (language, titles, skip link, button names, theme contrast, zoom never blocked).'
+],
+limitesT: 'Inaccessible or unchecked content',
+limitesIntro: 'Not tested yet, so not guaranteed:',
+nonTeste: [
+'use with a real screen reader (NVDA, Narrator, VoiceOver, TalkBack); in particular, messages announced after an action (Miette’s answer, theme applied, feedback sent) were only checked in the code;',
+'text-only zoom at 200% (without zooming the whole page);',
+'Windows High Contrast mode (forced colors);',
+'contrast of the Night and High contrast themes: checked by the automated tests, not measured again by hand during the audit;',
+'use on a real touch phone.'
+],
+demoIntro: 'Limits of the demo mode:',
+demo: [
+'emails (sign up, forgotten password) are not sent: they appear in a demo mailbox on screen;',
+'the articles in the batch are fixed examples, not today’s news;',
+'your data stays in this browser: feedback written in the demo is read by no one;',
+'the “QR code” page, a printable presentation aid, is only in French and has no footer.'
+],
+fonctionsT: 'Accessibility features',
+fonctions: [
+{ nom: 'Skip link', texte: 'the first Tab on every page, “Skip to content”, goes straight to the main content.' },
+{ nom: 'High contrast theme', texte: 'in My profile, along with the Bronze, Classic bakery and Night themes.' },
+{ nom: '“Animations on” checkbox', texte: 'in My profile: unticked, it stops decorative animations. Your device’s “reduce motion” setting is also respected.' },
+{ nom: 'Pause for “Tout chaud”', texte: 'a button pauses the animation of the “Tout chaud” badge.' },
+{ nom: 'Keyboard grid', texte: 'in the batch’s Customise mode, buttons move up, move down and resize each block, and arrows pick a layout. Drag and drop is never required.' },
+{ nom: 'Two languages', texte: 'French and English, chosen at the top of every page.' }
+],
+envT: 'Test environment',
+env: [
+'Windows 11; Chromium (the development tool’s built-in browser) and Firefox with axe DevTools;',
+'windows of 1280 × 800 px and 640 px (equivalent to a 200% zoom), and a 390 px phone width;',
+'all four themes; demo account for the signed-in pages.'
+],
+contactT: 'Report a problem',
+contactIntro: 'If some content or feature is not accessible to you, tell us: we will look for a fix or another way to give you the information.',
+contactProfil: 'With an account: write to us from the “Fine-tune your batch” box in', contactProfilLien: 'your profile',
+contactMail: 'By email:', aVenir: 'address coming soon.',
+recours: 'Since the site has no legal accessibility obligation, there is no official appeal procedure: every report will be read and handled by the team.',
+accueil: '← Home', confidentialite: 'Privacy'
+}
+};
+function texte(x) { return { texte: x }; }
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr' }; }
+renderVals() {
+var t = T[(this.state && this.state.lang) || 'fr'];
+// Lot 26 : adresse de contact lue dans config.js (contactAccessibilite) ; vide, on affiche « adresse à venir ».
+var mail = (window.PQ_CONFIG && window.PQ_CONFIG.contactAccessibilite) || '';
+var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+return {
+t: t,
+methode: t.methode.map(texte), nonTeste: t.nonTeste.map(texte), demo: t.demo.map(texte), env: t.env.map(texte),
+fonctions: t.fonctions,
+mail: ok ? mail : '', mailHref: ok ? 'mailto:' + mail : '#',
+mailStyle: ok ? '' : 'display: none', aVenirStyle: ok ? 'display: none' : ''
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>

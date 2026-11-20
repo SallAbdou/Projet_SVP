@@ -1,11 +1,23 @@
 /* En-tête commun des écrans du parcours d'entrée (logo, langue, lien de connexion optionnel).
    enteteHtml() est pur et testé ; dans le navigateur, remplit [data-entete] après chaque rendu
-   (événement « pq:rendu » de boot.js). Attribut data-connexion : affiche « Se connecter ». */
+   (événement « pq:rendu » de boot.js). Attribut data-connexion : affiche « Se connecter ».
+   piedHtml() remplit de même [data-pied] : liens Confidentialité et Accessibilité (lot 26). */
 (function (root) {
   var TEXTES = {
-    fr: { langue: 'Langue', accueil: 'Votre pAIn quotidien, accueil', connexion: 'Se connecter' },
-    en: { langue: 'Language', accueil: 'Votre pAIn quotidien, home', connexion: 'Log in' }
+    fr: { langue: 'Langue', accueil: 'Votre pAIn quotidien, accueil', connexion: 'Se connecter', confidentialite: 'Confidentialité', accessibilite: 'Accessibilité' },
+    en: { langue: 'Language', accueil: 'Votre pAIn quotidien, home', connexion: 'Log in', confidentialite: 'Privacy', accessibilite: 'Accessibility' }
   };
+
+  var LIENS_PIED = [{ id: 'confidentialite', href: '/confidentialite' }, { id: 'accessibilite', href: '/accessibilite' }];
+
+  // Liens du pied de page ; o.chemin (location.pathname) marque la page courante (aria-current).
+  function piedHtml(o) {
+    var t = TEXTES[o.lang === 'en' ? 'en' : 'fr'];
+    var chemin = String(o.chemin || '').replace(/\.html$/, '').replace(/\/+$/, '');
+    return LIENS_PIED.map(function (l) {
+      return '<a href="' + l.href + '"' + (chemin === l.href ? ' aria-current="page"' : '') + '>' + esc(t[l.id]) + '</a>';
+    }).join('');
+  }
 
   function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -28,6 +40,8 @@
 
   function monter(e) {
     var rootEl = e.detail && e.detail.root;
+    var pied = rootEl && rootEl.querySelector('[data-pied]');
+    if (pied) pied.innerHTML = piedHtml({ lang: e.detail.lang, chemin: root.location && root.location.pathname });
     var el = rootEl && rootEl.querySelector('[data-entete]');
     if (!el) return;
     el.innerHTML = enteteHtml({ lang: e.detail.lang, connexion: el.hasAttribute('data-connexion'), qr: el.hasAttribute('data-qr') });
@@ -60,7 +74,7 @@
     else if (!e.shiftKey && document.activeElement === dernier) { e.preventDefault(); premier.focus(); }
   }
 
-  var Parcours = { enteteHtml: enteteHtml, focaliser: focaliser, focalisables: focalisables, clavierModale: clavierModale };
+  var Parcours = { enteteHtml: enteteHtml, piedHtml: piedHtml, focaliser: focaliser, focalisables: focalisables, clavierModale: clavierModale };
   if (typeof module === 'object' && module.exports) module.exports = Parcours;
   else {
     root.Parcours = Parcours;

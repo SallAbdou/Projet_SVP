@@ -6,12 +6,12 @@
     fr: {
       tagline: 'L’actu IA, pétrie pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
       liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', profil: 'Mon profil' },
-      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu'
+      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu', accessibilite: 'Accessibilité'
     },
     en: {
       tagline: 'AI news, kneaded for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
       liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', profil: 'My profile' },
-      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu'
+      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu', accessibilite: 'Accessibility'
     }
   };
 
@@ -29,6 +29,9 @@
   var LANG_OFF = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer';
 
   var DECO = 'min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--bord-fort);background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer;align-self:flex-start';
+
+  // Lot 26 : lien discret vers la déclaration d'accessibilité, sous « Se déconnecter ».
+  var PIED = 'display:inline-flex;align-items:center;min-height:44px;align-self:flex-start;font-size:13px;color:var(--doux)';
 
   function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -66,7 +69,8 @@
       '<div style="border-top:1px solid var(--bord);padding-top:14px;display:flex;align-items:center;gap:10px">' +
       '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
       '<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span></div></div>' +
-      '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div></div></div>';
+      '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button>' +
+      '<a href="/accessibilite" style="' + PIED + '">' + esc(t.accessibilite) + '</a></div></div></div>';
   }
 
   // Sous 900 px, la nav latérale devient une barre en haut avec un bouton Menu (modèle disclosure).
