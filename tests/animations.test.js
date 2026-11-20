@@ -109,8 +109,7 @@ test('CSS : data-animations="off" coupe toutes les animations ; le choix on pass
     assert.ok(blocs.length > 0, f);
     for (const b of blocs) assert.match(b, /html:not\(\[data-animations="on"\]\)/, f + ' : ' + b);
   }
-  // Vapeur du four et de la 404 : reste visible, fixe.
-  assert.match(lire('comptoir.html'), /html\[data-animations="off"\] \.four-vapeur\{opacity:\.8\}/);
+  // Vapeur de la 404 : reste visible, fixe (le four du comptoir est traité à part, voir plus bas).
   assert.match(lire('404.html'), /html\[data-animations="off"\] \.vapeur,html\[data-animations="off"\] \.lueur\{opacity:\.8\}/);
   assert.match(lire('comptoir.html'), /html\[data-animations="off"\] \.four-lien,html\[data-animations="off"\] \.four-lien:hover\{transition:none;transform:none\}/);
   assert.match(css, /html\[data-animations="off"\] \.btn-petrir:active\{transform:none\}/);
@@ -121,13 +120,15 @@ test('fournée : défilement doux vers le halo seulement si les animations sont 
   assert.match(h, /getAttribute\('data-animations'\) === 'off'/);
 });
 
-test('bouton Tout chaud : aspect de puce, cible de 24 px, curseur main, indice discret, bulle stylée', () => {
+test('bouton Tout chaud : aspect de puce, cible de 24 px, curseur main, sans pictogramme, bulle stylée', () => {
   const css = lire('charte.css');
   assert.match(css, /button\.puce-chaud\{[^}]*min-height:24px/);
   assert.match(css, /button\.puce-chaud\{[^}]*cursor:pointer/);
   assert.match(css, /button\.puce-chaud\{[^}]*font:inherit/);
   assert.match(css, /button\.puce-chaud:focus-visible\{outline:3px solid var\(--focus\)/);
-  assert.match(css, /\.puce-pause/);
+  // Lot 24 bis : plus de pictogramme pause ou lecture, le bouton garde l'aspect exact d'une puce.
+  assert.doesNotMatch(css, /puce-pause/);
+  assert.doesNotMatch(lire('animations.js'), /puce-pause/);
   assert.match(css, /#pq-bulle-anim\{/);
 });
 
@@ -139,4 +140,46 @@ test('profil : case Animations dans la section Apparence, FR et EN, branchée su
   assert.match(h, /animLabel: 'Animations on'/);
   assert.match(h, /Animations\.enregistrer\(/);
   assert.match(h, /Animations\.appliquer\(document/);
+});
+
+// Lot 24 bis : le four du comptoir est dessiné par <use>. Ses clones vivent dans un arbre fantôme où <html> n'est
+// pas un ancêtre : html[data-animations="off"] * ne les atteint pas. On bascule donc entre deux <svg> du DOM normal.
+function symbole(h, id) {
+  const m = h.match(new RegExp('<symbol id="' + id + '"[^>]*>([\\s\\S]*?)</symbol>'));
+  assert.ok(m, 'symbole ' + id);
+  return m[1];
+}
+
+test('comptoir : four figé de même dessin que le four animé, sans animation', () => {
+  const h = lire('comptoir.html');
+  const anime = symbole(h, 'pq-four');
+  const fige = symbole(h, 'pq-four-fige');
+  assert.match(anime, /class="four-vapeur"/);
+  assert.match(anime, /class="four-lueur"/);
+  assert.doesNotMatch(fige, /four-vapeur"|four-lueur|animation/);
+  const dessin = s => s.replace(/ (class|style)="[^"]*"/g, '').replace(/\s+/g, ' ').trim();
+  assert.equal(dessin(fige), dessin(anime));
+  assert.match(h, /\.four-vapeur-fixe\{[^}]*opacity:\.8/);
+  assert.doesNotMatch(h.match(/\.four-vapeur-fixe\{[^}]*\}/)[0], /animation/);
+});
+
+test('comptoir : chaque four existe en version animée et figée, même taille, bascule par data-animations et prefers-reduced-motion', () => {
+  const h = lire('comptoir.html');
+  const anim = h.match(/<svg class="four-svg four-svg-anime" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"><\/use><\/svg>/g) || [];
+  const fixe = h.match(/<svg class="four-svg four-svg-fixe" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four-fige"><\/use><\/svg>/g) || [];
+  assert.equal(anim.length, 2);
+  assert.equal(fixe.length, 2);
+  assert.equal((h.match(/<use href="#pq-four"/g) || []).length, 2, 'aucun four animé sans jumeau figé');
+  assert.match(h, /\.four-svg-fixe\{display:none\}/);
+  assert.ok(h.indexOf('.four-svg-fixe{display:none}') > h.indexOf('.four-svg{'), 'règle placée après .four-svg');
+  assert.match(h, /html\[data-animations="off"\] \.four-svg-anime\{display:none\}html\[data-animations="off"\] \.four-svg-fixe\{display:block\}/);
+  assert.match(h, /@media \(prefers-reduced-motion:reduce\)\{html:not\(\[data-animations="on"\]\) \.four-svg-anime\{display:none\}html:not\(\[data-animations="on"\]\) \.four-svg-fixe\{display:block\}/);
+});
+
+test('aucune animation CSS dans un <symbol> utilisé par <use> hors du comptoir figé', () => {
+  for (const f of fs.readdirSync(RACINE).filter(n => n.endsWith('.html') && n !== 'index copy.html')) {
+    const h = lire(f);
+    if (!/<use /.test(h)) continue;
+    assert.equal(f, 'comptoir.html', f + ' : <use> animé à couvrir comme le four du comptoir');
+  }
 });

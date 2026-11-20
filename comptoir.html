@@ -24,8 +24,12 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .four-lueur{animation:pq-four-lueur 2.4s ease-in-out infinite alternate}
 @keyframes pq-four-vapeur{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
 @keyframes pq-four-lueur{from{opacity:.5}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .four-vapeur{animation:none;opacity:.8}html:not([data-animations="on"]) .four-lueur{animation:none}html:not([data-animations="on"]) .four-lien,html:not([data-animations="on"]) .four-lien:hover{transition:none;transform:none}}
-html[data-animations="off"] .four-vapeur{opacity:.8}
+/* Lot 24 bis : le four est dessiné par <use>, dont les clones échappent à html[data-animations="off"] *.
+   On bascule donc entre deux <svg> de même taille : four animé (#pq-four) ou four figé (#pq-four-fige, même dessin). */
+.four-vapeur-fixe{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:.8}
+.four-svg-fixe{display:none}
+html[data-animations="off"] .four-svg-anime{display:none}html[data-animations="off"] .four-svg-fixe{display:block}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .four-svg-anime{display:none}html:not([data-animations="on"]) .four-svg-fixe{display:block}html:not([data-animations="on"]) .four-lien,html:not([data-animations="on"]) .four-lien:hover{transition:none;transform:none}}
 html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:hover{transition:none;transform:none}
 </style>
 <style>*{box-sizing:border-box}html{overflow-x:hidden}body{overflow-x:clip}@media (max-width:1100px){.kpis{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}.kpis{grid-template-columns:repeat(2, minmax(0, 1fr))}.bars{gap:6px!important}}</style>
@@ -105,14 +109,29 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 <path d="M78 114l6 7M95 110l6 7M112 112l6 7" stroke="var(--brun)" stroke-width="3" stroke-linecap="round"></path>
 <rect x="44" y="86" width="112" height="46" rx="8" fill="none" stroke="var(--bord-fort)" stroke-width="2"></rect>
 <rect x="70" y="137" width="60" height="5" rx="2.5" fill="var(--bord-fort)"></rect>
+</symbol><symbol id="pq-four-fige" viewBox="0 0 200 170">
+<path class="four-vapeur-fixe" d="M78 40c-7-8 7-14 0-24"></path>
+<path class="four-vapeur-fixe" d="M100 38c-7-8 7-14 0-24"></path>
+<path class="four-vapeur-fixe" d="M122 40c-7-8 7-14 0-24"></path>
+<rect x="34" y="154" width="18" height="10" rx="3" fill="var(--brun-fonce)"></rect><rect x="148" y="154" width="18" height="10" rx="3" fill="var(--brun-fonce)"></rect>
+<rect x="20" y="46" width="160" height="112" rx="16" fill="var(--brun)"></rect>
+<rect x="20" y="46" width="160" height="24" rx="12" fill="var(--brun-fonce)"></rect>
+<circle cx="44" cy="58" r="5" fill="var(--sable)"></circle><circle cx="64" cy="58" r="5" fill="var(--sable)"></circle><circle cx="156" cy="58" r="4" fill="var(--croute)"></circle>
+<rect x="34" y="78" width="132" height="70" rx="10" fill="var(--texte)"></rect>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="var(--braise-fonce)"></rect>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="url(#pq-four-feu)"></rect>
+<path d="M60 130c0-15 18-26 40-26s40 11 40 26z" fill="url(#pq-four-pain)" stroke="var(--cuivre)" stroke-width="1.5"></path>
+<path d="M78 114l6 7M95 110l6 7M112 112l6 7" stroke="var(--brun)" stroke-width="3" stroke-linecap="round"></path>
+<rect x="44" y="86" width="112" height="46" rx="8" fill="none" stroke="var(--bord-fort)" stroke-width="2"></rect>
+<rect x="70" y="137" width="60" height="5" rx="2.5" fill="var(--bord-fort)"></rect>
 </symbol></svg>
 <a href="/fournee#n1" class="four-lien" aria-label="{{fourLabel}}" style="{{nextStyle}}">
-<svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
+<svg class="four-svg four-svg-anime" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg><svg class="four-svg four-svg-fixe" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four-fige"></use></svg>
 <span class="four-titre">{{next.titre}}</span>
 <span class="four-cta">{{t.fourCta}}</span>
 </a>
 <div role="status" style="{{fourAttenteStyle}}">
-<svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
+<svg class="four-svg four-svg-anime" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg><svg class="four-svg four-svg-fixe" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four-fige"></use></svg>
 <p style="margin:0;font-size:14px;color:var(--doux)">{{t.nextLoading}}</p>
 </div>
 <div style="{{nextEmptyStyle}}">
