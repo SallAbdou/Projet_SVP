@@ -24,8 +24,8 @@
   ];
 
   var LIEN = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:var(--texte-2);text-decoration:none';
-  var LIEN_ACTIF = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;background:var(--creme);color:var(--brun-fonce);font-weight:700;text-decoration:none;box-shadow:inset 3px 0 0 var(--braise),inset 0 0 0 1px var(--bord)';
-  var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:700;cursor:pointer';
+  var LIEN_ACTIF = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;background:var(--creme);color:var(--brun-fonce);font-weight:600;text-decoration:none;box-shadow:inset 3px 0 0 var(--braise),inset 0 0 0 1px var(--bord)';
+  var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:600;cursor:pointer';
   var LANG_OFF = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer';
 
   var DECO = 'min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--bord-fort);background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer;align-self:flex-start';
@@ -37,7 +37,7 @@
     var liens = PAGES.map(function (p) {
       var actif = p.id === o.page;
       var compteur = p.id === 'garde-manger' && o.compteurGardeManger > 0
-        ? '<span data-compteur aria-label="' + esc(o.compteurGardeManger + ' ' + t.compteur[o.compteurGardeManger > 1 ? 1 : 0]) + '" style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--miel);color:var(--brun-fonce)">' + o.compteurGardeManger + '</span>'
+        ? '<span data-compteur aria-label="' + esc(o.compteurGardeManger + ' ' + t.compteur[o.compteurGardeManger > 1 ? 1 : 0]) + '" style="margin-left:auto;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--miel);color:var(--brun-fonce)">' + o.compteurGardeManger + '</span>'
         : '';
       return '<a href="' + p.href + '"' + (actif ? ' aria-current="page"' : '') + ' style="' + (actif ? LIEN_ACTIF : LIEN) + '">' +
         '<svg width="18" height="18"' + (p.nom ? ' data-icone="' + p.nom + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p.icone + '</svg>' +
@@ -50,7 +50,7 @@
       '<div class="pq-nav-tete">' +
       '<div class="pq-nav-marque" style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
       '<div style="display:flex;align-items:center;gap:10px">' +
-      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:var(--braise)">AI</span>n quotidien</span></div>' +
+      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:600;font-size:20px;line-height:1.1">Votre p<span style="color:var(--braise)">AI</span>n quotidien</span></div>' +
       '<span class="pq-nav-tagline" style="font-size:13px;color:var(--doux)">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
       '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
@@ -63,8 +63,8 @@
       '<button type="button" data-lang="fr" data-focus="lang-fr" aria-pressed="' + fr + '" style="' + (fr ? LANG_ON : LANG_OFF) + '">FR</button>' +
       '<button type="button" data-lang="en" data-focus="lang-en" aria-pressed="' + !fr + '" style="' + (fr ? LANG_OFF : LANG_ON) + '">EN</button></div>' +
       '<div style="border-top:1px solid var(--bord);padding-top:16px;display:flex;align-items:center;gap:12px">' +
-      '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
-      '<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span></div></div>' +
+      '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:600">' + esc(prenom.charAt(0)) + '</span>' +
+      '<div style="display:flex;flex-direction:column"><span style="font-weight:600;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span></div></div>' +
       '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div></div></div>';
   }
 
@@ -85,8 +85,8 @@
     '.pq-nav-nom{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
     '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
     '.pq-nav-nom span{color:var(--brun)!important}' +
-    '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
-    '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:700;cursor:pointer}' +
+    '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
+    '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer}' +
     '.pq-nav-panneau{display:none;position:absolute;left:-16px;right:-16px;top:calc(100% + 10px);padding:16px;background:var(--sable);border-bottom:1px solid var(--bord);box-shadow:var(--ombre-2);max-height:calc(100vh - 64px);overflow:auto;gap:18px}' +
     '.pq-nav[data-ouvert] .pq-nav-panneau{display:flex}}';
 
