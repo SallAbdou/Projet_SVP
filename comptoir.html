@@ -36,7 +36,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
-<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em"><span style="display:block">{{titleL1}}</span><span style="display:block">{{t.titleL2}}</span></h1>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.titre}}</h1>
 <p style="margin:0;color:var(--doux);font-size:16px"><span style="display:block">{{t.subtitle1}}</span><span style="display:block">{{t.subtitle2}}</span></p>
 <p role="status" style="{{exempleStyle}}">{{t.exemple}}</p>
 </div>
@@ -155,46 +155,46 @@ var T = {
 fr: {
 navLabel: 'Navigation principale',
 eyebrowTail: 'tes 30 derniers jours', exemple: 'Fournée d’exemple : n8n ne répond pas',
-title: 'Bonjour {prenom},', titleAnon: 'Bonjour,', titleL2: 'Voici ce que tes fournées ont généré',
-subtitle1: 'Chaque matin, on cook les nouveautés IA pour toi.', subtitle2: 'Tu choisis ce que tu sers à ton audience.',
+titre: 'Ce que tes fournées ont généré',
+subtitle1: 'Chaque matin, on prépare les nouveautés IA pour toi', subtitle2: 'Tu choisis ce que tu sers à ton audience',
 sample: 'Inclut des données d’exemple',
 waitOne: '1 post attend ses chiffres', waitMany: '{n} posts attendent leurs chiffres', waitCta: 'Reporter mes chiffres',
 kpiLabel: 'Chiffres clés', kpiTitle: 'Tes posts, ces 30 derniers jours',
 kpis: ['Posts publiés', 'Impressions', 'Réactions', 'Republications', 'Prises de contact'],
-ecart: { hausseN: '+{n} vs mois dernier', baisseN: '-{n} vs mois dernier', hausseP: '+{n} %', baisseP: '-{n} %', stable: 'stable', nouveau: 'nouveau' },
+ecart: { hausseN: '+{n} vs mois dernier', baisseN: '-{n} vs mois dernier', hausseP: '+{n} % vs mois dernier', baisseP: '-{n} % vs mois dernier', stable: 'stable', nouveau: 'nouveau' },
 visTitle: 'Tes meilleures fournées', visSub: 'Impressions de tes 6 derniers posts',
 bar: '{label} : {n} impressions, sujet {etat}',
 etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
 noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
 insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
 nextTitle: 'Tout juste sorti du four', fourCta: 'Voir ma fournée', fourLabel: 'Voir la première news du jour : {titre}',
-nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
+nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant', nextEmptyCta: 'Voir la fournée du jour',
 gainTitle: 'Ce que ta veille a rapporté', gainContacts: 'Prises de contact', gainPosts: 'Posts publiés grâce à la fournée', gainSince: 'Depuis le début',
 pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
 fraicheur: { chaud: 'Encore chaud', enfourner: 'À enfourner avant demain', rassis: 'Rassis' },
-pantryEmpty: 'Rien de côté pour l’instant.', pantryEmptyCta: 'Aller à la fournée du jour'
+pantryEmpty: 'Rien de côté pour l’instant', pantryEmptyCta: 'Aller à la fournée du jour'
 },
 en: {
 navLabel: 'Main navigation',
 eyebrowTail: 'your last 30 days', exemple: 'Sample batch: n8n is not responding',
-title: 'Hi {prenom},', titleAnon: 'Hi,', titleL2: 'Here’s what your batches brought in',
-subtitle1: 'Every morning, we cook the latest AI news for you.', subtitle2: 'You choose what to serve your audience.',
+titre: 'What your batches brought in',
+subtitle1: 'Every morning, we prepare the latest AI news for you', subtitle2: 'You choose what to serve your audience',
 sample: 'Includes sample data',
 waitOne: '1 post is waiting for its figures', waitMany: '{n} posts are waiting for their figures', waitCta: 'Report my figures',
 kpiLabel: 'Key figures', kpiTitle: 'Your posts, these last 30 days',
 kpis: ['Posts published', 'Impressions', 'Reactions', 'Reposts', 'Contact requests'],
-ecart: { hausseN: '+{n} vs last month', baisseN: '-{n} vs last month', hausseP: '+{n}%', baisseP: '-{n}%', stable: 'steady', nouveau: 'new' },
+ecart: { hausseN: '+{n} vs last month', baisseN: '-{n} vs last month', hausseP: '+{n}% vs last month', baisseP: '-{n}% vs last month', stable: 'steady', nouveau: 'new' },
 visTitle: 'Your best batches', visSub: 'Impressions of your last 6 posts',
 bar: '{label}: {n} impressions, topic {etat}',
 etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
 noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
 insightNeutral: 'Publish and report your figures to see what works best.',
 nextTitle: 'Fresh out of the oven', fourCta: 'See my batch', fourLabel: 'See today’s first news: {titre}',
-nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
+nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now', nextEmptyCta: 'See today’s batch',
 gainTitle: 'What your watch brought in', gainContacts: 'Contact requests', gainPosts: 'Posts published thanks to the batch', gainSince: 'Since the start',
 pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
 fraicheur: { chaud: 'Still warm', enfourner: 'Bake before tomorrow', rassis: 'Gone stale' },
-pantryEmpty: 'Nothing set aside yet.', pantryEmptyCta: 'Go to today’s batch'
+pantryEmpty: 'Nothing set aside yet', pantryEmptyCta: 'Go to today’s batch'
 }
 };
 var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
@@ -242,8 +242,6 @@ var barres = Comptoir.graphique(posts);
 var chaudGagne = Comptoir.analyse(posts).chaudGagne;
 var attente = Comptoir.sansChiffres(posts);
 var bilan = Comptoir.bilan(posts);
-var u = null;
-try { u = Auth.utilisateurCourant(); } catch (e) {}
 var jour = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 var champs = ['posts', 'impressions', 'reactions', 'republications', 'contacts'];
 var news = Bento.pickTopics(articles, 1, Store.refsIgnorees(store, Store.dateDuJour(new Date())))[0];
@@ -253,7 +251,6 @@ return {
 t: t,
 exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:var(--doux);padding:6px 12px;border-radius:10px;border:1px dashed var(--bord-fort);align-self:flex-start' : HIDE,
 eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
-titleL1: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
 sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--creme); border: 1px dashed var(--bord-fort); color: var(--doux)' : HIDE,
 waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px 16px; border-radius: 14px; background: var(--miel); color: var(--brun-fonce); border: 1px solid var(--bord-fort)' : HIDE,
 waitText: attente === 1 ? t.waitOne : remplir(t.waitMany, { n: attente }),
