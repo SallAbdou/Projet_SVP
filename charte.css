@@ -85,13 +85,9 @@
 @media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .puce-chaud,html:not([data-animations="on"]) .puce-chaud::before{animation:none}}
 
 /* Lot 23 : « Tout chaud » devient un bouton pause (animations.js, WCAG 2.2.2). Même aspect que la puce, curseur main,
-   cible d'au moins 24 px, petit pictogramme pause (deux barres) ou lecture (triangle) en couleur du texte. */
+   cible d'au moins 24 px, sans pictogramme (lot 24 bis) : l'état se lit dans la bulle et le nom accessible. */
 button.puce-chaud{font:inherit;font-size:12px;font-weight:700;line-height:1.5;min-height:24px;border:0;margin:0;cursor:pointer;-webkit-appearance:none;appearance:none}
 button.puce-chaud:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.puce-pause{flex:none;box-sizing:border-box;width:7px;height:8px;border-left:2px solid currentColor;border-right:2px solid currentColor;opacity:.7}
-button.puce-chaud:hover .puce-pause,button.puce-chaud:focus-visible .puce-pause{opacity:1}
-html[data-animations="off"] .puce-pause{width:0;height:0;border-right:0;border-left:7px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent}
-/* Bulle du bouton (élément fixe hors des tuiles, qui coupent leur contenu). */
 #pq-bulle-anim{position:fixed;z-index:60;max-width:240px;padding:6px 10px;border-radius:8px;background:var(--texte);color:var(--fond);font-size:13px;font-weight:600;line-height:1.35;box-shadow:var(--ombre-2)}
 #pq-bulle-anim[hidden]{display:none}
 #pq-bulle-anim::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}

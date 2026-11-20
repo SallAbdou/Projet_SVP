@@ -100,10 +100,6 @@
       btn.setAttribute('data-anim-pause', '');
       btn.setAttribute('data-texte', span.textContent.trim());
       btn.appendChild(doc.createTextNode(span.textContent));
-      var picto = doc.createElement('span');
-      picto.className = 'puce-pause';
-      picto.setAttribute('aria-hidden', 'true');
-      btn.appendChild(picto);
       span.parentNode.replaceChild(btn, span);
       etiqueter(btn);
     });
