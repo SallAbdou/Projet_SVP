@@ -8,13 +8,13 @@
 body{margin:0;background:var(--fond-page)}
 a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
-.kpis{display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:14px}
-.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;background:var(--croute);color:var(--sur-clair);font-weight:700;text-decoration:none}
+.kpis{display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:16px}
+.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:999px;background:var(--croute);color:var(--sur-clair);font-weight:700;text-decoration:none}
 .btn-plein:hover{background:var(--or-milieu);color:var(--sur-clair)}
 .btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--braise);color:var(--braise);font-weight:700;font-size:14px;text-decoration:none}
 .btn-ligne:hover{background:var(--braise);color:var(--sur-plein)}
 /* Four illustré : un seul lien vers la news n°1 de la fournée. */
-.four-lien{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 12px 14px;border-radius:16px;color:var(--texte);text-decoration:none;text-align:center;transition:background .2s,transform .2s}
+.four-lien{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 12px 16px;border-radius:16px;color:var(--texte);text-decoration:none;text-align:center;transition:background .2s,transform .2s}
 .four-lien:hover{background:var(--miel);color:var(--texte);transform:translateY(-2px)}
 .four-lien:hover .four-cta{text-decoration:underline}
 .four-svg{display:block;width:100%;max-width:220px;height:auto}
@@ -26,15 +26,15 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 @keyframes pq-four-lueur{from{opacity:.5}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.four-vapeur{animation:none;opacity:.8}.four-lueur{animation:none}.four-lien,.four-lien:hover{transition:none;transform:none}}
 </style>
-<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:1100px){.kpis{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}.kpis{grid-template-columns:repeat(2, minmax(0, 1fr))}.bars{gap:6px!important}}</style>
+<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:1100px){.kpis{grid-template-columns:repeat(3, minmax(0, 1fr))}}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}.kpis{grid-template-columns:repeat(2, minmax(0, 1fr))}.bars{gap:8px!important}}</style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script>
 </head><body><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
-<nav data-nav data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
-<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
+<nav data-nav data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 16px;display:flex;flex-direction:column;gap:24px"></nav>
+<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 48px 64px;display:flex;flex-direction:column;gap:24px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
-<div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
+<div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em"><span style="display:block">{{titleL1}}</span><span style="display:block">{{t.titleL2}}</span></h1>
 <p style="margin:0;color:var(--doux);font-size:16px"><span style="display:block">{{t.subtitle1}}</span><span style="display:block">{{t.subtitle2}}</span></p>
@@ -58,22 +58,22 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </sc-for>
 </div>
 </section>
-<div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start">
-<section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+<section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:16px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
 <h2 id="vis-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.visTitle}}</h2>
 <span style="font-size:13px;color:var(--doux)">{{t.visSub}}</span>
 </div>
 <div style="{{barsStyle}}">
-<div class="bars" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;align-items:end;height:220px;border-bottom:2px solid var(--bord);padding-bottom:4px">
+<div class="bars" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:16px;align-items:end;height:220px;border-bottom:2px solid var(--bord);padding-bottom:4px">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
-<div role="img" aria-label="{{b.aria}}" style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
+<div role="img" aria-label="{{b.aria}}" style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;height:100%">
 <span style="font-size:12px;font-weight:700" aria-hidden="true">{{b.value}}</span>
 <div style="{{b.barStyle}}" aria-hidden="true"></div>
 </div>
 </sc-for>
 </div>
-<div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:var(--texte-2);text-align:center">
+<div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:16px;font-size:12px;color:var(--texte-2);text-align:center">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto">{{b.label}}</span>
 </sc-for>
@@ -83,7 +83,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <p style="margin:0;padding:12px 16px;border-radius:12px;background:var(--miel);color:var(--brun-fonce);{{insStyle}}">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
-<section aria-labelledby="next-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
+<section aria-labelledby="next-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
 <h2 id="next-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.nextTitle}}</h2>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <radialGradient id="pq-four-feu" cx="50%" cy="80%" r="75%"><stop offset="0" stop-color="var(--pain-grigne)"></stop><stop offset="0.45" stop-color="var(--croute)"></stop><stop offset="1" stop-color="var(--braise-vive)"></stop></radialGradient>
@@ -118,7 +118,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <a href="/fournee" class="btn-plein" style="align-self:flex-start">{{t.nextEmptyCta}}</a>
 </div>
 </section>
-<section aria-labelledby="gain-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+<section aria-labelledby="gain-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
 <h2 id="gain-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px">{{t.gainTitle}}</h2>
 <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:var(--doux)">{{t.gainContacts}}</span><strong>{{gainContacts}}</strong></div>
 <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:var(--doux)">{{t.gainPosts}}</span><strong>{{gainPosts}}</strong></div>
@@ -126,13 +126,13 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </section>
 </div>
 </div>
-<section aria-labelledby="pantry-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:4px">
+<section aria-labelledby="pantry-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:4px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-bottom:8px">
 <h2 id="pantry-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.pantryTitle}}</h2>
 <a href="/garde-manger" style="font-weight:700;font-size:14px;display:inline-flex;align-items:center;min-height:44px">{{t.pantryAll}}</a>
 </div>
 <sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
-<div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 0;border-top:1px solid var(--trait)">
+<div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 0;border-top:1px solid var(--trait)">
 <div style="flex:999 1 320px;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;overflow-wrap:anywhere">{{p.titre}}</span><span style="font-size:12px;color:var(--doux)">{{p.meta}}</span></div>
 <span class="{{p.chip}}">{{p.state}}</span>
 <a href="{{p.href}}" class="btn-petrir" aria-label="{{p.kneadLabel}}"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg>{{t.knead}}</a>
@@ -255,14 +255,14 @@ exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color
 eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
 titleL1: u && u.prenom ? t.title.replace('{prenom}', u.prenom) : t.titleAnon,
 sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--creme); border: 1px dashed var(--bord-fort); color: var(--doux)' : HIDE,
-waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 18px; border-radius: 14px; background: var(--miel); color: var(--brun-fonce); border: 1px solid var(--bord-fort)' : HIDE,
+waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px 16px; border-radius: 14px; background: var(--miel); color: var(--brun-fonce); border: 1px solid var(--bord-fort)' : HIDE,
 waitText: attente === 1 ? t.waitOne : remplir(t.waitMany, { n: attente }),
 kpis: champs.map(function (c, i) {
 var last = i === champs.length - 1;
 var e = k.ecarts[c];
 return {
 label: t.kpis[i], value: charge ? num(k.actuel[c]) : '…', sub: charge ? texteEcart(e, i === 0 ? 'nombre' : 'pourcent', t) : '',
-box: last ? 'background: var(--braise); color: var(--sur-plein); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: var(--creme); border: 1px solid var(--bord); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
+box: last ? 'background: var(--braise); color: var(--sur-plein); border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; min-width: 0' : 'background: var(--creme); border: 1px solid var(--bord); border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; min-width: 0',
 labelStyle: last ? 'font-size: 13px; color: var(--sur-plein)' : 'font-size: 13px; color: var(--doux)',
 subStyle: last ? 'font-size: 12px; color: var(--sur-plein)' : 'font-size: 12px; color: ' + SENS[e.sens]
 };
@@ -283,7 +283,7 @@ insStyle: charge && chaudGagne ? 'font-size:16px;font-weight:700' : 'font-size:1
 // Four : lien vers la news n°1 quand la fournée est prête, four qui chauffe sans lien pendant l'attente.
 nextStyle: news ? '' : HIDE,
 fourAttenteStyle: !news && chauffe ? 'display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center' : HIDE,
-nextEmptyStyle: !news && !chauffe ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
+nextEmptyStyle: !news && !chauffe ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
 next: { titre: news ? news.titre : '' },
 fourLabel: news ? remplir(t.fourLabel, { titre: news.titre }) : '',
 gainContacts: num(bilan.contacts),
@@ -296,7 +296,7 @@ titre: a.titre, meta: [a.source, age].filter(Boolean).join(' · '), chip: CHIP(f
 href: Bento.lienFournil(a.ref), kneadLabel: remplir(t.kneadLabel, { titre: a.titre })
 };
 }),
-pantryEmptyStyle: sauves.length ? HIDE : 'display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-top: 4px'
+pantryEmptyStyle: sauves.length ? HIDE : 'display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-top: 4px'
 };
 }
 }

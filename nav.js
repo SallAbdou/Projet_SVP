@@ -23,8 +23,8 @@
     { id: 'profil', href: '/profil', icone: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>' }
   ];
 
-  var LIEN = 'display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;color:var(--texte-2);text-decoration:none';
-  var LIEN_ACTIF = 'display:flex;align-items:center;gap:10px;min-height:44px;padding:0 12px;border-radius:10px;background:var(--creme);color:var(--brun-fonce);font-weight:700;text-decoration:none;box-shadow:inset 3px 0 0 var(--braise),inset 0 0 0 1px var(--bord)';
+  var LIEN = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:var(--texte-2);text-decoration:none';
+  var LIEN_ACTIF = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;background:var(--creme);color:var(--brun-fonce);font-weight:700;text-decoration:none;box-shadow:inset 3px 0 0 var(--braise),inset 0 0 0 1px var(--bord)';
   var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:700;cursor:pointer';
   var LANG_OFF = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer';
 
@@ -58,23 +58,23 @@
       '</div>' +
       '<div id="pq-nav-panneau" class="pq-nav-panneau">' +
       '<div style="display:flex;flex-direction:column;gap:4px">' + liens + '</div>' +
-      '<div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">' +
+      '<div style="margin-top:auto;display:flex;flex-direction:column;gap:16px">' +
       '<div role="group" aria-label="' + esc(t.langLabel) + '" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--miel);align-self:flex-start">' +
       '<button type="button" data-lang="fr" data-focus="lang-fr" aria-pressed="' + fr + '" style="' + (fr ? LANG_ON : LANG_OFF) + '">FR</button>' +
       '<button type="button" data-lang="en" data-focus="lang-en" aria-pressed="' + !fr + '" style="' + (fr ? LANG_OFF : LANG_ON) + '">EN</button></div>' +
-      '<div style="border-top:1px solid var(--bord);padding-top:14px;display:flex;align-items:center;gap:10px">' +
+      '<div style="border-top:1px solid var(--bord);padding-top:16px;display:flex;align-items:center;gap:12px">' +
       '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
       '<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span></div></div>' +
       '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div></div></div>';
   }
 
   // Sous 900 px, la nav latérale devient une barre en haut avec un bouton Menu (modèle disclosure).
-  var CSS = '.pq-nav{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
+  var CSS = '.pq-nav{display:flex;flex-direction:column;gap:24px;flex:1 1 auto}' +
     // Bloc marque (nom, accroche, sans logo) centré dans la colonne latérale ; à gauche dans la barre mobile.
     '.pq-nav-tete{display:flex;align-items:center;justify-content:center;gap:10px}' +
     '.pq-nav-marque{align-items:center;text-align:center}' +
     '.pq-nav-menu,.pq-nav-prenom{display:none}' +
-    '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
+    '.pq-nav-panneau{display:flex;flex-direction:column;gap:24px;flex:1 1 auto}' +
     '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
     '@media (max-width:899.98px){' +
     '[data-nav]{position:sticky;top:0;z-index:40;flex:1 1 100%!important;padding:10px 16px!important;border-right:0!important;border-bottom:1px solid var(--bord);gap:0!important}' +
