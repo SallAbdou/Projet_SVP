@@ -9,7 +9,7 @@ body{margin:0;background:var(--fond-page)}
 a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
 </style>
-<style>.four-pain-miche{transform-origin:48px 56px;animation:lever 1.6s ease-in-out infinite alternate}@keyframes lever{from{transform:scale(.86,.7)}to{transform:scale(1,1)}}@media (prefers-reduced-motion:reduce){.four-pain-miche{animation:none}}</style>
+<style>.four-pain-miche{transform-origin:48px 56px;animation:lever 1.6s ease-in-out infinite alternate}@keyframes lever{from{transform:scale(.86,.7)}to{transform:scale(1,1)}}@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .four-pain-miche{animation:none}}</style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
 <style>
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(180px,auto);grid-auto-flow:dense;gap:16px}
@@ -19,7 +19,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 /* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
 .bento .tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px color-mix(in srgb,var(--croute) 55%,transparent);animation:pq-halo 1s ease-in-out 2 alternate}
 @keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute),0 0 10px 2px color-mix(in srgb,var(--croute) 35%,transparent)}to{box-shadow:0 0 0 5px var(--croute),0 0 30px 10px color-mix(in srgb,var(--croute) 60%,transparent)}}
-@media (prefers-reduced-motion:reduce){.bento .tile.pq-halo{animation:none}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .bento .tile.pq-halo{animation:none}}
 .bento .tile.pq-halo .act-knead:focus{outline:2px solid var(--braise);outline-offset:2px}
 .tile-S{grid-column:span 1;grid-row:span 1}
 .tile-M{grid-column:span 2;grid-row:span 1}
@@ -117,7 +117,7 @@ a.act[data-act="read"]:active{transform:translateY(1px)}
 @media (pointer:coarse){.act{min-height:44px;min-width:44px}}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.toast-box{animation:none!important}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .toast-box{animation:none!important}}
 .toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 8px 8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:var(--ombre-3)}
 .toast-box button{min-height:44px;padding:0 16px;border-radius:999px;border:0;background:var(--croute);color:var(--sur-clair);font:inherit;font-weight:700;cursor:pointer}
 .toast-box button:focus-visible{outline:2px solid var(--fond);outline-offset:2px}
@@ -138,14 +138,14 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 @media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile-S{grid-column:span 1}.tile-M,.tile-L{grid-column:span 2}}
 @media (max-width:640px){.bento{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto}.tile-S,.tile-M,.tile-L{grid-column:auto;grid-row:auto}.tile,.tile-body{overflow:visible}}
 </style>
-<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script>
-</head><body><div id="root"></div>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <div id="pq-toast" aria-live="polite"></div>
 <div id="pq-bulle" class="bulle" aria-hidden="true" hidden></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="fournee" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
-<main class="{{mainClass}}" style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
+<main id="contenu" tabindex="-1" class="{{mainClass}}" style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{eyebrow}}</p>
@@ -443,7 +443,7 @@ var id = Bento.cibleAncre(this.ancre, visibles);
 this.ancre = null;
 if (id) {
 var self = this;
-var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var reduit = document.documentElement.getAttribute('data-animations') === 'off' || (!document.documentElement.hasAttribute('data-animations') && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 this.halo = { id: id };
 var bouton = root.querySelector('[data-act="knead"][data-id="' + id + '"]');
 if (bouton) { try { bouton.focus({ preventScroll: true }); } catch (e) { bouton.focus(); } }

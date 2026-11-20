@@ -77,6 +77,8 @@
     '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
     '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
     '@media (max-width:899.98px){' +
+    // Barre collante : le défilement vers un élément focalisé s'arrête sous elle (WCAG 2.4.11).
+    'html{scroll-padding-top:var(--pq-barre-nav)}' +
     '[data-nav]{position:sticky;top:0;z-index:40;flex:1 1 100%!important;padding:10px 16px!important;border-right:0!important;border-bottom:1px solid var(--bord);gap:0!important}' +
     '.pq-nav{gap:0;position:relative}' +
     '.pq-nav-tete{justify-content:flex-start}' +

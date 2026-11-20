@@ -23,8 +23,11 @@
   // Titre de l'onglet : version anglaise si elle existe (meta pq-titre-en), sinon le titre français.
   function titrePage(lang, fr, en) { return lang === 'en' && en ? en : fr; }
 
+  // Lien d'évitement (posé en dur avant #root, hors du rendu) : texte suivant la langue.
+  function texteEvitement(lang) { return lang === 'en' ? 'Skip to content' : 'Aller au contenu'; }
+
   if (typeof module === 'object' && module.exports) {
-    module.exports = { esc: esc, remplirGabarit: remplirGabarit, titrePage: titrePage };
+    module.exports = { esc: esc, remplirGabarit: remplirGabarit, titrePage: titrePage, texteEvitement: texteEvitement };
     return;
   }
 
@@ -89,6 +92,8 @@
     var lang = c.state.lang || 'fr';
     document.documentElement.lang = lang;
     document.title = titrePage(lang, titreFr, metaEn && metaEn.getAttribute('content'));
+    var evitement = document.querySelector('.pq-evitement');
+    if (evitement) evitement.textContent = texteEvitement(lang);
     document.dispatchEvent(new CustomEvent('pq:rendu', { detail: { root: root, lang: lang } }));
     if (typeof c.afterRender === 'function') c.afterRender(root);
     restaurer(etat, root);

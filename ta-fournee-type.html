@@ -10,11 +10,11 @@
 // Sans inscription en cours, cet écran n'a rien à montrer : retour au questionnaire.
 (function () { var d = Auth.demandeEnCours(Auth.charger()); if (!d || d.motif !== 'inscription') { window.__redirige = true; location.replace('/questionnaire'); } })();
 </script>
-</head><body><div id="root"></div>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div class="parcours">
 <header class="entete" data-entete></header>
-<main class="contenu centre">
+<main id="contenu" tabindex="-1" class="contenu centre">
 <section class="carte carte-large" aria-labelledby="titre">
 <p class="sur-titre">{{t.eyebrow}}</p>
 <h1 id="titre" class="titre">{{titre}}</h1>
@@ -91,4 +91,4 @@ tuiles: tuiles
 };
 }
 }
-</script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>

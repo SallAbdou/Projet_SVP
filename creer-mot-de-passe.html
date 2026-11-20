@@ -5,11 +5,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <link rel="stylesheet" href="/parcours.css">
-</head><body><div id="root"></div>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div class="parcours">
 <header class="entete" data-entete></header>
-<main class="contenu centre">
+<main id="contenu" tabindex="-1" class="contenu centre">
 <section class="carte" aria-labelledby="perime-t" style="{{vue.perime}}">
 <h1 id="perime-t" class="titre">{{t.perimeTitre}}</h1>
 <p class="chapo">{{t.perimeTexte}}</p>
@@ -126,4 +126,4 @@ valider: function () { self.valider(); }
 };
 }
 }
-</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>

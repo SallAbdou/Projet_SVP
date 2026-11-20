@@ -13,14 +13,15 @@ a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 .vapeur{animation:vapeur 2.6s ease-in-out infinite}
 .vapeur.v2{animation-delay:.8s}.vapeur.v3{animation-delay:1.6s}
 .lueur{animation:lueur 2.2s ease-in-out infinite}
-@media (prefers-reduced-motion: reduce){.vapeur,.lueur{animation:none;opacity:.8}}
+@media (prefers-reduced-motion: reduce){html:not([data-animations="on"]) .vapeur,html:not([data-animations="on"]) .lueur{animation:none;opacity:.8}}
+html[data-animations="off"] .vapeur,html[data-animations="off"] .lueur{opacity:.8}
 </style>
 <style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
-</head><body><div id="root"></div>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="min-height:100vh;box-sizing:border-box;background:var(--fond-page);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5;display:flex;flex-direction:column;padding:24px 40px 40px">
 <header class="entete" data-entete style="padding-left:0;padding-right:0"></header>
-<main style="flex:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:40px 72px;padding:32px 0">
+<main id="contenu" tabindex="-1" style="flex:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:40px 72px;padding:32px 0">
 <svg width="340" height="340" viewBox="0 0 340 340" role="img" aria-label="{{t.ovenAlt}}" style="max-width:100%;height:auto;flex:0 1 340px">
 <g fill="none" stroke="var(--bord-fort)" stroke-width="5" stroke-linecap="round">
 <path class="vapeur" d="M130 64c-10-12 10-20 0-34"></path>
@@ -100,4 +101,4 @@ frStyle: lang === 'fr' ? on : off, enStyle: lang === 'en' ? on : off
 };
 }
 }
-</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>
