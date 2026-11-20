@@ -141,13 +141,20 @@
   }
 
   // Accessibilité du message (liaison unique sur la zone statique) : délai suspendu tant que le
-  // focus est dedans (WCAG 2.2.1), repris à la sortie ; Échap ferme le message.
-  // f = { pause(), reprise(), echap() }.
+  // focus ou la souris est dedans (WCAG 2.2.1, survol ajouté au lot 24), repris quand les deux
+  // sont sortis ; Échap ferme le message. f = { pause(), reprise(), echap() }.
   function suivreToast(el, f) {
     if (!el || el.__suivi) return;
     el.__suivi = true;
-    el.addEventListener('focusin', function () { f.pause(); });
-    el.addEventListener('focusout', function (e) { if (!e.relatedTarget || !el.contains(e.relatedTarget)) f.reprise(); });
+    var focus = false, survol = false;
+    el.addEventListener('focusin', function () { focus = true; f.pause(); });
+    el.addEventListener('focusout', function (e) {
+      if (e.relatedTarget && el.contains(e.relatedTarget)) return;
+      focus = false;
+      if (!survol) f.reprise();
+    });
+    el.addEventListener('mouseenter', function () { survol = true; f.pause(); });
+    el.addEventListener('mouseleave', function () { survol = false; if (!focus) f.reprise(); });
     el.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); f.echap(); } });
   }
 

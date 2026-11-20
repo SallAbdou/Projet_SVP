@@ -77,7 +77,7 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 </div>
 <div class="bars" aria-hidden="true" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;font-size:12px;color:var(--texte-2);text-align:center">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
-<span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto">{{b.label}}</span>
+<span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto">{{b.label}}<span style="display:block;margin-top:2px;font-weight:700;color:var(--texte)">{{b.etat}}</span></span>
 </sc-for>
 </div>
 </div>
@@ -275,7 +275,7 @@ noBars: charge ? t.noBars : t.loading,
 busy: String(!charge),
 bars: barres.map(function (b) {
 return {
-value: num(b.impressions), label: b.label,
+value: num(b.impressions), label: b.label, etat: t.etats[b.feu],
 aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.feu] }),
 barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; box-shadow: ' + (Charte.contourBarre(b.feu) || 'none') + '; border-radius: 14px 14px 4px 4px'
 };

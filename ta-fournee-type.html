@@ -28,8 +28,8 @@
 <dd style="margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{thematiques}}" as="th"><span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--sable);color:var(--brun-fonce)">{{th.label}}</span></sc-for></dd></div>
 </dl>
 <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
-<div class="mini-bento" role="img" aria-label="{{apercuLabel}}">
-<sc-for list="{{tuiles}}" as="tu"><div class="{{tu.classe}}"><span class="mini-rang">{{tu.rang}}</span><span class="{{tu.puce}}">{{tu.chaud}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div></sc-for>
+<div class="mini-bento" role="group" aria-label="{{apercuLabel}}">
+<sc-for list="{{tuiles}}" as="tu"><div class="{{tu.classe}}"><span class="mini-rang" aria-hidden="true">{{tu.rang}}</span><span class="{{tu.puce}}">{{tu.chaud}}</span><span class="mini-ligne" aria-hidden="true"></span><span class="mini-ligne courte" aria-hidden="true"></span></div></sc-for>
 </div>
 <figcaption class="aide">{{t.legende}}</figcaption>
 </figure>

@@ -125,3 +125,30 @@ test('bordures des champs en --bord-champ (contraste non textuel 3:1)', () => {
   assert.match(fournil, /\.fo-select\{[^}]*var\(--bord-champ\)/);
   assert.match(fournil, /<textarea id="brouillon"[^>]*var\(--bord-champ\)/);
 });
+
+// Lot 24 (N3) : le bouton de pause « Tout chaud » vit dans l'aperçu ; un role="img" masquerait
+// ses enfants, d'où un bouton focalisable mais muet (axe : nested-interactive).
+test('aperçu de ta fournée type : groupe nommé, décor masqué, pas de role img', () => {
+  const html = lire('ta-fournee-type.html');
+  assert.match(html, /<div class="mini-bento" role="group" aria-label="\{\{apercuLabel\}\}">/);
+  assert.match(html, /<span class="mini-rang" aria-hidden="true">/);
+  assert.match(html, /<span class="mini-ligne" aria-hidden="true">/);
+});
+
+// Lot 24 (N6, 1.4.1) : l'état de chaque barre (Tout chaud, À pétrir, Rassis) est écrit sous la barre,
+// pas seulement porté par sa couleur.
+test('comptoir : état écrit sous chaque barre du graphique', () => {
+  const html = lire('comptoir.html');
+  assert.match(html, /\{\{b\.label\}\}[\s\S]{0,200}\{\{b\.etat\}\}/);
+  assert.match(html, /etat: t\.etats\[b\.feu\]/);
+});
+
+// Lot 24 (N7, 3.3.4) : effacer les données demande une confirmation explicite.
+test('confidentialité : effacement en deux temps, confirmation et annulation', () => {
+  const html = lire('confidentialite.html');
+  assert.match(html, /data-focus="effacer-oui"/);
+  assert.match(html, /data-focus="effacer-annuler"/);
+  assert.match(html, /confirmerOui: 'Oui, tout effacer'/);
+  assert.match(html, /confirmerOui: 'Yes, erase everything'/);
+  assert.ok(!/Un clic suffit/.test(html));
+});
