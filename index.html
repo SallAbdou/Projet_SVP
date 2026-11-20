@@ -23,13 +23,13 @@
 </div>
 <figure style="margin:0;display:flex;flex-direction:column;gap:12px">
 <div class="mini-bento" role="img" aria-label="{{t.apercuLabel}}">
-<div class="mini-tuile or"><span class="mini-rang">{{t.n1}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span><span class="mini-titre">{{t.exemple1}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
-<div class="mini-tuile large"><span class="mini-rang">{{t.n2}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="mini-ligne"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="mini-ligne"></span></div>
-<div class="mini-tuile large"><span class="mini-rang">{{t.n5}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n6}}</span><span class="mini-ligne"></span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n7}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile or"><span class="mini-tete"><span class="mini-rang">{{t.n1}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span></span><span class="mini-titre">{{t.exemple1}}</span><span class="etiquette-source mini-puce">{{t.source1}}</span></div>
+<div class="mini-tuile large"><span class="mini-tete"><span class="mini-rang">{{t.n2}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span></span><span class="mini-titre-petit">{{t.exemple2}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="puce puce-petrir mini-puce">{{t.petrir}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="puce puce-petrir mini-puce">{{t.petrir}}</span></div>
+<div class="mini-tuile large"><span class="mini-tete"><span class="mini-rang">{{t.n5}}</span><span class="puce puce-petrir mini-puce">{{t.petrir}}</span></span><span class="mini-titre-petit">{{t.exemple5}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n6}}</span><span class="puce puce-rassis mini-puce">{{t.rassis}}</span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n7}}</span><span class="puce puce-rassis mini-puce">{{t.rassis}}</span></div>
 </div>
 <figcaption style="font-size:14px;color:var(--doux)">{{t.apercuLegende}}</figcaption>
 </figure>
@@ -72,7 +72,8 @@ chapo: 'Tu choisis tes thèmes et ton niveau. On sélectionne, on note et on ré
 cta: 'Goûter ma fournée', ctaConnecte: 'Voir ma fournée du jour', dejaCompte: 'J’ai déjà un compte',
 apercuLabel: 'Aperçu de la fournée du jour : la news n°1 en grand, en doré, puis les 6 suivantes',
 apercuLegende: 'Ta fournée du jour : la news la mieux notée en doré, les suivantes autour',
-n1: 'n°1', chaud: 'Tout chaud', n2: 'n°2', n3: 'n°3', n4: 'n°4', n5: 'n°5', n6: 'n°6', n7: 'n°7', exemple1: 'Les agents IA entrent dans les PME',
+n1: 'n°1', chaud: 'Tout chaud', n2: 'n°2', n3: 'n°3', n4: 'n°4', n5: 'n°5', n6: 'n°6', n7: 'n°7', exemple1: 'Les agents IA entrent dans les PME', source1: 'The Decoder', petrir: 'À pétrir', rassis: 'Rassis',
+exemple2: 'Comment les PME mesurent le retour sur investissement de l’IA', exemple5: 'Les assistants de code arrivent dans les outils no-code',
 commentTitre: 'Comment ça marche',
 etapes: [
 ['On collecte', 'Toutes les 3 heures, on ramasse l’actu IA dans des dizaines de sources fiables.'],
@@ -91,7 +92,8 @@ chapo: 'Pick your topics and your level. We select, rate and sum up the best AI 
 cta: 'Taste my batch', ctaConnecte: 'See today’s batch', dejaCompte: 'I already have an account',
 apercuLabel: 'Preview of today’s batch: news number 1 large and golden, then the 6 next ones',
 apercuLegende: 'Your daily batch: the best rated news in gold, the next ones around it',
-n1: '#1', chaud: 'Piping hot', n2: '#2', n3: '#3', n4: '#4', n5: '#5', n6: '#6', n7: '#7', exemple1: 'AI agents are moving into small businesses',
+n1: '#1', chaud: 'Piping hot', n2: '#2', n3: '#3', n4: '#4', n5: '#5', n6: '#6', n7: '#7', exemple1: 'AI agents are moving into small businesses', source1: 'The Decoder', petrir: 'Needs kneading', rassis: 'Gone stale',
+exemple2: 'How small businesses measure the return on AI', exemple5: 'Code assistants arrive in no-code tools',
 commentTitre: 'How it works',
 etapes: [
 ['We gather', 'Every 3 hours, we collect AI news from dozens of reliable sources.'],
