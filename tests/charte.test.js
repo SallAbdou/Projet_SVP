@@ -376,3 +376,18 @@ test('mini-tuile dorée de la landing : titre et rang en couleurs du n°1, lisib
   assert.match(p, /\.mini-titre\{[^}]*color:var\(--or-texte\)/);
   assert.match(p, /\.mini-tuile\.or \.mini-rang\{background:var\(--or-brun\);color:var\(--or-surface\)\}/);
 });
+
+// Lot 25 : garde-fou de couverture. Les quatre thèmes sont bien lus dans charte.css, et chaque fond aux couleurs
+// imposées (repos et survol) a au moins une paire texte vérifiée à 4,5:1 dans TEXTE.
+test('contrastes : quatre thèmes lus, chaque fond imposé couvert par une paire texte', () => {
+  for (const nom of ['bronze', 'classique', 'nuit', 'contraste']) assert.ok(Object.keys(BLOCS[nom] || {}).length > 5, 'bloc ' + nom + ' non lu');
+  const P = require('../tools/palette-oklch.js');
+  const fonds = Object.keys(P.imposees).filter(k => /(fond|survol)$/.test(k) && !/pain|grigne/.test(k));
+  assert.ok(fonds.length >= 6, fonds.join(', '));
+  for (const k of fonds) assert.ok(TEXTE.some(([, b]) => b === k), '--' + k + ' sans paire texte');
+  // Focus visible aussi sur le miel (survols de liens et tuiles).
+  for (const [nom, vars] of Object.entries(THEMES)) {
+    const c = C.contraste(vars.focus, vars.miel);
+    assert.ok(c >= 3, nom + ' : focus sur miel = ' + arrondi(c));
+  }
+});
