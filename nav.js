@@ -40,7 +40,7 @@
         ? '<span data-compteur aria-label="' + esc(o.compteurGardeManger + ' ' + t.compteur[o.compteurGardeManger > 1 ? 1 : 0]) + '" style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--miel);color:var(--brun-fonce)">' + o.compteurGardeManger + '</span>'
         : '';
       return '<a href="' + p.href + '"' + (actif ? ' aria-current="page"' : '') + ' style="' + (actif ? LIEN_ACTIF : LIEN) + '">' +
-        '<svg width="18" height="18"' + (p.nom ? ' data-icone="' + p.nom + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p.icone + '</svg>' +
+        '<svg width="18" height="18"' + (p.nom ? ' data-icone="' + p.nom + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p.icone + '</svg>' +
         esc(t.liens[p.id]) + compteur + '</a>';
     }).join('');
     var fr = o.lang !== 'en';
@@ -54,7 +54,7 @@
       '<span class="pq-nav-tagline" style="font-size:13px;color:var(--doux)">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
       '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
-      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>' + esc(t.menu) + '</button>' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>' + esc(t.menu) + '</button>' +
       '</div>' +
       '<div id="pq-nav-panneau" class="pq-nav-panneau">' +
       '<div style="display:flex;flex-direction:column;gap:4px">' + liens + '</div>' +

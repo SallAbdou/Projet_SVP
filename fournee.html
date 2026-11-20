@@ -84,12 +84,12 @@ main.fournee-tient .jauges{margin-top:auto}
 .tool-sizes{display:inline-flex;gap:4px}
 .tool{min-height:44px;min-width:44px;padding:0 10px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .tool[aria-pressed="true"]{background:var(--brun);border-color:var(--brun);color:var(--sur-plein)}
-.tool-drag{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:18px}
+.tool-drag{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.tool svg{display:block;pointer-events:none}
 .bento.editing .tile{cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .bento.editing .tile button{cursor:pointer}
 .tile-tools{flex-wrap:nowrap;gap:4px;padding-bottom:0;border-bottom:0}
 .tile-tools .tool{min-height:28px;min-width:28px;height:28px;padding:0 7px;border-radius:8px;border-width:1px;font-size:12px}
-.tile-tools .tool-drag{font-size:14px}
 .tile-tools .tool-sizes{gap:2px}
 @media (pointer:coarse){.tile-tools{flex-wrap:wrap}.tile-tools .tool{min-height:44px;min-width:44px;height:auto;font-size:inherit}}
 .tile-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:auto;padding-top:4px}
@@ -186,9 +186,9 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <sc-for list="{{slots}}" as="s" hint-placeholder-count="7">
 <section data-tile="{{s.id}}" class="tile" aria-labelledby="tt-{{s.id}}">
 <div class="tile-tools" role="group" aria-label="{{s.toolsLabel}}">
-<span class="tool tool-drag" data-drag title="{{s.dragLabel}}" aria-hidden="true">⠿</span>
-<button type="button" class="tool" data-id="{{s.id}}" data-act="up" onClick="{{tileUp}}" aria-label="{{s.upLabel}}">↑</button>
-<button type="button" class="tool" data-id="{{s.id}}" data-act="down" onClick="{{tileDown}}" aria-label="{{s.downLabel}}">↓</button>
+<span class="tool tool-drag" data-drag title="{{s.dragLabel}}" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg></span>
+<button type="button" class="tool" data-id="{{s.id}}" data-act="up" onClick="{{tileUp}}" aria-label="{{s.upLabel}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>
+<button type="button" class="tool" data-id="{{s.id}}" data-act="down" onClick="{{tileDown}}" aria-label="{{s.downLabel}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg></button>
 <span class="tool-sizes" role="group" aria-label="{{s.sizeLabel}}">
 <button type="button" class="tool" data-id="{{s.id}}" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
 <button type="button" class="tool" data-id="{{s.id}}" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
@@ -214,9 +214,9 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <p class="score">{{s.money}}</p>
 <div class="tile-actions">
 <a href="{{s.kneadHref}}" data-act="knead" data-id="{{s.id}}" class="btn-petrir act-knead"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg><span>{{s.knead}}<span class="act-suite">{{s.kneadSuite}}</span></span></a>
-<button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
-<button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="pq-sr">{{s.skipLabel}}</span></button>
-<a class="act" data-act="read" data-id="{{s.id}}" href="{{s.url}}" target="_blank" rel="noopener" aria-label="{{s.readLabel}}" title="{{s.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{s.read}}</span></a>
+<button type="button" class="act" data-act="save" data-id="{{s.id}}" aria-pressed="{{s.saved}}" title="{{s.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{s.saveLabel}}</span></button>
+<button type="button" class="act" data-act="skip" data-id="{{s.id}}" title="{{s.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="pq-sr">{{s.skipLabel}}</span></button>
+<a class="act" data-act="read" data-id="{{s.id}}" href="{{s.url}}" target="_blank" rel="noopener" aria-label="{{s.readLabel}}" title="{{s.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{s.read}}</span></a>
 </div>
 </div>
 </section>
@@ -224,9 +224,9 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 
 <section data-tile="graph" class="tile" aria-labelledby="tt-graph">
 <div class="tile-tools" role="group" aria-label="{{g.toolsLabel}}">
-<span class="tool tool-drag" data-drag title="{{g.dragLabel}}" aria-hidden="true">⠿</span>
-<button type="button" class="tool" data-id="graph" data-act="up" onClick="{{tileUp}}" aria-label="{{g.upLabel}}">↑</button>
-<button type="button" class="tool" data-id="graph" data-act="down" onClick="{{tileDown}}" aria-label="{{g.downLabel}}">↓</button>
+<span class="tool tool-drag" data-drag title="{{g.dragLabel}}" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg></span>
+<button type="button" class="tool" data-id="graph" data-act="up" onClick="{{tileUp}}" aria-label="{{g.upLabel}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button>
+<button type="button" class="tool" data-id="graph" data-act="down" onClick="{{tileDown}}" aria-label="{{g.downLabel}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg></button>
 <span class="tool-sizes" role="group" aria-label="{{g.sizeLabel}}">
 <button type="button" class="tool" data-id="graph" data-size="S" data-act="size-S" onClick="{{tileSize}}" aria-pressed="false">S</button>
 <button type="button" class="tool" data-id="graph" data-size="M" data-act="size-M" onClick="{{tileSize}}" aria-pressed="false">M</button>
@@ -268,7 +268,7 @@ subtitle: 'Les sujets croustillants, tout juste sortis du four.',
 sample: 'Données d’exemple', customize: 'Personnaliser', done: 'Terminer',
 loading: 'Mise au four…', loadError: 'Impossible de charger la fournée. Recharge la page.', exemple: 'Fournée d’exemple : n8n ne répond pas',
 waiting: 'Encore quelques secondes : on choisit tes sujets du jour.', waitTitle: 'Ta fournée est au four, {prenom}', why: 'Pourquoi cette couleur :',
-editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la mieux notée). Attrape un bloc n’importe où pour le déplacer (au doigt : appui long, ou la poignée ⠿), ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
+editHint: 'Chaque emplacement reçoit chaque matin la news de ce rang (n°1 = la mieux notée). Attrape un bloc n’importe où pour le déplacer (au doigt : appui long, ou la poignée à six points), ou utilise les flèches. Tes choix sont enregistrés sur cet appareil.',
 countLabel: 'News affichées', reset: 'Disposition par défaut',
 mepTitre: 'Mise en page', toastMep: 'Mise en page « {nom} » appliquée', mepVide: 'Déplace ou redimensionne un bloc pour créer ta mise en page',
 mep: {
@@ -297,7 +297,7 @@ subtitle: 'Crispy topics, fresh out of the oven.',
 sample: 'Sample data', customize: 'Customise', done: 'Done',
 loading: 'Baking…', loadError: 'Could not load the batch. Reload the page.', exemple: 'Sample batch: n8n is not responding',
 waiting: 'Just a few more seconds: we are picking today’s topics.', waitTitle: 'Your batch is in the oven, {prenom}', why: 'Why this colour:',
-editHint: 'Each slot gets that day’s news of the same rank every morning (#1 = best rated). Grab a block anywhere to move it (on touch: long press, or the ⠿ handle), or use the arrows. Your choices are saved on this device.',
+editHint: 'Each slot gets that day’s news of the same rank every morning (#1 = best rated). Grab a block anywhere to move it (on touch: long press, or the six-dot handle), or use the arrows. Your choices are saved on this device.',
 countLabel: 'News shown', reset: 'Default layout',
 mepTitre: 'Layout', toastMep: 'Layout “{nom}” applied', mepVide: 'Move or resize a block to create your own layout',
 mep: {

@@ -19,7 +19,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .four-lien:hover .four-cta{text-decoration:underline}
 .four-svg{display:block;width:100%;max-width:220px;height:auto}
 .four-titre{font-weight:700;font-size:16.5px;line-height:1.35;overflow-wrap:anywhere}
-.four-cta{font-weight:700;font-size:14px;color:var(--braise)}
+.four-cta{display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:14px;color:var(--braise)}
 .four-vapeur{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:0;animation:pq-four-vapeur 3s ease-out infinite}
 .four-lueur{animation:pq-four-lueur 2.4s ease-in-out infinite alternate}
 @keyframes pq-four-vapeur{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
@@ -107,7 +107,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <a href="/fournee#n1" class="four-lien" aria-label="{{fourLabel}}" style="{{nextStyle}}">
 <svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
 <span class="four-titre">{{next.titre}}</span>
-<span class="four-cta">{{t.fourCta}}</span>
+<span class="four-cta">{{t.fourCta}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex:none"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></span>
 </a>
 <div role="status" style="{{fourAttenteStyle}}">
 <svg class="four-svg" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg>
@@ -129,7 +129,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <section aria-labelledby="pantry-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:4px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-bottom:8px">
 <h2 id="pantry-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.pantryTitle}}</h2>
-<a href="/garde-manger" style="font-weight:700;font-size:14px;display:inline-flex;align-items:center;min-height:44px">{{t.pantryAll}}</a>
+<a href="/garde-manger" style="font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:4px;min-height:44px">{{t.pantryAll}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex:none"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a>
 </div>
 <sc-for list="{{pantry}}" as="p" hint-placeholder-count="3">
 <div style="display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 0;border-top:1px solid var(--trait)">
@@ -167,10 +167,10 @@ bar: '{label} : {n} impressions, sujet {etat}',
 etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
 noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
 insightNeutral: 'Publie et reporte tes chiffres pour voir ce qui marche le mieux.',
-nextTitle: 'Tout juste sorti du four', fourCta: 'Voir ma fournée →', fourLabel: 'Voir la première news du jour : {titre}',
+nextTitle: 'Tout juste sorti du four', fourCta: 'Voir ma fournée', fourLabel: 'Voir la première news du jour : {titre}',
 nextLoading: 'La fournée chauffe…', loading: 'Mise au four…', nextEmpty: 'Rien de nouveau au four pour l’instant.', nextEmptyCta: 'Voir la fournée du jour',
 gainTitle: 'Ce que ta veille a rapporté', gainContacts: 'Prises de contact', gainPosts: 'Posts publiés grâce à la fournée', gainSince: 'Depuis le début',
-pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger →', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
+pantryTitle: 'Mis de côté au garde-manger', pantryAll: 'Tout le garde-manger', knead: 'Pétrir', kneadLabel: 'Pétrir « {titre} »',
 fraicheur: { chaud: 'Encore chaud', enfourner: 'À enfourner avant demain', rassis: 'Rassis' },
 pantryEmpty: 'Rien de côté pour l’instant.', pantryEmptyCta: 'Aller à la fournée du jour'
 },
@@ -189,10 +189,10 @@ bar: '{label}: {n} impressions, topic {etat}',
 etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
 noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
 insightNeutral: 'Publish and report your figures to see what works best.',
-nextTitle: 'Fresh out of the oven', fourCta: 'See my batch →', fourLabel: 'See today’s first news: {titre}',
+nextTitle: 'Fresh out of the oven', fourCta: 'See my batch', fourLabel: 'See today’s first news: {titre}',
 nextLoading: 'The batch is baking…', loading: 'In the oven…', nextEmpty: 'Nothing new in the oven right now.', nextEmptyCta: 'See today’s batch',
 gainTitle: 'What your watch brought in', gainContacts: 'Contact requests', gainPosts: 'Posts published thanks to the batch', gainSince: 'Since the start',
-pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry →', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
+pantryTitle: 'Set aside in the pantry', pantryAll: 'The whole pantry', knead: 'Knead', kneadLabel: 'Knead “{titre}”',
 fraicheur: { chaud: 'Still warm', enfourner: 'Bake before tomorrow', rassis: 'Gone stale' },
 pantryEmpty: 'Nothing set aside yet.', pantryEmptyCta: 'Go to today’s batch'
 }

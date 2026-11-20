@@ -81,7 +81,7 @@ test('accroche sous le logo : « L’actu IA, pétrie pour toi. »', () => {
 
 test('icône flamme pour la fournée du jour, même taille que les autres', () => {
   const lien = html({}).split('<a href="/fournee"')[1].split('</a>')[0];
-  assert.match(lien, /<svg width="18" height="18"[^>]*data-icone="flamme"[^>]*stroke-width="2"/);
+  assert.match(lien, /<svg width="18" height="18"[^>]*data-icone="flamme"[^>]*stroke-width="1.5"/);
 });
 
 test('bloc marque (logo, nom, accroche) centré dans la colonne, à gauche dans la barre mobile', () => {
