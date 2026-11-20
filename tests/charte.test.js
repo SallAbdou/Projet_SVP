@@ -271,7 +271,7 @@ test('profondeur : fond de page en léger dégradé et ombres teintées brun, un
 });
 
 test('bouton Pétrir en pastille rouge imposée : fond uni sous le texte, petit pain blanc décoratif, appui, focus, sans animation si réduit', () => {
-  assert.match(css, /\.btn-petrir\{[^}]*border-radius:999px/);
+  assert.match(css, /\.btn-petrir\{[^}]*border-radius:10px/);
   assert.match(css, /\.btn-petrir\{[^}]*background:var\(--petrir-btn-fond\)/);
   assert.match(css, /\.btn-petrir\{[^}]*border:1\.5px solid var\(--petrir-btn-bord\)/);
   assert.match(css, /\.btn-petrir\{[^}]*color:var\(--petrir-btn-texte\)/);

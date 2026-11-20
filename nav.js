@@ -25,8 +25,8 @@
 
   var LIEN = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;color:var(--texte-2);text-decoration:none';
   var LIEN_ACTIF = 'display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:10px;background:var(--creme);color:var(--brun-fonce);font-weight:600;text-decoration:none;box-shadow:inset 3px 0 0 var(--braise),inset 0 0 0 1px var(--bord)';
-  var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:600;cursor:pointer';
-  var LANG_OFF = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:999px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer';
+  var LANG_ON = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:8px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:600;cursor:pointer';
+  var LANG_OFF = 'min-height:44px;min-width:52px;padding:0 14px;border-radius:8px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer';
 
   var DECO = 'min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--bord-fort);background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer;align-self:flex-start';
 
@@ -37,7 +37,7 @@
     var liens = PAGES.map(function (p) {
       var actif = p.id === o.page;
       var compteur = p.id === 'garde-manger' && o.compteurGardeManger > 0
-        ? '<span data-compteur aria-label="' + esc(o.compteurGardeManger + ' ' + t.compteur[o.compteurGardeManger > 1 ? 1 : 0]) + '" style="margin-left:auto;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--miel);color:var(--brun-fonce)">' + o.compteurGardeManger + '</span>'
+        ? '<span data-compteur aria-label="' + esc(o.compteurGardeManger + ' ' + t.compteur[o.compteurGardeManger > 1 ? 1 : 0]) + '" style="margin-left:auto;font-size:12px;color:var(--doux);font-variant-numeric:tabular-nums">' + o.compteurGardeManger + '</span>'
         : '';
       return '<a href="' + p.href + '"' + (actif ? ' aria-current="page"' : '') + ' style="' + (actif ? LIEN_ACTIF : LIEN) + '">' +
         '<svg width="18" height="18"' + (p.nom ? ' data-icone="' + p.nom + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p.icone + '</svg>' +
@@ -59,7 +59,7 @@
       '<div id="pq-nav-panneau" class="pq-nav-panneau">' +
       '<div style="display:flex;flex-direction:column;gap:4px">' + liens + '</div>' +
       '<div style="margin-top:auto;display:flex;flex-direction:column;gap:16px">' +
-      '<div role="group" aria-label="' + esc(t.langLabel) + '" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--miel);align-self:flex-start">' +
+      '<div role="group" aria-label="' + esc(t.langLabel) + '" style="display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--miel);align-self:flex-start">' +
       '<button type="button" data-lang="fr" data-focus="lang-fr" aria-pressed="' + fr + '" style="' + (fr ? LANG_ON : LANG_OFF) + '">FR</button>' +
       '<button type="button" data-lang="en" data-focus="lang-en" aria-pressed="' + !fr + '" style="' + (fr ? LANG_OFF : LANG_ON) + '">EN</button></div>' +
       '<div style="border-top:1px solid var(--bord);padding-top:16px;display:flex;align-items:center;gap:12px">' +
@@ -86,7 +86,7 @@
     '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
     '.pq-nav-nom span{color:var(--brun)!important}' +
     '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
-    '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer}' +
+    '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer}' +
     '.pq-nav-panneau{display:none;position:absolute;left:-16px;right:-16px;top:calc(100% + 10px);padding:16px;background:var(--sable);border-bottom:1px solid var(--bord);box-shadow:var(--ombre-2);max-height:calc(100vh - 64px);overflow:auto;gap:18px}' +
     '.pq-nav[data-ouvert] .pq-nav-panneau{display:flex}}';
 

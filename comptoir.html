@@ -9,10 +9,14 @@ body{margin:0;background:var(--fond-page)}
 a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
 a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .kpis{display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:16px}
-.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:999px;background:var(--croute);color:var(--sur-clair);font-weight:600;text-decoration:none}
+.btn-plein{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--croute);color:var(--sur-clair);font-weight:600;text-decoration:none}
 .btn-plein:hover{background:var(--or-milieu);color:var(--sur-clair)}
-.btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--braise);color:var(--braise);font-weight:600;font-size:14px;text-decoration:none}
+.btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:10px;border:1.5px solid var(--braise);color:var(--braise);font-weight:600;font-size:14px;text-decoration:none}
 .btn-ligne:hover{background:var(--braise);color:var(--sur-plein)}
+/* Légende du graphique : la couleur de chaque barre dit l'état du sujet (aussi annoncé par le libellé de la barre). */
+.legende{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--doux)}
+.legende>span{display:inline-flex;align-items:center;gap:8px}
+.legende-case{width:10px;height:10px;border-radius:2px;flex:none}
 /* Four illustré : un seul lien vers la news n°1 de la fournée. */
 .four-lien{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 12px 16px;border-radius:16px;color:var(--texte);text-decoration:none;text-align:center;transition:background .2s,transform .2s}
 .four-lien:hover{background:var(--miel);color:var(--texte);transform:translateY(-2px)}
@@ -59,7 +63,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </div>
 </section>
 <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
-<section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:16px">
+<section aria-labelledby="vis-t" style="flex:999 1 520px;min-width:0;background:var(--creme);border:1px solid var(--bord);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
 <h2 id="vis-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:600">{{t.visTitle}}</h2>
 <span style="font-size:13px;color:var(--doux)">{{t.visSub}}</span>
@@ -78,12 +82,13 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <span style="min-width:0;overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto">{{b.label}}</span>
 </sc-for>
 </div>
+<div class="legende" aria-hidden="true"><span><span class="legende-case" style="background:var(--barre-chaud)"></span>{{leg.chaud}}</span><span><span class="legende-case" style="background:var(--barre-petrir)"></span>{{leg.petrir}}</span><span><span class="legende-case" style="background:var(--barre-rassis);box-shadow:inset 0 0 0 1.5px var(--barre-rassis-contour)"></span>{{leg.rassis}}</span></div>
 </div>
 <p style="{{noBarsStyle}}">{{noBars}}</p>
-<p style="margin:0;padding:12px 16px;border-radius:12px;background:var(--miel);color:var(--brun-fonce);{{insStyle}}">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
+<p style="margin:0;padding:12px 16px;border-radius:8px;background:var(--miel);color:var(--brun-fonce);{{insStyle}}">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
-<section aria-labelledby="next-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
+<section aria-labelledby="next-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px">
 <h2 id="next-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;font-weight:600">{{t.nextTitle}}</h2>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <radialGradient id="pq-four-feu" cx="50%" cy="80%" r="75%"><stop offset="0" stop-color="var(--pain-grigne)"></stop><stop offset="0.45" stop-color="var(--croute)"></stop><stop offset="1" stop-color="var(--braise-vive)"></stop></radialGradient>
@@ -118,7 +123,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 <a href="/fournee" class="btn-plein" style="align-self:flex-start">{{t.nextEmptyCta}}</a>
 </div>
 </section>
-<section aria-labelledby="gain-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
+<section aria-labelledby="gain-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px">
 <h2 id="gain-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;font-weight:600">{{t.gainTitle}}</h2>
 <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:var(--doux)">{{t.gainContacts}}</span><strong style="font-weight:600;font-variant-numeric:tabular-nums">{{gainContacts}}</strong></div>
 <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span style="color:var(--doux)">{{t.gainPosts}}</span><strong style="font-weight:600;font-variant-numeric:tabular-nums">{{gainPosts}}</strong></div>
@@ -126,7 +131,7 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 </section>
 </div>
 </div>
-<section aria-labelledby="pantry-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:4px">
+<section aria-labelledby="pantry-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:4px">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;padding-bottom:8px">
 <h2 id="pantry-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:600">{{t.pantryTitle}}</h2>
 <a href="/garde-manger" style="font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:4px;min-height:44px">{{t.pantryAll}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" style="flex:none"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a>
@@ -251,8 +256,8 @@ return {
 t: t,
 exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:var(--doux);padding:6px 12px;border-radius:10px;border:1px dashed var(--bord-fort);align-self:flex-start' : HIDE,
 eyebrow: jour.charAt(0).toUpperCase() + jour.slice(1) + ' · ' + t.eyebrowTail,
-sampleStyle: exemples.length ? 'font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--creme); border: 1px dashed var(--bord-fort); color: var(--doux)' : HIDE,
-waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px 16px; border-radius: 14px; background: var(--miel); color: var(--brun-fonce); border: 1px solid var(--bord-fort)' : HIDE,
+sampleStyle: exemples.length ? 'font-size: 13px; color: var(--doux)' : HIDE,
+waitStyle: attente ? 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px 16px; border-radius: 12px; background: var(--miel); color: var(--brun-fonce); border: 1px solid var(--bord-fort)' : HIDE,
 waitText: attente === 1 ? t.waitOne : remplir(t.waitMany, { n: attente }),
 kpis: champs.map(function (c, i) {
 var last = i === champs.length - 1;
@@ -272,9 +277,10 @@ bars: barres.map(function (b) {
 return {
 value: num(b.impressions), label: b.label,
 aria: remplir(t.bar, { label: b.label, n: num(b.impressions), etat: t.etats[b.feu] }),
-barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; box-shadow: ' + (Charte.contourBarre(b.feu) || 'none') + '; border-radius: 14px 14px 4px 4px'
+barStyle: 'width: 100%; height: ' + b.hauteur + '%; background: ' + Charte.barre(b.feu) + '; box-shadow: ' + (Charte.contourBarre(b.feu) || 'none') + '; border-radius: 6px 6px 2px 2px'
 };
 }),
+leg: { chaud: t.etats.vert, petrir: t.etats.orange, rassis: t.etats.rouge },
 ins: !charge ? { avant: t.loading, gras: '', apres: '' } : Comptoir.phraseAnalyse(chaudGagne, lang) || { avant: t.insightNeutral, gras: '', apres: '' },
 insStyle: charge && chaudGagne ? 'font-size:16px;font-weight:600' : 'font-size:14px',
 // Four : lien vers la news n°1 quand la fournée est prête, four qui chauffe sans lien pendant l'attente.
