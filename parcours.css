@@ -88,7 +88,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 /* Aperçu de la bento (statique) */
 .mini-bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:88px;gap:8px}
 .mini-tuile{background:var(--creme);border:1px solid var(--bord);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0;overflow:hidden}
-.mini-tuile.or{background:var(--maillard);border:2px solid var(--or-bord);box-shadow:0 6px 16px color-mix(in srgb,var(--or-bord) 28%,transparent);grid-column:span 2;grid-row:span 2}
+.mini-tuile.or{background:var(--maillard);border:2px solid var(--or-bord);box-shadow:var(--ombre-1);grid-column:span 2;grid-row:span 2}
 .mini-tuile.large{grid-column:span 2}
 .mini-rang{align-self:flex-start;font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px;background:var(--sable);color:var(--brun-fonce)}
 .mini-tuile.or .mini-rang{background:var(--or-brun);color:var(--or-surface)}

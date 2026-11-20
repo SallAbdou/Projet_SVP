@@ -16,9 +16,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .tile{container-type:inline-size;min-width:0;min-height:0;overflow:hidden;background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:20px 24px;display:flex;flex-direction:column;gap:12px}
 .tile-body{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
 .tile[hidden]{display:none}
-/* Arrivée depuis le four du comptoir : halo doré de 2 s, fixe sous prefers-reduced-motion. */
-.bento .tile.pq-halo{box-shadow:0 0 0 4px var(--croute),0 0 26px 8px color-mix(in srgb,var(--croute) 55%,transparent);animation:pq-halo 1s ease-in-out 2 alternate}
-@keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute),0 0 10px 2px color-mix(in srgb,var(--croute) 35%,transparent)}to{box-shadow:0 0 0 5px var(--croute),0 0 30px 10px color-mix(in srgb,var(--croute) 60%,transparent)}}
+/* Arrivée depuis le four du comptoir : liseré croûte de 2 s, fixe sous prefers-reduced-motion. */
+.bento .tile.pq-halo{box-shadow:0 0 0 4px var(--croute);animation:pq-halo 1s ease-in-out 2 alternate}
+@keyframes pq-halo{from{box-shadow:0 0 0 3px var(--croute)}to{box-shadow:0 0 0 5px var(--croute)}}
 @media (prefers-reduced-motion:reduce){.bento .tile.pq-halo{animation:none}}
 .bento .tile.pq-halo .act-knead:focus{outline:2px solid var(--braise);outline-offset:2px}
 .tile-S{grid-column:span 1;grid-row:span 1}
@@ -71,9 +71,9 @@ main.fournee-tient .jauges{margin-top:auto}
 }
 @media (max-width:640px){.tile .score{display:none}}
 /* Emplacement n°1 : doré « Maillard », la croûte bien dorée, pour repérer d'un coup d'œil la news la mieux notée. */
-.tile[data-tile="n1"]{--texte:var(--or-texte);--texte-2:var(--or-texte-2);--doux:var(--or-texte-2);--brun:var(--or-brun);--brun-fonce:var(--or-texte-2);--creme:var(--or-surface);--sur-plein:var(--or-sur-plein);--source:var(--or-source);--source-fonce:var(--or-source-fonce);--bord-fort:var(--or-bord);color:var(--sur-clair);background:var(--maillard);border:2px solid var(--cuivre);box-shadow:0 8px 22px color-mix(in srgb,var(--or-bord) 30%,transparent)}
+.tile[data-tile="n1"]{--texte:var(--or-texte);--texte-2:var(--or-texte-2);--doux:var(--or-texte-2);--brun:var(--or-brun);--brun-fonce:var(--or-texte-2);--creme:var(--or-surface);--sur-plein:var(--or-sur-plein);--source:var(--or-source);--source-fonce:var(--or-source-fonce);--bord-fort:var(--or-bord);color:var(--sur-clair);background:var(--maillard);border:2px solid var(--cuivre);box-shadow:var(--ombre-1)}
 .bento.editing .tile[data-tile="n1"]{border:2px dashed var(--brun)}
-.tile[data-tile="n1"] .rank{background:var(--brun);color:var(--or-surface);box-shadow:0 0 0 2px var(--or-haut)}
+.tile[data-tile="n1"] .rank{background:var(--brun);color:var(--or-surface)}
 .tile[data-tile="n1"] .tile-body p{color:var(--sur-clair)!important}
 .tile[data-tile="n1"] .tile-body a[target]{background:var(--creme);border-color:var(--cuivre)!important}
 .tile[data-tile="n1"] .tile-tools .tool{background:var(--creme)}
@@ -125,7 +125,7 @@ a.act[data-act="read"]:active{transform:translateY(1px)}
 .mep-groupe{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 .mep{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-height:44px;padding:10px;border-radius:14px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;text-align:left;cursor:pointer}
 .mep:hover{border-color:var(--brun)}
-.mep[aria-checked="true"]{border:2px solid var(--brun);padding:9.5px;background:var(--creme);box-shadow:0 0 0 3px color-mix(in srgb,var(--brun) 15%,transparent)}
+.mep[aria-checked="true"]{border:2px solid var(--brun);padding:9.5px;background:var(--creme)}
 .mep[aria-checked="true"] .mep-nom::before{content:'✓ ';color:var(--brun)}
 .mep-mini{display:block;padding:6px;border-radius:8px;background:var(--sable)}
 .mep-mini svg{display:block;width:100%;height:auto;max-height:84px}
