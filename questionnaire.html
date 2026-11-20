@@ -82,9 +82,9 @@
 <fieldset class="champ">
 <legend><h1 id="t6" class="titre" tabindex="-1">{{t.titre6}}</h1></legend>
 <div class="choix choix-ligne">
-<label for="newsletter"><input id="newsletter" type="checkbox" onChange="{{basculerNewsletter}}" aria-describedby="err-newsletter" {{cocheNewsletter}}><span>{{t.consentNewsletter}}</span></label>
+<label for="newsletter"><input id="newsletter" type="checkbox" onChange="{{basculerNewsletter}}" aria-invalid="{{inv.newsletter}}" aria-describedby="err-newsletter" {{cocheNewsletter}}><span>{{t.consentNewsletter}}</span></label>
 <p id="err-newsletter" class="erreur">{{err.newsletter}}</p>
-<label for="rgpd"><input id="rgpd" type="checkbox" onChange="{{basculerRgpd}}" aria-describedby="err-rgpd" {{cocheRgpd}}><span>{{t.consentRgpd}}</span></label>
+<label for="rgpd"><input id="rgpd" type="checkbox" onChange="{{basculerRgpd}}" aria-invalid="{{inv.rgpd}}" aria-describedby="err-rgpd" {{cocheRgpd}}><span>{{t.consentRgpd}}</span></label>
 <p id="err-rgpd" class="erreur">{{err.rgpd}}</p>
 </div>
 <a class="lien" href="/confidentialite">{{t.confidentialite}}</a>

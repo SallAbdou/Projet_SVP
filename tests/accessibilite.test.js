@@ -152,3 +152,41 @@ test('confidentialité : effacement en deux temps, confirmation et annulation', 
   assert.match(html, /confirmerOui: 'Yes, erase everything'/);
   assert.ok(!/Un clic suffit/.test(html));
 });
+
+// Lot 24 (m1, 3.3.3) : champs vides à la connexion, message qui dit quoi corriger, sur le bon champ.
+test('connexion : messages distincts pour e-mail ou mot de passe vides', () => {
+  const html = lire('connexion.html');
+  assert.match(html, /emailVide: 'Indique ton e-mail\.'/);
+  assert.match(html, /mdpVide: 'Indique ton mot de passe\.'/);
+  assert.match(html, /<input id="email"[^>]*aria-invalid="\{\{invalideEmail\}\}"/);
+  assert.match(html, /<input id="mdp"[^>]*aria-invalid="\{\{invalideMdp\}\}"/);
+});
+
+// Lot 24 (m2) : les cases de consentement en erreur portent aria-invalid et un liseré visible.
+test('questionnaire : cases de consentement marquées en erreur', () => {
+  const html = lire('questionnaire.html');
+  assert.match(html, /<input id="newsletter"[^>]*aria-invalid="\{\{inv\.newsletter\}\}"/);
+  assert.match(html, /<input id="rgpd"[^>]*aria-invalid="\{\{inv\.rgpd\}\}"/);
+  assert.match(lire('parcours.css'), /\.choix label:has\(input\[aria-invalid="true"\]\)\{[^}]*var\(--erreur\)/);
+});
+
+// Lot 24 (m5, 2.4.2) : la 404 dit dans son titre que la page n'existe pas ; la cuisson est un décor.
+test('404 : titre explicite, barre de cuisson décorative', () => {
+  const html = lire('404.html');
+  assert.match(html, /<title>Page introuvable · Votre pAIn quotidien<\/title>/);
+  assert.match(html, /content="Page not found · Votre pAIn quotidien"/);
+  assert.ok(!/role="progressbar"/.test(html));
+});
+
+// Lot 24 (m6, 2.4.11) : le lanceur fixe du chat ne recouvre pas l'élément qui reçoit le focus.
+test('accueil : marge de défilement sous le lanceur du chat', () => {
+  assert.match(lire('parcours.css'), /html:has\(\.chat-lanceur\)\{scroll-padding-bottom:\d+px\}/);
+});
+
+// Lot 24 (m7, A2) : compteur relié au brouillon ; plus d'aside imbriqué dans main (axe).
+test('fournil : compteur relié au brouillon, colonne sans aside', () => {
+  const html = lire('fournil.html');
+  assert.match(html, /<span id="compteur-brouillon"/);
+  assert.match(html, /<textarea id="brouillon"[^>]*aria-describedby="compteur-brouillon"/);
+  assert.ok(!/<aside/.test(html));
+});

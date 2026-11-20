@@ -28,8 +28,11 @@ test('aria-current seulement sur la page courante', () => {
 test('compteur du garde-manger', () => {
   assert.ok(!html({ compteurGardeManger: 0 }).includes('data-compteur'));
   assert.ok(/data-compteur[^>]*>3</.test(html({ compteurGardeManger: 3 })));
-  assert.ok(html({ compteurGardeManger: 1 }).includes('aria-label="1 article mis de côté"'));
-  assert.ok(html({ compteurGardeManger: 3 }).includes('aria-label="3 articles mis de côté"'));
+  // Lot 24 (m3) : pas d'aria-label sur un span sans rôle ; chiffre masqué, texte lu à la place.
+  assert.ok(/data-compteur aria-hidden="true"[^>]*>1</.test(html({ compteurGardeManger: 1 })));
+  assert.ok(html({ compteurGardeManger: 1 }).includes('<span class="pq-sr">, 1 article mis de côté</span>'));
+  assert.ok(!/data-compteur[^>]*aria-label/.test(html({ compteurGardeManger: 2 })));
+  assert.ok(html({ compteurGardeManger: 3 }).includes('<span class="pq-sr">, 3 articles mis de côté</span>'));
 });
 
 test('prénom échappé', () => {
