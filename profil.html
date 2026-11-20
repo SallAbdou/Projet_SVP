@@ -43,6 +43,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .pf-retour-texte{margin:0;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .pf-retour-date{margin:2px 0 0;font-size:13px;color:var(--doux)}
 .pf-themes{border:0;margin:0;padding:0;min-width:0}
+.pf-anim{display:flex;align-items:center;gap:10px;min-height:24px}
+.pf-anim input{flex:none;width:20px;height:20px;margin:0;accent-color:var(--brun);cursor:pointer}
+.pf-anim input:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.pf-anim label{cursor:pointer}
 .pf-themes legend{padding:0;margin:0 0 10px}
 .pf-themes-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .pf-theme{display:flex;flex-direction:column;gap:10px;padding:10px 12px 12px;border:1.5px solid var(--bord-fort);border-radius:14px;background:var(--creme);color:var(--texte);font-weight:600;cursor:pointer}
@@ -58,13 +62,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .pf-apercu-pain{flex:none;width:34px;height:18px;border-radius:50%;background:linear-gradient(170deg,var(--pain-haut),var(--pain-bas))}
 @media (max-width:640px){.pf-carte{padding:18px}.pf-ligne{grid-template-columns:1fr}}
 </style>
-<style>*{box-sizing:border-box}html,body{overflow-x:hidden}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
-<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/retours.js"></script>
-</head><body><div id="root"></div>
+<style>*{box-sizing:border-box}html{overflow-x:hidden}body{overflow-x:clip}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script><script src="/retours.js"></script>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="profil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
-<main style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
+<main id="contenu" tabindex="-1" style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
 <p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{t.eyebrow}}</p>
@@ -91,7 +95,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <fieldset class="pf-themes"><legend class="pf-label">{{t.themeLegende}}</legend>
 <div class="pf-themes-grille"><sc-for list="{{themes}}" as="c" hint-placeholder-count="4"><label class="pf-theme" for="{{c.id}}"><span class="pf-apercu" data-theme="{{c.valeur}}" aria-hidden="true"><span class="pf-apercu-carte"><span class="pf-apercu-ligne"></span><span class="pf-apercu-or"></span><span class="pf-apercu-pain"></span></span></span><span class="pf-theme-choix"><input id="{{c.id}}" type="radio" name="theme" data-valeur="{{c.valeur}}" onChange="{{choisirTheme}}" {{c.coche}}><span>{{c.label}}</span></span></label></sc-for></div>
 </fieldset>
-<p role="status" aria-live="polite" class="pf-succes">{{themeAnnonce}}</p>
+<div class="pf-anim"><input id="animations" type="checkbox" aria-describedby="animations-aide" data-focus="animations" onChange="{{choisirAnimations}}" {{animCoche}}><label for="animations" class="pf-label">{{t.animLabel}}</label></div>
+<p id="animations-aide" class="pf-note">{{t.animAide}}</p>
+<p role="status" aria-live="polite" class="pf-succes">{{apparenceAnnonce}}</p>
 </section>
 <section aria-labelledby="retour-t" class="pf-carte">
 <h2 id="retour-t" class="pf-titre">{{t.retourT}}</h2>
@@ -133,7 +139,9 @@ session: 'Ta session a expiré : reconnecte-toi, ton texte sera à réécrire.'
 },
 derniersT: 'Tes derniers retours', listeVide: 'Aucun retour pour l’instant.', listeErreur: 'Impossible d’afficher tes retours pour l’instant.',
 apparenceT: 'Apparence', themeLegende: 'Thème de couleur',
-themes: { bronze: 'Bronze', classique: 'Boulangerie classique', nuit: 'Nuit', contraste: 'Contraste élevé' }, themeApplique: 'Thème « {nom} » appliqué.'
+themes: { bronze: 'Bronze', classique: 'Boulangerie classique', nuit: 'Nuit', contraste: 'Contraste élevé' }, themeApplique: 'Thème « {nom} » appliqué.',
+animLabel: 'Animations activées', animAide: 'Décochée, coupe les animations décoratives : four du comptoir, braise de « Tout chaud »…',
+animOn: 'Animations activées.', animOff: 'Animations coupées.'
 },
 en: {
 navLabel: 'Main navigation', eyebrow: 'Your account', title: 'My profile',
@@ -153,7 +161,9 @@ session: 'Your session has expired: log in again, you will need to rewrite your 
 },
 derniersT: 'Your latest feedback', listeVide: 'No feedback yet.', listeErreur: 'Your feedback can’t be shown right now.',
 apparenceT: 'Appearance', themeLegende: 'Colour theme',
-themes: { bronze: 'Bronze', classique: 'Classic bakery', nuit: 'Night', contraste: 'High contrast' }, themeApplique: '“{nom}” theme applied.'
+themes: { bronze: 'Bronze', classique: 'Classic bakery', nuit: 'Night', contraste: 'High contrast' }, themeApplique: '“{nom}” theme applied.',
+animLabel: 'Animations on', animAide: 'Unticked, stops decorative animations: the counter oven, the “Tout chaud” glow…',
+animOn: 'Animations on.', animOff: 'Animations off.'
 }
 };
 var CACHE = 'display: none';
@@ -163,7 +173,7 @@ class Component extends DCLogic {
 constructor(props) {
 super(props);
 // retour : saisie en cours ; succes : booléen (texte traduit au rendu) ; derniers : null tant que la liste charge.
-this.state = { lang: 'fr', retour: '', retourErreur: null, succes: false, envoi: false, derniers: null, derniersErreur: false, theme: Theme.lire(stockageTheme(), cleTheme()), themeAnnonce: null };
+this.state = { lang: 'fr', retour: '', retourErreur: null, succes: false, envoi: false, derniers: null, derniersErreur: false, theme: Theme.lire(stockageTheme(), cleTheme()), themeAnnonce: null, animations: document.documentElement.getAttribute('data-animations') === 'off' ? 'off' : 'on', animAnnonce: null };
 this.chargerDerniers();
 }
 chargerDerniers() {
@@ -219,13 +229,21 @@ self.setState({ envoi: false, retourErreur: r.erreur });
 });
 },
 themes: Theme.THEMES.map(function (v) { return { id: 'theme-' + v, valeur: v, label: t.themes[v], coche: v === s.theme ? 'checked' : '' }; }),
-themeAnnonce: s.themeAnnonce ? t.themeApplique.replace('{nom}', t.themes[s.themeAnnonce]) : '',
+apparenceAnnonce: s.animAnnonce ? (s.animAnnonce === 'off' ? t.animOff : t.animOn) : (s.themeAnnonce ? t.themeApplique.replace('{nom}', t.themes[s.themeAnnonce]) : ''),
+animCoche: s.animations === 'off' ? '' : 'checked',
+choisirAnimations: function (e) {
+var v = e.target.checked ? 'on' : 'off';
+Animations.appliquer(document, v);
+var st = stockageTheme();
+if (st) Animations.enregistrer(st, Animations.cleCompte(Auth.utilisateurCourant()), v);
+self.setState({ animations: v, animAnnonce: v });
+},
 choisirTheme: function (e) {
 var v = Theme.normaliser(e.target.getAttribute('data-valeur'));
 Theme.appliquer(document, v);
 var st = stockageTheme();
 if (st) Theme.enregistrer(st, cleTheme(), v);
-self.setState({ theme: v, themeAnnonce: v });
+self.setState({ theme: v, themeAnnonce: v, animAnnonce: null });
 },
 deconnexion: function () { try { Auth.seDeconnecter(); } catch (e) {} window.location.href = '/'; }
 };

@@ -22,11 +22,11 @@ return null;
 // Mode réel : Tally renvoie ici sans rien en mémoire, on affiche alors un texte générique.
 if (window.PQ_MODE !== 'reel' && !adresseEnvoyee()) { window.__redirige = true; location.replace('/connexion'); }
 </script>
-</head><body><div id="root"></div>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div class="parcours">
 <header class="entete" data-entete></header>
-<main class="contenu centre">
+<main id="contenu" tabindex="-1" class="contenu centre">
 <section class="carte" aria-labelledby="titre">
 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--braise)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
 <h1 id="titre" class="titre">{{t.titre}}</h1>
@@ -132,4 +132,4 @@ clavierModale: function (e) { Parcours.clavierModale(e, function () { self.ferme
 };
 }
 }
-</script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>

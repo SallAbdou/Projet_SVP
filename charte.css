@@ -50,6 +50,7 @@
   --sur-titre:#E9AC76;--cuivre:#CE9869;--ok:#A3D7A3;--ok-fond:#1D2F1E;--erreur:#EFA598;--erreur-fond:#3F201B;--source:#85BEB6;--source-fonce:#A0CFC8;
   --barre-rassis-contour:#858D94;--sur-plein:#140E0A;--champ:#0D0805;--bord-champ:#977E67;--panneau:#3A2A20;--panneau-texte:#F5EBDE;
   --panneau-doux:#E4D7C7;--panneau-or:#F2CB88;--ombre-teinte:#030101;
+  --contour-plein:#A38A73;
   color-scheme:dark;
 }
 [data-theme="contraste"]{
@@ -81,7 +82,22 @@
   50%{background-position:100% 50%;box-shadow:0 0 14px 3px color-mix(in srgb,var(--croute) 55%,transparent)}
 }
 @keyframes pq-braise-point{from{opacity:.65;transform:scale(.85)}to{opacity:1;transform:scale(1.1)}}
-@media (prefers-reduced-motion:reduce){.puce-chaud,.puce-chaud::before{animation:none}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .puce-chaud,html:not([data-animations="on"]) .puce-chaud::before{animation:none}}
+
+/* Lot 23 : « Tout chaud » devient un bouton pause (animations.js, WCAG 2.2.2). Même aspect que la puce, curseur main,
+   cible d'au moins 24 px, petit pictogramme pause (deux barres) ou lecture (triangle) en couleur du texte. */
+button.puce-chaud{font:inherit;font-size:12px;font-weight:700;line-height:1.5;min-height:24px;border:0;margin:0;cursor:pointer;-webkit-appearance:none;appearance:none}
+button.puce-chaud:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.puce-pause{flex:none;box-sizing:border-box;width:7px;height:8px;border-left:2px solid currentColor;border-right:2px solid currentColor;opacity:.7}
+button.puce-chaud:hover .puce-pause,button.puce-chaud:focus-visible .puce-pause{opacity:1}
+html[data-animations="off"] .puce-pause{width:0;height:0;border-right:0;border-left:7px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent}
+/* Bulle du bouton (élément fixe hors des tuiles, qui coupent leur contenu). */
+#pq-bulle-anim{position:fixed;z-index:60;max-width:240px;padding:6px 10px;border-radius:8px;background:var(--texte);color:var(--fond);font-size:13px;font-weight:600;line-height:1.35;box-shadow:var(--ombre-2)}
+#pq-bulle-anim[hidden]{display:none}
+
+/* Lot 23 : animations décoratives coupées (case « Animations » du profil ou bouton Tout chaud, data-animations sur <html>).
+   Les retours de couleur au survol restent ; les mouvements et boucles s'arrêtent. */
+html[data-animations="off"] *,html[data-animations="off"] *::before,html[data-animations="off"] *::after{animation:none!important}
 .puce-rassis{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rassis-texte) 22%,transparent)}
 
 /* Ampoule « éclair de génie » devant « Pour toi » (SVG décoratif, plein, jaune croûte), alignée sur la première ligne. */
@@ -98,7 +114,8 @@
 .btn-petrir:hover .pain-ico path:first-child{fill:var(--petrir-pain-survol)}.btn-petrir:hover .pain-ico path+path{stroke:var(--petrir-grigne-survol)}
 .btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 4px color-mix(in srgb,var(--ombre-teinte) 28%,transparent)}
 .btn-petrir:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
-@media (prefers-reduced-motion:reduce){.btn-petrir{transition:none}.btn-petrir:active{transform:none}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .btn-petrir{transition:none}html:not([data-animations="on"]) .btn-petrir:active{transform:none}}
+html[data-animations="off"] .btn-petrir:active{transform:none}
 
 
 /* Étiquette de source d'un article : même forme que les puces d'état (lot 20), couleur imposée propre.
@@ -116,3 +133,13 @@
 [data-nav]+main{max-width:var(--largeur-contenu);margin-inline:auto}
 @media (min-width:900px){[data-nav]{flex-grow:0!important}}
 [data-nav]+main p:not(.pq-pleine){max-width:70ch}
+
+/* Lot 23 : lien d'évitement, premier élément de chaque page, masqué hors écran et visible au focus clavier. */
+:root{--pq-barre-nav:72px}
+.pq-evitement{position:absolute;left:12px;top:12px;z-index:100;transform:translateY(-200%);padding:10px 16px;border-radius:10px;background:var(--texte);color:var(--fond);font-weight:700;text-decoration:none}
+.pq-evitement:focus{transform:none;outline:3px solid var(--focus);outline-offset:2px}
+#contenu:focus{outline:none}
+
+/* Lot 23 : thème Nuit, fonds pleins imposés (Pétrir, LinkedIn, Rassis, Lire la source) cernés d'un contour à 3:1 au moins
+   contre les fonds sombres (WCAG 1.4.11). Les couleurs imposées ne changent pas ; le focus clavier garde son propre contour. */
+[data-theme="nuit"] :is(.btn-petrir,.fo-btn-linkedin,.puce-rassis,.gm-source,.act[data-act="read"]):not(:focus-visible){outline:1.5px solid var(--contour-plein);outline-offset:1px}

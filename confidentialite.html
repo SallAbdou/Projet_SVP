@@ -6,11 +6,11 @@
 <link rel="stylesheet" href="/charte.css">
 <link rel="stylesheet" href="/parcours.css">
 <style>.texte h2{font-size:22px;margin-top:6px}.texte ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}</style>
-</head><body><div id="root"></div>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div class="parcours">
 <header class="entete" data-entete></header>
-<main class="contenu centre">
+<main id="contenu" tabindex="-1" class="contenu centre">
 <article class="carte carte-large texte" aria-labelledby="titre">
 <p class="sur-titre">{{t.eyebrow}}</p>
 <h1 id="titre" class="titre">{{t.titre}}</h1>
@@ -68,4 +68,4 @@ location.href = '/';
 };
 }
 }
-</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>
