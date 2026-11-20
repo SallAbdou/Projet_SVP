@@ -80,8 +80,9 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .progression{display:flex;flex-direction:column;gap:8px}
 .progression-texte{font-size:14px;font-weight:600;color:var(--sur-titre)}
 .progression-barre{height:8px;border-radius:999px;background:var(--sable);overflow:hidden}
-.progression-barre span{display:block;height:100%;border-radius:999px;background:var(--dore);transition:width .3s ease}
-@media (prefers-reduced-motion:reduce){.progression-barre span{transition:none}}
+.progression-barre span{display:block;height:100%;border-radius:999px;background:var(--dore);transition:width .3s var(--courbe)}
+.bouton,.bouton-secondaire{transition:background-color .14s var(--courbe),color .14s var(--courbe)}
+@media (prefers-reduced-motion:reduce){.progression-barre span,.bouton,.bouton-secondaire{transition:none}}
 
 .mention-demo{font-size:13px;color:var(--doux);padding:10px 14px;border-radius:12px;border:1px dashed var(--bord-fort);background:var(--fond)}
 

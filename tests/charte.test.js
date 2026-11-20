@@ -312,8 +312,9 @@ test('étiquette de source : même forme que les puces d’état (lot 20)', () =
   assert.match(etq, /color:var\(--etiquette-texte\)/);
 });
 
-test('animation Tout chaud coupée sous prefers-reduced-motion', () => {
-  assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.puce-chaud/);
+test('puce Tout chaud immobile, sans boucle ni lueur (lot 21)', () => {
+  assert.doesNotMatch(css, /\.puce-chaud(::before)?\{[^}]*animation/);
+  assert.doesNotMatch(css, /\.puce-chaud(::before)?\{[^}]*box-shadow/);
 });
 
 test('chaque page charge /charte.css avant toute autre feuille de style', () => {
