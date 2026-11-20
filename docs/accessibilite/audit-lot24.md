@@ -9,8 +9,8 @@ Pages parcourues : accueil (Miette, FAQ, chat de démo, modale QR), découvrir, 
 | Gravité | Nombre |
 |---|---|
 | Majeure | 3 |
-| Moyenne | 7 |
-| Mineure | 8 |
+| Moyenne | 8 (dont A1, trouvé par axe) |
+| Mineure | 9 (dont A2, trouvé par axe) |
 
 Rien de bloquant au clavier : pas de piège, ordre logique, focus visible partout (contour 3 px), modales QR, boîte de démo et publication qui gardent et rendent le focus, chat et menu mobile fermables avec Échap, erreurs des champs texte bien reliées (`aria-invalid`, `aria-describedby`, focus sur le premier champ en erreur). Les faiblesses portent surtout sur les annonces aux lecteurs d'écran, le contraste des bordures de champs et les bulles d'aide.
 
@@ -148,12 +148,48 @@ Gravité : **majeure** = une personne ne peut pas accomplir une tâche ou perd u
 - Zoom du texte seul à 200 % (1.4.4) : Chromium ne sait pas zoomer le texte seul. À faire dans Firefox : Affichage, Zoom, cocher « Zoom texte seulement », puis Ctrl + plusieurs fois.
 - Mode Contraste élevé de Windows (`forced-colors`) : non testé.
 - Thèmes Nuit et Contraste élevé : contrastes non remesurés dans ce lot (contours traités au lot 23).
-- Résultats d'axe DevTools : à ajouter (étape 2).
 - Mobile tactile réel (VoiceOver, TalkBack) : non testé.
 
-## Résultats axe DevTools
+## Résultats axe
 
-À compléter avec les résultats transmis par l'utilisateur.
+Le premier passage de l'utilisateur avec l'extension axe DevTools dans Firefox avait donné 0 problème partout. Le second passage a été lancé dans le navigateur intégré avec axe-core 4.10.2 (règles WCAG 2.0, 2.1 et 2.2 A et AA, plus les bonnes pratiques), sur le serveur local, compte démo pour les pages connectées. Il couvre aussi les états ouverts : chat avec une réponse, modale QR, boîte de démo, mode Personnaliser, modale de publication, garde-manger avec 2 articles. Une partie des écarts entre les deux passages s'explique sans doute par des pages qu'on n'atteint qu'en suivant le parcours (ta-fournee-type redirige vers le questionnaire si on tape son adresse directement) ou par des états qui ne s'affichent qu'après une action.
+
+### Violations
+
+| Règle | Impact | Nombre | Page, élément | Rapport |
+|---|---|---|---|---|
+| `nested-interactive` | serious | 1 | ta-fournee-type, `.mini-bento` | Confirme **N3** |
+| `scrollable-region-focusable` | serious | 1 | accueil, chat ouvert, `.chat-fil` | Nouveau : **A1** |
+| `landmark-complementary-is-top-level` | moderate | 1 | fournil avec un sujet choisi, `aside` | Nouveau : **A2** |
+
+**A1. Fil du chat non atteignable au clavier**
+- Critère : 2.1.1 Clavier (A)
+- Page : accueil, `#chat .chat-fil`
+- Constat : quand l'historique dépasse la hauteur du panneau, le fil défile, mais il ne contient aucun élément focalisable : impossible de remonter dans les réponses au clavier.
+- Gravité : moyenne.
+- Correction : `tabindex="0"`, `role="log"` et un nom (« Conversation avec Miette ») sur le fil. Une seule modification règle A1 et M1.
+
+**A2. Repère `aside` imbriqué**
+- Critère : bonne pratique (lié à 1.3.1)
+- Page : fournil, colonne de droite (`aside` dans `main`)
+- Gravité : mineure.
+- Correction : remplacer `aside` par un `section` qui porte le titre (`aria-labelledby`), ou sortir l'`aside` du `main`.
+
+### À vérifier (« incomplete »)
+
+- `color-contrast` (serious, de 1 à 25 éléments selon la page) : axe ne sait pas mesurer un texte posé sur un dégradé. Vérifié à la main : sur le fond de page (dégradé de `rgb(254,250,243)` à `rgb(242,229,213)`), le texte le plus clair (sur-titre) reste à 5,36:1 au pire point, les liens à 5,61:1, le texte secondaire à 6,24:1. Pastille « Tout chaud » à 5,01:1, texte des tuiles dorées au moins à 6,57:1. **Conforme.**
+- `aria-valid-attr-value` (accueil, `.chat-lanceur`) : axe ne peut pas confirmer la cible de `aria-controls="chat"` combinée à `aria-haspopup`. La cible existe. Pas de correction nécessaire, ou retirer `aria-haspopup` qui n'apporte rien sur un panneau non modal.
+
+### Prévu par l'audit manuel mais non signalé par axe
+
+- m3 (pastille du garde-manger avec `aria-label` sur un `span`) : axe 4.10 ne le signale pas. La correction reste recommandée.
+- Tout le reste du rapport (annonces, bordures de champs, bulles, délai du toast, couleur du graphique, confirmation d'effacement) est hors de portée d'un outil automatique : c'est attendu.
+
+## Bug corrigé dans ce lot : e-mail saisi à l'envers
+
+- Pages : questionnaire, connexion, mot-de-passe-oublié.
+- Constat : en tapant « abc » dans le champ e-mail, on obtenait « cba ». Le moteur recrée `#root` à chaque frappe et remet le curseur en place ; or Chrome ne donne pas la position du curseur d'un `type="email"`, si bien que le curseur revenait au début du champ.
+- Correction : champs e-mail en `type="text"` avec `inputmode="email"` (clavier e-mail sur mobile), `autocomplete` conservé, `spellcheck="false"`, `autocapitalize="none"`. Le site n'utilisait pas la validation native, il a la sienne. Test ajouté dans `tests/accessibilite.test.js`. Vérifié dans le navigateur : saisie à l'endroit et insertion au milieu correctes sur les trois pages.
 
 ## Test au lecteur d'écran : procédure
 
