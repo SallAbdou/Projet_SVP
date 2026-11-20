@@ -14,10 +14,38 @@ function lire(page) {
   return { tpl, T: vm.runInNewContext('(' + objet + ')') };
 }
 
-test('accueil : étape 3 sans virgule avant « et tu suis », en FR comme en EN', () => {
+test('accueil : étape 3 relue (lot 27), en FR comme en EN', () => {
   const { T } = lire('index.html');
-  assert.equal(T.fr.etapes[2][1], 'Tu pétris la news en post LinkedIn en quelques minutes et tu suis ce qu’il rapporte.');
-  assert.equal(T.en.etapes[2][1], 'Knead the story into a LinkedIn post in minutes and track what it brings in.');
+  assert.equal(T.fr.etapes[2][1], 'Tu pétris la news en post LinkedIn en quelques minutes seulement. Tu valides la publication (ton et style d’écriture), puis tu suis les réactions.');
+  assert.equal(T.en.etapes[2][1], 'Knead the story into a LinkedIn post in just a few minutes. Approve the post (tone and writing style), then follow the reactions.');
+});
+
+test('accueil : titre relu, sans « Chaque matin », fin de titre insécable (lot 27)', () => {
+  const html = fs.readFileSync(path.join(RACINE, 'index.html'), 'utf8');
+  const { T } = lire('index.html');
+  assert.equal(T.fr.promesse, 'L’actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn tout\u00a0chaud.');
+  assert.equal(T.en.promesse, 'The AI news that matters for your job, ready to knead into a piping hot LinkedIn\u00a0post.');
+  assert.match(html, /<meta name="description" content="L'actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn tout chaud\.">/);
+  assert.ok(!/chaque matin/i.test(html.split('<script type="text/plain"')[0]), 'plus de « Chaque matin » dans l’en-tête');
+});
+
+test('accueil : le chapo passe à la ligne par le gabarit, pas par la chaîne traduite (lot 27)', () => {
+  const { tpl, T } = lire('index.html');
+  assert.match(tpl, /<p class="chapo">\{\{t\.chapo\}\}<br>\{\{t\.chapoSuite\}\}<\/p>/);
+  assert.equal(T.fr.chapo, 'Tu choisis tes thèmes et ton niveau.');
+  assert.equal(T.en.chapo, 'Pick your topics and your level.');
+  for (const lang of ['fr', 'en']) assert.ok(!/<|>/.test(T[lang].chapo + T[lang].chapoSuite), lang);
+});
+
+test('accueil : « Confidentialité » est un vrai lien dans la FAQ, même texte que pour Miette (lot 27)', () => {
+  const { tpl, T } = lire('index.html');
+  assert.match(tpl, /<details class="faq-item" data-id="donnees"[^>]*>[\s\S]*?<p>\{\{t\.donneesAvant\}\}<a class="lien-texte" href="\/confidentialite">\{\{t\.confidentialite\}\}<\/a>\{\{t\.donneesApres\}\}<\/p><\/details>/);
+  for (const lang of ['fr', 'en']) {
+    const t = T[lang];
+    const faq = Object.fromEntries(t.faq.map(f => [f[0], f]));
+    assert.equal(t.donneesAvant + t.confidentialite + t.donneesApres, faq.donnees[2], lang);
+    assert.equal(t.faq[t.faq.length - 1][0], 'donnees', lang + ' : rendue après la liste, elle doit rester la dernière');
+  }
 });
 
 test('accueil : l’aperçu en ticket montre les 3 premières news, classées, avec état et score', () => {
@@ -64,7 +92,10 @@ test('accueil : la FAQ a les mêmes questions en FR et en EN, toutes renseignée
   assert.match(tpl, /<details class="faq-item"[^>]*><summary>\{\{f\.q\}\}/);
   assert.deepEqual(T.fr.faq.map(f => f[0]), T.en.faq.map(f => f[0]));
   for (const lang of ['fr', 'en']) {
-    for (const [id, q, r] of T[lang].faq) {
+    for (const [id, q, rep] of T[lang].faq) {
+      const paras = [].concat(rep);
+      assert.ok(paras.length <= 2, lang + ' ' + id + ' : le gabarit prévoit deux paragraphes au plus');
+      const r = paras.join(' ');
       assert.ok(id && q.endsWith('?') && r.length > 20, lang + ' ' + id);
       assert.ok(!/\[|À COMPLÉTER|TODO/i.test(q + r), lang + ' ' + id + ' : réponse provisoire');
     }
@@ -93,7 +124,7 @@ test('accueil : chaque réponse du chat est celle de la FAQ', () => {
   const v = c.renderVals();
   const textes = Array.from(v.messages, m => String(m.texte));
   const faq = Object.fromEntries(ctx.T.fr.faq.map(f => [f[0], f]));
-  assert.deepEqual(textes.slice(1), [faq.score[1], faq.score[2], faq.sources[1], faq.sources[2]]);
+  assert.deepEqual(textes.slice(1), [faq.score[1], faq.score[2], faq.sources[1], [].concat(faq.sources[2]).join(' ')]);
   assert.ok(!v.suggestions.some(s => s.id === 'score' || s.id === 'sources'), 'une question posée n’est plus proposée');
   assert.ok(v.suggestions.length <= 4);
 });
