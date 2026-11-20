@@ -18,7 +18,7 @@
 <p id="err-connexion" class="alerte" role="alert" style="{{alerteStyle}}">{{erreurTexte}}</p>
 <div class="champ">
 <label for="email">{{t.email}}</label>
-<input id="email" type="email" autocomplete="username" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
+<input id="email" type="text" spellcheck="false" autocapitalize="none" autocomplete="username" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
 </div>
 <div class="champ">
 <label for="mdp">{{t.mdp}}</label>

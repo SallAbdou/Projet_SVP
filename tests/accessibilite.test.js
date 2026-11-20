@@ -100,3 +100,19 @@ test('barre mobile vraiment collante : body ne devient pas un conteneur de défi
     assert.match(lire(p), /html\{overflow-x:hidden\}body\{overflow-x:clip\}/, p);
   }
 });
+
+// Lot 24 : #root est recréé à chaque frappe et Chrome ne donne pas la position du curseur d'un
+// champ type="email" ; le curseur revenait au début et l'adresse s'écrivait à l'envers.
+// Les champs e-mail sont donc en type="text" avec le clavier e-mail et l'autocomplétion.
+test('champs e-mail : type text, clavier e-mail, autocomplétion (saisie à l endroit)', () => {
+  PAGES.forEach(f => {
+    const html = lire(f);
+    assert.ok(!/<input[^>]*type="email"/.test(html), f + ' : type="email" interdit');
+    (html.match(/<input[^>]*id="email"[^>]*>/g) || []).forEach(i => {
+      assert.ok(/type="text"/.test(i), f + ' : type text');
+      assert.ok(/inputmode="email"/.test(i), f + ' : inputmode email');
+      assert.ok(/autocomplete="(email|username)"/.test(i), f + ' : autocomplete');
+      assert.ok(/spellcheck="false"/.test(i) && /autocapitalize="none"/.test(i), f + ' : ni correcteur ni majuscule');
+    });
+  });
+});

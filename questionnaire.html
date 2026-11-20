@@ -30,7 +30,7 @@
 </div>
 <div class="champ" style="margin-top:12px">
 <label for="email">{{t.email}}</label>
-<input id="email" type="email" autocomplete="email" inputmode="email" value="{{r.email}}" onInput="{{saisirEmail}}" aria-invalid="{{inv.email}}" aria-describedby="aide-email err-email">
+<input id="email" type="text" spellcheck="false" autocapitalize="none" autocomplete="email" inputmode="email" value="{{r.email}}" onInput="{{saisirEmail}}" aria-invalid="{{inv.email}}" aria-describedby="aide-email err-email">
 <p id="aide-email" class="aide">{{t.aideEmail}}</p>
 <p id="err-email" class="erreur">{{err.email}}</p>
 </div>
