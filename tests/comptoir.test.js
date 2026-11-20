@@ -115,7 +115,7 @@ test('bilan additionne tout l historique', () => {
 test('phraseAnalyse FR : appel à l’action, gras, sans ratio', () => {
   assert.deepEqual(C.phraseAnalyse(true, 'fr'), {
     avant: 'Tes posts sur des sujets ', gras: 'tout chaud',
-    apres: ' font plus d’audience que les autres : sers-les vite.'
+    apres: ' font plus d’audience que les autres : sers-les vite.'
   });
 });
 
