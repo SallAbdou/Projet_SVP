@@ -107,3 +107,12 @@
 
 /* Texte lu par les lecteurs d'écran mais masqué à l'écran. */
 .pq-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* Lot 22 : largeur bornée des pages connectées sur grand écran. Le main qui suit le menu ne dépasse pas
+   --largeur-contenu et se centre dans l'espace à droite du menu (fond continu jusqu'au bord, porté par le conteneur).
+   Au-dessus de 900 px (menu en colonne, voir nav.js), le menu ne grandit plus : sinon il absorberait l'espace
+   libéré par le main borné. Paragraphes bornés à 70 caractères, sauf encadrés (classe pq-pleine). */
+:root{--largeur-contenu:1440px}
+[data-nav]+main{max-width:var(--largeur-contenu);margin-inline:auto}
+@media (min-width:900px){[data-nav]{flex-grow:0!important}}
+[data-nav]+main p:not(.pq-pleine){max-width:70ch}

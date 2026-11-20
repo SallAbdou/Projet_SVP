@@ -149,7 +149,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <h2 id="perf-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.perfTitle}}</h2>
 <p style="margin:0;color:var(--doux);font-size:14px">{{t.perfSub}}</p>
 </div>
-<p style="{{perfVideStyle}}">{{t.perfVide}}</p>
+<p class="pq-pleine" style="{{perfVideStyle}}">{{t.perfVide}}</p>
 <sc-for list="{{posts}}" as="p" hint-placeholder-count="2">
 <form class="fo-post" data-index="{{p.i}}" data-id="{{p.id}}" onSubmit="{{enregistrerChiffres}}" novalidate aria-label="{{p.formLabel}}">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px"><h3 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:17px;overflow-wrap:anywhere">{{p.titre}}</h3><span style="font-size:13px;color:var(--doux)">{{p.date}}</span></div>
