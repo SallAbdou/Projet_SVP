@@ -82,9 +82,10 @@
 <div class="chat-nom"><h2 id="chat-t">Miette</h2><p>{{t.chatSousTitre}}</p></div>
 <button type="button" class="chat-fermer" onClick="{{fermerChat}}" aria-label="{{t.chatFermer}}" data-focus="chat-fermer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
 </div>
-<div class="chat-fil">
+<div class="chat-fil" tabindex="0" role="region" aria-label="{{t.chatFilNom}}">
 <sc-for list="{{messages}}" as="m"><p class="{{m.classe}}"><span class="pq-sr">{{m.qui}}</span>{{m.texte}}</p></sc-for>
 </div>
+<p class="pq-sr" data-annonce>{{chatAnnonce}}</p>
 <div class="chat-suggestions" role="group" aria-label="{{t.chatSuggestions}}">
 <sc-for list="{{suggestions}}" as="s"><button type="button" class="chat-suggestion" data-id="{{s.id}}" data-focus="sugg-{{s.id}}" onClick="{{poser}}">{{s.q}}</button></sc-for>
 <a class="lien" href="#faq" onClick="{{versFaq}}">{{t.chatToutes}}</a>
@@ -145,6 +146,7 @@ chatFermer: 'Fermer le chat',
 chatSuggestions: 'Questions proposées',
 chatToutes: 'Voir toutes les questions',
 chatBonjour: 'Salut ! Je suis Miette. Choisis une question, je te réponds.',
+chatFilNom: 'Conversation avec Miette',
 chatFini: 'Tu as fait le tour ! Le reste est dans la FAQ, juste au-dessus.',
 chatToi: 'Toi :', chatMiette: 'Miette :',
 chatNote: 'Démo : Miette répond avec les réponses de la FAQ. Elle ne comprend pas encore les questions libres.',
@@ -192,6 +194,7 @@ chatFermer: 'Close the chat',
 chatSuggestions: 'Suggested questions',
 chatToutes: 'See all questions',
 chatBonjour: 'Hi! I’m Miette. Pick a question and I’ll answer.',
+chatFilNom: 'Conversation with Miette',
 chatFini: 'That’s everything! The rest is in the FAQ, just above.',
 chatToi: 'You:', chatMiette: 'Miette:',
 chatNote: 'Demo: Miette answers with the FAQ answers. She can’t understand free-form questions yet.',
@@ -249,9 +252,12 @@ messages.push({ classe: 'chat-msg chat-msg-miette', qui: t.chatMiette, texte: pa
 });
 var reste = this.restantes(posees);
 if (!reste.length) messages.push({ classe: 'chat-msg chat-msg-miette', qui: t.chatMiette, texte: t.chatFini });
+// Dernière réponse de Miette, relayée par la zone d'annonce de boot.js (lot 24).
+var chatAnnonce = posees.length ? messages[messages.length - 1].texte : '';
 var ouvertes = s.faqOuvertes || {};
 return {
 t: t,
+chatAnnonce: chatAnnonce,
 voileStyle: s.qrOuvert ? '' : 'display: none',
 fermerQr: function () { self.fermerQr(); },
 clicVoile: function (e) { if (e.target === e.currentTarget) self.fermerQr(); },

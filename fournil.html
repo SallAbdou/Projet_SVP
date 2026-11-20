@@ -23,7 +23,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .fo-btn-linkedin{border-color:var(--linkedin-bord);background:var(--linkedin-fond);color:var(--linkedin-texte)}
 .fo-btn-linkedin:hover:not(:disabled){border-color:var(--linkedin-survol);background:var(--linkedin-survol);color:var(--linkedin-texte)}
 .fo-lien{background:none;border:0;padding:0 4px;min-height:44px;font:inherit;font-size:13px;font-weight:700;color:var(--brun);cursor:pointer;align-self:flex-start}
-.fo-select{min-height:44px;padding:0 12px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;font-weight:500}
+.fo-select{min-height:44px;padding:0 12px;border-radius:12px;border:1.5px solid var(--bord-champ);background:var(--fond);color:var(--texte);font:inherit;font-weight:500}
 .fo-choix{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:16px 20px;border-bottom:1px solid var(--trait)}
 .fo-choix:last-child{border-bottom:0}
 .fo-post{display:flex;flex-direction:column;gap:12px;padding:18px;border:1px solid var(--trait);border-radius:16px;background:var(--fond)}
@@ -112,7 +112,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <button type="button" class="fo-btn" data-focus="garder" onClick="{{garder}}">{{t.garder}}</button>
 </div>
 <label for="brouillon" style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--texte-2)">{{t.textLabel}}
-<textarea id="brouillon" rows="14" onInput="{{saisir}}" onCompositionend="{{saisir}}" style="box-sizing:border-box;width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--bord-fort);background:var(--fond);color:var(--texte);font:inherit;font-weight:400;font-size:15px;line-height:1.6;resize:vertical">
+<textarea id="brouillon" rows="14" onInput="{{saisir}}" onCompositionend="{{saisir}}" style="box-sizing:border-box;width:100%;padding:14px 16px;border-radius:14px;border:1.5px solid var(--bord-champ);background:var(--fond);color:var(--texte);font:inherit;font-weight:400;font-size:15px;line-height:1.6;resize:vertical">
 {{texte}}</textarea>
 </label>
 <div style="display:flex;flex-wrap:wrap;gap:10px">

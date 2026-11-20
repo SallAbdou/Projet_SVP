@@ -41,7 +41,7 @@ form{display:flex;flex-direction:column;gap:18px;margin:0}
 .champ{display:flex;flex-direction:column;gap:6px}
 .champ label,.champ legend,.libelle{font-weight:700;font-size:15px}
 .aide{font-size:14px;color:var(--doux)}
-.champ input[type=text],.champ input[type=email],.champ input[type=password]{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--champ);color:var(--texte);font:inherit}
+.champ input[type=text],.champ input[type=email],.champ input[type=password]{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1.5px solid var(--bord-champ);background:var(--champ);color:var(--texte);font:inherit}
 .champ input:focus-visible{border-color:var(--dore)}
 .champ input[aria-invalid="true"]{border-color:var(--erreur);background:var(--erreur-fond)}
 .erreur{color:var(--erreur);font-size:14px;font-weight:600}

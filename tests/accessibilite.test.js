@@ -116,3 +116,12 @@ test('champs e-mail : type text, clavier e-mail, autocomplétion (saisie à l en
     });
   });
 });
+
+// Lot 24 (M3) : la bordure est le seul repère d'un champ (fond du champ proche de celui de la carte) ;
+// --bord-fort ne tient pas 3:1, --bord-champ si (1.4.11).
+test('bordures des champs en --bord-champ (contraste non textuel 3:1)', () => {
+  assert.match(lire('parcours.css'), /\.champ input\[type=text\][^{]*\{[^}]*border:1\.5px solid var\(--bord-champ\)/);
+  const fournil = lire('fournil.html');
+  assert.match(fournil, /\.fo-select\{[^}]*var\(--bord-champ\)/);
+  assert.match(fournil, /<textarea id="brouillon"[^>]*var\(--bord-champ\)/);
+});

@@ -65,3 +65,23 @@ test('bulle.js : fermeture par Échap, ouverture au survol, au focus et au doigt
   }
   assert.match(js, /'Escape'/);
 });
+
+// Lot 24 (1.4.13) : la bulle doit rester ouverte quand la souris passe du bouton à la bulle.
+test('resteOuverte : vers le bouton ou la bulle oui, ailleurs non', () => {
+  const texte = {}, ailleurs = {};
+  const btn = { contains: el => el === btn };
+  const bulle = { contains: el => el === bulle || el === texte };
+  assert.equal(Bulle.resteOuverte(bulle, btn, bulle), true);
+  assert.equal(Bulle.resteOuverte(texte, btn, bulle), true);
+  assert.equal(Bulle.resteOuverte(btn, btn, bulle), true);
+  assert.equal(Bulle.resteOuverte(ailleurs, btn, bulle), false);
+  assert.equal(Bulle.resteOuverte(null, btn, bulle), false);
+});
+
+test('bulles survolables : pas de pointer-events:none, pont sur l écart', () => {
+  const fournee = fs.readFileSync(path.join(__dirname, '..', 'fournee.html'), 'utf8');
+  const regle = fournee.match(/\.bulle\{[^}]*\}/)[0];
+  assert.ok(!/pointer-events:none/.test(regle));
+  assert.match(fournee, /\.bulle::before\{/);
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'charte.css'), 'utf8'), /#pq-bulle-anim::before\{/);
+});

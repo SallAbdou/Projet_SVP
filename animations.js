@@ -144,7 +144,10 @@
     var larg = doc.documentElement.clientWidth, haut = root.innerHeight;
     var left = Math.max(8, Math.min(r.left, larg - b.offsetWidth - 8));
     var top = r.bottom + 6;
-    if (top + b.offsetHeight > haut - 8 && r.top - 6 - b.offsetHeight >= 8) top = r.top - 6 - b.offsetHeight;
+    var dessus = top + b.offsetHeight > haut - 8 && r.top - 6 - b.offsetHeight >= 8;
+    if (dessus) top = r.top - 6 - b.offsetHeight;
+    // Côté de la bulle : place le pont invisible (::before) qui couvre l'écart avec le bouton (lot 24).
+    b.setAttribute('data-cote', dessus ? 'dessus' : 'dessous');
     b.style.left = left + 'px';
     b.style.top = top + 'px';
     bulleCible = btn;
