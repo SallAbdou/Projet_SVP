@@ -193,6 +193,8 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .faq-chevron{flex:none;transition:transform .2s ease}
 .faq-item[open] .faq-chevron{transform:rotate(180deg)}
 .faq-item p{padding:0 0 20px;color:var(--doux);max-width:62ch}
+.faq-item p+p{margin-top:-8px}
+.lien-texte{font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
 
 .pied-lanceur{padding-bottom:104px}
 html:has(.chat-lanceur){scroll-padding-bottom:104px}
