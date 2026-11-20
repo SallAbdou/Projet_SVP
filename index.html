@@ -3,7 +3,7 @@
 <title>Votre pAIn quotidien · l'actu IA qui compte pour ton métier</title>
 <meta name="pq-titre-en" content="Votre pAIn quotidien · the AI news that matters for your job">
 <meta name="description" content="Chaque matin, l'actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
 <link rel="stylesheet" href="/parcours.css">
 </head><body><div id="root"></div>
@@ -21,15 +21,15 @@
 <a class="lien" href="/connexion">{{t.dejaCompte}}</a>
 </div>
 </div>
-<figure style="margin:0;display:flex;flex-direction:column;gap:12px">
+<figure style="margin:0;display:flex;flex-direction:column;gap:10px">
 <div class="mini-bento" role="img" aria-label="{{t.apercuLabel}}">
-<div class="mini-tuile or"><span class="mini-tete"><span class="mini-rang">{{t.n1}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span></span><span class="mini-titre">{{t.exemple1}}</span><span class="etiquette-source mini-puce">{{t.source1}}</span></div>
-<div class="mini-tuile large"><span class="mini-tete"><span class="mini-rang">{{t.n2}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span></span><span class="mini-titre-petit">{{t.exemple2}}</span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="puce puce-petrir mini-puce">{{t.petrir}}</span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="puce puce-petrir mini-puce">{{t.petrir}}</span></div>
-<div class="mini-tuile large"><span class="mini-tete"><span class="mini-rang">{{t.n5}}</span><span class="puce puce-petrir mini-puce">{{t.petrir}}</span></span><span class="mini-titre-petit">{{t.exemple5}}</span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n6}}</span><span class="puce puce-rassis mini-puce">{{t.rassis}}</span></div>
-<div class="mini-tuile"><span class="mini-rang">{{t.n7}}</span><span class="puce puce-rassis mini-puce">{{t.rassis}}</span></div>
+<div class="mini-tuile or"><span class="mini-rang">{{t.n1}}</span><span class="puce puce-chaud mini-puce">{{t.chaud}}</span><span class="mini-titre">{{t.exemple1}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">{{t.n2}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n3}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n4}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile large"><span class="mini-rang">{{t.n5}}</span><span class="mini-ligne"></span><span class="mini-ligne courte"></span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n6}}</span><span class="mini-ligne"></span></div>
+<div class="mini-tuile"><span class="mini-rang">{{t.n7}}</span><span class="mini-ligne"></span></div>
 </div>
 <figcaption style="font-size:14px;color:var(--doux)">{{t.apercuLegende}}</figcaption>
 </figure>
@@ -40,7 +40,7 @@
 <sc-for list="{{etapes}}" as="e"><li class="etape"><span class="etape-num" aria-hidden="true">{{e.num}}</span><h3>{{e.titre}}</h3><p>{{e.texte}}</p></li></sc-for>
 </ol>
 </section>
-<section style="margin-top:48px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center" aria-labelledby="fin-t">
+<section style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center" aria-labelledby="fin-t">
 <h2 id="fin-t" class="section-titre" style="margin:0">{{t.finTitre}}</h2>
 <a class="bouton" href="{{ctaHref}}">{{ctaLabel}}</a>
 </section>
@@ -71,9 +71,8 @@ promesse: 'Chaque matin, l’actu IA qui compte pour ton métier, prête à pét
 chapo: 'Tu choisis tes thèmes et ton niveau. On sélectionne, on note et on résume pour toi les meilleures news IA du jour, avec l’angle qui parle à tes clients.',
 cta: 'Goûter ma fournée', ctaConnecte: 'Voir ma fournée du jour', dejaCompte: 'J’ai déjà un compte',
 apercuLabel: 'Aperçu de la fournée du jour : la news n°1 en grand, en doré, puis les 6 suivantes',
-apercuLegende: 'Ta fournée du jour : la news la mieux notée en doré, les suivantes autour',
-n1: 'n°1', chaud: 'Tout chaud', n2: 'n°2', n3: 'n°3', n4: 'n°4', n5: 'n°5', n6: 'n°6', n7: 'n°7', exemple1: 'Les agents IA entrent dans les PME', source1: 'The Decoder', petrir: 'À pétrir', rassis: 'Rassis',
-exemple2: 'Comment les PME mesurent le retour sur investissement de l’IA', exemple5: 'Les assistants de code arrivent dans les outils no-code',
+apercuLegende: 'Ta fournée du jour : la news la mieux notée en doré, les suivantes autour.',
+n1: 'n°1', chaud: 'Tout chaud', n2: 'n°2', n3: 'n°3', n4: 'n°4', n5: 'n°5', n6: 'n°6', n7: 'n°7', exemple1: 'Les agents IA entrent dans les PME',
 commentTitre: 'Comment ça marche',
 etapes: [
 ['On collecte', 'Toutes les 3 heures, on ramasse l’actu IA dans des dizaines de sources fiables.'],
@@ -83,7 +82,7 @@ etapes: [
 finTitre: 'Ta première fournée est à 2 minutes',
 qrTitre: 'Scanne pour la démo', qrAlt: 'QR code vers https://team42svp.vercel.app/', qrImprimer: 'Version à imprimer',
 qrAide: 'Ouvre l’appareil photo de ton téléphone et vise le code pour suivre la démo.', fermer: 'Fermer',
-confidentialite: 'Confidentialité', demo: 'Démo : aucune donnée ne quitte ton navigateur'
+confidentialite: 'Confidentialité', demo: 'Démo : aucune donnée ne quitte ton navigateur.'
 },
 en: {
 eyebrow: 'AI news watch for solopreneurs',
@@ -91,9 +90,8 @@ promesse: 'Every morning, the AI news that matters for your job, ready to knead 
 chapo: 'Pick your topics and your level. We select, rate and sum up the best AI news of the day for you, with the angle your clients care about.',
 cta: 'Taste my batch', ctaConnecte: 'See today’s batch', dejaCompte: 'I already have an account',
 apercuLabel: 'Preview of today’s batch: news number 1 large and golden, then the 6 next ones',
-apercuLegende: 'Your daily batch: the best rated news in gold, the next ones around it',
-n1: '#1', chaud: 'Piping hot', n2: '#2', n3: '#3', n4: '#4', n5: '#5', n6: '#6', n7: '#7', exemple1: 'AI agents are moving into small businesses', source1: 'The Decoder', petrir: 'Needs kneading', rassis: 'Gone stale',
-exemple2: 'How small businesses measure the return on AI', exemple5: 'Code assistants arrive in no-code tools',
+apercuLegende: 'Your daily batch: the best rated news in gold, the next ones around it.',
+n1: '#1', chaud: 'Piping hot', n2: '#2', n3: '#3', n4: '#4', n5: '#5', n6: '#6', n7: '#7', exemple1: 'AI agents are moving into small businesses',
 commentTitre: 'How it works',
 etapes: [
 ['We gather', 'Every 3 hours, we collect AI news from dozens of reliable sources.'],
@@ -103,7 +101,7 @@ etapes: [
 finTitre: 'Your first batch is 2 minutes away',
 qrTitre: 'Scan for the demo', qrAlt: 'QR code to https://team42svp.vercel.app/', qrImprimer: 'Printable version',
 qrAide: 'Open your phone camera and point it at the code to follow the demo.', fermer: 'Close',
-confidentialite: 'Privacy', demo: 'Demo: no data leaves your browser'
+confidentialite: 'Privacy', demo: 'Demo: no data leaves your browser.'
 }
 };
 class Component extends DCLogic {
