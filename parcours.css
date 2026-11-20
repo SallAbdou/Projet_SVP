@@ -102,9 +102,9 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .heros h1{font-size:48px;font-weight:500;letter-spacing:-0.02em}
 .heros .chapo{font-size:18px;max-width:540px}
 .heros-texte{display:flex;flex-direction:column;gap:20px}
-.etapes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;margin:0;padding:0}
-.etape{background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px}
-.etape-num{width:40px;height:40px;border-radius:50%;background:var(--sable);color:var(--brun-fonce);display:inline-flex;align-items:center;justify-content:center;font-family:Fraunces,Georgia,serif;font-weight:500;font-size:18px}
+.etapes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;list-style:none;margin:0;padding:0}
+.etape{border-top:1.5px solid var(--bord-fort);padding:16px 0 0;display:flex;flex-direction:column;gap:8px}
+.etape-num{color:var(--sur-titre);font-family:Fraunces,Georgia,serif;font-weight:500;font-size:20px;line-height:1;font-variant-numeric:tabular-nums}
 .etape h3{font-size:20px}
 .etape p{color:var(--doux)}
 .section-titre{font-size:28px;font-weight:500;margin:8px 0 16px}
@@ -120,7 +120,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 @media (max-width:860px){
   .heros{grid-template-columns:1fr;gap:28px}
   .heros h1{font-size:36px}
-  .etapes{grid-template-columns:1fr}
+  .etapes{grid-template-columns:1fr;gap:24px}
   .grisee-nav{display:none}
 }
 @media (max-width:640px){
