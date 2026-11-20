@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
+<title>Votre pAIn quotidien · l'actu IA qui compte pour ton métier</title>
+<meta name="pq-titre-en" content="Votre pAIn quotidien · the AI news that matters for your job">
+<meta name="description" content="Chaque matin, l'actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;family=DM+Mono:wght@500&amp;display=swap">
+<link rel="stylesheet" href="/charte.css">
+<link rel="stylesheet" href="/parcours.css">
+</head><body><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div class="parcours">
+<header class="entete" data-entete data-connexion data-qr></header>
+<main class="contenu">
+<section class="heros" aria-labelledby="heros-t">
+<div class="heros-texte">
+<p class="sur-titre">{{t.eyebrow}}</p>
+<h1 id="heros-t">{{t.promesse}}</h1>
+<p class="chapo">{{t.chapo}}</p>
+<div class="actions">
+<a class="bouton" href="{{ctaHref}}" data-focus="cta">{{ctaLabel}}</a>
+<a class="lien" href="/connexion">{{t.dejaCompte}}</a>
+</div>
+</div>
+<figure class="apercu">
+<div class="apercu-scene">
+<div class="miette-accueil">
+<p class="miette-bulle">{{t.mietteBulle}}</p>
+<svg class="miette miette-grande" viewBox="0 0 120 120" role="img" aria-label="{{t.mietteAlt}}" focusable="false">
+<ellipse class="miette-ombre" cx="60" cy="110" rx="36" ry="5"></ellipse>
+<path class="miette-membre" d="M14 76c-9-3-13-12-9-20M106 82c6 3 9 8 8 13M44 100v8M76 100v8"></path>
+<path class="miette-mie" d="M14 78c0-30 20-52 46-52s46 22 46 52c0 14-10 22-24 22H38c-14 0-24-8-24-22z"></path>
+<path class="miette-grigne" d="M40 42l8 12M58 36l8 12M76 42l8 12"></path>
+<circle class="miette-trait" cx="48" cy="74" r="4.5"></circle><circle class="miette-trait" cx="72" cy="74" r="4.5"></circle>
+<path class="miette-sourire" d="M52 84q8 7 16 0"></path>
+<circle class="miette-joue" cx="39" cy="84" r="5"></circle><circle class="miette-joue" cx="81" cy="84" r="5"></circle>
+</svg>
+</div>
+<div class="ticket">
+<p class="ticket-tete"><span>{{t.ticketTitre}}</span><span>{{t.ticketCompte}}</span></p>
+<ol class="ticket-liste">
+<sc-for list="{{apercu}}" as="a"><li class="ticket-ligne"><span class="ticket-rang" aria-hidden="true">{{a.rang}}</span><span class="ticket-corps"><span class="ticket-titre">{{a.titre}}</span><span class="ticket-meta"><span class="{{a.puce}}">{{a.etat}}</span><span>{{a.source}} · {{a.score}}</span></span></span></li></sc-for>
+</ol>
+<p class="ticket-pied">{{t.ticketPied}}</p>
+</div>
+</div>
+<figcaption class="apercu-legende">{{t.apercuLegende}}</figcaption>
+</figure>
+</section>
+<section aria-labelledby="etapes-t">
+<h2 id="etapes-t" class="section-titre">{{t.commentTitre}}</h2>
+<ol class="etapes">
+<sc-for list="{{etapes}}" as="e"><li class="etape"><span class="etape-num" aria-hidden="true">{{e.num}}</span><h3>{{e.titre}}</h3><p>{{e.texte}}</p></li></sc-for>
+</ol>
+</section>
+<section id="faq" class="faq" aria-labelledby="faq-t">
+<div class="faq-intro">
+<h2 id="faq-t" class="section-titre" tabindex="-1">{{t.faqTitre}}</h2>
+<p class="chapo">{{t.faqChapo}}</p>
+<button type="button" class="bouton-secondaire" onClick="{{ouvrirChat}}" data-focus="faq-chat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5h16v11H9l-5 4z"></path></svg>{{t.faqChat}}</button>
+</div>
+<div class="faq-liste">
+<sc-for list="{{faq}}" as="f"><details class="faq-item" data-id="{{f.id}}" onToggle="{{noterFaq}}" {{f.ouvert}}><summary>{{f.q}}<svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"></path></svg></summary><p>{{f.r}}</p></details></sc-for>
+</div>
+</section>
+<section style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center" aria-labelledby="fin-t">
+<h2 id="fin-t" class="section-titre" style="margin:0">{{t.finTitre}}</h2>
+<a class="bouton" href="{{ctaHref}}">{{ctaLabel}}</a>
+</section>
+</main>
+<footer class="pied pied-lanceur">
+<span>© 2026 Votre pAIn quotidien</span>
+<a href="/confidentialite">{{t.confidentialite}}</a>
+<span>{{t.demo}}</span>
+</footer>
+<button type="button" class="chat-lanceur" onClick="{{ouvrirChat}}" aria-haspopup="dialog" aria-controls="chat" aria-expanded="{{chatOuvert}}" data-focus="chat-lanceur" style="{{lanceurStyle}}">
+<span class="chat-tete"><svg class="miette" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><path class="miette-mie" d="M14 78c0-30 20-52 46-52s46 22 46 52c0 14-10 22-24 22H38c-14 0-24-8-24-22z"></path><path class="miette-grigne" d="M40 42l8 12M58 36l8 12M76 42l8 12"></path><circle class="miette-trait" cx="48" cy="74" r="6"></circle><circle class="miette-trait" cx="72" cy="74" r="6"></circle><path class="miette-sourire" d="M52 86q8 7 16 0"></path></svg></span>
+<span class="chat-lanceur-texte">{{t.chatLanceur}}</span>
+</button>
+<section id="chat" class="chat" role="dialog" aria-labelledby="chat-t" aria-describedby="chat-d" style="{{chatStyle}}" onKeydown="{{clavierChat}}">
+<div class="chat-barre">
+<span class="chat-tete"><svg class="miette" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><path class="miette-mie" d="M14 78c0-30 20-52 46-52s46 22 46 52c0 14-10 22-24 22H38c-14 0-24-8-24-22z"></path><path class="miette-grigne" d="M40 42l8 12M58 36l8 12M76 42l8 12"></path><circle class="miette-trait" cx="48" cy="74" r="6"></circle><circle class="miette-trait" cx="72" cy="74" r="6"></circle><path class="miette-sourire" d="M52 86q8 7 16 0"></path></svg></span>
+<div class="chat-nom"><h2 id="chat-t">Miette</h2><p>{{t.chatSousTitre}}</p></div>
+<button type="button" class="chat-fermer" onClick="{{fermerChat}}" aria-label="{{t.chatFermer}}" data-focus="chat-fermer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div class="chat-fil">
+<sc-for list="{{messages}}" as="m"><p class="{{m.classe}}"><span class="pq-sr">{{m.qui}}</span>{{m.texte}}</p></sc-for>
+</div>
+<div class="chat-suggestions" role="group" aria-label="{{t.chatSuggestions}}">
+<sc-for list="{{suggestions}}" as="s"><button type="button" class="chat-suggestion" data-id="{{s.id}}" data-focus="sugg-{{s.id}}" onClick="{{poser}}">{{s.q}}</button></sc-for>
+<a class="lien" href="#faq" onClick="{{versFaq}}">{{t.chatToutes}}</a>
+</div>
+<p id="chat-d" class="chat-note">{{t.chatNote}}</p>
+</section>
+<div class="voile" style="{{voileStyle}}" onClick="{{clicVoile}}">
+<div class="boite qr-boite" role="dialog" aria-modal="true" aria-labelledby="qr-t" aria-describedby="qr-d" onKeydown="{{clavierModale}}">
+<div class="boite-barre"><h2 id="qr-t">{{t.qrTitre}}</h2><button type="button" class="bouton-secondaire" style="min-height:44px;padding:0 16px" onClick="{{fermerQr}}" data-focus="qr-fermer">{{t.fermer}}</button></div>
+<div class="qr-contenu">
+<img src="/assets/qr-landing.svg" width="320" height="320" alt="{{t.qrAlt}}">
+<p class="qr-contenu-adresse">https://team42svp.vercel.app/</p>
+<p id="qr-d" class="qr-contenu-aide">{{t.qrAide}}</p>
+<a class="lien" href="/qr">{{t.qrImprimer}}</a>
+</div>
+</div>
+</div>
+</div>
+</script>
+<script src="/dc.js"></script><script>
+var T = {
+fr: {
+eyebrow: 'Veille IA pour solopreneurs',
+promesse: 'Chaque matin, l’actu IA qui compte pour ton métier, prête à pétrir en post LinkedIn',
+chapo: 'Tu choisis tes thèmes et ton niveau. On sélectionne, on note et on résume pour toi les meilleures news IA du jour, avec l’angle qui parle à tes clients.',
+cta: 'Goûter ma fournée', ctaConnecte: 'Voir ma fournée du jour', dejaCompte: 'J’ai déjà un compte',
+mietteBulle: 'Ta fournée de ce matin est prête !',
+mietteAlt: 'Miette, la mascotte : une petite miche de pain qui salue',
+ticketTitre: 'Fournée du jour', ticketCompte: '3 sur 7', ticketPied: 'Données d’exemple',
+apercuLegende: 'Ta fournée du jour : les news classées de la mieux notée à la moins bien notée, avec leur état et leur score sur 15.',
+apercu: [
+['Les agents IA gèrent désormais la facturation des petites entreprises', 'The Decoder', 'chaud', 13],
+['Comment les PME mesurent le retour sur investissement de l’IA', 'MIT Technology Review', 'chaud', 12],
+['Un modèle open source rivalise avec les leaders du marché', 'Hugging Face Blog', 'petrir', 10]
+],
+etats: { chaud: 'Tout chaud', petrir: 'À pétrir', rassis: 'Rassis' }, sur15: '/15',
+commentTitre: 'Comment ça marche',
+etapes: [
+['On collecte', 'Toutes les 3 heures, on ramasse l’actu IA dans des dizaines de sources fiables.'],
+['On trie pour toi', 'Chaque news est notée et résumée, puis choisie selon ton métier, tes thèmes et ton niveau.'],
+['Tu publies', 'Tu pétris la news en post LinkedIn en quelques minutes et tu suis ce qu’il rapporte.']
+],
+faqTitre: 'Questions fréquentes',
+faqChapo: 'Tu ne trouves pas ta réponse ? Miette te guide.',
+faqChat: 'Demander à Miette',
+faq: [
+['sources', 'D’où viennent les news ?', 'De dizaines de sources tech et IA reconnues : blogs officiels, médias spécialisés. Chaque news affiche sa source, avec un lien pour lire l’article d’origine.'],
+['etats', 'Que veulent dire « Tout chaud », « À pétrir » et « Rassis » ?', 'Tout chaud : encore peu couvert, publie vite. À pétrir : déjà repris ailleurs, trouve ton angle. Rassis : partout depuis des jours, garde-le en référence plutôt que de le publier.'],
+['publication', 'Mon post est-il publié sans moi ?', 'Jamais. L’IA rédige un premier jet, tu le relis et tu le modifies. Ensuite tu choisis : copier le texte, ou confirmer toi-même la publication sur LinkedIn.'],
+['score', 'Comment est calculé le score sur 15 ?', 'Trois critères notés sur 5 : la durabilité du sujet, sa propension à être partagé et son lien avec ton offre.'],
+['preferences', 'Puis-je changer mes thèmes ?', 'Oui. Dans Mon profil, « Modifier mes préférences » relance le questionnaire. Tu peux aussi laisser un retour pour affiner tes prochaines fournées.'],
+['duree', 'Combien de temps faut-il pour démarrer ?', '2 minutes pour régler ta fournée : ton métier, tes thèmes, ton niveau. Ensuite, un post se pétrit en quelques minutes.'],
+['donnees', 'Que deviennent mes données ?', 'Tout est expliqué sur la page Confidentialité. En démo, aucune donnée ne quitte ton navigateur.']
+],
+chatLanceur: 'Une question ? Demande à Miette',
+chatSousTitre: 'Guide de la démo',
+chatFermer: 'Fermer le chat',
+chatSuggestions: 'Questions proposées',
+chatToutes: 'Voir toutes les questions',
+chatBonjour: 'Salut ! Je suis Miette. Choisis une question, je te réponds.',
+chatFini: 'Tu as fait le tour ! Le reste est dans la FAQ, juste au-dessus.',
+chatToi: 'Toi :', chatMiette: 'Miette :',
+chatNote: 'Démo : Miette répond avec les réponses de la FAQ. Elle ne comprend pas encore les questions libres.',
+finTitre: 'Ta première fournée est à 2 minutes',
+qrTitre: 'Scanne pour la démo', qrAlt: 'QR code vers https://team42svp.vercel.app/', qrImprimer: 'Version à imprimer',
+qrAide: 'Ouvre l’appareil photo de ton téléphone et vise le code pour suivre la démo.', fermer: 'Fermer',
+confidentialite: 'Confidentialité', demo: 'Démo : aucune donnée ne quitte ton navigateur.'
+},
+en: {
+eyebrow: 'AI news watch for solopreneurs',
+promesse: 'Every morning, the AI news that matters for your job, ready to knead into a LinkedIn post',
+chapo: 'Pick your topics and your level. We select, rate and sum up the best AI news of the day for you, with the angle your clients care about.',
+cta: 'Taste my batch', ctaConnecte: 'See today’s batch', dejaCompte: 'I already have an account',
+mietteBulle: 'Your morning batch is ready!',
+mietteAlt: 'Miette, the mascot: a small loaf of bread waving hello',
+ticketTitre: 'Today’s batch', ticketCompte: '3 of 7', ticketPied: 'Sample data',
+apercuLegende: 'Your daily batch: stories ranked from best rated down, with their status and their score out of 15.',
+apercu: [
+['AI agents now handle invoicing for small businesses', 'The Decoder', 'chaud', 13],
+['How small businesses measure the return on AI', 'MIT Technology Review', 'chaud', 12],
+['An open-source model rivals the market leaders', 'Hugging Face Blog', 'petrir', 10]
+],
+etats: { chaud: 'Piping hot', petrir: 'Needs kneading', rassis: 'Gone stale' }, sur15: '/15',
+commentTitre: 'How it works',
+etapes: [
+['We gather', 'Every 3 hours, we collect AI news from dozens of reliable sources.'],
+['We sort it for you', 'Each story is rated and summed up, then picked for your job, your topics and your level.'],
+['You publish', 'Knead the story into a LinkedIn post in minutes and track what it brings in.']
+],
+faqTitre: 'Frequently asked questions',
+faqChapo: 'Can’t find your answer? Miette will guide you.',
+faqChat: 'Ask Miette',
+faq: [
+['sources', 'Where does the news come from?', 'From dozens of well-known tech and AI sources: official blogs, specialist media. Every story shows its source, with a link to read the original article.'],
+['etats', 'What do “Piping hot”, “Needs kneading” and “Gone stale” mean?', 'Piping hot: barely covered yet, post it fast. Needs kneading: already picked up elsewhere, find your angle. Gone stale: everywhere for days, keep it as a reference rather than posting it.'],
+['publication', 'Is my post published without me?', 'Never. AI writes a first draft, you read and edit it. Then you choose: copy the text, or confirm the LinkedIn post yourself.'],
+['score', 'How is the score out of 15 worked out?', 'Three criteria rated out of 5: how long the topic stays relevant, how likely it is to be shared, and how well it fits your offer.'],
+['preferences', 'Can I change my topics?', 'Yes. In My profile, “Edit my preferences” opens the questionnaire again. You can also leave feedback to fine-tune your next batches.'],
+['duree', 'How long does it take to get started?', '2 minutes to set up your batch: your job, your topics, your level. After that, a post takes a few minutes to knead.'],
+['donnees', 'What happens to my data?', 'Everything is explained on the Privacy page. In the demo, no data leaves your browser.']
+],
+chatLanceur: 'A question? Ask Miette',
+chatSousTitre: 'Demo guide',
+chatFermer: 'Close the chat',
+chatSuggestions: 'Suggested questions',
+chatToutes: 'See all questions',
+chatBonjour: 'Hi! I’m Miette. Pick a question and I’ll answer.',
+chatFini: 'That’s everything! The rest is in the FAQ, just above.',
+chatToi: 'You:', chatMiette: 'Miette:',
+chatNote: 'Demo: Miette answers with the FAQ answers. She can’t understand free-form questions yet.',
+finTitre: 'Your first batch is 2 minutes away',
+qrTitre: 'Scan for the demo', qrAlt: 'QR code to https://team42svp.vercel.app/', qrImprimer: 'Printable version',
+qrAide: 'Open your phone camera and point it at the code to follow the demo.', fermer: 'Close',
+confidentialite: 'Privacy', demo: 'Demo: no data leaves your browser.'
+}
+};
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr', qrOuvert: false, chatOuvert: false, posees: [], faqOuvertes: {} }; }
+// Appelée par le bouton QR de l'en-tête (parcours.js).
+ouvrirQr() { this.pendingFocus = 'qr-fermer'; this.setState({ qrOuvert: true }); }
+fermerQr() { this.pendingFocus = 'entete-qr'; this.setState({ qrOuvert: false }); }
+ouvrirChat() { this.pendingFocus = 'chat-fermer'; this.setState({ chatOuvert: true }); }
+fermerChat() { this.pendingFocus = 'chat-lanceur'; this.setState({ chatOuvert: false }); }
+// Question choisie dans le chat : ajoutée au fil, le focus passe à la question suivante.
+poser(id) {
+var posees = this.state.posees.concat([id]);
+var reste = this.restantes(posees);
+this.pendingFocus = reste.length ? 'sugg-' + reste[0] : 'chat-fermer';
+this.setState({ posees: posees });
+}
+restantes(posees) {
+var t = T[this.state.lang || 'fr'];
+return t.faq.map(function (f) { return f[0]; }).filter(function (id) { return posees.indexOf(id) === -1; });
+}
+afterRender(root) {
+var f = this.pendingFocus;
+this.pendingFocus = null;
+var el = f && root.querySelector('[data-focus="' + f + '"]');
+if (el) el.focus();
+// « Voir toutes les questions » : après le rendu (boot.js restaure le défilement), on descend à la FAQ.
+if (this.allerFaq) {
+this.allerFaq = false;
+setTimeout(function () { var titre = root.querySelector('#faq-t'); if (titre) { titre.scrollIntoView({ block: 'start' }); titre.focus({ preventScroll: true }); } }, 0);
+}
+var fil = root.querySelector('.chat-fil');
+if (fil) fil.scrollTop = fil.scrollHeight;
+}
+renderVals() {
+var self = this;
+var s = this.state || {};
+var lang = s.lang || 'fr';
+var t = T[lang];
+var connecte = false;
+try { connecte = !!Auth.utilisateurCourant(); } catch (e) {}
+var parId = {};
+t.faq.forEach(function (f) { parId[f[0]] = f; });
+var posees = (s.posees || []).filter(function (id) { return parId[id]; });
+var messages = [{ classe: 'chat-msg chat-msg-miette', qui: t.chatMiette, texte: t.chatBonjour }];
+posees.forEach(function (id) {
+messages.push({ classe: 'chat-msg chat-msg-toi', qui: t.chatToi, texte: parId[id][1] });
+messages.push({ classe: 'chat-msg chat-msg-miette', qui: t.chatMiette, texte: parId[id][2] });
+});
+var reste = this.restantes(posees);
+if (!reste.length) messages.push({ classe: 'chat-msg chat-msg-miette', qui: t.chatMiette, texte: t.chatFini });
+var ouvertes = s.faqOuvertes || {};
+return {
+t: t,
+voileStyle: s.qrOuvert ? '' : 'display: none',
+fermerQr: function () { self.fermerQr(); },
+clicVoile: function (e) { if (e.target === e.currentTarget) self.fermerQr(); },
+clavierModale: function (e) { Parcours.clavierModale(e, function () { self.fermerQr(); }); },
+ctaHref: connecte ? '/fournee' : '/decouvrir',
+ctaLabel: connecte ? t.ctaConnecte : t.cta,
+apercu: t.apercu.map(function (a, i) {
+return { rang: String(i + 1).padStart(2, '0'), titre: a[0], source: a[1], puce: 'puce puce-' + a[2], etat: t.etats[a[2]], score: a[3] + t.sur15 };
+}),
+etapes: t.etapes.map(function (e, i) { return { num: i + 1, titre: e[0], texte: e[1] }; }),
+faq: t.faq.map(function (f) { return { id: f[0], q: f[1], r: f[2], ouvert: ouvertes[f[0]] ? 'open' : '' }; }),
+// Ouverture d'une question gardée sans nouveau rendu, pour la retrouver après un changement de langue.
+noterFaq: function (e) { s.faqOuvertes = s.faqOuvertes || {}; s.faqOuvertes[e.currentTarget.getAttribute('data-id')] = e.currentTarget.open; },
+chatOuvert: String(!!s.chatOuvert),
+chatStyle: s.chatOuvert ? '' : 'display: none',
+lanceurStyle: s.chatOuvert ? 'display: none' : '',
+ouvrirChat: function () { self.ouvrirChat(); },
+fermerChat: function () { self.fermerChat(); },
+clavierChat: function (e) { if (e.key === 'Escape') { e.preventDefault(); self.fermerChat(); } },
+versFaq: function (e) { e.preventDefault(); self.allerFaq = true; self.setState({ chatOuvert: false }); },
+messages: messages,
+// Quatre questions proposées à la fois, pour garder le chat lisible sur téléphone.
+suggestions: reste.slice(0, 4).map(function (id) { return { id: id, q: parId[id][1] }; }),
+poser: function (e) { self.poser(e.currentTarget.getAttribute('data-id')); }
+};
+}
+}
+</script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/boot.js"></script></body></html>

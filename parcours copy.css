@@ -1,0 +1,232 @@
+/* Feuille partagée des écrans du parcours d'entrée (landing, questionnaire, compte).
+   Palette : variables de charte.css (chargée avant). Pas de nav latérale. */
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--fond-page);color:var(--texte);font-family:'DM Sans',-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55}
+a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
+:focus-visible{outline:3px solid var(--dore);outline-offset:2px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;margin:0;letter-spacing:-0.01em}
+p{margin:0}
+.visuellement-cache{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Mise en page */
+.parcours{min-height:100vh;display:flex;flex-direction:column}
+.entete{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding:18px 32px;max-width:1180px;width:100%;margin:0 auto}
+.entete-droite{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.logo{display:inline-flex;align-items:center;gap:10px;color:var(--texte);text-decoration:none;min-height:44px}
+.logo-icone{width:38px;height:38px;border-radius:12px;background:var(--braise);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;flex:none}
+.logo-nom{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:20px;line-height:1.1}
+.logo-nom span{color:var(--dore)}
+.langues{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--sable)}
+.langues button{min-height:40px;min-width:48px;padding:0 12px;border-radius:999px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer}
+.langues button[aria-pressed="true"]{background:var(--braise);color:var(--sur-plein);font-weight:700}
+.contenu{flex:1 0 auto;width:100%;max-width:1180px;margin:0 auto;padding:24px 32px 56px}
+.centre{display:flex;justify-content:center;align-items:flex-start}
+.pied{border-top:1px solid var(--bord);padding:20px 32px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;font-size:14px;color:var(--doux)}
+.pied a{display:inline-flex;align-items:center;min-height:44px}
+
+/* Cartes et textes */
+.carte{width:100%;max-width:560px;background:var(--creme);border:1px solid var(--bord);border-radius:22px;padding:32px 34px;display:flex;flex-direction:column;gap:20px;box-shadow:var(--ombre-2)}
+.carte-large{max-width:760px}
+.sur-titre{font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)}
+.titre{font-size:34px;font-weight:800}
+.chapo{color:var(--doux);font-size:17px}
+/* Groupe de mots qui passe à la ligne d'un seul tenant (et se replie seul s'il dépasse la ligne). */
+.groupe{display:inline-block}
+.liens-bas{display:flex;flex-wrap:wrap;gap:4px 18px;justify-content:space-between;align-items:center}
+.liens-bas a,.lien{display:inline-flex;align-items:center;min-height:44px;font-weight:600}
+
+/* Champs */
+form{display:flex;flex-direction:column;gap:18px;margin:0}
+.champ{display:flex;flex-direction:column;gap:6px}
+.champ label,.champ legend,.libelle{font-weight:700;font-size:15px}
+.aide{font-size:14px;color:var(--doux)}
+.champ input[type=text],.champ input[type=email],.champ input[type=password]{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--champ);color:var(--texte);font:inherit}
+.champ input:focus-visible{border-color:var(--dore)}
+.champ input[aria-invalid="true"]{border-color:var(--erreur);background:var(--erreur-fond)}
+.erreur{color:var(--erreur);font-size:14px;font-weight:600}
+.erreur:empty{display:none}
+.alerte{padding:12px 16px;border-radius:12px;background:var(--erreur-fond);color:var(--erreur);font-weight:600}
+.info{padding:12px 16px;border-radius:12px;background:var(--ok-fond);color:var(--ok);font-weight:600}
+.mdp{position:relative;display:flex}
+.mdp input{padding-right:110px!important}
+.mdp button{position:absolute;right:4px;top:2px;min-height:44px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--brun);font:inherit;font-weight:700;cursor:pointer}
+.regles{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.regles li{display:flex;align-items:center;gap:8px;color:var(--doux)}
+.regles li::before{content:'';width:16px;height:16px;border-radius:50%;border:2px solid var(--bord-fort);flex:none}
+.regles li.ok{color:var(--ok);font-weight:600}
+.regles li.ok::before{background:var(--ok);border-color:var(--ok);box-shadow:inset 0 0 0 2px var(--creme)}
+
+/* Boutons */
+.bouton,.bouton-secondaire{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer;text-align:center}
+.bouton{background:var(--braise);color:var(--sur-plein);border:0}
+.bouton:hover{background:var(--braise-fonce);color:var(--sur-plein)}
+.bouton-secondaire{background:var(--creme);color:var(--brun);border:1.5px solid var(--brun)}
+.bouton-secondaire:hover{background:var(--sable);color:var(--brun-fonce)}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.actions-fin{justify-content:space-between}
+
+/* Choix (cases et boutons radio en tuiles) */
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.choix{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:8px}
+.choix-ligne{grid-template-columns:1fr}
+.choix label{position:relative;display:flex;align-items:flex-start;gap:10px;min-height:48px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--bord-fort);background:var(--champ);cursor:pointer;font-weight:600}
+.choix input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--brun);flex:none}
+.choix input:focus-visible{outline:3px solid var(--dore);outline-offset:2px}
+.choix label:has(input:checked){border-color:var(--brun);background:var(--miel)}
+.choix .detail{display:block;font-weight:400;font-size:14px;color:var(--doux)}
+
+/* Progression */
+.progression{display:flex;flex-direction:column;gap:8px}
+.progression-texte{font-size:14px;font-weight:700;color:var(--sur-titre)}
+.progression-barre{height:8px;border-radius:999px;background:var(--sable);overflow:hidden}
+.progression-barre span{display:block;height:100%;border-radius:999px;background:var(--dore);transition:width .3s ease}
+@media (prefers-reduced-motion:reduce){.progression-barre span{transition:none}}
+
+.mention-demo{font-size:13px;color:var(--doux);padding:10px 14px;border-radius:12px;border:1px dashed var(--bord-fort);background:var(--fond)}
+
+/* Aperçu de la bento (statique) */
+.mini-bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:86px;gap:10px}
+.mini-tuile{background:var(--creme);border:1px solid var(--bord);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:7px;min-width:0;overflow:hidden}
+.mini-tuile.or{background:var(--maillard);border:2px solid var(--or-bord);box-shadow:0 6px 16px color-mix(in srgb,var(--or-bord) 28%,transparent);grid-column:span 2;grid-row:span 2}
+.mini-tuile.large{grid-column:span 2}
+.mini-rang{align-self:flex-start;font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px;background:var(--sable);color:var(--brun-fonce)}
+.mini-tuile.or .mini-rang{background:var(--or-brun);color:var(--or-surface)}
+.mini-ligne{height:8px;border-radius:999px;background:var(--bord)}
+.mini-tuile.or .mini-ligne{background:color-mix(in srgb,var(--or-brun) 28%,transparent)}
+.mini-ligne.courte{width:55%}
+.mini-titre{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:16px;line-height:1.2;color:var(--or-texte)}
+
+/* Landing */
+.heros{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;align-items:center;padding:24px 0 40px}
+.heros h1{font-size:48px;font-weight:800}
+.heros .chapo{font-size:18px;max-width:540px}
+.heros-texte{display:flex;flex-direction:column;gap:20px}
+.etapes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;list-style:none;margin:0;padding:0}
+.etape{background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.etape-num{width:40px;height:40px;border-radius:50%;background:var(--sable);color:var(--brun-fonce);display:inline-flex;align-items:center;justify-content:center;font-family:Fraunces,Georgia,serif;font-weight:800;font-size:18px}
+.etape h3{font-size:20px}
+.etape p{color:var(--doux)}
+.section-titre{font-size:28px;font-weight:800;margin:8px 0 18px}
+
+/* Plateforme grisée */
+.grisee{position:relative;min-height:100vh;overflow:hidden}
+.grisee-fond{position:absolute;inset:0;display:flex;gap:20px;padding:24px;filter:blur(6px) saturate(.85);opacity:.75;pointer-events:none;user-select:none}
+.grisee-nav{flex:0 0 220px;border-radius:18px;background:var(--sable);padding:20px;display:flex;flex-direction:column;gap:12px}
+.grisee-app{flex:1;display:flex;flex-direction:column;gap:16px;min-width:0}
+.grisee-app .mini-bento{grid-auto-rows:150px}
+.grisee-avant{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;background:color-mix(in srgb,var(--fond) 35%,transparent)}
+
+@media (max-width:860px){
+  .heros{grid-template-columns:1fr;gap:28px}
+  .heros h1{font-size:36px}
+  .etapes{grid-template-columns:1fr}
+  .grisee-nav{display:none}
+}
+@media (max-width:640px){
+  .entete{padding:14px 16px}
+  .contenu{padding:16px 16px 40px}
+  .pied{padding:16px}
+  .carte{padding:24px 18px;border-radius:18px}
+  .titre{font-size:28px}
+  .heros h1{font-size:30px}
+  .mini-bento{grid-auto-rows:70px;gap:8px}
+  .grisee-fond{padding:12px}
+  .actions .bouton,.actions .bouton-secondaire{flex:1 1 auto}
+}
+/* Fenêtre modale (faux e-mail, QR code de la landing) */
+.voile{position:fixed;inset:0;z-index:10;background:var(--voile);display:flex;align-items:center;justify-content:center;padding:16px}
+.boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:var(--creme);border-radius:18px;box-shadow:var(--ombre-3);display:flex;flex-direction:column}
+.boite-barre{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--bord);background:var(--sable);border-radius:18px 18px 0 0}
+.boite-barre h2{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0}
+
+/* Bouton QR code de l'en-tête (landing) et contenu de sa fenêtre */
+.entete-qr{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:700;cursor:pointer}
+.entete-qr:hover{border-color:var(--brun)}
+.qr-boite{max-width:440px}
+.qr-contenu{padding:22px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.qr-contenu img{display:block;width:min(320px,70vw);height:auto;border:1px solid var(--bord);border-radius:16px;padding:12px;background:var(--qr-fond)}
+.qr-contenu-adresse{font-family:Fraunces,Georgia,serif;font-size:20px;font-weight:800;color:var(--brun-fonce);overflow-wrap:anywhere}
+.qr-contenu-aide{color:var(--doux);font-size:15px}
+@media (max-width:400px){.qr-contenu-adresse{font-size:16px}.entete-qr{padding:0 12px}.entete-qr-texte{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}}
+[data-mode="reel"] .mention-demo,[data-mode="reel"] [data-demo-seul]{display:none}
+.mini-puce{align-self:flex-start;font-size:10.5px;padding:1px 8px;gap:4px}
+.mini-puce::before{width:5px;height:5px}
+
+/* Landing : Miette (mascotte en aplat, couleurs du petit pain de la charte), aperçu en ticket de fournée,
+   FAQ dépliable et chat guidé de la démo (réponses de la FAQ, pas de saisie libre). */
+.apercu{margin:0;display:flex;flex-direction:column;gap:10px}
+.apercu-scene{display:flex;align-items:flex-end;gap:8px}
+.apercu-legende{font-size:14px;color:var(--doux)}
+.miette-accueil{flex:0 0 150px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.miette-bulle{position:relative;background:var(--creme);border:1.5px solid var(--texte);border-radius:14px;padding:10px 12px;font-size:14px;font-weight:700;line-height:1.35;text-align:center}
+.miette-bulle::after{content:'';position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:var(--creme);border-right:1.5px solid var(--texte);border-bottom:1.5px solid var(--texte);transform:translateX(-50%) rotate(45deg)}
+.miette{display:block;width:100%;height:auto;overflow:visible}
+.miette-grande{width:140px}
+.miette-ombre{fill:var(--bord)}
+.miette-membre{fill:none;stroke:var(--pain-bas);stroke-width:5;stroke-linecap:round}
+.miette-mie{fill:var(--pain-haut);stroke:var(--pain-bas);stroke-width:3}
+.miette-grigne{fill:none;stroke:var(--pain-grigne);stroke-width:5;stroke-linecap:round}
+.miette-trait{fill:var(--pain-texte)}
+.miette-sourire{fill:none;stroke:var(--pain-texte);stroke-width:3;stroke-linecap:round}
+.miette-joue{fill:color-mix(in srgb,var(--braise-vive) 45%,transparent)}
+.ticket{flex:1 1 auto;min-width:0;background:var(--creme);border:1.5px solid var(--texte);border-radius:16px;overflow:hidden}
+.ticket-tete,.ticket-pied{display:flex;justify-content:space-between;gap:8px;padding:12px 18px;font-family:'DM Mono',ui-monospace,monospace;font-size:13px;color:var(--doux)}
+.ticket-tete{border-bottom:1.5px dashed var(--bord-fort);text-transform:uppercase;letter-spacing:0.04em}
+.ticket-pied{border-top:1.5px dashed var(--bord-fort);font-size:12px}
+.ticket-liste{list-style:none;margin:0;padding:0}
+.ticket-ligne{display:flex;gap:14px;padding:14px 18px}
+.ticket-ligne+.ticket-ligne{border-top:1px solid var(--trait)}
+.ticket-rang{flex:none;padding-top:2px;font-family:'DM Mono',ui-monospace,monospace;font-size:14px;color:var(--brun)}
+.ticket-corps{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ticket-titre{font-weight:700;line-height:1.3}
+.ticket-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--doux)}
+
+.faq{display:flex;flex-wrap:wrap;gap:24px 48px;margin-top:56px;scroll-margin-top:24px}
+.faq-intro{flex:1 1 260px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.faq-intro .section-titre{margin:0}
+.faq-liste{flex:999 1 520px;min-width:0;border-top:2px solid var(--texte)}
+.faq-item{border-bottom:1px solid var(--bord)}
+.faq-item summary{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:60px;padding:8px 0;font-weight:700;font-size:17px;line-height:1.35;cursor:pointer;list-style:none}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-chevron{flex:none;transition:transform .2s ease}
+.faq-item[open] .faq-chevron{transform:rotate(180deg)}
+.faq-item p{padding:0 0 20px;color:var(--doux);max-width:62ch}
+
+.pied-lanceur{padding-bottom:104px}
+.chat-lanceur{position:fixed;right:24px;bottom:24px;z-index:9;display:inline-flex;align-items:center;gap:12px;min-height:64px;padding:6px 20px 6px 6px;border:0;border-radius:999px;background:var(--panneau);color:var(--panneau-texte);font:inherit;font-weight:700;cursor:pointer;box-shadow:var(--ombre-2)}
+.chat-lanceur:hover{box-shadow:var(--ombre-3)}
+.chat-tete{flex:none;width:52px;height:52px;border-radius:50%;background:var(--creme);display:inline-flex;align-items:center;justify-content:center}
+.chat-tete .miette{width:42px}
+.chat{position:fixed;right:24px;bottom:24px;z-index:9;width:min(400px,calc(100vw - 32px));max-height:min(640px,calc(100vh - 48px));display:flex;flex-direction:column;background:var(--fond);border:1.5px solid var(--texte);border-radius:20px;overflow:hidden;box-shadow:var(--ombre-3)}
+.chat-barre{display:flex;align-items:center;gap:12px;padding:12px 12px 12px 16px;background:var(--panneau);color:var(--panneau-texte)}
+.chat-nom{flex:1 1 auto;min-width:0}
+.chat-nom h2{font-size:18px}
+.chat-nom p{font-size:13px;color:var(--panneau-doux)}
+.chat-fermer{flex:none;width:44px;height:44px;border:0;border-radius:12px;background:transparent;color:var(--panneau-texte);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.chat-fermer:hover{background:color-mix(in srgb,var(--panneau-texte) 14%,transparent)}
+.chat-fil{flex:1 1 auto;min-height:120px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chat-msg{max-width:88%;padding:10px 14px;border-radius:16px;line-height:1.45}
+.chat-msg-miette{align-self:flex-start;background:var(--creme);border:1px solid var(--bord);border-bottom-left-radius:4px}
+.chat-msg-toi{align-self:flex-end;background:var(--braise);color:var(--sur-plein);border-bottom-right-radius:4px}
+.chat-suggestions{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-top:1px solid var(--bord);background:var(--creme)}
+.chat-suggestion{min-height:44px;padding:8px 14px;border-radius:18px;border:1.5px solid var(--bord-fort);background:var(--champ);color:var(--texte);font:inherit;font-size:14px;font-weight:600;line-height:1.3;text-align:left;cursor:pointer}
+.chat-suggestion:hover{border-color:var(--brun)}
+.chat-suggestions .lien{font-size:14px}
+.chat-note{padding:0 16px 12px;background:var(--creme);font-size:12px;color:var(--doux)}
+@media (prefers-reduced-motion:reduce){.faq-chevron{transition:none}}
+@media (max-width:640px){
+  .miette-accueil{flex-basis:108px}
+  .miette-grande{width:100px}
+  .miette-bulle{font-size:13px;padding:8px 10px}
+  .ticket-ligne{padding:12px 14px}
+  .chat,.chat-lanceur{right:16px;bottom:16px}
+  .chat{max-height:calc(100vh - 32px)}
+}
+@media (max-width:400px){
+  .apercu-scene{flex-direction:column;align-items:stretch}
+  .miette-accueil{flex-direction:row;flex-basis:auto;align-items:center}
+  .miette-grande{width:84px}
+  .chat-lanceur{padding:6px}
+  .chat-lanceur-texte{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+}
