@@ -271,7 +271,7 @@ test('profondeur : fond de page en léger dégradé et ombres teintées brun, un
 });
 
 test('bouton Pétrir en pastille rouge imposée : fond uni sous le texte, petit pain blanc décoratif, appui, focus, sans animation si réduit', () => {
-  assert.match(css, /\.btn-petrir\{[^}]*border-radius:999px/);
+  assert.match(css, /\.btn-petrir\{[^}]*border-radius:10px/);
   assert.match(css, /\.btn-petrir\{[^}]*background:var\(--petrir-btn-fond\)/);
   assert.match(css, /\.btn-petrir\{[^}]*border:1\.5px solid var\(--petrir-btn-bord\)/);
   assert.match(css, /\.btn-petrir\{[^}]*color:var\(--petrir-btn-texte\)/);
@@ -312,8 +312,9 @@ test('étiquette de source : même forme que les puces d’état (lot 20)', () =
   assert.match(etq, /color:var\(--etiquette-texte\)/);
 });
 
-test('animation Tout chaud coupée sous prefers-reduced-motion', () => {
-  assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.puce-chaud/);
+test('puce Tout chaud immobile, sans boucle ni lueur (lot 21)', () => {
+  assert.doesNotMatch(css, /\.puce-chaud(::before)?\{[^}]*animation/);
+  assert.doesNotMatch(css, /\.puce-chaud(::before)?\{[^}]*box-shadow/);
 });
 
 test('chaque page charge /charte.css avant toute autre feuille de style', () => {

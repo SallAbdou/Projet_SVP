@@ -126,8 +126,8 @@
 
   // Phrase d'analyse en trois morceaux (le gabarit échappe tout : le gras est un <strong> du gabarit).
   var PHRASES = {
-    fr: { avant: 'Sers-les vite ! Tes posts sur des sujets ', gras: 'tout chaud', apres: ' font plus d’audience que les autres.' },
-    en: { avant: 'Serve them fast! Your posts on ', gras: 'piping hot', apres: ' topics get more reach than the others.' }
+    fr: { avant: 'Tes posts sur des sujets ', gras: 'tout chaud', apres: ' font plus d’audience que les autres : sers-les vite.' },
+    en: { avant: 'Your posts on ', gras: 'piping hot', apres: ' topics get more reach than the others, so serve them fast.' }
   };
   function phraseAnalyse(chaudGagne, lang) {
     if (chaudGagne !== true) return null;
