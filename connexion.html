@@ -18,11 +18,11 @@
 <p id="err-connexion" class="alerte" role="alert" style="{{alerteStyle}}">{{erreurTexte}}</p>
 <div class="champ">
 <label for="email">{{t.email}}</label>
-<input id="email" type="email" autocomplete="username" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
+<input id="email" type="text" spellcheck="false" autocapitalize="none" autocomplete="username" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalideEmail}}" aria-describedby="err-connexion">
 </div>
 <div class="champ">
 <label for="mdp">{{t.mdp}}</label>
-<div class="mdp"><input id="mdp" type="{{typeChamp}}" autocomplete="current-password" value="{{mdp}}" onInput="{{saisirMdp}}" aria-invalid="{{invalide}}" aria-describedby="err-connexion">
+<div class="mdp"><input id="mdp" type="{{typeChamp}}" autocomplete="current-password" value="{{mdp}}" onInput="{{saisirMdp}}" aria-invalid="{{invalideMdp}}" aria-describedby="err-connexion">
 <button type="button" onClick="{{basculerVue}}" data-focus="voir" aria-pressed="{{visible}}">{{libelleVoir}}</button></div>
 <a class="lien" href="/mot-de-passe-oublie" style="align-self:flex-start">{{t.oubli}}</a>
 </div>
@@ -47,6 +47,7 @@ demoBouton: 'Utiliser le compte de démo (Léa)',
 email: 'E-mail', mdp: 'Mot de passe', voir: 'Afficher', masquer: 'Masquer',
 oubli: 'Mot de passe oublié ?', valider: 'Me connecter',
 erreur: 'E-mail ou mot de passe incorrect.',
+emailVide: 'Indique ton e-mail.', mdpVide: 'Indique ton mot de passe.',
 reseau: 'Le serveur ne répond pas. Réessaie dans un instant.',
 accueil: '← Accueil', creer: 'Pas encore de compte ? Règle ta fournée',
 demo: 'Démo : aucun mot de passe n’est envoyé ni enregistré. Tout compte confirmé accepte un mot de passe qui respecte les règles (8 caractères, une majuscule, un chiffre).'
@@ -57,6 +58,7 @@ demoBouton: 'Use the demo account (Léa)',
 email: 'Email', mdp: 'Password', voir: 'Show', masquer: 'Hide',
 oubli: 'Forgot your password?', valider: 'Log in',
 erreur: 'Incorrect email or password.',
+emailVide: 'Enter your email.', mdpVide: 'Enter your password.',
 reseau: 'The server is not responding. Try again in a moment.',
 accueil: '← Home', creer: 'No account yet? Set up your batch',
 demo: 'Demo: no password is sent or stored. Any confirmed account accepts a password that meets the rules (8 characters, one capital, one digit).'
@@ -78,6 +80,9 @@ valider() {
 // Démo : réponse immédiate ; mode réel : promesse (Supabase). Promise.resolve couvre les deux.
 var self = this;
 if (this.envoi) return;
+// Lot 24 (3.3.3) : champ vide, on dit lequel et on y place le focus, sans interroger le serveur.
+if (!String(this.state.email || '').trim()) { this.pendingFocus = '#email'; this.setState({ erreur: 'emailVide' }); return; }
+if (!this.state.mdp) { this.pendingFocus = '#mdp'; this.setState({ erreur: 'mdpVide' }); return; }
 this.envoi = true;
 Promise.resolve(Auth.seConnecter(this.state.email, this.state.mdp)).then(function (r) {
 self.envoi = false;
@@ -92,8 +97,10 @@ var lang = st.lang || 'fr';
 var t = T[lang];
 return {
 t: t, email: st.email, mdp: st.mdp,
-erreurTexte: st.erreur === 'reseau' ? t.reseau : t.erreur,
-alerteStyle: st.erreur ? '' : HIDE, invalide: st.erreur ? 'true' : 'false',
+erreurTexte: t[st.erreur] || t.erreur,
+alerteStyle: st.erreur ? '' : HIDE,
+invalideEmail: st.erreur && st.erreur !== 'mdpVide' ? 'true' : 'false',
+invalideMdp: st.erreur && st.erreur !== 'emailVide' ? 'true' : 'false',
 typeChamp: st.visible ? 'text' : 'password', visible: String(!!st.visible), libelleVoir: st.visible ? t.masquer : t.voir,
 saisirEmail: function (e) { self.setState({ email: e.target.value }); },
 saisirMdp: function (e) { self.setState({ mdp: e.target.value }); },

@@ -41,7 +41,7 @@ form{display:flex;flex-direction:column;gap:18px;margin:0}
 .champ{display:flex;flex-direction:column;gap:6px}
 .champ label,.champ legend,.libelle{font-weight:700;font-size:15px}
 .aide{font-size:14px;color:var(--doux)}
-.champ input[type=text],.champ input[type=email],.champ input[type=password]{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1.5px solid var(--bord-fort);background:var(--champ);color:var(--texte);font:inherit}
+.champ input[type=text],.champ input[type=email],.champ input[type=password]{min-height:48px;width:100%;padding:0 14px;border-radius:12px;border:1.5px solid var(--bord-champ);background:var(--champ);color:var(--texte);font:inherit}
 .champ input:focus-visible{border-color:var(--dore)}
 .champ input[aria-invalid="true"]{border-color:var(--erreur);background:var(--erreur-fond)}
 .erreur{color:var(--erreur);font-size:14px;font-weight:600}
@@ -74,6 +74,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .choix input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--brun);flex:none}
 .choix input:focus-visible{outline:3px solid var(--dore);outline-offset:2px}
 .choix label:has(input:checked){border-color:var(--brun);background:var(--miel)}
+.choix label:has(input[aria-invalid="true"]){border-color:var(--erreur);background:var(--erreur-fond)}
 .choix .detail{display:block;font-weight:400;font-size:14px;color:var(--doux)}
 
 /* Progression */
@@ -194,6 +195,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .faq-item p{padding:0 0 20px;color:var(--doux);max-width:62ch}
 
 .pied-lanceur{padding-bottom:104px}
+html:has(.chat-lanceur){scroll-padding-bottom:104px}
 .chat-lanceur{position:fixed;right:24px;bottom:24px;z-index:9;display:inline-flex;align-items:center;gap:12px;min-height:64px;padding:6px 20px 6px 6px;border:0;border-radius:999px;background:var(--panneau);color:var(--panneau-texte);font:inherit;font-weight:700;cursor:pointer;box-shadow:var(--ombre-2)}
 .chat-lanceur:hover{box-shadow:var(--ombre-3)}
 .chat-tete{flex:none;width:52px;height:52px;border-radius:50%;background:var(--creme);display:inline-flex;align-items:center;justify-content:center}

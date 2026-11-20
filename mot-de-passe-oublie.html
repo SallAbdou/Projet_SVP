@@ -16,7 +16,7 @@
 <form onSubmit="{{valider}}" novalidate>
 <div class="champ">
 <label for="email">{{t.email}}</label>
-<input id="email" type="email" autocomplete="email" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-email">
+<input id="email" type="text" spellcheck="false" autocapitalize="none" autocomplete="email" inputmode="email" value="{{email}}" onInput="{{saisirEmail}}" aria-invalid="{{invalide}}" aria-describedby="err-email">
 <p id="err-email" class="erreur">{{erreur}}</p>
 </div>
 <button type="submit" class="bouton" data-focus="valider">{{t.valider}}</button>

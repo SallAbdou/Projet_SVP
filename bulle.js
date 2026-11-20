@@ -21,7 +21,12 @@
     return { left: left, top: top, dessus: false };
   }
 
-  var Bulle = { placer: placer };
+  // Lot 24 (1.4.13) : la bulle reste ouverte si la souris va vers le bouton ou vers la bulle.
+  function resteOuverte(vers, btn, bulle) {
+    return !!vers && ((btn && btn.contains(vers)) || (bulle && bulle.contains(vers)));
+  }
+
+  var Bulle = { placer: placer, resteOuverte: resteOuverte };
 
   function brancher(doc, win) {
     var courant = null, mode = '';
@@ -56,8 +61,14 @@
     });
     doc.addEventListener('mouseout', function (e) {
       var btn = bouton(e.target);
+      var b = bulleEl();
+      // Sortie de la bulle survolée : on ferme sauf si l'on revient sur son bouton.
+      if (!btn && courant && mode === 'survol' && b && b.contains(e.target)) {
+        if (!resteOuverte(e.relatedTarget, courant, b)) fermer();
+        return;
+      }
       if (!btn || btn !== courant || mode !== 'survol') return;
-      if (e.relatedTarget && btn.contains(e.relatedTarget)) return;
+      if (resteOuverte(e.relatedTarget, btn, b)) return;
       fermer();
     });
     doc.addEventListener('focusin', function (e) {
@@ -70,6 +81,8 @@
     // Appui au doigt ou clic : bascule ; un appui ailleurs referme.
     doc.addEventListener('click', function (e) {
       var btn = bouton(e.target);
+      var b = bulleEl();
+      if (!btn && b && b.contains(e.target)) return;
       if (!btn) { if (courant) fermer(); return; }
       if (btn === courant && mode === 'clic') fermer();
       else ouvrir(btn, 'clic');

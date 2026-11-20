@@ -94,6 +94,8 @@ html[data-animations="off"] .puce-pause{width:0;height:0;border-right:0;border-l
 /* Bulle du bouton (élément fixe hors des tuiles, qui coupent leur contenu). */
 #pq-bulle-anim{position:fixed;z-index:60;max-width:240px;padding:6px 10px;border-radius:8px;background:var(--texte);color:var(--fond);font-size:13px;font-weight:600;line-height:1.35;box-shadow:var(--ombre-2)}
 #pq-bulle-anim[hidden]{display:none}
+#pq-bulle-anim::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}
+#pq-bulle-anim[data-cote="dessus"]::before{top:auto;bottom:-8px}
 
 /* Lot 23 : animations décoratives coupées (case « Animations » du profil ou bouton Tout chaud, data-animations sur <html>).
    Les retours de couleur au survol restent ; les mouvements et boucles s'arrêtent. */

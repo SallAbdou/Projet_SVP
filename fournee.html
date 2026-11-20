@@ -43,8 +43,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .jauge-aide{display:inline-flex;align-items:center;min-height:24px;max-width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:600;text-align:left;text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:help}
 .jauge-aide:hover{color:var(--brun)}
 .jauge-aide:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
-.bulle{position:fixed;z-index:60;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;left:0;top:0;max-width:min(300px,calc(100vw - 16px));padding:10px 12px;border-radius:10px;border:1px solid var(--bord-fort);background:var(--panneau);color:var(--panneau-texte);font-size:13px;font-weight:500;line-height:1.45;box-shadow:var(--ombre-2);pointer-events:none}
+.bulle{position:fixed;z-index:60;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;left:0;top:0;max-width:min(300px,calc(100vw - 16px));padding:10px 12px;border-radius:10px;border:1px solid var(--bord-fort);background:var(--panneau);color:var(--panneau-texte);font-size:13px;font-weight:500;line-height:1.45;box-shadow:var(--ombre-2)}
 .bulle[hidden]{display:none}
+.bulle::before{content:"";position:absolute;left:0;right:0;top:-10px;height:10px}
+.bulle[data-cote="dessus"]::before{top:auto;bottom:-10px}
 .jauge-piste{display:block;height:12px;border-radius:999px;background:color-mix(in srgb,var(--brun) 14%,transparent);box-shadow:inset 0 0 0 1px var(--bord-fort);overflow:hidden}
 .jauge-plein{display:block;height:100%;border-radius:inherit;background:var(--brun)}
 .jauge-val{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
@@ -154,7 +156,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
 <span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--creme);border:1px dashed var(--bord-fort);color:var(--doux)">{{t.sample}}</span>
-<button type="button" data-act="edit" aria-pressed="{{editPressed}}" onClick="{{toggleEdit}}" style="{{editBtnStyle}}">{{editLabel}}</button>
+<button type="button" data-act="edit" onClick="{{toggleEdit}}" style="{{editBtnStyle}}">{{editLabel}}</button>
 </div>
 </header>
 <p role="status" style="{{loadingStyle}}">{{t.loading}}</p>
@@ -283,7 +285,8 @@ readFull: 'Lire la source : {titre} (nouvel onglet)',
 states: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
 rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
-toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille de {name}', drag: 'Glisser pour déplacer',
+annoncePosition: '{name} est maintenant en position {p}', annonceTaille: '{name} : taille {s}',
+toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille pour {name}', drag: 'Glisser pour déplacer',
 money: 'Monétisation {m}/15', jauges: { durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' }, sur5: '{v}/5',
 aides: { durabilite: 'Le sujet sera-t-il encore valable dans une semaine ?', propension: 'Ton client est-il prêt à payer pour être aidé là-dessus ? Y a-t-il une valeur ajoutée pour lui ? Est-ce que ça l’instruit ?', lienOffre: 'Le sujet mène-t-il à une offre payante, monétisable pour toi via tes posts LinkedIn ?' },
 knead: 'Pétrir', kneadSuite: ' un post', graphShow: 'Afficher le graphique', graphHide: 'Masquer le graphique', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
@@ -312,6 +315,7 @@ readFull: 'Read the source: {titre} (new tab)',
 states: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
 rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
+annoncePosition: '{name} is now in position {p}', annonceTaille: '{name}: size {s}',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
 money: 'Monetisation {m}/15', jauges: { durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' }, sur5: '{v}/5',
 aides: { durabilite: 'Will the topic still hold up in a week?', propension: 'Is your client ready to pay for help on this? Does it add value for them? Does it teach them something?', lienOffre: 'Does the topic lead to a paid offer you can monetise through your LinkedIn posts?' },
@@ -421,6 +425,16 @@ updateLayout(layout, focus) {
 try { Bento.saveLayout(window.localStorage, layout); } catch (e) {}
 this.pendingFocus = focus || null;
 this.setState({ layout: layout });
+if (focus && focus.id) this.annoncerBloc(focus.id, focus.act);
+}
+// Lot 24 (N4) : un déplacement ou un changement de taille est dit au lecteur d'écran.
+annoncerBloc(id, act) {
+var t = T[this.state.lang || 'fr'];
+var nom = id === 'graph' ? t.graphName : fill(t.slotName, { n: String(id).replace(/\D/g, '') });
+var tuiles = Array.prototype.slice.call(document.querySelectorAll('#root [data-tile]')).filter(function (el) { return el.getClientRects().length > 0; });
+var pos = tuiles.map(function (el) { return el.getAttribute('data-tile'); }).indexOf(id) + 1;
+var texte = /^size-/.test(act) ? fill(t.annonceTaille, { name: nom, s: act.slice(5) }) : fill(t.annoncePosition, { name: nom, p: pos });
+if (window.annoncer && pos > 0) window.annoncer(texte.charAt(0).toUpperCase() + texte.slice(1));
 }
 // Panneau « Mise en page » : applique un préréglage (ou rend la disposition personnalisée),
 // l'enregistre et l'annonce dans la zone aria-live. focus : data-act à refocaliser.
@@ -553,7 +567,6 @@ toggleSave: function (e) { self.agir(idOf(e), 'save', e.detail === 0); },
 skip: function (e) { self.agir(idOf(e), 'skip', e.detail === 0); },
 unskipAll: function () { self.toutFaireRevenir(); },
 emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: var(--miel)' : HIDE,
-editPressed: String(!!st.editing),
 editLabel: st.editing ? t.done : t.customize,
 editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--braise); background: ' + (st.editing ? 'var(--braise); color: var(--sur-plein)' : 'var(--creme); color: var(--braise)') + '; font: inherit; font-weight: 700; cursor: pointer',
 loadingStyle: !data && !st.loadError ? 'margin: 0; color: var(--doux)' : HIDE,
