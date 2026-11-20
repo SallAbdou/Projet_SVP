@@ -89,3 +89,14 @@ test('Nuit : couleurs imposées inchangées', () => {
   const nuit = vars(bloc('[data-theme="nuit"]'));
   for (const k of ['petrir-btn-fond', 'linkedin-fond', 'rassis-fond', 'lire-fond']) assert.equal(nuit[k], undefined, k);
 });
+
+test('barre mobile vraiment collante : body ne devient pas un conteneur de défilement (overflow-x:clip, pas hidden)', () => {
+  for (const f of [...PAGES, 'parcours.css']) {
+    const t = lire(f);
+    assert.doesNotMatch(t, /html,\s*body\{overflow-x:hidden\}/, f);
+    assert.doesNotMatch(t, /body\{[^}]*overflow-x:hidden/, f);
+  }
+  for (const p of ['comptoir.html', 'fournee.html', 'fournil.html', 'garde-manger.html', 'profil.html']) {
+    assert.match(lire(p), /html\{overflow-x:hidden\}body\{overflow-x:clip\}/, p);
+  }
+});
