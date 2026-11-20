@@ -142,6 +142,32 @@ Gravité : **majeure** = une personne ne peut pas accomplir une tâche ou perd u
 - Espacement du texte 1.4.12 (interligne 1,5, lettres 0,12 em, mots 0,16 em, paragraphes 2 em) : aucun texte coupé, à 640 px comme en bureau.
 - Aide cohérente (3.2.6) : le chat n'existe que sur l'accueil, il n'y a donc pas d'incohérence entre pages.
 
+## Corrections faites dans ce lot
+
+Tous les points relevés sont corrigés, avec tests (329 au vert) et vérification dans le navigateur. Après correction, axe-core 4.10.2 ne trouve **aucune violation** sur les 16 pages, y compris dans les états ouverts (chat, modales, mode Personnaliser, fournil avec un sujet, garde-manger rempli).
+
+| Point | Correction | Vérifié dans le navigateur |
+|---|---|---|
+| M1, A1 | Fil du chat atteignable au clavier (`tabindex="0"`, région nommée) ; la dernière réponse de Miette passe par la zone d'annonce | Réponse écrite dans `#pq-annonce`, axe sans violation |
+| M2 | `boot.js` crée deux zones d'annonce persistantes hors de `#root` (`#pq-annonce` polie, `#pq-annonce-urgente` assertive) et une fonction `annoncer()`. Après chaque rendu, il relève les `role="status"`, `role="alert"`, `aria-live` et `data-annonce` de `#root`, retire leur rôle et ne dit que ce qui vient d'apparaître ou a changé | Erreur de connexion dite une seule fois (pas à chaque frappe), thème du profil, « C'est renvoyé ! » |
+| M3 | Champs en `--bord-champ` (4,65:1 au lieu de 2,2:1) : questionnaire, connexion, mots de passe, fournil | Mesuré au fournil |
+| N1, N2 | Bulles survolables : plus de `pointer-events:none`, pont invisible sur l'écart, fermeture quand la souris quitte la bulle | Survol bouton puis bulle : reste ouverte ; sortie : se ferme |
+| N3 | Aperçu de ta-fournee-type en `role="group"` nommé, décor masqué | `nested-interactive` disparu |
+| N4 | « L'emplacement n°1 est maintenant en position 2 », « Le graphique : taille S » | Annonces lues dans la zone |
+| N5 | Le délai du toast était déjà suspendu au focus (le rapport le surestimait) ; il l'est maintenant aussi au survol, et ne reprend que quand souris et focus sont sortis | Toast présent après 7 s de survol, parti 5 s après la sortie |
+| N6 | État écrit sous chaque barre (« Tout chaud », « À pétrir », « Rassis ») | Capture du comptoir |
+| N7 | Effacement en deux temps : message « C'est définitif », focus sur « Oui, tout effacer », « Annuler » rend le focus | Parcours au clavier, données conservées après Annuler |
+| m1 | « Indique ton e-mail. » / « Indique ton mot de passe. », focus et `aria-invalid` sur le seul champ concerné | Les deux cas |
+| m2 | Cases de consentement avec `aria-invalid` et liseré rouge | Capture de l'étape 6 |
+| m3 | Chiffre en `aria-hidden`, texte masqué « , 1 article mis de côté » | Nom du lien relevé |
+| m4 | Bouton Personnaliser sans `aria-pressed` (seul le libellé change) | |
+| m5 | Titre « Page introuvable », barre de cuisson en décor | Titre relevé |
+| m6 | `scroll-padding-bottom: 104px` quand le lanceur du chat est présent | Valeur calculée relevée |
+| m7, A2 | Compteur relié au brouillon ; `aside` remplacé par un `div` | axe sans violation |
+| m8 | « Taille pour le graphique » | |
+
+Bug corrigé en plus : e-mail saisi à l'envers (voir plus haut).
+
 ## Non vérifié dans ce lot
 
 - Lecteur d'écran réel (NVDA, Narrateur) : à faire par l'utilisateur, procédure ci-dessous. M2 en dépend.
