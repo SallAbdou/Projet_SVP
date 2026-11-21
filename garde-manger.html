@@ -62,7 +62,7 @@ a.gm-source:active{transform:translateY(1px)}
 <a href="/fournee" data-act="go-batch" class="gm-knead">{{t.emptyLink}}</a>
 </div>
 <p style="{{noMatchStyle}}">{{t.noMatch}}</p>
-<section aria-label="{{t.listLabel}}" style="{{listStyle}}">
+<section data-visite="garde" aria-label="{{t.listLabel}}" style="{{listStyle}}">
 <sc-for list="{{items}}" as="i" hint-placeholder-count="4">
 <article class="gm-item">
 <div style="flex:999 1 380px;min-width:0;display:flex;gap:14px">
@@ -248,4 +248,4 @@ retirer: function (e) { self.retirer(e.currentTarget.getAttribute('data-id'), e.
 };
 }
 }
-</script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>
