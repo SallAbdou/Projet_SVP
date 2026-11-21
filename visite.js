@@ -21,12 +21,14 @@
     { id: 'numero1', page: 'fournee', cible: 'numero1', selecteur: '[data-bento] [data-tile="n1"]' },
     { id: 'actions', page: 'fournee', cible: 'actions', selecteur: '[data-bento] [data-tile="n1"] .tile-actions' },
     { id: 'personnaliser', page: 'fournee', cible: 'personnaliser', selecteur: 'button[data-act="edit"]' },
+    // Deuxième étape à faire : « Pétrir un post » du n°1 ouvre le fournil sur cette news.
+    { id: 'petrir', page: 'fournee', cible: 'petrir', selecteur: '[data-bento] [data-tile="n1"] a[data-act="knead"]', action: true },
+    // amorce : sans sujet choisi (étape Pétrir sautée), le fournil montre la liste de choix ; la visite suit
+    // alors le premier lien « Pétrir » (une fois, sans ?ref= déjà présent) pour montrer un vrai brouillon.
+    { id: 'sujet', page: 'fournil', cible: 'sujet', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
+    { id: 'brouillon', page: 'fournil', cible: 'brouillon', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
     // Garde-manger : data-visite="garde" sur la liste et sur l'état vide, il est expliqué dans les deux cas.
     { id: 'garde', page: 'garde-manger', cible: 'garde' },
-    // amorce : sans sujet choisi, le fournil montre la liste de choix ; la visite suit alors le premier
-    // lien « Pétrir » (une fois, sans ?ref= déjà présent) pour montrer un vrai brouillon.
-    { id: 'sujet', page: 'fournil', cible: 'sujet', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
-    { id: 'brouillon', page: 'fournil', cible: 'brouillon' },
     { id: 'preferences', page: 'profil', cible: 'preferences' },
     { id: 'apparence', page: 'profil', cible: 'apparence' },
     { id: 'retours', page: 'profil', cible: 'retours' },
@@ -48,6 +50,7 @@
         grille: { titre: 'La fournée du jour', texte: 'Tes articles du jour, triés pour toi. L’étiquette te dit s’il est Tout chaud, À pétrir ou Rassis.' },
         numero1: { titre: 'Le n°1, tout doré', texte: 'Le meilleur article du jour, avec ses jauges. Touche un critère pour lire son explication.' },
         actions: { titre: 'Tes gestes de boulanger', texte: 'Pétrir pour en faire un post, Lire la source, le mettre de côté ou l’écarter : à toi de choisir.' },
+        petrir: { titre: 'À toi de pétrir', texte: 'Cette news t’inspire ? Clique sur « Pétrir un post » : direction le fournil, où l’IA prépare ton brouillon.' },
         personnaliser: { titre: 'Ta vitrine, à ta façon', texte: 'Avec Personnaliser, tu déplaces, agrandis ou masques les tuiles de ta fournée.' },
         garde: { titre: 'Le garde-manger', texte: 'Une news te plaît mais pas le temps de la pétrir ? Mets-la de côté depuis la fournée : elle t’attend ici, au frais, jusqu’à ce que tu en fasses un post.' },
         sujet: { titre: 'Le fournil, ton atelier à posts', texte: 'Ici, l’IA transforme une news de ta fournée en post LinkedIn à ta façon. Tu pars de celle-ci, ou tu en prends une autre avec « Changer de sujet ».' },
@@ -72,6 +75,7 @@
         grille: { titre: 'Today’s batch', texte: 'Your articles of the day, sorted for you. The label tells you if it is Piping hot, Needs kneading or Gone stale.' },
         numero1: { titre: 'Number 1, all golden', texte: 'The best article of the day, with its gauges. Tap a criterion to read what it means.' },
         actions: { titre: 'Your baker’s moves', texte: 'Knead it into a post, read the source, save it for later or skip it: your call.' },
+        petrir: { titre: 'Your turn to knead', texte: 'Does this story inspire you? Click “Knead a post”: off to the kitchen, where the AI prepares your draft.' },
         personnaliser: { titre: 'Your shop window, your way', texte: 'With Customise, you move, resize or hide the tiles of your batch.' },
         garde: { titre: 'The pantry', texte: 'Like a story but no time to knead it? Save it for later from the batch: it waits here, kept cool, until you turn it into a post.' },
         sujet: { titre: 'The kitchen, your post workshop', texte: 'Here, the AI turns a story from your batch into a LinkedIn post in your own style. Start from this one, or pick another with “Change topic”.' },
@@ -89,26 +93,30 @@
   /* ---------- Parcours ---------- */
 
   // Part de « depart » dans le sens donné : étape affichable de la page, page à ouvrir, ou fin.
+  // passees : étapes franchies parce que leur cible est absente, pour le compteur.
   function aller(etapes, depart, sens, page, visible) {
     var j = depart;
     var s = sens < 0 ? -1 : 1;
+    var passees = [];
     for (;;) {
-      if (j >= etapes.length) return { fin: true };
+      if (j >= etapes.length) return { fin: true, passees: passees };
       if (j < 0) { j = 0; s = 1; continue; }
       var e = etapes[j];
-      if (e.page !== page) return { naviguer: e.page, index: j };
-      if (visible(e)) return { index: j };
+      if (e.page !== page) return { naviguer: e.page, index: j, passees: passees };
+      if (visible(e)) return { index: j, passees: passees };
+      passees.push(e.id);
       j += s;
     }
   }
 
-  // Étapes sautées : celles des autres pages restent, celles de la page sont mesurées à nouveau.
-  function sauteesPourPage(sautees, etapes, page, visible) {
-    var autres = (sautees || []).filter(function (id) {
-      return etapes.some(function (e) { return e.id === id && e.page !== page; });
+  // Étapes sautées : seules celles réellement franchies comptent, l'étape montrée en sort. On ne mesure
+  // jamais toute une page d'avance : ses données peuvent arriver après (bug « 6 sur 13 » au retour).
+  function noterSauts(sautees, passees, montree) {
+    var r = [];
+    (sautees || []).concat(passees || []).forEach(function (id) {
+      if (id !== montree && r.indexOf(id) === -1) r.push(id);
     });
-    var ici = etapes.filter(function (e) { return e.page === page && !visible(e); }).map(function (e) { return e.id; });
-    return autres.concat(ici);
+    return r;
   }
 
   function compteur(etapes, index, sautees) {
@@ -220,7 +228,7 @@
 
   var Visite = {
     CLE: CLE, CHEMINS: CHEMINS, ETAPES: ETAPES, TEXTES: TEXTES,
-    aller: aller, apresAction: apresAction, sauteesPourPage: sauteesPourPage, compteur: compteur, formater: formater,
+    aller: aller, apresAction: apresAction, noterSauts: noterSauts, compteur: compteur, formater: formater,
     lireCompte: lireCompte, marquerVue: marquerVue, reporter: reporter, doitLancer: doitLancer,
     poserEncours: poserEncours, lireEncours: lireEncours, effacerEncours: effacerEncours,
     marqueurSession: marqueurSession, placer: placer
@@ -234,6 +242,7 @@
   var doc = root.document;
   var ls = root.localStorage;
   var MOBILE = '(max-width: 899.98px)';
+  var CLE_FOURNIL = 'pq-visite-fournil';
 
   // Miette, dessin d'Abdou (index.html) repris tel quel ; décoratif dans la bulle.
   var MIETTE = '<svg class="miette" viewBox="0 0 120 120" aria-hidden="true" focusable="false">' +
@@ -524,10 +533,10 @@
     actif = true;
     var e = ETAPES[courant.index];
     ouvrirMenu(!!(e.menu && mobile()));
-    // Sauts de la page mesurés à chaque étape : les données arrivées entre-temps comptent.
-    // L'accueil s'ouvre avant le chargement des données : on ne mesure pas encore, il compte toutes les étapes.
-    if (courant.index > 0 && !doc.querySelector('#root [aria-busy="true"]')) {
-      courant.sautees = sauteesPourPage(courant.sautees, ETAPES, pageCourante(), visible);
+    courant.sautees = noterSauts(courant.sautees, [], e.id);
+    // Fournil ouvert sur un sujet : on garde son adresse pour y revenir avec Précédent.
+    if (pageCourante() === 'fournil' && /[?&]ref=/.test(root.location.search)) {
+      try { root.sessionStorage.setItem(CLE_FOURNIL, root.location.pathname + root.location.search); } catch (err) {}
     }
     var r = remplir();
     var el = elementCible(e);
@@ -556,10 +565,13 @@
   // Applique le résultat de aller() : étape sur la page, page suivante, ou fin de la visite.
   function suivre(res, sens) {
     if (res.fin) { marquerVue(ls, compte); fermer(doc.querySelector('[data-visite-revoir]')); return; }
+    courant.sautees = noterSauts(courant.sautees, res.passees, res.naviguer ? null : ETAPES[res.index].id);
     if (res.naviguer) {
       poserEncours(ls, compte, { index: res.index, sens: sens, sautees: courant.sautees });
       ouvrirMenu(false);
-      root.location.href = CHEMINS[res.naviguer];
+      var url = CHEMINS[res.naviguer];
+      if (res.naviguer === 'fournil') { try { url = root.sessionStorage.getItem(CLE_FOURNIL) || url; } catch (err) {} }
+      root.location.href = url;
       return;
     }
     courant.index = res.index;
@@ -617,7 +629,6 @@
           return;
         }
       }
-      courant.sautees = sauteesPourPage(courant.sautees, ETAPES, page, visible);
       suivre(aller(ETAPES, courant.index, courant.sens, page, visible), courant.sens);
     })();
   }

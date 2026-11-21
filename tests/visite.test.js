@@ -18,17 +18,19 @@ const E = V.ETAPES;
 const idx = id => E.findIndex(e => e.id === id);
 const tout = () => true;
 
-test('seize étapes sur cinq pages, dans l’ordre du parcours', () => {
-  assert.equal(E.length, 16);
+test('dix-sept étapes sur cinq pages, dans l’ordre du parcours', () => {
+  assert.equal(E.length, 17);
   assert.equal(V.CLE, 'pq-visite');
   const pages = E.map(e => e.page).filter((p, i, a) => a.indexOf(p) === i);
-  assert.deepEqual(pages, ['comptoir', 'fournee', 'garde-manger', 'fournil', 'profil']);
+  assert.deepEqual(pages, ['comptoir', 'fournee', 'fournil', 'garde-manger', 'profil']);
+  assert.deepEqual(E.filter(e => e.page === 'fournee').map(e => e.id), ['grille', 'numero1', 'actions', 'personnaliser', 'petrir']);
   assert.equal(E[0].cible, null, 'accueil au centre, toujours affichable');
   for (const e of E.slice(1)) assert.equal(typeof e.cible, 'string', e.id);
   assert.equal(E[idx('menu')].menu, true);
   assert.deepEqual(E.filter(e => e.page === 'fournil').map(e => e.id), ['sujet', 'brouillon']);
   assert.deepEqual(E.filter(e => e.page === 'profil').map(e => e.id), ['preferences', 'apparence', 'retours', 'revoir']);
   assert.ok(E[idx('sujet')].amorce, 'le fournil sans sujet suit un lien Pétrir');
+  assert.ok(E[idx('brouillon')].amorce, 'retour depuis le garde-manger : le brouillon aussi peut amorcer');
   for (const p of pages) assert.match(V.CHEMINS[p], /^\/[a-z-]+$/);
 });
 
@@ -50,44 +52,67 @@ test('textes FR et EN : même forme, une ou deux phrases, aucun tiret long', () 
   assert.match(V.TEXTES.fr.etapes.sujet.texte, /LinkedIn/);
   assert.match(V.TEXTES.fr.etapes.garde.texte, /de côté/);
   assert.match(V.TEXTES.fr.etapes.four.texte, /Clique sur « Voir ma fournée »/);
+  assert.match(V.TEXTES.fr.etapes.petrir.texte, /Clique sur « Pétrir un post »/);
+  assert.match(V.TEXTES.en.etapes.petrir.texte, /“Knead a post”/);
 });
 
 test('aller : part de l’étape donnée, incluse, étape visible de la même page', () => {
-  assert.deepEqual(V.aller(E, 1, 1, 'comptoir', tout), { index: 1 });
-  assert.deepEqual(V.aller(E, 0, 1, 'comptoir', tout), { index: 0 });
+  assert.deepEqual(V.aller(E, 1, 1, 'comptoir', tout), { index: 1, passees: [] });
+  assert.deepEqual(V.aller(E, 0, 1, 'comptoir', tout), { index: 0, passees: [] });
 });
 
 test('suivante : cible masquée sautée, sans blocage', () => {
   const vis = e => e.id !== 'graphique';
-  assert.deepEqual(V.aller(E, idx('graphique'), 1, 'comptoir', vis), { index: idx('four') });
-  assert.deepEqual(V.aller(E, idx('graphique'), -1, 'comptoir', vis), { index: idx('indicateurs') });
+  assert.deepEqual(V.aller(E, idx('graphique'), 1, 'comptoir', vis), { index: idx('four'), passees: ['graphique'] });
+  assert.deepEqual(V.aller(E, idx('graphique'), -1, 'comptoir', vis), { index: idx('indicateurs'), passees: ['graphique'] });
 });
 
 test('changement de page : on navigue, l’étape est résolue à l’arrivée', () => {
-  assert.deepEqual(V.aller(E, idx('four') + 1, 1, 'comptoir', tout), { naviguer: 'fournee', index: idx('four') + 1 });
-  assert.deepEqual(V.aller(E, idx('grille') - 1, -1, 'fournee', tout), { naviguer: 'comptoir', index: idx('four') });
-  // Garde-manger vide : arrivée sur la page, sa seule étape est masquée, on file vers le fournil.
+  assert.deepEqual(V.aller(E, idx('four') + 1, 1, 'comptoir', tout), { naviguer: 'fournee', index: idx('four') + 1, passees: [] });
+  assert.deepEqual(V.aller(E, idx('grille') - 1, -1, 'fournee', tout), { naviguer: 'comptoir', index: idx('four'), passees: [] });
+  // Arrivée sur une page dont la seule étape est masquée : on file vers la page voisine.
   const gm = idx('garde');
-  assert.deepEqual(V.aller(E, gm, 1, 'garde-manger', () => false), { naviguer: 'fournil', index: gm + 1 });
-  assert.deepEqual(V.aller(E, gm, -1, 'garde-manger', () => false), { naviguer: 'fournee', index: gm - 1 });
+  assert.deepEqual(V.aller(E, gm, 1, 'garde-manger', () => false), { naviguer: 'profil', index: gm + 1, passees: ['garde'] });
+  assert.deepEqual(V.aller(E, gm, -1, 'garde-manger', () => false), { naviguer: 'fournil', index: gm - 1, passees: ['garde'] });
 });
 
 test('après la dernière étape : fin ; avant la première : on reste au début', () => {
-  assert.deepEqual(V.aller(E, E.length, 1, 'profil', tout), { fin: true });
-  assert.deepEqual(V.aller(E, E.length - 1, 1, 'profil', () => false), { fin: true });
-  assert.deepEqual(V.aller(E, -1, -1, 'comptoir', tout), { index: 0 });
+  assert.deepEqual(V.aller(E, E.length, 1, 'profil', tout), { fin: true, passees: [] });
+  assert.deepEqual(V.aller(E, E.length - 1, 1, 'profil', () => false), { fin: true, passees: ['revoir'] });
+  assert.deepEqual(V.aller(E, -1, -1, 'comptoir', tout), { index: 0, passees: [] });
 });
 
-test('sautées : recalculées page par page, compteur cohérent', () => {
-  let s = V.sauteesPourPage([], E, 'comptoir', e => e.id !== 'graphique');
+test('sautées : seulement les étapes passées, l’étape montrée en sort', () => {
+  let s = V.noterSauts([], ['graphique'], 'four');
   assert.deepEqual(s, ['graphique']);
-  assert.deepEqual(V.compteur(E, idx('four'), s), { numero: 4, total: 15 });
-  assert.deepEqual(V.compteur(E, 0, s), { numero: 1, total: 15 });
-  // Retour sur la page : le graphique est revenu, il n'est plus sauté.
-  s = V.sauteesPourPage(s.concat(['garde']), E, 'comptoir', tout);
+  assert.deepEqual(V.compteur(E, idx('four'), s), { numero: 4, total: 16 });
+  assert.deepEqual(V.compteur(E, 0, s), { numero: 1, total: 16 });
+  // Retour en arrière : le graphique est affiché cette fois, il n'est plus sauté.
+  s = V.noterSauts(s.concat(['garde']), [], 'graphique');
   assert.deepEqual(s, ['garde']);
-  assert.deepEqual(V.compteur(E, E.length - 1, s), { numero: 15, total: 15 });
+  assert.deepEqual(V.noterSauts(['a'], ['a', 'b'], 'c'), ['a', 'b'], 'pas de doublon');
+  assert.deepEqual(V.compteur(E, E.length - 1, s), { numero: 16, total: 16 });
   assert.equal(V.formater('{n} sur {total}', { numero: 3, total: 12 }), '3 sur 12');
+});
+
+test('bug du compteur : suivant puis précédent, le total ne bouge pas quand tout est affichable', () => {
+  // Avant le correctif, l'arrivée sur la fournée mesurait toutes ses étapes alors que les tuiles
+  // n'étaient pas encore rendues : « 6 sur 13 ». Seules les étapes réellement passées comptent.
+  let i = 0, s = [];
+  const totaux = new Set();
+  const pas = sens => {
+    const page = E[Math.max(0, Math.min(i + sens, E.length - 1))].page;
+    const res = V.aller(E, i + sens, sens, page, tout);
+    if (res.fin) return;
+    i = res.index;
+    s = V.noterSauts(s, res.passees, E[i].id);
+    totaux.add(V.compteur(E, i, s).total);
+    assert.equal(V.compteur(E, i, s).numero, i + 1);
+  };
+  for (let k = 0; k < 12; k++) pas(1);
+  for (let k = 0; k < 8; k++) pas(-1);
+  for (let k = 0; k < 14; k++) pas(1);
+  assert.deepEqual([...totaux], [17]);
 });
 
 test('mémoire par compte : vue et reportée', () => {
@@ -172,11 +197,15 @@ test('placer : jamais hors écran, cible géante ou absente', () => {
   }
 });
 
-test('étape à faire : le four se clique, la visite reprend à l’étape suivante', () => {
+test('étapes à faire : le four puis « Pétrir un post », la visite reprend à l’étape suivante', () => {
   const four = E[idx('four')];
   assert.equal(four.action, true);
-  assert.equal(E.filter(e => e.action).length, 1);
+  assert.deepEqual(E.filter(e => e.action).map(e => e.id), ['four', 'petrir']);
   assert.equal(E[idx('four') + 1].page, 'fournee');
+  assert.equal(idx('petrir'), idx('personnaliser') + 1, 'juste après « Ta vitrine »');
+  assert.equal(E[idx('petrir') + 1].id, 'sujet');
+  assert.match(E[idx('petrir')].selecteur, /data-tile="n1"/);
+  assert.match(E[idx('petrir')].selecteur, /data-act="knead"/);
   assert.deepEqual(V.apresAction(E, idx('four'), ['graphique']), { index: idx('four') + 1, sens: 1, sautees: ['graphique'] });
   assert.match(V.TEXTES.fr.ui.aToi, /\S/);
 });
