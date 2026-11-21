@@ -38,3 +38,8 @@ Faire découvrir l'application à la première connexion, façon Airtable : Miet
 - Profil détaillé : préférences, apparence (thèmes et animations), « Affine ta fournée », puis « Revoir la visite ».
 - Étape du four à faire : pas de bouton Suivant, « À toi de jouer ! ». Seul le lien « Voir ma fournée » reste actif (ses voisins deviennent inertes à chaque niveau), il reçoit le focus et fait partie de la boucle Tab ; le clic ou Entrée ouvre la fournée et la visite reprend à l'étape suivante. La bulle passe en `aria-modal="false"` pendant cette étape et l'étape est annoncée.
 - Desktop : une cible large qui tient avec la bulle en dessous est remontée en haut de l'écran pour que la bulle ne la recouvre pas.
+
+## v3 (retours de Delio)
+- 17 étapes, nouvel ordre : comptoir, fournée, puis une deuxième étape à faire juste après « Ta vitrine » : cliquer sur « Pétrir un post » du n°1, qui ouvre le fournil sur cette news ; ensuite fournil, garde-manger, profil.
+- Bug du compteur (« 6 sur 13 » après Précédent) : à l'arrivée sur une page, toutes ses étapes étaient mesurées alors que les tuiles de la fournée n'étaient pas encore rendues, et comptées comme sautées. Désormais seules les étapes réellement franchies (cible absente au moment du passage) sortent du total, et une étape affichée y revient.
+- Précédent depuis le garde-manger rouvre le fournil sur le même sujet (adresse gardée dans sessionStorage `pq-visite-fournil`) ; l'étape brouillon peut aussi amorcer un sujet en secours.
