@@ -31,3 +31,10 @@ Faire découvrir l'application à la première connexion, façon Airtable : Miet
 - Pages : `data-visite="..."` sur les cibles des cinq pages, script `visite.js` chargé avant `boot.js`, bouton « Revoir la visite » au profil.
 - `nav.js` expose `Nav.ouvrirMenu(etat)` pour l'étape menu en mobile.
 - Note pour Abdou dans `docs/branchement-back.md`.
+
+## v2 (retours de Delio)
+- 16 étapes. Fournil en deux temps : à quoi il sert (une news de la fournée devient un post LinkedIn, « Changer de sujet ») puis le brouillon (ton, texte, compteur, publier).
+- Garde-manger expliqué même vide : `data-visite="garde"` sur la liste et sur l'état vide.
+- Profil détaillé : préférences, apparence (thèmes et animations), « Affine ta fournée », puis « Revoir la visite ».
+- Étape du four à faire : pas de bouton Suivant, « À toi de jouer ! ». Seul le lien « Voir ma fournée » reste actif (ses voisins deviennent inertes à chaque niveau), il reçoit le focus et fait partie de la boucle Tab ; le clic ou Entrée ouvre la fournée et la visite reprend à l'étape suivante. La bulle passe en `aria-modal="false"` pendant cette étape et l'étape est annoncée.
+- Desktop : une cible large qui tient avec la bulle en dessous est remontée en haut de l'écran pour que la bulle ne la recouvre pas.

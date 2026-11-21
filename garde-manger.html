@@ -55,7 +55,7 @@ a.gm-source:active{transform:translateY(1px)}
 <button type="button" class="gm-filtre gm-filtre-{{f.id}}" data-act="{{f.act}}" data-filtre="{{f.id}}" aria-pressed="{{f.pressed}}" onClick="{{choisirFiltre}}">{{f.label}}</button>
 </sc-for>
 </div>
-<div style="{{emptyStyle}}">
+<div data-visite="garde" style="{{emptyStyle}}">
 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--cuivre)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h16v10H4z"></path><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path><path d="M10 14h4"></path></svg>
 <h2 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800">{{t.emptyTitle}}</h2>
 <p style="margin:0;color:var(--doux);max-width:460px">{{t.emptyText}}</p>
