@@ -3,7 +3,7 @@
    Utilisable dans le navigateur (window.Store) et sous Node (tests). */
 (function (root) {
   var CLE = 'pq-store';
-  var CLES_DEMO = ['pq-store', 'pq-layout', 'pq-lang', 'pq-auth', 'pq-questionnaire', 'pq-retours', 'pq-theme', 'pq-animations'];
+  var CLES_DEMO = ['pq-store', 'pq-layout', 'pq-lang', 'pq-auth', 'pq-questionnaire', 'pq-retours', 'pq-theme', 'pq-animations', 'pq-visite'];
   var CHAMPS_CHIFFRES = ['impressions', 'reactions', 'republications', 'commentaires', 'contacts'];
 
   function estObjet(v) { return !!v && typeof v === 'object' && !Array.isArray(v); }

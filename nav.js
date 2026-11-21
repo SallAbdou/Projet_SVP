@@ -144,6 +144,8 @@
   }
 
   var Nav = { html: html };
+  // Lot 28 : la visite guidée ouvre puis referme le menu mobile pour son étape « menu ».
+  Nav.ouvrirMenu = function (etat) { basculer(!!etat, false); };
   if (typeof module === 'object' && module.exports) module.exports = Nav;
   else {
     root.Nav = Nav;

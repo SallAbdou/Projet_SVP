@@ -175,6 +175,14 @@ Dans WF4, pour chaque abonné, avant le nœud Gemini :
 
 **Rappel : la clé `service_role` ne va jamais dans le front** (ni dans `config.js`, ni dans le dépôt).
 
+## 7 bis. Visite guidée (lot 28)
+
+Note pour Abdou : en mode réel comme en démo, le fait d'avoir vu la visite guidée est stocké **dans le navigateur** (localStorage `pq-visite`, par compte, clé = e-mail en minuscules comme pour le thème). Rien n'est envoyé à Supabase ni à n8n.
+
+- Conséquence : sur un autre navigateur ou après effacement des données du site, la visite se relance à la connexion.
+- « Plus tard » reporte la visite jusqu'à la connexion suivante. En mode réel, le repère de connexion est `session.user.last_sign_in_at` de `pq-auth-reel` ; s'il manque, « Plus tard » vaut jusqu'à « Revoir la visite » (profil).
+- Une synchro Supabase pourra venir plus tard (par exemple une colonne `visite_vue` sur le profil de l'abonné) ; elle n'est pas faite dans ce lot.
+
 ## 8. Tester de bout en bout
 
 1. Remplir `config.js` (étape 1) sur une branche de test, déployer (ou servir en local et ajouter `localhost` dans Supabase et le CORS de WF3).

@@ -184,7 +184,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <button type="button" class="tool" data-act="reset" onClick="{{resetLayout}}">{{t.reset}}</button>
 </div>
 <div style="{{emptyStyle}}"><p style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;font-weight:800;color:var(--texte)">{{t.allDone}}</p><button type="button" data-act="unskip-all" onClick="{{unskipAll}}" style="min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--braise);color:var(--sur-plein);font:inherit;font-weight:700;cursor:pointer">{{t.bringBack}}</button></div>
-<div data-bento class="bento {{gridClass}}" style="{{gridStyle}}">
+<div data-bento data-visite="grille" class="bento {{gridClass}}" style="{{gridStyle}}">
 
 <sc-for list="{{slots}}" as="s" hint-placeholder-count="7">
 <section data-tile="{{s.id}}" class="tile" aria-labelledby="tt-{{s.id}}">
@@ -615,4 +615,4 @@ barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background:
 };
 }
 }
-</script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>

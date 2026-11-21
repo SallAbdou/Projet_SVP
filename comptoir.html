@@ -37,7 +37,7 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 </head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
-<nav data-nav data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
+<nav data-nav data-visite="menu" data-page="comptoir" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
 <main id="contenu" tabindex="-1" style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:26px">
 <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
@@ -52,7 +52,7 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 <span style="font-weight:700">{{waitText}}</span>
 <a href="/fournil" class="btn-ligne">{{t.waitCta}}</a>
 </div>
-<section aria-label="{{t.kpiLabel}}" aria-busy="{{busy}}" style="display:flex;flex-direction:column;gap:12px">
+<section data-visite="indicateurs" aria-label="{{t.kpiLabel}}" aria-busy="{{busy}}" style="display:flex;flex-direction:column;gap:12px">
 <p style="margin:0;font-size:14px;color:var(--doux)"><strong style="color:var(--texte)">{{t.kpiTitle}}</strong></p>
 <div class="kpis">
 <sc-for list="{{kpis}}" as="k" hint-placeholder-count="5">
@@ -70,7 +70,7 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 <h2 id="vis-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.visTitle}}</h2>
 <span style="font-size:13px;color:var(--doux)">{{t.visSub}}</span>
 </div>
-<div style="{{barsStyle}}">
+<div data-visite="graphique" style="{{barsStyle}}">
 <div class="bars" style="display:grid;grid-template-columns:repeat(6, minmax(0, 1fr));gap:14px;align-items:end;height:220px;border-bottom:2px solid var(--bord);padding-bottom:4px">
 <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
 <div role="img" aria-label="{{b.aria}}" style="display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
@@ -125,7 +125,7 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 <rect x="44" y="86" width="112" height="46" rx="8" fill="none" stroke="var(--bord-fort)" stroke-width="2"></rect>
 <rect x="70" y="137" width="60" height="5" rx="2.5" fill="var(--bord-fort)"></rect>
 </symbol></svg>
-<a href="/fournee#n1" class="four-lien" aria-label="{{fourLabel}}" style="{{nextStyle}}">
+<a href="/fournee#n1" class="four-lien" data-visite="four" aria-label="{{fourLabel}}" style="{{nextStyle}}">
 <svg class="four-svg four-svg-anime" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"></use></svg><svg class="four-svg four-svg-fixe" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four-fige"></use></svg>
 <span class="four-titre">{{next.titre}}</span>
 <span class="four-cta">{{t.fourCta}}</span>
@@ -321,4 +321,4 @@ pantryEmptyStyle: sauves.length ? HIDE : 'display: flex; flex-wrap: wrap; align-
 };
 }
 }
-</script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>
