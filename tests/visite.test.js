@@ -18,14 +18,17 @@ const E = V.ETAPES;
 const idx = id => E.findIndex(e => e.id === id);
 const tout = () => true;
 
-test('douze étapes sur cinq pages, dans l’ordre du parcours', () => {
-  assert.equal(E.length, 12);
+test('seize étapes sur cinq pages, dans l’ordre du parcours', () => {
+  assert.equal(E.length, 16);
   assert.equal(V.CLE, 'pq-visite');
   const pages = E.map(e => e.page).filter((p, i, a) => a.indexOf(p) === i);
   assert.deepEqual(pages, ['comptoir', 'fournee', 'garde-manger', 'fournil', 'profil']);
   assert.equal(E[0].cible, null, 'accueil au centre, toujours affichable');
   for (const e of E.slice(1)) assert.equal(typeof e.cible, 'string', e.id);
   assert.equal(E[idx('menu')].menu, true);
+  assert.deepEqual(E.filter(e => e.page === 'fournil').map(e => e.id), ['sujet', 'brouillon']);
+  assert.deepEqual(E.filter(e => e.page === 'profil').map(e => e.id), ['preferences', 'apparence', 'retours', 'revoir']);
+  assert.ok(E[idx('sujet')].amorce, 'le fournil sans sujet suit un lien Pétrir');
   for (const p of pages) assert.match(V.CHEMINS[p], /^\/[a-z-]+$/);
 });
 
@@ -44,6 +47,9 @@ test('textes FR et EN : même forme, une ou deux phrases, aucun tiret long', () 
   assert.equal(V.TEXTES.fr.etapes.accueil.texte, 'Bienvenue au fournil ! Je te fais visiter ?');
   assert.match(V.TEXTES.fr.etapes[E[E.length - 1].id].texte, /Tu peux revoir cette visite à tout moment depuis ton profil\./);
   assert.equal(V.TEXTES.fr.ui.compteur, '{n} sur {total}');
+  assert.match(V.TEXTES.fr.etapes.sujet.texte, /LinkedIn/);
+  assert.match(V.TEXTES.fr.etapes.garde.texte, /de côté/);
+  assert.match(V.TEXTES.fr.etapes.four.texte, /Clique sur « Voir ma fournée »/);
 });
 
 test('aller : part de l’étape donnée, incluse, étape visible de la même page', () => {
@@ -75,12 +81,12 @@ test('après la dernière étape : fin ; avant la première : on reste au début
 test('sautées : recalculées page par page, compteur cohérent', () => {
   let s = V.sauteesPourPage([], E, 'comptoir', e => e.id !== 'graphique');
   assert.deepEqual(s, ['graphique']);
-  assert.deepEqual(V.compteur(E, idx('four'), s), { numero: 4, total: 11 });
-  assert.deepEqual(V.compteur(E, 0, s), { numero: 1, total: 11 });
+  assert.deepEqual(V.compteur(E, idx('four'), s), { numero: 4, total: 15 });
+  assert.deepEqual(V.compteur(E, 0, s), { numero: 1, total: 15 });
   // Retour sur la page : le graphique est revenu, il n'est plus sauté.
   s = V.sauteesPourPage(s.concat(['garde']), E, 'comptoir', tout);
   assert.deepEqual(s, ['garde']);
-  assert.deepEqual(V.compteur(E, E.length - 1, s), { numero: 11, total: 11 });
+  assert.deepEqual(V.compteur(E, E.length - 1, s), { numero: 15, total: 15 });
   assert.equal(V.formater('{n} sur {total}', { numero: 3, total: 12 }), '3 sur 12');
 });
 
@@ -164,6 +170,20 @@ test('placer : jamais hors écran, cible géante ou absente', () => {
     const p = V.placer(r, b, vue);
     assert.ok(dedans(p), JSON.stringify([r, p]));
   }
+});
+
+test('étape à faire : le four se clique, la visite reprend à l’étape suivante', () => {
+  const four = E[idx('four')];
+  assert.equal(four.action, true);
+  assert.equal(E.filter(e => e.action).length, 1);
+  assert.equal(E[idx('four') + 1].page, 'fournee');
+  assert.deepEqual(V.apresAction(E, idx('four'), ['graphique']), { index: idx('four') + 1, sens: 1, sautees: ['graphique'] });
+  assert.match(V.TEXTES.fr.ui.aToi, /\S/);
+});
+
+test('garde-manger : expliqué même vide (liste ou état vide)', () => {
+  const h = lire('garde-manger.html');
+  assert.equal((h.match(/data-visite="garde"/g) || []).length, 2);
 });
 
 test('pages : chaque cible déclarée existe dans le gabarit de sa page, visite.js chargé avant boot.js', () => {

@@ -82,7 +82,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <sc-for list="{{infos}}" as="l" hint-placeholder-count="2"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
 </dl>
 </section>
-<section aria-labelledby="prefs-t" class="pf-carte">
+<section aria-labelledby="prefs-t" class="pf-carte" data-visite="preferences">
 <h2 id="prefs-t" class="pf-titre">{{t.prefs}}</h2>
 <dl class="pf-liste">
 <sc-for list="{{prefs}}" as="l" hint-placeholder-count="4"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
@@ -90,7 +90,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <p class="pf-note">{{t.source}}</p>
 <a href="/questionnaire" class="pf-btn" data-focus="profil-modifier">{{t.redo}}</a>
 </section>
-<section aria-labelledby="apparence-t" class="pf-carte">
+<section aria-labelledby="apparence-t" class="pf-carte" data-visite="apparence">
 <h2 id="apparence-t" class="pf-titre">{{t.apparenceT}}</h2>
 <fieldset class="pf-themes"><legend class="pf-label">{{t.themeLegende}}</legend>
 <div class="pf-themes-grille"><sc-for list="{{themes}}" as="c" hint-placeholder-count="4"><label class="pf-theme" for="{{c.id}}"><span class="pf-apercu" data-theme="{{c.valeur}}" aria-hidden="true"><span class="pf-apercu-carte"><span class="pf-apercu-ligne"></span><span class="pf-apercu-or"></span><span class="pf-apercu-pain"></span></span></span><span class="pf-theme-choix"><input id="{{c.id}}" type="radio" name="theme" data-valeur="{{c.valeur}}" onChange="{{choisirTheme}}" {{c.coche}}><span>{{c.label}}</span></span></label></sc-for></div>
@@ -99,7 +99,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <p id="animations-aide" class="pf-note">{{t.animAide}}</p>
 <p role="status" aria-live="polite" class="pf-succes">{{apparenceAnnonce}}</p>
 </section>
-<section aria-labelledby="retour-t" class="pf-carte">
+<section aria-labelledby="retour-t" class="pf-carte" data-visite="retours">
 <h2 id="retour-t" class="pf-titre">{{t.retourT}}</h2>
 <p class="pf-intro">{{t.retourIntro}}</p>
 <form class="pf-form" novalidate onSubmit="{{envoyerRetour}}">

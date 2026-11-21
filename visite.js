@@ -15,57 +15,71 @@
     { id: 'menu', page: 'comptoir', cible: 'menu', menu: true },
     { id: 'indicateurs', page: 'comptoir', cible: 'indicateurs' },
     { id: 'graphique', page: 'comptoir', cible: 'graphique' },
-    { id: 'four', page: 'comptoir', cible: 'four' },
+    // action : étape à faire soi-même (cliquer sur la cible), sans bouton Suivant.
+    { id: 'four', page: 'comptoir', cible: 'four', action: true },
     { id: 'grille', page: 'fournee', cible: 'grille' },
     { id: 'numero1', page: 'fournee', cible: 'numero1', selecteur: '[data-bento] [data-tile="n1"]' },
     { id: 'actions', page: 'fournee', cible: 'actions', selecteur: '[data-bento] [data-tile="n1"] .tile-actions' },
     { id: 'personnaliser', page: 'fournee', cible: 'personnaliser', selecteur: 'button[data-act="edit"]' },
+    // Garde-manger : data-visite="garde" sur la liste et sur l'état vide, il est expliqué dans les deux cas.
     { id: 'garde', page: 'garde-manger', cible: 'garde' },
     // amorce : sans sujet choisi, le fournil montre la liste de choix ; la visite suit alors le premier
     // lien « Pétrir » (une fois, sans ?ref= déjà présent) pour montrer un vrai brouillon.
-    { id: 'brouillon', page: 'fournil', cible: 'brouillon', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
-    { id: 'profil', page: 'profil', cible: 'profil' }
+    { id: 'sujet', page: 'fournil', cible: 'sujet', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
+    { id: 'brouillon', page: 'fournil', cible: 'brouillon' },
+    { id: 'preferences', page: 'profil', cible: 'preferences' },
+    { id: 'apparence', page: 'profil', cible: 'apparence' },
+    { id: 'retours', page: 'profil', cible: 'retours' },
+    { id: 'revoir', page: 'profil', cible: 'profil' }
   ];
 
   var TEXTES = {
     fr: {
       ui: {
         compteur: '{n} sur {total}', suivant: 'Suivant', precedent: 'Précédent', passer: 'Passer la visite',
-        terminer: 'Terminer', parti: 'C’est parti', plusTard: 'Plus tard'
+        terminer: 'Terminer', parti: 'C’est parti', plusTard: 'Plus tard', aToi: 'À toi de jouer !'
       },
       etapes: {
         accueil: { titre: 'Salut, moi c’est Miette', texte: 'Bienvenue au fournil ! Je te fais visiter ?' },
         menu: { titre: 'Le menu du fournil', texte: 'Toutes les pièces de la boulangerie sont ici, du comptoir à ton profil.' },
         indicateurs: { titre: 'Tes chiffres du matin', texte: 'Impressions, réactions, contacts : un coup d’œil suffit pour savoir si ta pâte lève.' },
         graphique: { titre: 'Tes meilleures fournées', texte: 'Chaque barre est un de tes posts. Les plus hautes sont celles qui ont le mieux levé.' },
-        four: { titre: 'Le four', texte: 'La news n°1 du jour t’attend au chaud. Clique sur « Voir ma fournée » pour la découvrir.' },
+        four: { titre: 'Le four', texte: 'La news n°1 du jour t’attend au chaud. Clique sur « Voir ma fournée » pour ouvrir le four.' },
         grille: { titre: 'La fournée du jour', texte: 'Tes articles du jour, triés pour toi. L’étiquette te dit s’il est Tout chaud, À pétrir ou Rassis.' },
         numero1: { titre: 'Le n°1, tout doré', texte: 'Le meilleur article du jour, avec ses jauges. Touche un critère pour lire son explication.' },
         actions: { titre: 'Tes gestes de boulanger', texte: 'Pétrir pour en faire un post, Lire la source, le mettre de côté ou l’écarter : à toi de choisir.' },
         personnaliser: { titre: 'Ta vitrine, à ta façon', texte: 'Avec Personnaliser, tu déplaces, agrandis ou masques les tuiles de ta fournée.' },
-        garde: { titre: 'Le garde-manger', texte: 'Les articles que tu as mis de côté t’attendent ici, au frais.' },
-        brouillon: { titre: 'Le fournil', texte: 'L’IA pétrit un brouillon, tu choisis le ton et tu retouches. Quand c’est prêt : « Valider et publier sur LinkedIn ».' },
-        profil: { titre: 'Ton profil', texte: 'Préférences, thème, animations et avis : tout se règle ici. Tu peux revoir cette visite à tout moment depuis ton profil.' }
+        garde: { titre: 'Le garde-manger', texte: 'Une news te plaît mais pas le temps de la pétrir ? Mets-la de côté depuis la fournée : elle t’attend ici, au frais, jusqu’à ce que tu en fasses un post.' },
+        sujet: { titre: 'Le fournil, ton atelier à posts', texte: 'Ici, l’IA transforme une news de ta fournée en post LinkedIn à ta façon. Tu pars de celle-ci, ou tu en prends une autre avec « Changer de sujet ».' },
+        brouillon: { titre: 'Ton brouillon', texte: 'Choisis le ton, retouche le texte et garde un œil sur le compteur de caractères. Quand il te plaît : « Valider et publier sur LinkedIn ».' },
+        preferences: { titre: 'Tes préférences', texte: 'Métier, thématiques, rapport à l’IA et langue des articles servent à choisir ta fournée chaque matin. Change-les avec « Modifier mes préférences ».' },
+        apparence: { titre: 'À ton goût', texte: 'Quatre thèmes de couleur, dont Nuit et Contraste élevé, et une case pour couper les animations. Ton choix reste attaché à ton compte.' },
+        retours: { titre: 'Affine ta fournée', texte: 'Un sujet ne te parle pas, il en manque un ? Dis-le ici en quelques mots, on s’en sert pour mieux choisir tes prochaines fournées.' },
+        revoir: { titre: 'Revoir la visite', texte: 'Tu peux revoir cette visite à tout moment depuis ton profil. Bonne fournée !' }
       }
     },
     en: {
       ui: {
         compteur: '{n} of {total}', suivant: 'Next', precedent: 'Back', passer: 'Skip the tour',
-        terminer: 'Finish', parti: 'Let’s go', plusTard: 'Later'
+        terminer: 'Finish', parti: 'Let’s go', plusTard: 'Later', aToi: 'Your turn!'
       },
       etapes: {
         accueil: { titre: 'Hi, I’m Miette', texte: 'Welcome to the bakery! Shall I show you around?' },
         menu: { titre: 'The bakery menu', texte: 'Every room of the bakery is here, from the counter to your profile.' },
         indicateurs: { titre: 'Your morning numbers', texte: 'Impressions, reactions, contacts: one glance tells you whether your dough is rising.' },
         graphique: { titre: 'Your best batches', texte: 'Each bar is one of your posts. The tallest ones rose the best.' },
-        four: { titre: 'The oven', texte: 'Today’s top story is waiting, still warm. Click “See my batch” to open it.' },
+        four: { titre: 'The oven', texte: 'Today’s top story is waiting, still warm. Click “See my batch” to open the oven.' },
         grille: { titre: 'Today’s batch', texte: 'Your articles of the day, sorted for you. The label tells you if it is Piping hot, Needs kneading or Gone stale.' },
         numero1: { titre: 'Number 1, all golden', texte: 'The best article of the day, with its gauges. Tap a criterion to read what it means.' },
         actions: { titre: 'Your baker’s moves', texte: 'Knead it into a post, read the source, save it for later or skip it: your call.' },
         personnaliser: { titre: 'Your shop window, your way', texte: 'With Customise, you move, resize or hide the tiles of your batch.' },
-        garde: { titre: 'The pantry', texte: 'The articles you saved for later are waiting here, kept cool.' },
-        brouillon: { titre: 'The kitchen', texte: 'The AI kneads a draft, you pick the tone and touch it up. When it is ready: “Confirm and post to LinkedIn”.' },
-        profil: { titre: 'Your profile', texte: 'Preferences, theme, animations and feedback: it is all set here. You can replay this tour anytime from your profile.' }
+        garde: { titre: 'The pantry', texte: 'Like a story but no time to knead it? Save it for later from the batch: it waits here, kept cool, until you turn it into a post.' },
+        sujet: { titre: 'The kitchen, your post workshop', texte: 'Here, the AI turns a story from your batch into a LinkedIn post in your own style. Start from this one, or pick another with “Change topic”.' },
+        brouillon: { titre: 'Your draft', texte: 'Pick the tone, edit the text and keep an eye on the character count. When you like it: “Confirm and post to LinkedIn”.' },
+        preferences: { titre: 'Your preferences', texte: 'Job, topics, relationship with AI and article language are used to pick your batch every morning. Change them with “Edit my preferences”.' },
+        apparence: { titre: 'Your way', texte: 'Four colour themes, including Night and High contrast, and a box to turn animations off. Your choice stays with your account.' },
+        retours: { titre: 'Fine-tune your batch', texte: 'A topic doesn’t speak to you, or one is missing? Say so here in a few words, we use it to pick your next batches better.' },
+        revoir: { titre: 'Replay the tour', texte: 'You can replay this tour anytime from your profile. Enjoy your batch!' }
       }
     }
   };
@@ -100,6 +114,11 @@
   function compteur(etapes, index, sautees) {
     var garde = function (e) { return (sautees || []).indexOf(e.id) === -1; };
     return { numero: etapes.slice(0, index + 1).filter(garde).length, total: etapes.filter(garde).length };
+  }
+
+  // Étape à faire (clic sur la cible) : la page suivante reprendra à l'étape d'après.
+  function apresAction(etapes, index, sautees) {
+    return { index: Math.min(index + 1, etapes.length - 1), sens: 1, sautees: (sautees || []).slice() };
   }
 
   function formater(modele, c) { return modele.replace('{n}', c.numero).replace('{total}', c.total); }
@@ -201,7 +220,7 @@
 
   var Visite = {
     CLE: CLE, CHEMINS: CHEMINS, ETAPES: ETAPES, TEXTES: TEXTES,
-    aller: aller, sauteesPourPage: sauteesPourPage, compteur: compteur, formater: formater,
+    aller: aller, apresAction: apresAction, sauteesPourPage: sauteesPourPage, compteur: compteur, formater: formater,
     lireCompte: lireCompte, marquerVue: marquerVue, reporter: reporter, doitLancer: doitLancer,
     poserEncours: poserEncours, lireEncours: lireEncours, effacerEncours: effacerEncours,
     marqueurSession: marqueurSession, placer: placer
@@ -257,6 +276,8 @@
     'border:1.5px solid var(--brun);background:transparent;color:var(--brun-fonce)}' +
     '.pq-visite-btn[data-plein]{border-color:var(--braise);background:var(--braise);color:var(--sur-plein)}' +
     '.pq-visite-lien{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--brun);text-decoration:underline;cursor:pointer}' +
+    '.pq-visite-atoi{display:inline-flex;align-items:center;min-height:44px;font-weight:800;font-size:14px;color:var(--brun)}' +
+    '.pq-visite-voile[data-action]{pointer-events:none}' +
     '.pq-visite-bulle button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
     '[data-theme="contraste"] .pq-visite-bulle{border-width:2px;border-color:var(--texte)}' +
     // Mobile : la bulle devient une feuille fixée en bas de l'écran.
@@ -323,16 +344,26 @@
   }
 
   /* ----- Fond inerte : Tab ne quitte jamais la bulle ----- */
-  function rendreInerte(oui) {
-    Array.prototype.forEach.call(doc.body.children, function (el) {
-      if (elems && (el === elems.voile || el === elems.trou || el === elems.bulle)) return;
-      if (el.id === 'pq-annonce' || el.id === 'pq-annonce-urgente' || el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
-      if (oui) {
-        if (!el.hasAttribute('inert')) { el.setAttribute('inert', ''); el.setAttribute('data-visite-inerte', ''); }
-      } else if (el.hasAttribute('data-visite-inerte')) {
-        el.removeAttribute('inert'); el.removeAttribute('data-visite-inerte');
-      }
+  function aGarder(el) {
+    if (elems && (el === elems.voile || el === elems.trou || el === elems.bulle)) return true;
+    return el.id === 'pq-annonce' || el.id === 'pq-annonce-urgente' || el.tagName === 'SCRIPT' || el.tagName === 'STYLE';
+  }
+  function marquer(el) {
+    if (aGarder(el) || el.hasAttribute('inert')) return;
+    el.setAttribute('inert', '');
+    el.setAttribute('data-visite-inerte', '');
+  }
+  // sauf : cible d'une étape à faire. Seul le chemin qui y mène reste actif, ses voisins deviennent inertes
+  // à chaque niveau ; la cible se clique et se tabule, le reste de la page non.
+  function rendreInerte(oui, sauf) {
+    Array.prototype.forEach.call(doc.querySelectorAll('[data-visite-inerte]'), function (el) {
+      el.removeAttribute('inert'); el.removeAttribute('data-visite-inerte');
     });
+    if (!oui) return;
+    if (!sauf) { Array.prototype.forEach.call(doc.body.children, marquer); return; }
+    for (var n = sauf; n && n.parentElement && n !== doc.body; n = n.parentElement) {
+      Array.prototype.forEach.call(n.parentElement.children, function (frere) { if (frere !== n) marquer(frere); });
+    }
   }
 
   function creer() {
@@ -359,6 +390,7 @@
     doc.body.appendChild(bulle);
     elems = { voile: voile, trou: trou, bulle: bulle };
     doc.addEventListener('keydown', clavier, true);
+    doc.addEventListener('click', clicCible, true);
     root.addEventListener('resize', planifier);
     root.addEventListener('scroll', planifier, true);
   }
@@ -366,11 +398,22 @@
   function detruire() {
     if (!elems) return;
     doc.removeEventListener('keydown', clavier, true);
+    doc.removeEventListener('click', clicCible, true);
     root.removeEventListener('resize', planifier);
     root.removeEventListener('scroll', planifier, true);
     rendreInerte(false);
     ['voile', 'trou', 'bulle'].forEach(function (k) { if (elems[k].parentNode) elems[k].parentNode.removeChild(elems[k]); });
     elems = null;
+  }
+
+  function etapeAFaire() { return actif && courant && ETAPES[courant.index].action === true; }
+
+  function clicCible(ev) {
+    if (!etapeAFaire()) return;
+    var el = elementCible(ETAPES[courant.index]);
+    if (!el || !el.contains(ev.target)) return;
+    // Le lien suit son cours (navigation normale) ; la page ouverte reprend à l'étape d'après.
+    poserEncours(ls, compte, apresAction(ETAPES, courant.index, courant.sautees));
   }
 
   function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -388,9 +431,13 @@
     var actions = accueil
       ? '<button type="button" class="pq-visite-lien" data-visite-act="plustard">' + esc(x.ui.plusTard) + '</button><span class="pq-visite-espace"></span>' + bouton('suivant', x.ui.parti, true)
       : '<button type="button" class="pq-visite-lien" data-visite-act="passer">' + esc(x.ui.passer) + '</button><span class="pq-visite-espace"></span>' +
-        bouton('precedent', x.ui.precedent, false) + bouton(dernier ? 'terminer' : 'suivant', dernier ? x.ui.terminer : x.ui.suivant, true);
+        bouton('precedent', x.ui.precedent, false) +
+        (e.action ? '<span class="pq-visite-atoi">' + esc(x.ui.aToi) + '</span>'
+          : bouton(dernier ? 'terminer' : 'suivant', dernier ? x.ui.terminer : x.ui.suivant, true));
     var b = elems.bulle;
     if (accueil) b.setAttribute('data-accueil', ''); else b.removeAttribute('data-accueil');
+    // Étape à faire : le focus part sur la cible, hors de la bulle ; le reste de la page reste inerte.
+    b.setAttribute('aria-modal', e.action ? 'false' : 'true');
     b.innerHTML = '<div class="pq-visite-tete">' + MIETTE + '<p class="pq-visite-compteur">' + esc(formater(x.ui.compteur, c)) + '</p></div>' +
       '<h2 id="pq-visite-titre" class="pq-visite-titre">' + esc(x.etapes[e.id].titre) + '</h2>' +
       '<p id="pq-visite-texte" class="pq-visite-texte">' + esc(x.etapes[e.id].texte) + '</p>' +
@@ -452,6 +499,19 @@
     var r = el.getBoundingClientRect();
     var barre = mobile() ? (parseFloat(root.getComputedStyle(doc.documentElement).scrollPaddingTop) || 0) : 0;
     var bas = mobile() && elems ? root.innerHeight - elems.bulle.offsetHeight : root.innerHeight;
+    if (!mobile() && elems) {
+      // Desktop, cible large sans place sur les côtés : si cible et bulle tiennent l'une sous l'autre,
+      // on remonte la cible pour que la bulle se pose dessous au lieu de la recouvrir.
+      var bl = elems.bulle.offsetWidth, bh = elems.bulle.offsetHeight, vl = doc.documentElement.clientWidth;
+      var cotes = r.right + ECART + bl <= vl - MARGE || r.left - ECART - bl >= MARGE;
+      var empile = r.height + ECART + bh + 2 * MARGE <= root.innerHeight;
+      if (!cotes && empile) {
+        if (r.top >= MARGE && r.bottom + ECART + bh <= root.innerHeight - MARGE) return;
+        if (r.top - ECART - bh >= MARGE && r.bottom <= root.innerHeight) return;
+        root.scrollBy(0, r.top - 2 * MARGE);
+        return;
+      }
+    }
     if (r.top >= barre && r.bottom <= bas) return;
     // Défilement instantané : un défilement doux est interrompu par les rendus de boot.js (qui remettent
     // la position d'avant) et le projecteur suit de toute façon. Mobile : en haut, sous la barre collante
@@ -465,19 +525,21 @@
     var e = ETAPES[courant.index];
     ouvrirMenu(!!(e.menu && mobile()));
     // Sauts de la page mesurés à chaque étape : les données arrivées entre-temps comptent.
-    // L'accueil s'ouvre avant le chargement des données : on ne mesure pas encore, il affiche « 1 sur 12 ».
+    // L'accueil s'ouvre avant le chargement des données : on ne mesure pas encore, il compte toutes les étapes.
     if (courant.index > 0 && !doc.querySelector('#root [aria-busy="true"]')) {
       courant.sautees = sauteesPourPage(courant.sautees, ETAPES, pageCourante(), visible);
     }
     var r = remplir();
-    rendreInerte(true);
     var el = elementCible(e);
+    var aFaire = !!(e.action && el);
+    rendreInerte(true, aFaire ? el : null);
+    if (aFaire) elems.voile.setAttribute('data-action', ''); else elems.voile.removeAttribute('data-action');
     if (e.menu && mobile()) root.scrollTo(0, 0); else amenerEnVue(el);
     positionner();
-    var cible = elems.bulle.querySelector('[data-visite-act="suivant"],[data-visite-act="terminer"]');
+    var cible = aFaire ? el : elems.bulle.querySelector('[data-visite-act="suivant"],[data-visite-act="terminer"]');
     try { cible.focus({ preventScroll: true }); } catch (err) { cible.focus(); }
-    // Bulle déjà ouverte : le focus reste sur un bouton du même nom, on annonce la nouvelle étape.
-    if (dejaOuverte && root.annoncer) root.annoncer(formater(r.x.ui.compteur, r.c) + '. ' + r.x.etapes[r.e.id].titre + '. ' + r.x.etapes[r.e.id].texte);
+    // Bulle déjà ouverte, ou focus posé sur la cible hors de la bulle : on annonce l'étape.
+    if ((dejaOuverte || aFaire) && root.annoncer) root.annoncer(formater(r.x.ui.compteur, r.c) + '. ' + r.x.etapes[r.e.id].titre + '. ' + r.x.etapes[r.e.id].texte);
     dejaOuverte = true;
   }
 
@@ -525,10 +587,12 @@
       return;
     }
     if (ev.key !== 'Tab') return;
-    var f = elems.bulle.querySelectorAll('button');
+    var f = Array.prototype.slice.call(elems.bulle.querySelectorAll('button'));
+    var el = etapeAFaire() ? elementCible(ETAPES[courant.index]) : null;
+    if (el) f.unshift(el);
     if (!f.length) return;
     var premier = f[0], dernier = f[f.length - 1];
-    var dedans = elems.bulle.contains(doc.activeElement);
+    var dedans = elems.bulle.contains(doc.activeElement) || (!!el && el === doc.activeElement);
     if (ev.shiftKey && (doc.activeElement === premier || !dedans)) { ev.preventDefault(); dernier.focus(); }
     else if (!ev.shiftKey && (doc.activeElement === dernier || !dedans)) { ev.preventDefault(); premier.focus(); }
   }
@@ -597,6 +661,11 @@
         if (!actif) return;
         var e = ETAPES[courant.index];
         if (!(e.menu && mobile())) amenerEnVue(elementCible(e));
+        if (e.action) {
+          var el = elementCible(e);
+          rendreInerte(true, el);
+          if (el && doc.activeElement === doc.body) { try { el.focus({ preventScroll: true }); } catch (err) { el.focus(); } }
+        }
         planifier();
       }, 0);
       return;
