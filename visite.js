@@ -1,4 +1,4 @@
-/* Lot 28 : visite guidée d'onboarding. Miette guide, un projecteur éclaire un élément à la fois,
+/* Lots 28 et 29 : visite guidée d'onboarding. Miette guide, un projecteur éclaire un élément à la fois,
    la visite traverse cinq pages (comptoir, fournée, garde-manger, fournil, profil).
    Logique pure (étapes, suivant/précédent, sauts, compteur, mémoire, placement) testée sous Node ;
    partie DOM dans le navigateur, reprise après chaque « pq:rendu » de boot.js.
@@ -10,29 +10,24 @@
   var CHEMINS = { comptoir: '/comptoir', fournee: '/fournee', 'garde-manger': '/garde-manger', fournil: '/fournil', profil: '/profil' };
 
   // cible : valeur de data-visite sur la page, ou sélecteur propre (selecteur) quand la cible vient d'une liste.
+  // Lot 29 : une fenêtre d'accueil hors compteur, puis huit étapes au plus.
   var ETAPES = [
-    { id: 'accueil', page: 'comptoir', cible: null },
+    { id: 'accueil', page: 'comptoir', cible: null, accueil: true },
     { id: 'menu', page: 'comptoir', cible: 'menu', menu: true },
-    { id: 'indicateurs', page: 'comptoir', cible: 'indicateurs' },
-    { id: 'graphique', page: 'comptoir', cible: 'graphique' },
+    // avec : seconde cible éclairée avec la première (un seul projecteur englobant les deux).
+    { id: 'comptoir', page: 'comptoir', cible: 'indicateurs', avec: 'graphique' },
     // action : étape à faire soi-même (cliquer sur la cible), sans bouton Suivant.
     { id: 'four', page: 'comptoir', cible: 'four', action: true },
-    { id: 'grille', page: 'fournee', cible: 'grille' },
-    { id: 'numero1', page: 'fournee', cible: 'numero1', selecteur: '[data-bento] [data-tile="n1"]' },
-    { id: 'actions', page: 'fournee', cible: 'actions', selecteur: '[data-bento] [data-tile="n1"] .tile-actions' },
-    { id: 'personnaliser', page: 'fournee', cible: 'personnaliser', selecteur: 'button[data-act="edit"]' },
+    { id: 'fournee', page: 'fournee', cible: 'grille' },
     // Deuxième étape à faire : « Pétrir un post » du n°1 ouvre le fournil sur cette news.
     { id: 'petrir', page: 'fournee', cible: 'petrir', selecteur: '[data-bento] [data-tile="n1"] a[data-act="knead"]', action: true },
     // amorce : sans sujet choisi (étape Pétrir sautée), le fournil montre la liste de choix ; la visite suit
     // alors le premier lien « Pétrir » (une fois, sans ?ref= déjà présent) pour montrer un vrai brouillon.
-    { id: 'sujet', page: 'fournil', cible: 'sujet', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
-    { id: 'brouillon', page: 'fournil', cible: 'brouillon', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
+    { id: 'fournil', page: 'fournil', cible: 'brouillon', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
     // Garde-manger : data-visite="garde" sur la liste et sur l'état vide, il est expliqué dans les deux cas.
     { id: 'garde', page: 'garde-manger', cible: 'garde' },
-    { id: 'preferences', page: 'profil', cible: 'preferences' },
-    { id: 'apparence', page: 'profil', cible: 'apparence' },
-    { id: 'retours', page: 'profil', cible: 'retours' },
-    { id: 'revoir', page: 'profil', cible: 'profil' }
+    // Profil : la carte « Revoir la visite » ; le texte résume les autres cartes.
+    { id: 'profil', page: 'profil', cible: 'profil' }
   ];
 
   var TEXTES = {
@@ -42,23 +37,15 @@
         terminer: 'Terminer', parti: 'C’est parti', plusTard: 'Plus tard', aToi: 'À toi de jouer !'
       },
       etapes: {
-        accueil: { titre: 'Salut, moi c’est Miette', texte: 'Bienvenue au fournil ! Je te fais visiter ?' },
+        accueil: { titre: 'Salut, moi c’est Miette', texte: 'Je te fais découvrir l’application ?' },
         menu: { titre: 'Le menu du fournil', texte: 'Toutes les pièces de la boulangerie sont ici, du comptoir à ton profil.' },
-        indicateurs: { titre: 'Tes chiffres du matin', texte: 'Impressions, réactions, contacts : un coup d’œil suffit pour savoir si ta pâte lève.' },
-        graphique: { titre: 'Tes meilleures fournées', texte: 'Chaque barre est un de tes posts. Les plus hautes sont celles qui ont le mieux levé.' },
+        comptoir: { titre: 'Tes chiffres du matin', texte: 'Impressions, réactions, contacts : un coup d’œil suffit pour savoir si ta pâte lève. Juste dessous, le graphique montre tes posts qui ont le mieux levé.' },
         four: { titre: 'Le four', texte: 'La news n°1 du jour t’attend au chaud. Clique sur « Voir ma fournée » pour ouvrir le four.' },
-        grille: { titre: 'La fournée du jour', texte: 'Tes articles du jour, triés pour toi. L’étiquette te dit s’il est Tout chaud, À pétrir ou Rassis.' },
-        numero1: { titre: 'Le n°1, tout doré', texte: 'Le meilleur article du jour, avec ses jauges. Touche un critère pour lire son explication.' },
-        actions: { titre: 'Tes gestes de boulanger', texte: 'Pétrir pour en faire un post, Lire la source, le mettre de côté ou l’écarter : à toi de choisir.' },
-        petrir: { titre: 'À toi de pétrir', texte: 'Cette news t’inspire ? Clique sur « Pétrir un post » : direction le fournil, où l’IA prépare ton brouillon.' },
-        personnaliser: { titre: 'Ta vitrine, à ta façon', texte: 'Avec Personnaliser, tu déplaces, agrandis ou masques les tuiles de ta fournée.' },
-        garde: { titre: 'Le garde-manger', texte: 'Une news te plaît mais pas le temps de la pétrir ? Mets-la de côté depuis la fournée : elle t’attend ici, au frais, jusqu’à ce que tu en fasses un post.' },
-        sujet: { titre: 'Le fournil, ton atelier à posts', texte: 'Ici, l’IA transforme une news de ta fournée en post LinkedIn à ta façon. Tu pars de celle-ci, ou tu en prends une autre avec « Changer de sujet ».' },
-        brouillon: { titre: 'Ton brouillon', texte: 'Choisis le ton, retouche le texte et garde un œil sur le compteur de caractères. Quand il te plaît : « Valider et publier sur LinkedIn ».' },
-        preferences: { titre: 'Tes préférences', texte: 'Métier, thématiques, rapport à l’IA et langue des articles servent à choisir ta fournée chaque matin. Change-les avec « Modifier mes préférences ».' },
-        apparence: { titre: 'À ton goût', texte: 'Quatre thèmes de couleur, dont Nuit et Contraste élevé, et une case pour couper les animations. Ton choix reste attaché à ton compte.' },
-        retours: { titre: 'Affine ta fournée', texte: 'Un sujet ne te parle pas, il en manque un ? Dis-le ici en quelques mots, on s’en sert pour mieux choisir tes prochaines fournées.' },
-        revoir: { titre: 'Revoir la visite', texte: 'Tu peux revoir cette visite à tout moment depuis ton profil. Bonne fournée !' }
+        fournee: { titre: 'La fournée du jour', texte: 'Tes articles du jour, étiquetés Tout chaud, À pétrir ou Rassis, avec le n°1 tout doré et ses jauges. Le bouton « Personnaliser » arrange ta vitrine à ta façon.' },
+        petrir: { titre: 'À toi de pétrir', texte: 'Sur chaque news, tu peux lire la source, la mettre de côté ou l’écarter. Clique sur « Pétrir un post » et l’IA te prépare un brouillon au fournil.' },
+        fournil: { titre: 'Le fournil, ton atelier à posts', texte: 'L’IA a tiré un brouillon LinkedIn de ton sujet : choisis le ton et retouche le texte. Quand il te plaît, « Valider et publier sur LinkedIn ».' },
+        garde: { titre: 'Le garde-manger', texte: 'Une news mise de côté depuis la fournée t’attend ici, au frais. Tu la pétris quand tu as le temps.' },
+        profil: { titre: 'Ton profil', texte: 'Tes préférences choisissent ta fournée, l’apparence règle thèmes et animations, et la boîte à retours nous aide à mieux viser. Tu peux revoir cette visite à tout moment depuis ton profil.' }
       }
     },
     en: {
@@ -67,23 +54,15 @@
         terminer: 'Finish', parti: 'Let’s go', plusTard: 'Later', aToi: 'Your turn!'
       },
       etapes: {
-        accueil: { titre: 'Hi, I’m Miette', texte: 'Welcome to the bakery! Shall I show you around?' },
+        accueil: { titre: 'Hi, I’m Miette', texte: 'Shall I show you around the app?' },
         menu: { titre: 'The bakery menu', texte: 'Every room of the bakery is here, from the counter to your profile.' },
-        indicateurs: { titre: 'Your morning numbers', texte: 'Impressions, reactions, contacts: one glance tells you whether your dough is rising.' },
-        graphique: { titre: 'Your best batches', texte: 'Each bar is one of your posts. The tallest ones rose the best.' },
+        comptoir: { titre: 'Your morning numbers', texte: 'Impressions, reactions, contacts: one glance tells you whether your dough is rising. Just below, the chart shows the posts that rose the best.' },
         four: { titre: 'The oven', texte: 'Today’s top story is waiting, still warm. Click “See my batch” to open the oven.' },
-        grille: { titre: 'Today’s batch', texte: 'Your articles of the day, sorted for you. The label tells you if it is Piping hot, Needs kneading or Gone stale.' },
-        numero1: { titre: 'Number 1, all golden', texte: 'The best article of the day, with its gauges. Tap a criterion to read what it means.' },
-        actions: { titre: 'Your baker’s moves', texte: 'Knead it into a post, read the source, save it for later or skip it: your call.' },
-        petrir: { titre: 'Your turn to knead', texte: 'Does this story inspire you? Click “Knead a post”: off to the kitchen, where the AI prepares your draft.' },
-        personnaliser: { titre: 'Your shop window, your way', texte: 'With Customise, you move, resize or hide the tiles of your batch.' },
-        garde: { titre: 'The pantry', texte: 'Like a story but no time to knead it? Save it for later from the batch: it waits here, kept cool, until you turn it into a post.' },
-        sujet: { titre: 'The kitchen, your post workshop', texte: 'Here, the AI turns a story from your batch into a LinkedIn post in your own style. Start from this one, or pick another with “Change topic”.' },
-        brouillon: { titre: 'Your draft', texte: 'Pick the tone, edit the text and keep an eye on the character count. When you like it: “Confirm and post to LinkedIn”.' },
-        preferences: { titre: 'Your preferences', texte: 'Job, topics, relationship with AI and article language are used to pick your batch every morning. Change them with “Edit my preferences”.' },
-        apparence: { titre: 'Your way', texte: 'Four colour themes, including Night and High contrast, and a box to turn animations off. Your choice stays with your account.' },
-        retours: { titre: 'Fine-tune your batch', texte: 'A topic doesn’t speak to you, or one is missing? Say so here in a few words, we use it to pick your next batches better.' },
-        revoir: { titre: 'Replay the tour', texte: 'You can replay this tour anytime from your profile. Enjoy your batch!' }
+        fournee: { titre: 'Today’s batch', texte: 'Your articles of the day, labelled Piping hot, Needs kneading or Gone stale, with the golden number 1 and its gauges. The “Customise” button arranges your shop window your way.' },
+        petrir: { titre: 'Your turn to knead', texte: 'On every story, you can read the source, save it for later or skip it. Click “Knead a post” and the AI prepares a draft in the kitchen.' },
+        fournil: { titre: 'The kitchen, your post workshop', texte: 'The AI turned your topic into a LinkedIn draft: pick the tone and edit the text. When you like it, “Confirm and post to LinkedIn”.' },
+        garde: { titre: 'The pantry', texte: 'A story saved from your batch waits here, kept cool. Knead it whenever you have time.' },
+        profil: { titre: 'Your profile', texte: 'Your preferences pick your batch, appearance sets themes and animations, and the feedback box helps us aim better. You can replay this tour anytime from your profile.' }
       }
     }
   };
@@ -119,8 +98,9 @@
     return r;
   }
 
+  // L'accueil n'est pas compté : « 1 sur 8 » est la première vraie étape.
   function compteur(etapes, index, sautees) {
-    var garde = function (e) { return (sautees || []).indexOf(e.id) === -1; };
+    var garde = function (e) { return !e.accueil && (sautees || []).indexOf(e.id) === -1; };
     return { numero: etapes.slice(0, index + 1).filter(garde).length, total: etapes.filter(garde).length };
   }
 
@@ -268,7 +248,10 @@
     '.pq-visite-tete{display:flex;align-items:center;gap:10px}' +
     '.pq-visite-bulle .miette{display:block;width:52px;height:auto;flex:none;overflow:visible}' +
     '.pq-visite-bulle[data-accueil] .pq-visite-tete{flex-direction:column;align-items:center;text-align:center}' +
-    '.pq-visite-bulle[data-accueil] .miette{width:96px}' +
+    // Accueil (lot 29) : petite fenêtre sans compteur, plus étroite que les bulles d'étape.
+    '.pq-visite-bulle[data-accueil]{width:min(300px,calc(100vw - 32px));padding:16px 16px 12px;gap:6px}' +
+    '.pq-visite-bulle[data-accueil] .miette{width:72px}' +
+    '.pq-visite-bulle[data-accueil] .pq-visite-titre{font-size:18px}' +
     '.pq-visite-bulle .miette-membre{fill:none;stroke:var(--pain-bas);stroke-width:5;stroke-linecap:round}' +
     '.pq-visite-bulle .miette-mie{fill:var(--pain-haut);stroke:var(--pain-bas);stroke-width:3}' +
     '.pq-visite-bulle .miette-grigne{fill:none;stroke:var(--pain-grigne);stroke-width:5;stroke-linecap:round}' +
@@ -291,7 +274,7 @@
     '[data-theme="contraste"] .pq-visite-bulle{border-width:2px;border-color:var(--texte)}' +
     // Mobile : la bulle devient une feuille fixée en bas de l'écran.
     '@media ' + MOBILE + '{.pq-visite-bulle{left:0!important;right:0;top:auto!important;bottom:0;width:auto;max-height:55vh;border-radius:18px 18px 0 0;border-bottom:0;' +
-    'padding:16px 16px calc(12px + env(safe-area-inset-bottom,0px))}.pq-visite-bulle .miette{width:44px}.pq-visite-bulle[data-accueil] .miette{width:76px}}' +
+    'padding:16px 16px calc(12px + env(safe-area-inset-bottom,0px))}.pq-visite-bulle .miette{width:44px}.pq-visite-bulle[data-accueil] .miette{width:60px}}' +
     // Aucune transition si les animations sont coupées (profil) ou si le système demande moins de mouvement.
     'html[data-animations="off"] .pq-visite-trou,html[data-animations="off"] .pq-visite-bulle{transition:none}' +
     '@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .pq-visite-trou,html:not([data-animations="on"]) .pq-visite-bulle{transition:none}}';
@@ -435,27 +418,39 @@
     var e = ETAPES[courant.index];
     var x = t();
     var c = compteur(ETAPES, courant.index, courant.sautees);
-    var accueil = courant.index === 0;
+    var accueil = e.accueil === true;
     var dernier = courant.index === ETAPES.length - 1;
     var actions = accueil
       ? '<button type="button" class="pq-visite-lien" data-visite-act="plustard">' + esc(x.ui.plusTard) + '</button><span class="pq-visite-espace"></span>' + bouton('suivant', x.ui.parti, true)
       : '<button type="button" class="pq-visite-lien" data-visite-act="passer">' + esc(x.ui.passer) + '</button><span class="pq-visite-espace"></span>' +
-        bouton('precedent', x.ui.precedent, false) +
+        // Première étape comptée : pas de retour vers la fenêtre d'accueil.
+        (c.numero > 1 ? bouton('precedent', x.ui.precedent, false) : '') +
         (e.action ? '<span class="pq-visite-atoi">' + esc(x.ui.aToi) + '</span>'
           : bouton(dernier ? 'terminer' : 'suivant', dernier ? x.ui.terminer : x.ui.suivant, true));
     var b = elems.bulle;
     if (accueil) b.setAttribute('data-accueil', ''); else b.removeAttribute('data-accueil');
     // Étape à faire : le focus part sur la cible, hors de la bulle ; le reste de la page reste inerte.
     b.setAttribute('aria-modal', e.action ? 'false' : 'true');
-    b.innerHTML = '<div class="pq-visite-tete">' + MIETTE + '<p class="pq-visite-compteur">' + esc(formater(x.ui.compteur, c)) + '</p></div>' +
+    b.innerHTML = '<div class="pq-visite-tete">' + MIETTE + (accueil ? '' : '<p class="pq-visite-compteur">' + esc(formater(x.ui.compteur, c)) + '</p>') + '</div>' +
       '<h2 id="pq-visite-titre" class="pq-visite-titre">' + esc(x.etapes[e.id].titre) + '</h2>' +
       '<p id="pq-visite-texte" class="pq-visite-texte">' + esc(x.etapes[e.id].texte) + '</p>' +
       '<div class="pq-visite-actions">' + actions + '</div>';
     return { c: c, e: e, x: x };
   }
 
-  function boiteDe(el) {
+  // Boîte de la cible, agrandie à la cible « avec » de l'étape quand elle est affichée.
+  function rectDe(el) {
     var r = el.getBoundingClientRect();
+    var e = courant ? ETAPES[courant.index] : null;
+    var a = e && e.avec ? doc.querySelector('[data-visite="' + e.avec + '"]') : null;
+    if (!a || !boiteVisible(a)) return r;
+    var s = a.getBoundingClientRect();
+    var g = Math.min(r.left, s.left), h = Math.min(r.top, s.top), d = Math.max(r.right, s.right), b = Math.max(r.bottom, s.bottom);
+    return { left: g, top: h, right: d, bottom: b, width: d - g, height: b - h };
+  }
+
+  function boiteDe(el) {
+    var r = rectDe(el);
     var box = { x: r.left, y: r.top, l: r.width, h: r.height };
     if (ETAPES[courant.index].menu && mobile()) {
       // Menu mobile : la barre et son panneau ouvert ne font qu'une zone éclairée.
@@ -505,7 +500,7 @@
 
   function amenerEnVue(el) {
     if (!el) return;
-    var r = el.getBoundingClientRect();
+    var r = rectDe(el);
     var barre = mobile() ? (parseFloat(root.getComputedStyle(doc.documentElement).scrollPaddingTop) || 0) : 0;
     var bas = mobile() && elems ? root.innerHeight - elems.bulle.offsetHeight : root.innerHeight;
     if (!mobile() && elems) {
@@ -522,6 +517,8 @@
       }
     }
     if (r.top >= barre && r.bottom <= bas) return;
+    // Cible englobante qui tient à l'écran : on la remonte en haut plutôt que de centrer sa première partie.
+    if (ETAPES[courant.index].avec && r.height <= bas - barre - 2 * MARGE) { root.scrollBy(0, r.top - barre - MARGE); return; }
     // Défilement instantané : un défilement doux est interrompu par les rendus de boot.js (qui remettent
     // la position d'avant) et le projecteur suit de toute façon. Mobile : en haut, sous la barre collante
     // (scroll-padding-top du lot 23), au-dessus de la feuille.
@@ -548,7 +545,7 @@
     var cible = aFaire ? el : elems.bulle.querySelector('[data-visite-act="suivant"],[data-visite-act="terminer"]');
     try { cible.focus({ preventScroll: true }); } catch (err) { cible.focus(); }
     // Bulle déjà ouverte, ou focus posé sur la cible hors de la bulle : on annonce l'étape.
-    if ((dejaOuverte || aFaire) && root.annoncer) root.annoncer(formater(r.x.ui.compteur, r.c) + '. ' + r.x.etapes[r.e.id].titre + '. ' + r.x.etapes[r.e.id].texte);
+    if ((dejaOuverte || aFaire) && root.annoncer) root.annoncer((r.e.accueil ? '' : formater(r.x.ui.compteur, r.c) + '. ') + r.x.etapes[r.e.id].titre + '. ' + r.x.etapes[r.e.id].texte);
     dejaOuverte = true;
   }
 
@@ -595,7 +592,7 @@
     if (ev.key === 'Escape') {
       ev.preventDefault(); ev.stopPropagation();
       // Échap quitte la visite comme « Passer » ; sur l'accueil, comme « Plus tard ».
-      agir(courant.index === 0 ? 'plustard' : 'passer');
+      agir(ETAPES[courant.index].accueil ? 'plustard' : 'passer');
       return;
     }
     if (ev.key !== 'Tab') return;
