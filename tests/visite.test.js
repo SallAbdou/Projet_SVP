@@ -306,3 +306,28 @@ test('pages : chaque cible déclarée existe dans le gabarit de sa page, visite.
   }
   assert.match(lire('profil.html'), /data-visite-revoir/);
 });
+
+// Lot 31 : Miette avance sur une baguette, une grigne par étape comptée.
+test('piste : une grigne par étape, de gauche à droite, Miette sur la grigne courante', () => {
+  const p = V.piste(1, 8);
+  assert.equal(p.grignes.length, 8);
+  assert.equal(p.grignes[0], p.miette);
+  for (let i = 1; i < 8; i++) assert.ok(p.grignes[i] > p.grignes[i - 1]);
+  assert.ok(p.grignes[0] >= 5 && p.grignes[7] <= 95, 'Miette reste sur la baguette');
+  assert.equal(V.piste(8, 8).miette, p.grignes[7]);
+  assert.equal(V.piste(3, 8).miette, p.grignes[2]);
+  assert.equal(V.piste(3, 8).doree, V.piste(3, 8).miette, 'la mie dorée suit Miette');
+});
+
+test('piste : total réduit par les sauts, une seule étape, numéro hors bornes', () => {
+  assert.equal(V.piste(1, 5).grignes.length, 5);
+  assert.deepEqual(V.piste(1, 1).grignes, [50]);
+  assert.equal(V.piste(0, 8).miette, V.piste(1, 8).miette);
+  assert.equal(V.piste(12, 8).miette, V.piste(8, 8).miette);
+});
+
+test('bulle d’étape : la petite Miette sur la baguette, plus de grande Miette en tête', () => {
+  const src = lire('visite.js');
+  assert.match(src, /pq-visite-piste/);
+  assert.match(src, /accueil \? MIETTE/);
+});

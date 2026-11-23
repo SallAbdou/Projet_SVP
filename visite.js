@@ -132,6 +132,17 @@
     return String(s).replace(/« /g, '« ').replace(/ ([»:;?!])/g, ' $1');
   }
 
+  // Lot 31 : progression sur une baguette. Une grigne par étape comptée (en % de la largeur, marges
+  // pour que Miette ne déborde pas), Miette posée sur la grigne courante, mie dorée jusqu'à elle.
+  function piste(numero, total) {
+    var n = Math.max(1, total | 0);
+    var k = Math.min(Math.max(1, numero | 0), n);
+    var MARGE = 7;
+    var grignes = [];
+    for (var i = 0; i < n; i++) grignes.push(n === 1 ? 50 : Math.round((MARGE + i * (100 - 2 * MARGE) / (n - 1)) * 100) / 100);
+    return { grignes: grignes, miette: grignes[k - 1], doree: grignes[k - 1] };
+  }
+
   function formater(modele, c) { return modele.replace('{n}', c.numero).replace('{total}', c.total); }
 
   /* ---------- Mémoire ---------- */
@@ -231,7 +242,7 @@
 
   var Visite = {
     CLE: CLE, CHEMINS: CHEMINS, ETAPES: ETAPES, TEXTES: TEXTES,
-    HALO: HALO, VOILE: VOILE, boutons: boutons, insecables: insecables,
+    HALO: HALO, VOILE: VOILE, boutons: boutons, insecables: insecables, piste: piste,
     aller: aller, apresAction: apresAction, noterSauts: noterSauts, compteur: compteur, formater: formater,
     lireCompte: lireCompte, marquerVue: marquerVue, reporter: reporter, doitLancer: doitLancer,
     poserEncours: poserEncours, lireEncours: lireEncours, effacerEncours: effacerEncours,
@@ -289,6 +300,15 @@
     '.pq-visite-bulle .miette-sourire{fill:none;stroke:var(--pain-texte);stroke-width:3;stroke-linecap:round}' +
     '.pq-visite-bulle .miette-joue{fill:color-mix(in srgb,var(--braise-vive) 45%,transparent)}' +
     '.pq-visite-compteur{margin:0;font-size:13px;font-weight:700;color:var(--texte-2)}' +
+    // Lot 31 : baguette de progression. Pâte claire à venir, croûte dorée parcourue, Miette posée dessus.
+    '.pq-visite-piste{position:relative;flex:1 1 auto;min-width:0;height:50px}' +
+    '.pq-visite-baguette{position:absolute;left:0;right:0;bottom:2px;height:14px;border-radius:999px;overflow:hidden;' +
+    'background:var(--or-haut);border:1.5px solid var(--pain-bas);box-sizing:border-box}' +
+    '.pq-visite-doree{position:absolute;left:0;top:0;bottom:0;background:var(--pain-bas);border-radius:999px 0 0 999px;transition:width .45s ease}' +
+    '.pq-visite-grigne{position:absolute;top:2px;width:4px;height:7px;margin-left:-2px;border-radius:2px;transform:skewX(-25deg);background:var(--pain-bas);opacity:.45}' +
+    '.pq-visite-grigne[data-faite],.pq-visite-grigne[data-courante]{background:var(--pain-grigne);opacity:1}' +
+    '.pq-visite-pas{position:absolute;bottom:10px;width:38px;margin-left:-19px;transition:left .45s cubic-bezier(.3,1.4,.6,1)}' +
+    '.pq-visite-bulle .pq-visite-pas .miette{width:38px}' +
     '.pq-visite-titre{margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;line-height:1.2;font-weight:800;color:var(--texte)}' +
     '.pq-visite-bulle[data-accueil] .pq-visite-titre,.pq-visite-bulle[data-accueil] .pq-visite-texte{text-align:center}' +
     '.pq-visite-texte{margin:0;font-size:15px;line-height:1.45;color:var(--texte)}' +
@@ -307,8 +327,9 @@
     '@media ' + MOBILE + '{.pq-visite-bulle{left:0!important;right:0;top:auto!important;bottom:0;width:auto;max-height:55vh;border-radius:18px 18px 0 0;border-bottom:0;' +
     'padding:16px 16px calc(12px + env(safe-area-inset-bottom,0px))}.pq-visite-bulle .miette{width:44px}.pq-visite-bulle[data-accueil] .miette{width:60px}}' +
     // Aucune transition si les animations sont coupées (profil) ou si le système demande moins de mouvement.
-    'html[data-animations="off"] .pq-visite-trou,html[data-animations="off"] .pq-visite-bulle{transition:none}' +
-    '@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .pq-visite-trou,html:not([data-animations="on"]) .pq-visite-bulle{transition:none}}';
+    'html[data-animations="off"] .pq-visite-trou,html[data-animations="off"] .pq-visite-bulle,html[data-animations="off"] .pq-visite-pas,html[data-animations="off"] .pq-visite-doree{transition:none}' +
+    '@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .pq-visite-trou,html:not([data-animations="on"]) .pq-visite-bulle,' +
+    'html:not([data-animations="on"]) .pq-visite-pas,html:not([data-animations="on"]) .pq-visite-doree{transition:none}}';
 
   var actif = false;     // visite affichée sur cette page
   var courant = null;    // { index, sens, sautees }
@@ -318,6 +339,7 @@
   var menuOuvert = false;
   var cadre = 0;
   var premierRendu = true;
+  var derniereMiette = null; // position de Miette sur la baguette dans la bulle affichée (lot 31)
 
   function lang() { try { return root.__app.state.lang === 'en' ? 'en' : 'fr'; } catch (err) { return 'fr'; } }
   function t() { return TEXTES[lang()]; }
@@ -458,11 +480,42 @@
     if (accueil) b.setAttribute('data-accueil', ''); else b.removeAttribute('data-accueil');
     // Étape à faire : la cible, hors de la bulle, reste cliquable et tabulable ; le reste de la page reste inerte.
     b.setAttribute('aria-modal', e.action ? 'false' : 'true');
-    b.innerHTML = '<div class="pq-visite-tete">' + MIETTE + (accueil ? '' : '<p class="pq-visite-compteur">' + esc(formater(x.ui.compteur, c)) + '</p>') + '</div>' +
+    // Lot 31 : aux étapes, la petite Miette part de la grigne quittée (même bulle, ou étape d'avant
+    // si l'on arrive d'une autre page) puis glisse vers la grigne courante.
+    var p = accueil ? null : piste(c.numero, c.total);
+    var depart = p && (derniereMiette != null ? derniereMiette : piste(c.numero - (courant.sens || 1), c.total).miette);
+    derniereMiette = p ? p.miette : null;
+    b.innerHTML = '<div class="pq-visite-tete">' + (accueil ? MIETTE : htmlPiste(p, depart) +
+      '<p class="pq-visite-compteur">' + esc(formater(x.ui.compteur, c)) + '</p>') + '</div>' +
       '<h2 id="pq-visite-titre" class="pq-visite-titre">' + esc(insecables(x.etapes[e.id].titre)) + '</h2>' +
       '<p id="pq-visite-texte" class="pq-visite-texte">' + esc(insecables(x.etapes[e.id].texte)) + '</p>' +
       '<div class="pq-visite-actions">' + actions + '</div>';
+    if (p && depart !== p.miette) glisser(b, p);
     return { c: c, e: e, x: x };
+  }
+
+  // Baguette décorative (le compteur texte dit la même chose) : grignes faites, courante, à venir.
+  function htmlPiste(p, depart) {
+    return '<div class="pq-visite-piste" aria-hidden="true"><div class="pq-visite-baguette">' +
+      '<span class="pq-visite-doree" style="width:' + depart + '%"></span>' +
+      p.grignes.map(function (g) {
+        var etat = g < p.miette ? ' data-faite' : g === p.miette ? ' data-courante' : '';
+        return '<i class="pq-visite-grigne" style="left:' + g + '%"' + etat + '></i>';
+      }).join('') +
+      '</div><span class="pq-visite-pas" style="left:' + depart + '%">' + MIETTE + '</span></div>';
+  }
+
+  // Deux images plus tard, la position de départ est peinte : la transition CSS fait le trajet.
+  function glisser(b, p) {
+    var raf = root.requestAnimationFrame || function (f) { return setTimeout(f, 16); };
+    raf(function () {
+      raf(function () {
+        var pas = b.querySelector('.pq-visite-pas');
+        var doree = b.querySelector('.pq-visite-doree');
+        if (pas) pas.style.left = p.miette + '%';
+        if (doree) doree.style.width = p.doree + '%';
+      });
+    });
   }
 
   // Boîte de la cible, agrandie à la cible « avec » de l'étape quand elle est affichée.
@@ -585,6 +638,7 @@
   function fermer(focusSur) {
     actif = false;
     dejaOuverte = false;
+    derniereMiette = null;
     ouvrirMenu(false);
     detruire();
     effacerEncours(ls);
