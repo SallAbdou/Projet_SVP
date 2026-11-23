@@ -43,3 +43,10 @@ Faire découvrir l'application à la première connexion, façon Airtable : Miet
 - 17 étapes, nouvel ordre : comptoir, fournée, puis une deuxième étape à faire juste après « Ta vitrine » : cliquer sur « Pétrir un post » du n°1, qui ouvre le fournil sur cette news ; ensuite fournil, garde-manger, profil.
 - Bug du compteur (« 6 sur 13 » après Précédent) : à l'arrivée sur une page, toutes ses étapes étaient mesurées alors que les tuiles de la fournée n'étaient pas encore rendues, et comptées comme sautées. Désormais seules les étapes réellement franchies (cible absente au moment du passage) sortent du total, et une étape affichée y revient.
 - Précédent depuis le garde-manger rouvre le fournil sur le même sujet (adresse gardée dans sessionStorage `pq-visite-fournil`) ; l'étape brouillon peut aussi amorcer un sujet en secours.
+
+## Lot 29 : visite resserrée à 8 étapes
+- Fenêtre d'accueil hors compteur, plus petite que les bulles d'étape (300 px, sans compteur) : « Je te fais découvrir l'application ? », boutons « C'est parti » et « Plus tard ». « Plus tard » et Échap ne marquent pas la visite comme vue.
+- Huit étapes, compteur « 1 sur 8 » à « 8 sur 8 » : `menu` (le menu), `comptoir` (indicateurs, le texte présente aussi le graphique juste dessous), `four` (à faire : « Voir ma fournée »), `fournee` (grille, étiquettes, n°1 doré et jauges, bouton « Personnaliser »), `petrir` (à faire : les gestes en une phrase, puis « Pétrir un post »), `fournil` (sujet, ton, brouillon, « Valider et publier sur LinkedIn », cible `brouillon`), `garde` (garde-manger), `profil` (préférences, apparence, retours et « Revoir la visite », cible la carte « Revoir la visite », bouton « Terminer »).
+- Les étapes `indicateurs`, `graphique`, `grille`, `numero1`, `actions`, `personnaliser`, `sujet`, `brouillon`, `preferences`, `apparence`, `retours` et `revoir` disparaissent ; les attributs `data-visite` correspondants restent dans les pages, sans effet.
+- La première étape comptée n'a pas de bouton Précédent : on ne revient pas à la fenêtre d'accueil.
+- Une cible absente fait sauter l'étape, le compteur reste stable (correctif du lot 28 conservé).

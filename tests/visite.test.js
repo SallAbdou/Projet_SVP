@@ -18,19 +18,23 @@ const E = V.ETAPES;
 const idx = id => E.findIndex(e => e.id === id);
 const tout = () => true;
 
-test('dix-sept étapes sur cinq pages, dans l’ordre du parcours', () => {
-  assert.equal(E.length, 17);
+test('lot 29 : accueil hors compteur puis huit étapes sur cinq pages, dans l’ordre du parcours', () => {
+  assert.equal(E.length, 9);
   assert.equal(V.CLE, 'pq-visite');
+  assert.deepEqual(E.map(e => e.id), ['accueil', 'menu', 'comptoir', 'four', 'fournee', 'petrir', 'fournil', 'garde', 'profil']);
   const pages = E.map(e => e.page).filter((p, i, a) => a.indexOf(p) === i);
   assert.deepEqual(pages, ['comptoir', 'fournee', 'fournil', 'garde-manger', 'profil']);
-  assert.deepEqual(E.filter(e => e.page === 'fournee').map(e => e.id), ['grille', 'numero1', 'actions', 'personnaliser', 'petrir']);
   assert.equal(E[0].cible, null, 'accueil au centre, toujours affichable');
+  assert.equal(E[0].accueil, true, 'accueil hors compteur');
+  assert.equal(E.filter(e => e.accueil).length, 1);
   for (const e of E.slice(1)) assert.equal(typeof e.cible, 'string', e.id);
   assert.equal(E[idx('menu')].menu, true);
-  assert.deepEqual(E.filter(e => e.page === 'fournil').map(e => e.id), ['sujet', 'brouillon']);
-  assert.deepEqual(E.filter(e => e.page === 'profil').map(e => e.id), ['preferences', 'apparence', 'retours', 'revoir']);
-  assert.ok(E[idx('sujet')].amorce, 'le fournil sans sujet suit un lien Pétrir');
-  assert.ok(E[idx('brouillon')].amorce, 'retour depuis le garde-manger : le brouillon aussi peut amorcer');
+  assert.equal(E[idx('comptoir')].cible, 'indicateurs');
+  assert.equal(E[idx('comptoir')].avec, 'graphique', 'projecteur englobant indicateurs et graphique');
+  assert.ok(lire('comptoir.html').includes('data-visite="graphique"'));
+  assert.equal(E[idx('fournee')].cible, 'grille');
+  assert.equal(E[idx('profil')].cible, 'profil', 'dernière étape sur la carte « Revoir la visite »');
+  assert.ok(E[idx('fournil')].amorce, 'le fournil sans sujet suit un lien Pétrir');
   for (const p of pages) assert.match(V.CHEMINS[p], /^\/[a-z-]+$/);
 });
 
@@ -46,10 +50,19 @@ test('textes FR et EN : même forme, une ou deux phrases, aucun tiret long', () 
     }
     assert.doesNotMatch(JSON.stringify(V.TEXTES[l]), new RegExp('[' + String.fromCharCode(0x2013, 0x2014) + ']'));
   }
-  assert.equal(V.TEXTES.fr.etapes.accueil.texte, 'Bienvenue au fournil ! Je te fais visiter ?');
+  assert.equal(V.TEXTES.fr.etapes.accueil.texte, 'Je te fais découvrir l’application ?');
+  assert.equal(V.TEXTES.fr.ui.parti, 'C’est parti');
+  assert.equal(V.TEXTES.fr.ui.plusTard, 'Plus tard');
   assert.match(V.TEXTES.fr.etapes[E[E.length - 1].id].texte, /Tu peux revoir cette visite à tout moment depuis ton profil\./);
   assert.equal(V.TEXTES.fr.ui.compteur, '{n} sur {total}');
-  assert.match(V.TEXTES.fr.etapes.sujet.texte, /LinkedIn/);
+  assert.match(V.TEXTES.fr.etapes.fournil.texte, /« Valider et publier sur LinkedIn »/);
+  assert.match(V.TEXTES.fr.etapes.fournil.texte, /ton/);
+  assert.match(V.TEXTES.fr.etapes.comptoir.texte, /graphique/);
+  assert.match(V.TEXTES.fr.etapes.fournee.texte, /Tout chaud.*À pétrir.*Rassis/);
+  assert.match(V.TEXTES.fr.etapes.fournee.texte, /« Personnaliser »/);
+  assert.match(V.TEXTES.en.etapes.fournee.texte, /“Customise”/);
+  assert.match(V.TEXTES.fr.etapes.petrir.texte, /lire la source.*de côté.*écarter/);
+  assert.match(V.TEXTES.fr.etapes.profil.texte, /préférences.*thèmes.*animations.*retour/s);
   assert.match(V.TEXTES.fr.etapes.garde.texte, /de côté/);
   assert.match(V.TEXTES.fr.etapes.four.texte, /Clique sur « Voir ma fournée »/);
   assert.match(V.TEXTES.fr.etapes.petrir.texte, /Clique sur « Pétrir un post »/);
@@ -62,14 +75,14 @@ test('aller : part de l’étape donnée, incluse, étape visible de la même pa
 });
 
 test('suivante : cible masquée sautée, sans blocage', () => {
-  const vis = e => e.id !== 'graphique';
-  assert.deepEqual(V.aller(E, idx('graphique'), 1, 'comptoir', vis), { index: idx('four'), passees: ['graphique'] });
-  assert.deepEqual(V.aller(E, idx('graphique'), -1, 'comptoir', vis), { index: idx('indicateurs'), passees: ['graphique'] });
+  const vis = e => e.id !== 'comptoir';
+  assert.deepEqual(V.aller(E, idx('comptoir'), 1, 'comptoir', vis), { index: idx('four'), passees: ['comptoir'] });
+  assert.deepEqual(V.aller(E, idx('comptoir'), -1, 'comptoir', vis), { index: idx('menu'), passees: ['comptoir'] });
 });
 
 test('changement de page : on navigue, l’étape est résolue à l’arrivée', () => {
   assert.deepEqual(V.aller(E, idx('four') + 1, 1, 'comptoir', tout), { naviguer: 'fournee', index: idx('four') + 1, passees: [] });
-  assert.deepEqual(V.aller(E, idx('grille') - 1, -1, 'fournee', tout), { naviguer: 'comptoir', index: idx('four'), passees: [] });
+  assert.deepEqual(V.aller(E, idx('fournee') - 1, -1, 'fournee', tout), { naviguer: 'comptoir', index: idx('four'), passees: [] });
   // Arrivée sur une page dont la seule étape est masquée : on file vers la page voisine.
   const gm = idx('garde');
   assert.deepEqual(V.aller(E, gm, 1, 'garde-manger', () => false), { naviguer: 'profil', index: gm + 1, passees: ['garde'] });
@@ -78,21 +91,23 @@ test('changement de page : on navigue, l’étape est résolue à l’arrivée',
 
 test('après la dernière étape : fin ; avant la première : on reste au début', () => {
   assert.deepEqual(V.aller(E, E.length, 1, 'profil', tout), { fin: true, passees: [] });
-  assert.deepEqual(V.aller(E, E.length - 1, 1, 'profil', () => false), { fin: true, passees: ['revoir'] });
+  assert.deepEqual(V.aller(E, E.length - 1, 1, 'profil', () => false), { fin: true, passees: ['profil'] });
   assert.deepEqual(V.aller(E, -1, -1, 'comptoir', tout), { index: 0, passees: [] });
 });
 
-test('sautées : seulement les étapes passées, l’étape montrée en sort', () => {
-  let s = V.noterSauts([], ['graphique'], 'four');
-  assert.deepEqual(s, ['graphique']);
-  assert.deepEqual(V.compteur(E, idx('four'), s), { numero: 4, total: 16 });
-  assert.deepEqual(V.compteur(E, 0, s), { numero: 1, total: 16 });
-  // Retour en arrière : le graphique est affiché cette fois, il n'est plus sauté.
-  s = V.noterSauts(s.concat(['garde']), [], 'graphique');
+test('sautées : seulement les étapes passées, l’étape montrée en sort ; l’accueil ne compte pas', () => {
+  let s = V.noterSauts([], ['comptoir'], 'four');
+  assert.deepEqual(s, ['comptoir']);
+  assert.deepEqual(V.compteur(E, idx('four'), s), { numero: 2, total: 7 });
+  assert.deepEqual(V.compteur(E, idx('menu'), []), { numero: 1, total: 8 });
+  assert.equal(V.compteur(E, 0, []).total, 8, 'accueil hors compteur');
+  // Retour en arrière : le comptoir est affiché cette fois, il n'est plus sauté.
+  s = V.noterSauts(s.concat(['garde']), [], 'comptoir');
   assert.deepEqual(s, ['garde']);
   assert.deepEqual(V.noterSauts(['a'], ['a', 'b'], 'c'), ['a', 'b'], 'pas de doublon');
-  assert.deepEqual(V.compteur(E, E.length - 1, s), { numero: 16, total: 16 });
-  assert.equal(V.formater('{n} sur {total}', { numero: 3, total: 12 }), '3 sur 12');
+  assert.deepEqual(V.compteur(E, E.length - 1, s), { numero: 7, total: 7 });
+  assert.deepEqual(V.compteur(E, E.length - 1, []), { numero: 8, total: 8 });
+  assert.equal(V.formater('{n} sur {total}', { numero: 3, total: 8 }), '3 sur 8');
 });
 
 test('bug du compteur : suivant puis précédent, le total ne bouge pas quand tout est affichable', () => {
@@ -107,12 +122,12 @@ test('bug du compteur : suivant puis précédent, le total ne bouge pas quand to
     i = res.index;
     s = V.noterSauts(s, res.passees, E[i].id);
     totaux.add(V.compteur(E, i, s).total);
-    assert.equal(V.compteur(E, i, s).numero, i + 1);
+    assert.equal(V.compteur(E, i, s).numero, i);
   };
-  for (let k = 0; k < 12; k++) pas(1);
-  for (let k = 0; k < 8; k++) pas(-1);
-  for (let k = 0; k < 14; k++) pas(1);
-  assert.deepEqual([...totaux], [17]);
+  for (let k = 0; k < 7; k++) pas(1);
+  for (let k = 0; k < 5; k++) pas(-1);
+  for (let k = 0; k < 9; k++) pas(1);
+  assert.deepEqual([...totaux], [8]);
 });
 
 test('mémoire par compte : vue et reportée', () => {
@@ -150,8 +165,8 @@ test('doitLancer : jamais vue et pas reportée pour cette connexion', () => {
 
 test('visite en cours : liée au compte, effacée à la fin', () => {
   const st = memoire();
-  assert.ok(V.poserEncours(st, 'lea@x.fr', { index: 5, sens: 1, sautees: ['graphique'] }));
-  assert.deepEqual(V.lireEncours(st, 'lea@x.fr'), { index: 5, sens: 1, sautees: ['graphique'] });
+  assert.ok(V.poserEncours(st, 'lea@x.fr', { index: 5, sens: 1, sautees: ['comptoir'] }));
+  assert.deepEqual(V.lireEncours(st, 'lea@x.fr'), { index: 5, sens: 1, sautees: ['comptoir'] });
   assert.equal(V.lireEncours(st, 'autre@x.fr'), null);
   V.poserEncours(st, 'lea@x.fr', { index: 99, sens: 7, sautees: 'x' });
   assert.equal(V.lireEncours(st, 'lea@x.fr'), null, 'index hors liste refusé');
@@ -198,15 +213,13 @@ test('placer : jamais hors écran, cible géante ou absente', () => {
 });
 
 test('étapes à faire : le four puis « Pétrir un post », la visite reprend à l’étape suivante', () => {
-  const four = E[idx('four')];
-  assert.equal(four.action, true);
   assert.deepEqual(E.filter(e => e.action).map(e => e.id), ['four', 'petrir']);
-  assert.equal(E[idx('four') + 1].page, 'fournee');
-  assert.equal(idx('petrir'), idx('personnaliser') + 1, 'juste après « Ta vitrine »');
-  assert.equal(E[idx('petrir') + 1].id, 'sujet');
+  assert.equal(E[idx('four') + 1].id, 'fournee');
+  assert.equal(E[idx('petrir') - 1].id, 'fournee');
+  assert.equal(E[idx('petrir') + 1].id, 'fournil');
   assert.match(E[idx('petrir')].selecteur, /data-tile="n1"/);
   assert.match(E[idx('petrir')].selecteur, /data-act="knead"/);
-  assert.deepEqual(V.apresAction(E, idx('four'), ['graphique']), { index: idx('four') + 1, sens: 1, sautees: ['graphique'] });
+  assert.deepEqual(V.apresAction(E, idx('four'), ['comptoir']), { index: idx('four') + 1, sens: 1, sautees: ['comptoir'] });
   assert.match(V.TEXTES.fr.ui.aToi, /\S/);
 });
 
