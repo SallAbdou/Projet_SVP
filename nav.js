@@ -61,7 +61,7 @@
       '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>' + esc(t.menu) + '</button>' +
       '</div>' +
       '<div id="pq-nav-panneau" class="pq-nav-panneau">' +
-      '<div style="display:flex;flex-direction:column;gap:4px">' + liens + '</div>' +
+      '<div data-nav-liens style="display:flex;flex-direction:column;gap:4px">' + liens + '</div>' +
       '<div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">' +
       '<div role="group" aria-label="' + esc(t.langLabel) + '" style="display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--miel);align-self:flex-start">' +
       '<button type="button" data-lang="fr" data-focus="lang-fr" aria-pressed="' + fr + '" style="' + (fr ? LANG_ON : LANG_OFF) + '">FR</button>' +
