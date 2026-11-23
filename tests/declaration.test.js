@@ -9,7 +9,7 @@ const Nav = require('../nav.js');
 const Config = require('../config.js');
 
 const RACINE = path.join(__dirname, '..');
-const lire = f => fs.readFileSync(path.join(RACINE, f), 'utf8');
+const lire = f => fs.readFileSync(path.join(RACINE, f), 'utf8').replace(/\r\n/g, '\n');
 const PAGES = fs.readdirSync(RACINE).filter(f => f.endsWith('.html') && f !== 'index copy.html');
 
 // Pages sans pied de page, avec leur justification.
