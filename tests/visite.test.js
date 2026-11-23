@@ -64,9 +64,76 @@ test('textes FR et EN : même forme, une ou deux phrases, aucun tiret long', () 
   assert.match(V.TEXTES.fr.etapes.petrir.texte, /lire la source.*de côté.*écarter/);
   assert.match(V.TEXTES.fr.etapes.profil.texte, /préférences.*thèmes.*animations.*retour/s);
   assert.match(V.TEXTES.fr.etapes.garde.texte, /de côté/);
-  assert.match(V.TEXTES.fr.etapes.four.texte, /Clique sur « Voir ma fournée »/);
-  assert.match(V.TEXTES.fr.etapes.petrir.texte, /Clique sur « Pétrir un post »/);
-  assert.match(V.TEXTES.en.etapes.petrir.texte, /“Knead a post”/);
+  // Lot 30 : « Suivant » fait l'action, le clic direct sur la cible reste possible et le texte le dit.
+  assert.match(V.TEXTES.fr.etapes.four.texte, /« Suivant ».*« Voir ma fournée »/);
+  assert.match(V.TEXTES.fr.etapes.petrir.texte, /« Suivant ».*« Pétrir un post »/);
+  assert.match(V.TEXTES.en.etapes.four.texte, /“Next”.*“See my batch”/);
+  assert.match(V.TEXTES.en.etapes.petrir.texte, /“Next”.*“Knead a post”/);
+});
+
+test('lot 30 : textes revus par la relectrice (menu, comptoir, fournil)', () => {
+  const fr = V.TEXTES.fr.etapes;
+  assert.equal(fr.menu.titre, 'Au menu');
+  assert.equal(fr.menu.texte, 'Tous les outils de ta boulangerie réunis : du comptoir à ton profil.');
+  assert.match(fr.comptoir.texte, /^Impressions, réactions, contacts/);
+  assert.match(fr.comptoir.texte, /En dessous : ton graphique montre tes posts qui ont le mieux levé\.$/);
+  assert.match(fr.fournil.texte, /^L’IA a créé un premier brouillon LinkedIn avec ton sujet : /);
+  assert.match(fr.fournil.texte, /« Valider et publier sur LinkedIn »/);
+  const en = V.TEXTES.en.etapes;
+  assert.equal(en.menu.titre, 'On the menu');
+  assert.match(en.comptoir.texte, /Below: your chart shows/);
+  assert.match(en.fournil.texte, /^The AI created a first LinkedIn draft from your topic: /);
+  // Plus de mention « À toi de jouer ! » : le bouton Suivant la remplace.
+  assert.equal(V.TEXTES.fr.ui.aToi, undefined);
+  assert.doesNotMatch(lire('visite.js'), /pq-visite-atoi/);
+});
+
+test('lot 30 : une rangée de boutons, Passer à gauche puis Précédent et Suivant, même aux étapes à faire', () => {
+  const b = (id, extra) => V.boutons(E[idx(id)], Object.assign({ numero: 2, dernier: false }, extra));
+  assert.deepEqual(b('accueil'), ['plustard', 'suivant']);
+  assert.deepEqual(b('menu', { numero: 1 }), ['passer', 'suivant'], 'pas de retour vers l’accueil');
+  assert.deepEqual(b('comptoir'), ['passer', 'precedent', 'suivant']);
+  assert.deepEqual(b('four'), ['passer', 'precedent', 'suivant'], 'étape à faire : vrai bouton Suivant');
+  assert.deepEqual(b('petrir'), ['passer', 'precedent', 'suivant']);
+  assert.deepEqual(b('profil', { dernier: true }), ['passer', 'precedent', 'terminer']);
+});
+
+test('lot 30 : espaces insécables à l’affichage, jamais de « seul en bout de ligne', () => {
+  const nb = String.fromCharCode(0xA0);
+  assert.equal(V.insecables('un clic sur « Pétrir » : oui ? non !'), 'un clic sur «' + nb + 'Pétrir' + nb + '»' + nb + ': oui' + nb + '? non' + nb + '!');
+  assert.equal(V.insecables('Below: “Next”'), 'Below: “Next”', 'anglais inchangé');
+});
+
+test('lot 30 : le menu éclaire le bloc de liens, pas toute la colonne', () => {
+  assert.match(E[idx('menu')].selecteur, /\[data-nav-liens\]/);
+  assert.match(lire('nav.js'), /data-nav-liens/);
+});
+
+test('lot 30 : halo clair autour de chaque cible, >= 3:1 contre le voile dans les 4 thèmes', () => {
+  const C = require('../charte.js');
+  const css = lire('charte.css');
+  const blocs = {};
+  css.replace(/([^{}]+)\{([^{}]*)\}/g, (m, sel, corps) => {
+    const s = sel.replace(/\/\*[\s\S]*?\*\//g, '').trim();
+    const nom = s === ':root,[data-theme="bronze"]' ? 'bronze' : ((/^\[data-theme="(\w+)"\]$/.exec(s) || [])[1]);
+    if (nom) { blocs[nom] = {}; corps.replace(/--([\w-]+):\s*(#[0-9A-Fa-f]{6})\b/g, (x, k, h) => { blocs[nom][k] = h; }); }
+    return m;
+  });
+  const rgb = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16));
+  const hex = a => '#' + a.map(n => Math.round(n).toString(16).padStart(2, '0')).join('');
+  for (const nom of ['bronze', 'classique', 'nuit', 'contraste']) {
+    const v = Object.assign({}, blocs.bronze, blocs[nom]);
+    const halo = v[V.HALO[nom]];
+    assert.ok(halo, nom + ' : jeton ' + V.HALO[nom]);
+    // Pire cas pour un halo clair : le voile posé sur la surface la plus claire du thème.
+    for (const fond of ['fond', 'creme', 'sable', 'champ']) {
+      const a = V.VOILE[nom], o = rgb(v['ombre-teinte']), f = rgb(v[fond]);
+      const voile = hex(o.map((c, i) => a * c + (1 - a) * f[i]));
+      const c = C.contraste(halo, voile);
+      assert.ok(c >= 3, nom + ' : halo ' + halo + ' sur voile ' + voile + ' (' + fond + ') = ' + c.toFixed(2));
+    }
+  }
+  assert.match(lire('visite.js'), /\.pq-visite-trou\{[^}]*var\(--pq-halo\)/);
 });
 
 test('aller : part de l’étape donnée, incluse, étape visible de la même page', () => {
@@ -220,7 +287,6 @@ test('étapes à faire : le four puis « Pétrir un post », la visite reprend �
   assert.match(E[idx('petrir')].selecteur, /data-tile="n1"/);
   assert.match(E[idx('petrir')].selecteur, /data-act="knead"/);
   assert.deepEqual(V.apresAction(E, idx('four'), ['comptoir']), { index: idx('four') + 1, sens: 1, sautees: ['comptoir'] });
-  assert.match(V.TEXTES.fr.ui.aToi, /\S/);
 });
 
 test('garde-manger : expliqué même vide (liste ou état vide)', () => {

@@ -13,10 +13,11 @@
   // Lot 29 : une fenêtre d'accueil hors compteur, puis huit étapes au plus.
   var ETAPES = [
     { id: 'accueil', page: 'comptoir', cible: null, accueil: true },
-    { id: 'menu', page: 'comptoir', cible: 'menu', menu: true },
+    // Lot 30 : sur desktop, le projecteur entoure le seul bloc de liens (pas la marque ni la langue).
+    { id: 'menu', page: 'comptoir', cible: 'menu', selecteur: '[data-visite="menu"] [data-nav-liens]', menu: true },
     // avec : seconde cible éclairée avec la première (un seul projecteur englobant les deux).
     { id: 'comptoir', page: 'comptoir', cible: 'indicateurs', avec: 'graphique' },
-    // action : étape à faire soi-même (cliquer sur la cible), sans bouton Suivant.
+    // action : étape à faire (cliquer sur la cible) ; lot 30 : « Suivant » fait le même clic.
     { id: 'four', page: 'comptoir', cible: 'four', action: true },
     { id: 'fournee', page: 'fournee', cible: 'grille' },
     // Deuxième étape à faire : « Pétrir un post » du n°1 ouvre le fournil sur cette news.
@@ -34,16 +35,16 @@
     fr: {
       ui: {
         compteur: '{n} sur {total}', suivant: 'Suivant', precedent: 'Précédent', passer: 'Passer la visite',
-        terminer: 'Terminer', parti: 'C’est parti', plusTard: 'Plus tard', aToi: 'À toi de jouer !'
+        terminer: 'Terminer', parti: 'C’est parti', plusTard: 'Plus tard'
       },
       etapes: {
         accueil: { titre: 'Salut, moi c’est Miette', texte: 'Je te fais découvrir l’application ?' },
-        menu: { titre: 'Le menu du fournil', texte: 'Toutes les pièces de la boulangerie sont ici, du comptoir à ton profil.' },
-        comptoir: { titre: 'Tes chiffres du matin', texte: 'Impressions, réactions, contacts : un coup d’œil suffit pour savoir si ta pâte lève. Juste dessous, le graphique montre tes posts qui ont le mieux levé.' },
-        four: { titre: 'Le four', texte: 'La news n°1 du jour t’attend au chaud. Clique sur « Voir ma fournée » pour ouvrir le four.' },
+        menu: { titre: 'Au menu', texte: 'Tous les outils de ta boulangerie réunis : du comptoir à ton profil.' },
+        comptoir: { titre: 'Tes chiffres du matin', texte: 'Impressions, réactions, contacts : un coup d’œil suffit pour savoir si ta pâte lève. En dessous : ton graphique montre tes posts qui ont le mieux levé.' },
+        four: { titre: 'Le four', texte: 'La news n°1 du jour t’attend au chaud. Ouvre le four avec « Suivant » ou d’un clic sur « Voir ma fournée ».' },
         fournee: { titre: 'La fournée du jour', texte: 'Tes articles du jour, étiquetés Tout chaud, À pétrir ou Rassis, avec le n°1 tout doré et ses jauges. Le bouton « Personnaliser » arrange ta vitrine à ta façon.' },
-        petrir: { titre: 'À toi de pétrir', texte: 'Sur chaque news, tu peux lire la source, la mettre de côté ou l’écarter. Clique sur « Pétrir un post » et l’IA te prépare un brouillon au fournil.' },
-        fournil: { titre: 'Le fournil, ton atelier à posts', texte: 'L’IA a tiré un brouillon LinkedIn de ton sujet : choisis le ton et retouche le texte. Quand il te plaît, « Valider et publier sur LinkedIn ».' },
+        petrir: { titre: 'À toi de pétrir', texte: 'Sur chaque news, tu peux lire la source, la mettre de côté ou l’écarter. Avec « Suivant » ou d’un clic sur « Pétrir un post », l’IA te prépare un brouillon au fournil.' },
+        fournil: { titre: 'Le fournil, ton atelier à posts', texte: 'L’IA a créé un premier brouillon LinkedIn avec ton sujet : choisis le ton, retouche le texte, puis clique sur « Valider et publier sur LinkedIn » quand il te plaît.' },
         garde: { titre: 'Le garde-manger', texte: 'Une news mise de côté depuis la fournée t’attend ici, au frais. Tu la pétris quand tu as le temps.' },
         profil: { titre: 'Ton profil', texte: 'Tes préférences choisissent ta fournée, l’apparence règle thèmes et animations, et la boîte à retours nous aide à mieux viser. Tu peux revoir cette visite à tout moment depuis ton profil.' }
       }
@@ -51,16 +52,16 @@
     en: {
       ui: {
         compteur: '{n} of {total}', suivant: 'Next', precedent: 'Back', passer: 'Skip the tour',
-        terminer: 'Finish', parti: 'Let’s go', plusTard: 'Later', aToi: 'Your turn!'
+        terminer: 'Finish', parti: 'Let’s go', plusTard: 'Later'
       },
       etapes: {
         accueil: { titre: 'Hi, I’m Miette', texte: 'Shall I show you around the app?' },
-        menu: { titre: 'The bakery menu', texte: 'Every room of the bakery is here, from the counter to your profile.' },
-        comptoir: { titre: 'Your morning numbers', texte: 'Impressions, reactions, contacts: one glance tells you whether your dough is rising. Just below, the chart shows the posts that rose the best.' },
-        four: { titre: 'The oven', texte: 'Today’s top story is waiting, still warm. Click “See my batch” to open the oven.' },
+        menu: { titre: 'On the menu', texte: 'All your bakery tools in one place: from the counter to your profile.' },
+        comptoir: { titre: 'Your morning numbers', texte: 'Impressions, reactions, contacts: one glance tells you whether your dough is rising. Below: your chart shows the posts that rose the best.' },
+        four: { titre: 'The oven', texte: 'Today’s top story is waiting, still warm. Open the oven with “Next” or a click on “See my batch”.' },
         fournee: { titre: 'Today’s batch', texte: 'Your articles of the day, labelled Piping hot, Needs kneading or Gone stale, with the golden number 1 and its gauges. The “Customise” button arranges your shop window your way.' },
-        petrir: { titre: 'Your turn to knead', texte: 'On every story, you can read the source, save it for later or skip it. Click “Knead a post” and the AI prepares a draft in the kitchen.' },
-        fournil: { titre: 'The kitchen, your post workshop', texte: 'The AI turned your topic into a LinkedIn draft: pick the tone and edit the text. When you like it, “Confirm and post to LinkedIn”.' },
+        petrir: { titre: 'Your turn to knead', texte: 'On every story, you can read the source, save it for later or skip it. With “Next” or a click on “Knead a post”, the AI prepares a draft in the kitchen.' },
+        fournil: { titre: 'The kitchen, your post workshop', texte: 'The AI created a first LinkedIn draft from your topic: pick the tone, edit the text, then click “Confirm and post to LinkedIn” when you like it.' },
         garde: { titre: 'The pantry', texte: 'A story saved from your batch waits here, kept cool. Knead it whenever you have time.' },
         profil: { titre: 'Your profile', texte: 'Your preferences pick your batch, appearance sets themes and animations, and the feedback box helps us aim better. You can replay this tour anytime from your profile.' }
       }
@@ -107,6 +108,28 @@
   // Étape à faire (clic sur la cible) : la page suivante reprendra à l'étape d'après.
   function apresAction(etapes, index, sautees) {
     return { index: Math.min(index + 1, etapes.length - 1), sens: 1, sautees: (sautees || []).slice() };
+  }
+
+  // Boutons de la bulle dans l'ordre du DOM, qui est aussi l'ordre visuel et l'ordre du focus :
+  // le lien discret à gauche (ou au-dessus sur mobile), puis Précédent et l'action principale à droite.
+  // Lot 30 : les étapes à faire ont aussi leur bouton Suivant.
+  function boutons(e, o) {
+    if (e.accueil) return ['plustard', 'suivant'];
+    var r = ['passer'];
+    // Première étape comptée : pas de retour vers la fenêtre d'accueil.
+    if (o.numero > 1) r.push('precedent');
+    r.push(o.dernier ? 'terminer' : 'suivant');
+    return r;
+  }
+
+  // Lot 30 : halo clair autour de la cible (jeton de charte.css par thème) et opacité du voile.
+  // Le halo garde au moins 3:1 contre le voile posé sur la surface la plus claire (tests/visite.test.js).
+  var HALO = { bronze: 'or-haut', classique: 'or-haut', nuit: 'panneau-or', contraste: 'creme' };
+  var VOILE = { bronze: 0.62, classique: 0.62, nuit: 0.74, contraste: 0.74 };
+
+  // Typographie française à l'affichage : « et » restent collés au mot, : ; ? ! à la fin du mot qui précède.
+  function insecables(s) {
+    return String(s).replace(/« /g, '« ').replace(/ ([»:;?!])/g, ' $1');
   }
 
   function formater(modele, c) { return modele.replace('{n}', c.numero).replace('{total}', c.total); }
@@ -208,6 +231,7 @@
 
   var Visite = {
     CLE: CLE, CHEMINS: CHEMINS, ETAPES: ETAPES, TEXTES: TEXTES,
+    HALO: HALO, VOILE: VOILE, boutons: boutons, insecables: insecables,
     aller: aller, apresAction: apresAction, noterSauts: noterSauts, compteur: compteur, formater: formater,
     lireCompte: lireCompte, marquerVue: marquerVue, reporter: reporter, doitLancer: doitLancer,
     poserEncours: poserEncours, lireEncours: lireEncours, effacerEncours: effacerEncours,
@@ -236,12 +260,18 @@
   var CSS =
     '.pq-visite-voile{position:fixed;inset:0;z-index:1000;background:transparent}' +
     '.pq-visite-voile[data-plein]{background:var(--pq-voile)}' +
-    // Voile teinté de la charte (--ombre-teinte de chaque thème), un peu plus dense que celui des modales.
-    ':root{--pq-voile:color-mix(in srgb,var(--ombre-teinte) 62%,transparent)}[data-theme="nuit"],[data-theme="contraste"]{--pq-voile:color-mix(in srgb,var(--ombre-teinte) 74%,transparent)}' +
-    '.pq-visite-trou{position:fixed;z-index:1001;border-radius:14px;pointer-events:none;box-shadow:0 0 0 200vmax var(--pq-voile);outline:3px solid var(--braise);outline-offset:0;' +
+    // Voile teinté de la charte (--ombre-teinte de chaque thème), un peu plus dense que celui des modales,
+    // et halo clair du lot 30 (HALO, VOILE).
+    Object.keys(HALO).map(function (th) {
+      return (th === 'bronze' ? ':root,' : '') + '[data-theme="' + th + '"]{--pq-halo:var(--' + HALO[th] + ');' +
+        '--pq-voile:color-mix(in srgb,var(--ombre-teinte) ' + Math.round(VOILE[th] * 100) + '%,transparent)}';
+    }).join('') +
+    // Liseré braise contre la cible, anneau clair plein autour, puis le voile. Pas de flou : un dégradé
+    // éclaircirait le voile au bord de l'anneau et casserait le 3:1.
+    '.pq-visite-trou{position:fixed;z-index:1001;border-radius:14px;pointer-events:none;box-shadow:0 0 0 8px var(--pq-halo),0 0 0 200vmax var(--pq-voile);outline:3px solid var(--braise);outline-offset:0;' +
     'transition:left .22s ease,top .22s ease,width .22s ease,height .22s ease}' +
     '.pq-visite-trou[hidden]{display:none}' +
-    '.pq-visite-bulle{position:fixed;z-index:1002;box-sizing:border-box;width:min(360px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;' +
+    '.pq-visite-bulle{position:fixed;z-index:1002;box-sizing:border-box;width:min(400px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;' +
     'padding:18px 18px 14px;border-radius:18px;background:var(--creme);color:var(--texte);border:1.5px solid var(--bord-fort);box-shadow:var(--ombre-3);' +
     'font-family:"DM Sans", system-ui, sans-serif;display:flex;flex-direction:column;gap:8px;transition:opacity .18s ease}' +
     '.pq-visite-bulle[data-cache]{opacity:0}' +
@@ -262,13 +292,14 @@
     '.pq-visite-titre{margin:0;font-family:Fraunces, Georgia, serif;font-size:20px;line-height:1.2;font-weight:800;color:var(--texte)}' +
     '.pq-visite-bulle[data-accueil] .pq-visite-titre,.pq-visite-bulle[data-accueil] .pq-visite-texte{text-align:center}' +
     '.pq-visite-texte{margin:0;font-size:15px;line-height:1.45;color:var(--texte)}' +
-    '.pq-visite-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:6px}' +
-    '.pq-visite-actions .pq-visite-espace{flex:1 1 auto}' +
-    '.pq-visite-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 16px;border-radius:999px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;' +
+    // Une rangée : lien discret à gauche, Précédent et Suivant groupés à droite. Si la place manque (mobile),
+    // le groupe passe dessous d'un seul tenant et le lien reste au-dessus.
+    '.pq-visite-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:6px}' +
+    '.pq-visite-groupe{display:flex;flex-wrap:nowrap;gap:8px;margin-left:auto}' +
+    '.pq-visite-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 16px;border-radius:999px;font:inherit;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;' +
     'border:1.5px solid var(--brun);background:transparent;color:var(--brun-fonce)}' +
     '.pq-visite-btn[data-plein]{border-color:var(--braise);background:var(--braise);color:var(--sur-plein)}' +
-    '.pq-visite-lien{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--brun);text-decoration:underline;cursor:pointer}' +
-    '.pq-visite-atoi{display:inline-flex;align-items:center;min-height:44px;font-weight:800;font-size:14px;color:var(--brun)}' +
+    '.pq-visite-lien{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--brun);text-decoration:underline;cursor:pointer;white-space:nowrap}' +
     '.pq-visite-voile[data-action]{pointer-events:none}' +
     '.pq-visite-bulle button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
     '[data-theme="contraste"] .pq-visite-bulle{border-width:2px;border-color:var(--texte)}' +
@@ -419,21 +450,17 @@
     var x = t();
     var c = compteur(ETAPES, courant.index, courant.sautees);
     var accueil = e.accueil === true;
-    var dernier = courant.index === ETAPES.length - 1;
-    var actions = accueil
-      ? '<button type="button" class="pq-visite-lien" data-visite-act="plustard">' + esc(x.ui.plusTard) + '</button><span class="pq-visite-espace"></span>' + bouton('suivant', x.ui.parti, true)
-      : '<button type="button" class="pq-visite-lien" data-visite-act="passer">' + esc(x.ui.passer) + '</button><span class="pq-visite-espace"></span>' +
-        // Première étape comptée : pas de retour vers la fenêtre d'accueil.
-        (c.numero > 1 ? bouton('precedent', x.ui.precedent, false) : '') +
-        (e.action ? '<span class="pq-visite-atoi">' + esc(x.ui.aToi) + '</span>'
-          : bouton(dernier ? 'terminer' : 'suivant', dernier ? x.ui.terminer : x.ui.suivant, true));
+    var liste = boutons(e, { numero: c.numero, dernier: courant.index === ETAPES.length - 1 });
+    var libelles = { plustard: x.ui.plusTard, passer: x.ui.passer, precedent: x.ui.precedent, suivant: accueil ? x.ui.parti : x.ui.suivant, terminer: x.ui.terminer };
+    var actions = '<button type="button" class="pq-visite-lien" data-visite-act="' + liste[0] + '">' + esc(libelles[liste[0]]) + '</button>' +
+      '<div class="pq-visite-groupe">' + liste.slice(1).map(function (a) { return bouton(a, libelles[a], a !== 'precedent'); }).join('') + '</div>';
     var b = elems.bulle;
     if (accueil) b.setAttribute('data-accueil', ''); else b.removeAttribute('data-accueil');
-    // Étape à faire : le focus part sur la cible, hors de la bulle ; le reste de la page reste inerte.
+    // Étape à faire : la cible, hors de la bulle, reste cliquable et tabulable ; le reste de la page reste inerte.
     b.setAttribute('aria-modal', e.action ? 'false' : 'true');
     b.innerHTML = '<div class="pq-visite-tete">' + MIETTE + (accueil ? '' : '<p class="pq-visite-compteur">' + esc(formater(x.ui.compteur, c)) + '</p>') + '</div>' +
-      '<h2 id="pq-visite-titre" class="pq-visite-titre">' + esc(x.etapes[e.id].titre) + '</h2>' +
-      '<p id="pq-visite-texte" class="pq-visite-texte">' + esc(x.etapes[e.id].texte) + '</p>' +
+      '<h2 id="pq-visite-titre" class="pq-visite-titre">' + esc(insecables(x.etapes[e.id].titre)) + '</h2>' +
+      '<p id="pq-visite-texte" class="pq-visite-texte">' + esc(insecables(x.etapes[e.id].texte)) + '</p>' +
       '<div class="pq-visite-actions">' + actions + '</div>';
     return { c: c, e: e, x: x };
   }
@@ -542,11 +569,17 @@
     if (aFaire) elems.voile.setAttribute('data-action', ''); else elems.voile.removeAttribute('data-action');
     if (e.menu && mobile()) root.scrollTo(0, 0); else amenerEnVue(el);
     positionner();
-    var cible = aFaire ? el : elems.bulle.querySelector('[data-visite-act="suivant"],[data-visite-act="terminer"]');
-    try { cible.focus({ preventScroll: true }); } catch (err) { cible.focus(); }
-    // Bulle déjà ouverte, ou focus posé sur la cible hors de la bulle : on annonce l'étape.
-    if ((dejaOuverte || aFaire) && root.annoncer) root.annoncer((r.e.accueil ? '' : formater(r.x.ui.compteur, r.c) + '. ') + r.x.etapes[r.e.id].titre + '. ' + r.x.etapes[r.e.id].texte);
+    // Lot 30 : le focus va toujours sur le bouton principal, y compris aux étapes à faire.
+    focusPrincipal();
+    // Bulle déjà ouverte : le focus reste dans le même dialogue, on annonce l'étape.
+    if (dejaOuverte && root.annoncer) root.annoncer((r.e.accueil ? '' : formater(r.x.ui.compteur, r.c) + '. ') + r.x.etapes[r.e.id].titre + '. ' + r.x.etapes[r.e.id].texte);
     dejaOuverte = true;
+  }
+
+  function focusPrincipal() {
+    var f = elems && elems.bulle.querySelector('[data-visite-act="suivant"],[data-visite-act="terminer"]');
+    if (!f) return;
+    try { f.focus({ preventScroll: true }); } catch (err) { f.focus(); }
   }
 
   function fermer(focusSur) {
@@ -580,6 +613,10 @@
   function agir(act) {
     if (!actif) return;
     var page = pageCourante();
+    var e = ETAPES[courant.index];
+    var cible = e.action ? elementCible(e) : null;
+    // Étape à faire : Suivant clique la cible (lien du four, « Pétrir un post ») ; clicCible note la reprise.
+    if (act === 'suivant' && cible) { cible.click(); return; }
     if (act === 'suivant') { if (ETAPES[courant.index].menu) ouvrirMenu(false); suivre(aller(ETAPES, courant.index + 1, 1, page, visible), 1); }
     else if (act === 'precedent') { if (ETAPES[courant.index].menu) ouvrirMenu(false); suivre(aller(ETAPES, courant.index - 1, -1, page, visible), -1); }
     else if (act === 'terminer') { marquerVue(ls, compte); fermer(doc.querySelector('[data-visite-revoir]')); }
@@ -672,7 +709,7 @@
         if (e.action) {
           var el = elementCible(e);
           rendreInerte(true, el);
-          if (el && doc.activeElement === doc.body) { try { el.focus({ preventScroll: true }); } catch (err) { el.focus(); } }
+          if (doc.activeElement === doc.body) focusPrincipal();
         }
         planifier();
       }, 0);
