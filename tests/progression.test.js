@@ -335,3 +335,13 @@ test('note pour le back : schéma Supabase indicatif de la progression', () => {
   assert.match(d, /create table[^;]*jeu_progression/i);
   assert.match(d, /create table[^;]*jeu_cartes/i);
 });
+
+test('moteur maison : un seul gestionnaire onX="{{…}}" par balise (boot.js n’en garde qu’un)', () => {
+  const pages = fs.readdirSync(RACINE).filter(f => f.endsWith('.html') && f !== 'index copy.html');
+  for (const p of pages) {
+    const tags = lire(p).match(/<[a-z][^>]*>/g) || [];
+    // Exception préexistante (avant le lot 33), signalée à part : la zone de texte du fournil porte onInput
+    // et onCompositionend ; seul le premier est branché.
+    for (const t of tags.filter(x => !/id="brouillon"/.test(x))) assert.ok((t.match(/\son[A-Z][a-z]+="\{\{/g) || []).length <= 1, p + ' : ' + t.slice(0, 120));
+  }
+});

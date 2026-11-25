@@ -84,7 +84,7 @@
         endormi: 'It fell asleep. It will wake up with your next batch, keeping a good part of its strength.',
         etatEndormi: 'Asleep'
       },
-      encart: { titre: 'Your progress', niveau: 'Level {niveau}', voir: 'See my collection' },
+      encart: { titre: 'Your progress', niveau: 'Level: {niveau}', voir: 'See my collection' },
       collection: {
         onglets: 'Pantry sections', cote: 'Saved', titre: 'My collection',
         intro: 'Every card seen in your batch joins your collection. It gets baked when you post about it.',

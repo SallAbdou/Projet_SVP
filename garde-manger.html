@@ -58,9 +58,9 @@ a.gm-source:active{transform:translateY(1px)}
 <h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
 <p style="margin:0;color:var(--doux);font-size:16px">{{t.subtitle}}</p>
 </header>
-<div role="tablist" aria-label="{{j.collection.onglets}}" class="gm-onglets" style="{{ongletsStyle}}">
-<button type="button" role="tab" id="gm-onglet-cote" class="gm-onglet" data-act="onglet-cote" data-onglet="cote" aria-selected="{{coteSel}}" aria-controls="gm-panneau-cote" tabindex="{{coteTab}}" onClick="{{choisirOnglet}}" onKeydown="{{clavierOnglets}}">{{ongletCote}}</button>
-<button type="button" role="tab" id="gm-onglet-collection" class="gm-onglet" data-act="onglet-collection" data-onglet="collection" aria-selected="{{colSel}}" aria-controls="gm-panneau-collection" tabindex="{{colTab}}" onClick="{{choisirOnglet}}" onKeydown="{{clavierOnglets}}">{{ongletCol}}</button>
+<div role="tablist" aria-label="{{j.collection.onglets}}" class="gm-onglets" style="{{ongletsStyle}}" onKeydown="{{clavierOnglets}}">
+<button type="button" role="tab" id="gm-onglet-cote" class="gm-onglet" data-act="onglet-cote" data-onglet="cote" aria-selected="{{coteSel}}" aria-controls="gm-panneau-cote" tabindex="{{coteTab}}" onClick="{{choisirOnglet}}">{{ongletCote}}</button>
+<button type="button" role="tab" id="gm-onglet-collection" class="gm-onglet" data-act="onglet-collection" data-onglet="collection" aria-selected="{{colSel}}" aria-controls="gm-panneau-collection" tabindex="{{colTab}}" onClick="{{choisirOnglet}}">{{ongletCol}}</button>
 </div>
 <div role="tabpanel" id="gm-panneau-cote" aria-labelledby="gm-onglet-cote" class="gm-panneau" style="{{panneauCoteStyle}}">
 <div role="group" aria-label="{{t.filterLabel}}" style="{{filtersStyle}}">
@@ -300,7 +300,9 @@ colGrilleStyle: col.total.vues ? '' : HIDE,
 colElements: colElements,
 choisirOnglet: function (e) { self.choisirOnglet(e.currentTarget.getAttribute('data-onglet'), false); },
 clavierOnglets: function (e) {
-var i = ONGLETS.indexOf(e.currentTarget.getAttribute('data-onglet'));
+var tab = e.target.closest && e.target.closest('[data-onglet]');
+var i = tab ? ONGLETS.indexOf(tab.getAttribute('data-onglet')) : -1;
+if (i === -1) return;
 var cible = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: ONGLETS.length - 1 }[e.key];
 if (cible === undefined) return;
 e.preventDefault();
