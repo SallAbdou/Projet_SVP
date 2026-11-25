@@ -271,8 +271,8 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <ul data-cartes data-visite="grille" class="cartes-grille" aria-label="{{j.vue.cartes}}" style="{{cartesStyle}}">
 <sc-for list="{{cartes}}" as="c" hint-placeholder-count="5">
 <li data-id="{{c.id}}">
-<article class="jeu-carte" data-rarete="{{c.rarete}}" aria-labelledby="ct-{{c.id}}">
-<div class="jeu-tete"><span class="jeu-rarete"><svg class="jeu-grignes" data-n="{{c.grignes}}" viewBox="0 0 30 16" aria-hidden="true" focusable="false"><path d="M3 12l4-8"></path><path d="M10 12l4-8"></path><path d="M17 12l4-8"></path><path d="M24 12l4-8"></path></svg><span>{{c.rareteNom}}</span></span><span class="{{c.chip}}">{{c.state}}</span></div>
+<article class="jeu-carte" data-rarete="{{c.rarete}}" data-cuite="{{c.cuite}}" aria-labelledby="ct-{{c.id}}">
+<div class="jeu-tete"><span class="jeu-rarete"><svg class="jeu-grignes" data-n="{{c.grignes}}" viewBox="0 0 30 16" aria-hidden="true" focusable="false"><path d="M3 12l4-8"></path><path d="M10 12l4-8"></path><path d="M17 12l4-8"></path><path d="M24 12l4-8"></path></svg><span>{{c.rareteNom}}</span></span><span class="{{c.chip}}">{{c.state}}</span><span class="jeu-cuite" style="{{c.cuiteStyle}}"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6"></path></svg>{{j.cuite}}</span></div>
 <h2 id="ct-{{c.id}}" class="jeu-titre">{{c.title}}</h2>
 <div class="jeu-meta"><span class="etiquette-source">{{c.source}}</span><span class="jeu-famille">{{c.famille}}</span></div>
 <div class="jeu-jauges"><p class="jeu-total">{{c.money}}</p>
@@ -395,6 +395,10 @@ Promise.all([Api.chargerFournee(), Api.chargerPosts().catch(function () { return
 .then(function (res) {
 if (res[0].etat === 'invalide') throw new Error('identifiant invalide');
 self.setState({ data: res[0], posts: res[1] });
+if (res[0].etat === 'pret' && !self.fourneeVue) {
+self.fourneeVue = true;
+try { Jeu.ouvrirFournee(stockage(), cleCompte(), self.restants().slice(0, self.state.layout.newsCount), new Date()); } catch (e) {}
+}
 if (res[0].etat === 'attente') setTimeout(function () { self.charger(); }, 2000);
 })
 .catch(function () { self.setState({ loadError: true }); });
@@ -564,7 +568,10 @@ var available = this.available();
 var idOf = function (e) { return e.currentTarget.getAttribute('data-id'); };
 var ready = !!data && data.etat === 'pret';
 var j = Jeu.textes(lang);
-var cartesVue = st.vue === 'cartes';
+// Lot 33 : jeu coupé au profil, plus de bascule ni de vue cartes (les données sont gardées).
+var compteJeu = Jeu.lireCompte(stockage(), cleCompte(), new Date());
+var jeuActif = !!cleCompte() && compteJeu.actif;
+var cartesVue = jeuActif && st.vue === 'cartes';
 var picked = this.restants();
 var store = st.store || Store.etatInitial();
 var posts = st.posts || [];
@@ -583,7 +590,7 @@ self.pendingFocus = { act: 'vue-' + vue };
 self.setState({ vue: vue, editing: vue === 'cartes' ? false : st.editing });
 },
 vueFourneePressed: String(!cartesVue), vueCartesPressed: String(cartesVue),
-basculeStyle: ready ? '' : HIDE,
+basculeStyle: ready && jeuActif ? '' : HIDE,
 cartesStyle: ready && cartesVue && available > 0 ? '' : HIDE,
 cartes: (ready && cartesVue ? picked.slice(0, layout.newsCount) : []).map(function (c, i) {
 var id = SLOT_IDS[i];
@@ -594,7 +601,8 @@ id: id, rarete: r.id, grignes: r.grignes, rareteNom: j.raretes[r.id], chip: CHIP
 title: c.titre, source: c.source, famille: c.axe || '', money: fill(t.money, { m: r.total }),
 url: Bento.safeUrl(c.url), readLabel: fill(t.readFull, { titre: c.titre }), read: t.read,
 knead: t.knead, kneadSuite: t.kneadSuite, kneadHref: Bento.lienFournil(c.ref),
-saveLabel: t.save, skipLabel: t.skip, saved: String(Store.estDeCote(store, c.ref))
+saveLabel: t.save, skipLabel: t.skip, saved: String(Store.estDeCote(store, c.ref)),
+cuite: String(Jeu.estCuite(compteJeu, c.ref)), cuiteStyle: Jeu.estCuite(compteJeu, c.ref) ? '' : HIDE
 };
 Jeu.notes(c).forEach(function (n, k) {
 o['j' + (k + 1) + 'Nom'] = t.jauges[n.cle];

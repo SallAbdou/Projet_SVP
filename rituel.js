@@ -12,6 +12,7 @@
   var compte = null;
   var premierRendu = true;
   var ui = null;         // { boite, cartes, ordre, retournees }
+  var gain = 0;          // points de cuisson gagnés à l'ouverture du rituel (lot 33)
 
   root.Rituel = { prevu: function () { return prevu; } };
 
@@ -78,9 +79,13 @@
     dos.setAttribute('tabindex', '-1');
   }
 
+  function finTexte() { var x = t(); return x.fini + (gain ? ' ' + Jeu.remplir(x.rituelGain, { n: gain }) : ''); }
+
   function finAffichee() {
     var x = t();
-    ui.boite.querySelector('.jeu-rituel-fini').hidden = false;
+    var fini = ui.boite.querySelector('.jeu-rituel-fini');
+    fini.textContent = finTexte();
+    fini.hidden = false;
     ui.boite.querySelector('[data-rituel-act="passer"]').hidden = true;
     ui.boite.querySelector('[data-rituel-act="tout"]').hidden = true;
     var voir = ui.boite.querySelector('[data-rituel-act="voir"]');
@@ -97,7 +102,7 @@
     var n = ui.ordre.length;
     var dire = Jeu.annonce(ui.ordre[i], i + 1, n, lang());
     var j = Jeu.suivante(ui.retournees);
-    if (j === -1) { finAffichee(); dire += ' ' + t().fini; }
+    if (j === -1) { finAffichee(); dire += ' ' + finTexte(); }
     else focus(ui.boite.querySelector('[data-rituel-dos="' + j + '"]'));
     annoncer(dire);
   }
@@ -105,7 +110,7 @@
   function toutRetourner() {
     ui.retournees.forEach(function (r, i) { if (!r) montrer(i); });
     finAffichee();
-    annoncer(t().fini);
+    annoncer(finTexte());
   }
 
   function fermer(versFournee) {
@@ -200,6 +205,10 @@
       var exclus = root.Store.refsIgnorees(root.Store.charger(ls), date);
       var cartes = Jeu.cartesDuJour(d.articles, nombreDeNews(), exclus);
       if (!cartes.length) { finir(); return; }
+      // Lot 33 : le rituel ouvre la fournée (cartes vues, levain nourri) et rapporte un peu, une fois par jour.
+      var maintenant = new Date();
+      Jeu.ouvrirFournee(ls, compte, cartes, maintenant);
+      gain = Jeu.gagnerRituel(ls, compte, maintenant).gain;
       ouvrir(Jeu.ordreRetournement(cartes));
     }).catch(function () { finir(); });
   }
