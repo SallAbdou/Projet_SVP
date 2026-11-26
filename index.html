@@ -70,8 +70,10 @@
 </main>
 <footer class="pied pied-lanceur">
 <span>© 2026 Votre pAIn quotidien</span>
-<a href="/confidentialite">{{t.confidentialite}}</a>
-<a href="/accessibilite">{{t.accessibilite}}</a>
+<div class="pied-encadres">
+<a class="bouton-secondaire" href="/confidentialite">{{t.confidentialite}}</a>
+<a class="bouton-secondaire" href="/accessibilite">{{t.accessibilite}}</a>
+</div>
 <span>{{t.demo}}</span>
 </footer>
 <button type="button" class="chat-lanceur" onClick="{{ouvrirChat}}" aria-haspopup="dialog" aria-controls="chat" aria-expanded="{{chatOuvert}}" data-focus="chat-lanceur" style="{{lanceurStyle}}">

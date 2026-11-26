@@ -18,6 +18,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .pf-ligne dt{color:var(--doux);font-weight:600}
 .pf-ligne dd{margin:0;font-weight:600;color:var(--texte);overflow-wrap:anywhere}
 .pf-note{margin:0;font-size:14px;color:var(--doux)}
+.pf-lien{display:inline-flex;align-items:center;min-height:44px;align-self:flex-start;font-size:14px;font-weight:600;color:var(--brun);text-decoration:underline;text-underline-offset:3px}
 .pf-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--brun);background:var(--creme);color:var(--brun);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
 .pf-btn:hover{background:var(--sable);color:var(--brun-fonce)}
 .pf-sortie{border-color:var(--bord-fort);color:var(--brun-fonce)}
@@ -99,6 +100,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <p id="animations-aide" class="pf-note">{{t.animAide}}</p>
 <div class="pf-anim"><input id="jeu-actif" type="checkbox" aria-describedby="jeu-actif-aide" data-focus="jeu-actif" onChange="{{choisirJeu}}" {{jeuCoche}}><label for="jeu-actif" class="pf-label">{{t.jeuLabel}}</label></div>
 <p id="jeu-actif-aide" class="pf-note">{{t.jeuAide}}</p>
+<a class="pf-lien" href="/accessibilite">{{t.accessibiliteLien}}</a>
 <p role="status" aria-live="polite" class="pf-succes">{{apparenceAnnonce}}</p>
 </section>
 <section aria-labelledby="retour-t" class="pf-carte" data-visite="retours">
@@ -145,7 +147,7 @@ reseau: 'Envoi impossible pour l’instant (connexion ou serveur). Ton texte est
 session: 'Ta session a expiré : reconnecte-toi, ton texte sera à réécrire.'
 },
 derniersT: 'Tes derniers retours', listeVide: 'Aucun retour pour l’instant.', listeErreur: 'Impossible d’afficher tes retours pour l’instant.',
-apparenceT: 'Apparence', themeLegende: 'Thème de couleur',
+apparenceT: 'Apparence', themeLegende: 'Thème de couleur', accessibiliteLien: 'Lire la déclaration d’accessibilité',
 visiteT: 'Visite guidée', visiteIntro: 'Miette te refait le tour du fournil, page par page.', visiteBtn: 'Revoir la visite',
 themes: { bronze: 'Bronze', classique: 'Boulangerie classique', nuit: 'Nuit', contraste: 'Contraste élevé' }, themeApplique: 'Thème « {nom} » appliqué.',
 animLabel: 'Animations activées', animAide: 'Décochée, coupe les animations décoratives : four du comptoir, braise de « Tout chaud »…',
@@ -170,7 +172,7 @@ reseau: 'Could not send right now (connection or server). Your text is kept: try
 session: 'Your session has expired: log in again, you will need to rewrite your text.'
 },
 derniersT: 'Your latest feedback', listeVide: 'No feedback yet.', listeErreur: 'Your feedback can’t be shown right now.',
-apparenceT: 'Appearance', themeLegende: 'Colour theme',
+apparenceT: 'Appearance', themeLegende: 'Colour theme', accessibiliteLien: 'Read the accessibility statement',
 visiteT: 'Guided tour', visiteIntro: 'Miette shows you around the bakery again, page by page.', visiteBtn: 'Replay the tour',
 themes: { bronze: 'Bronze', classique: 'Classic bakery', nuit: 'Night', contraste: 'High contrast' }, themeApplique: '“{nom}” theme applied.',
 animLabel: 'Animations on', animAide: 'Unticked, stops decorative animations: the counter oven, the “Tout chaud” glow…',
