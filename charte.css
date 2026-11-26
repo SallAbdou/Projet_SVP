@@ -142,7 +142,7 @@ html[data-animations="off"] .btn-petrir:active{transform:none}
    contre les fonds sombres (WCAG 1.4.11). Les couleurs imposées ne changent pas ; le focus clavier garde son propre contour. */
 [data-theme="nuit"] :is(.btn-petrir,.fo-btn-linkedin,.puce-rassis,.gm-source,.act[data-act="read"]):not(:focus-visible){outline:1.5px solid var(--contour-plein);outline-offset:1px}
 
-/* Lot 32 : cartes à collectionner (rituel du matin, rituel.js, et vue cartes de la fournée).
+/* Lot 32 : cartes à collectionner (collection du garde-manger ; lot 34 : dos dans la fournée).
    La rareté est écrite en toutes lettres avec un nombre de grignes (4 à 1) et un cadre propre ;
    Maillard reprend le doré du n°1 (--maillard, --or-*), Dorée une surface or, Croûte un cadre cuivre,
    Mie un cadre en pointillés. Jamais la couleur seule. */
@@ -168,36 +168,27 @@ html[data-animations="off"] .btn-petrir:active{transform:none}
 .jeu-jauge-val{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
 .jeu-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
-/* Rituel du matin : dialogue plein écran, cartes face cachée (dos = vrai bouton), retournement en 3D. */
-.jeu-rituel{position:fixed;inset:0;z-index:1100;overflow:auto;overscroll-behavior:contain;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5}
-.jeu-rituel-cadre{box-sizing:border-box;max-width:1200px;min-height:100%;margin:0 auto;padding:28px 32px 32px;display:flex;flex-direction:column;gap:18px}
-.jeu-rituel-tete{display:flex;flex-direction:column;gap:4px}
-.jeu-rituel-titre{margin:0;font-family:Fraunces, Georgia, serif;font-size:34px;line-height:1.1;font-weight:800;color:var(--texte)}
-.jeu-rituel-intro{margin:0;color:var(--doux);font-size:16px}
-.jeu-rituel-grille{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.jeu-rituel-grille>li{display:grid;perspective:1200px;min-width:0}
-.jeu-carte-3d{grid-area:1/1;display:grid;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.7,.3,1)}
-.jeu-carte-3d>*{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;min-width:0}
-.jeu-carte-3d>.jeu-carte{transform:rotateY(180deg)}
-.jeu-carte-3d[data-retournee]{transform:rotateY(180deg)}
-.jeu-dos{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:220px;padding:16px;border-radius:18px;border:2px solid var(--brun);background:var(--sable);color:var(--texte);font:inherit;font-weight:700;cursor:pointer;background-image:repeating-linear-gradient(135deg,color-mix(in srgb,var(--brun) 10%,transparent) 0 10px,transparent 10px 22px)}
+/* Lot 34 : dos des cartes, face cachée dans les tuiles de la fournée (le rituel plein écran du lot 32 est retiré).
+   Le dos est un vrai bouton qui remplit la tuile : pain dessiné, rang, rareté en toutes lettres avec ses grignes
+   et un cadre propre à la rareté (pointillés, cuivre, double, double épais). Jamais la couleur seule.
+   Les couleurs suivent la tuile : dans le n°1 doré, --creme et --texte deviennent la surface et le texte or. */
+.jeu-dos{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;min-height:150px;box-sizing:border-box;padding:14px;border-radius:14px;border:2px solid var(--brun);background:var(--creme);color:var(--texte);font:inherit;font-weight:700;text-align:center;cursor:pointer;background-image:repeating-linear-gradient(135deg,color-mix(in srgb,var(--brun) 10%,transparent) 0 10px,transparent 10px 22px)}
 .jeu-dos:hover{border-color:var(--braise)}
 .jeu-dos:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
-.jeu-dos[aria-disabled="true"]{cursor:default;border-style:dashed}
-.jeu-dos .pain-dos{width:72px;height:48px}
-.jeu-dos-num{font-family:Fraunces, Georgia, serif;font-size:20px;font-weight:800}
-.jeu-dos-aide{font-size:13px;color:var(--texte-2)}
-/* Pied collant : Passer et Tout retourner restent à portée quand les cartes défilent (mobile surtout). */
-.jeu-rituel-pied{position:sticky;bottom:0;z-index:1;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:flex-end;margin:auto -32px -32px;padding:12px 32px calc(16px + env(safe-area-inset-bottom,0px));background:var(--fond);border-top:1px solid var(--bord)}
-.jeu-rituel-fini{margin:0 auto 0 0;font-weight:700;color:var(--texte)}
-.jeu-rituel-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;min-width:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--brun);background:transparent;color:var(--brun-fonce);font:inherit;font-weight:700;font-size:15px;cursor:pointer}
-.jeu-rituel-btn[data-plein]{border-color:var(--braise);background:var(--braise);color:var(--sur-plein)}
-.jeu-rituel-btn:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.jeu-rituel-btn[hidden],.jeu-rituel-fini[hidden]{display:none}
-html.jeu-rituel-ouvert{overflow:hidden}
-@media (max-width:640px){.jeu-rituel-cadre{padding:20px 16px 24px}.jeu-rituel-pied{margin:auto -16px -24px;padding-left:16px;padding-right:16px}.jeu-rituel-titre{font-size:28px}.jeu-dos{min-height:120px}}
-html[data-animations="off"] .jeu-carte-3d{transition:none}
-@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .jeu-carte-3d{transition:none}}
+.jeu-dos[data-rarete="mie"]{border-style:dashed}
+.jeu-dos[data-rarete="croute"]{border-color:var(--cuivre)}
+.jeu-dos[data-rarete="doree"]{border:4px double var(--brun)}
+.jeu-dos[data-rarete="maillard"]{border:6px double var(--brun)}
+.jeu-dos .pain-dos{width:72px;height:48px;flex:none}
+.jeu-dos-rang{font-family:Fraunces, Georgia, serif;font-size:24px;line-height:1.1;font-weight:800}
+.jeu-dos-aide{font-size:13px;font-weight:600;color:var(--texte-2)}
+/* Retournement : la tuile pivote d'un quart de tour, la face arrive par l'autre quart. Coupé avec les animations. */
+.tile[data-tourne]{animation:jeu-tuile-part .2s ease-in forwards}
+.tile[data-revele]{animation:jeu-tuile-arrive .3s cubic-bezier(.3,.7,.3,1)}
+@keyframes jeu-tuile-part{to{transform:perspective(1000px) rotateY(90deg)}}
+@keyframes jeu-tuile-arrive{from{transform:perspective(1000px) rotateY(-90deg)}to{transform:none}}
+html[data-animations="off"] .tile[data-tourne],html[data-animations="off"] .tile[data-revele]{animation:none}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .tile[data-tourne],html:not([data-animations="on"]) .tile[data-revele]{animation:none}}
 
 /* Lot 33 : progression personnelle. Carte cuite : pastille « Cuite » en toutes lettres (avec un petit pain)
    et cadre intérieur, en plus de la rareté ; jamais la couleur seule. */

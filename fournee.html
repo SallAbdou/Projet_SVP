@@ -134,16 +134,19 @@ a.act[data-act="read"]:active{transform:translateY(1px)}
 .mep-mini svg{display:block;width:100%;height:auto;max-height:84px}
 .mep-nom{font-weight:700;font-size:14px}
 .mep-desc{font-size:12.5px;color:var(--doux);line-height:1.35}
-/* Lot 32 : bascule Vue fournée / Vue cartes et grille de cartes (styles des cartes dans charte.css). */
-.vue-bascule{display:inline-flex;gap:2px;padding:3px;border-radius:999px;border:1.5px solid var(--bord-fort);background:var(--creme)}
-.vue-bascule button{min-height:38px;padding:0 14px;border:0;border-radius:999px;background:transparent;color:var(--texte);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.vue-bascule button:hover{color:var(--brun-fonce);text-decoration:underline}
-.vue-bascule button[aria-pressed="true"]{background:var(--brun);color:var(--sur-plein);text-decoration:none}
-@media (pointer:coarse){.vue-bascule button{min-height:44px}}
-.cartes-grille{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.cartes-grille>li{display:flex;min-width:0}
-.cartes-grille .jeu-carte{flex:1 1 auto}
-.cartes-grille .tile-actions{margin-top:0;padding-top:0}
+/* Lot 34 : cartes face cachée dans les tuiles (styles du dos dans charte.css). Tant que la carte est cachée,
+   seul le dos s'affiche ; en mode Personnaliser, la tuile se déplace et se redimensionne comme les autres et le
+   dos ne se retourne pas (pas de retournement par erreur en glissant). */
+.tile[data-cachee="true"] .tile-body{display:none}
+.tile[data-cachee="true"]{padding:10px}
+.bento.editing .tile[data-cachee="true"]{padding:14px}
+.bento.editing .jeu-dos{pointer-events:none;cursor:grab}
+.tile[data-cachee="true"] .tile-tools{margin-bottom:4px}
+.jeu-dos .jeu-rarete{background:var(--brun);color:var(--creme)}
+.tile .jeu-cuite{font-size:12px}
+.jeu-compte{margin:0;font-size:14px;font-weight:700;color:var(--texte-2)}
+.btn-tout{min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--brun);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:700;cursor:pointer}
+.btn-tout:hover{background:var(--sable)}
 .jeu-grignes[data-n="3"] path:nth-child(n+4),.jeu-grignes[data-n="2"] path:nth-child(n+3),.jeu-grignes[data-n="1"] path:nth-child(n+2){display:none}
 .tile.dragging{opacity:.6;box-shadow:var(--ombre-3);transform:scale(.98)}
 html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
@@ -167,10 +170,8 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
 <span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--creme);border:1px dashed var(--bord-fort);color:var(--doux)">{{t.sample}}</span>
-<div class="vue-bascule" role="group" aria-label="{{j.vue.groupe}}" style="{{basculeStyle}}">
-<button type="button" data-act="vue-fournee" data-vue="fournee" aria-pressed="{{vueFourneePressed}}" onClick="{{choisirVue}}">{{j.vue.fournee}}</button>
-<button type="button" data-act="vue-cartes" data-vue="cartes" aria-pressed="{{vueCartesPressed}}" onClick="{{choisirVue}}">{{j.vue.cartes}}</button>
-</div>
+<p class="jeu-compte" role="status" style="{{compteStyle}}">{{compteTexte}}</p>
+<button type="button" class="btn-tout" data-act="tout-retourner" onClick="{{toutRetourner}}" style="{{toutStyle}}">{{j.toutRetourner}}</button>
 <button type="button" data-act="edit" onClick="{{toggleEdit}}" style="{{editBtnStyle}}">{{editLabel}}</button>
 </div>
 </header>
@@ -202,7 +203,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <div data-bento data-visite="grille" class="bento {{gridClass}}" style="{{gridStyle}}">
 
 <sc-for list="{{slots}}" as="s" hint-placeholder-count="7">
-<section data-tile="{{s.id}}" class="tile" aria-labelledby="tt-{{s.id}}">
+<section data-tile="{{s.id}}" class="tile" data-cachee="{{s.cachee}}" aria-labelledby="{{s.labelId}}">
 <div class="tile-tools" role="group" aria-label="{{s.toolsLabel}}">
 <span class="tool tool-drag" data-drag title="{{s.dragLabel}}" aria-hidden="true">⠿</span>
 <button type="button" class="tool" data-id="{{s.id}}" data-act="up" onClick="{{tileUp}}" aria-label="{{s.upLabel}}">↑</button>
@@ -213,13 +214,15 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <button type="button" class="tool" data-id="{{s.id}}" data-size="L" data-act="size-L" onClick="{{tileSize}}" aria-pressed="false">L</button>
 </span>
 </div>
+<button type="button" class="jeu-dos" id="td-{{s.id}}" data-act="decouvrir" data-id="{{s.id}}" data-rarete="{{s.dosRarete}}" aria-label="{{s.dosLabel}}" aria-disabled="{{s.dosDisabled}}" onClick="{{decouvrir}}" style="{{s.dosStyle}}"><svg class="pain-dos" viewBox="0 0 72 48" aria-hidden="true" focusable="false"><path d="M6 34C6 20 19 10 36 10s30 10 30 24c0 4-3 7-7 7H13c-4 0-7-3-7-7z" fill="var(--pain-haut)" stroke="var(--pain-bas)" stroke-width="2.5"></path><path d="M22 22l5 7M34 19l5 7M46 22l5 7" stroke="var(--pain-grigne)" stroke-width="3" stroke-linecap="round" fill="none"></path></svg><span class="jeu-dos-rang">{{s.dosRang}}</span><span class="jeu-rarete"><svg class="jeu-grignes" data-n="{{s.dosGrignes}}" viewBox="0 0 30 16" aria-hidden="true" focusable="false"><path d="M3 12l4-8"></path><path d="M10 12l4-8"></path><path d="M17 12l4-8"></path><path d="M24 12l4-8"></path></svg><span>{{s.dosRareteNom}}</span></span><span class="jeu-dos-aide">{{s.dosAide}}</span></button>
 <div class="tile-body">
 <div style="display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:12.5px;color:var(--texte-2)">
 <span class="rank" title="{{s.rankHint}}">{{s.rank}}</span>
 <span class="{{s.chip}}">{{s.state}}</span>
 <span class="etiquette-source">{{s.source}}</span>
+<span class="jeu-cuite" style="{{s.cuiteStyle}}"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6"></path></svg>{{j.cuite}}</span>
 </div>
-<h2 id="tt-{{s.id}}" class="news-title">{{s.title}}</h2>
+<h2 id="tt-{{s.id}}" class="news-title" tabindex="-1">{{s.title}}</h2>
 <p class="only-M resume" style="margin:0;color:var(--texte-2);font-size:14px">{{s.summary}}</p>
 <p class="only-L pour-toi" style="margin:0"><svg class="ampoule" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1v1.8M4.2 4.2l1.3 1.3M19.8 4.2l-1.3 1.3M1.5 11.5h1.8M20.7 11.5h1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M12 5a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 5z" fill="currentColor" stroke="var(--brun)" stroke-width="1.2" stroke-linejoin="round"></path><path d="M9.6 20.6h4.8M10.6 22.8h2.8" stroke="var(--brun)" stroke-width="1.6" stroke-linecap="round"></path></svg><span>{{s.forYou}}</span></p>
 <p class="raison {{s.whyClass}}" style="margin:0;font-size:12.5px;color:var(--doux)"><strong>{{s.whyLabel}}</strong> {{s.why}}</p>
@@ -268,28 +271,6 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 </section>
 
 </div>
-<ul data-cartes data-visite="grille" class="cartes-grille" aria-label="{{j.vue.cartes}}" style="{{cartesStyle}}">
-<sc-for list="{{cartes}}" as="c" hint-placeholder-count="5">
-<li data-id="{{c.id}}">
-<article class="jeu-carte" data-rarete="{{c.rarete}}" data-cuite="{{c.cuite}}" aria-labelledby="ct-{{c.id}}">
-<div class="jeu-tete"><span class="jeu-rarete"><svg class="jeu-grignes" data-n="{{c.grignes}}" viewBox="0 0 30 16" aria-hidden="true" focusable="false"><path d="M3 12l4-8"></path><path d="M10 12l4-8"></path><path d="M17 12l4-8"></path><path d="M24 12l4-8"></path></svg><span>{{c.rareteNom}}</span></span><span class="{{c.chip}}">{{c.state}}</span><span class="jeu-cuite" style="{{c.cuiteStyle}}"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6"></path></svg>{{j.cuite}}</span></div>
-<h2 id="ct-{{c.id}}" class="jeu-titre">{{c.title}}</h2>
-<div class="jeu-meta"><span class="etiquette-source">{{c.source}}</span><span class="jeu-famille">{{c.famille}}</span></div>
-<div class="jeu-jauges"><p class="jeu-total">{{c.money}}</p>
-<div class="jeu-jauge"><span class="jeu-jauge-nom">{{c.j1Nom}}</span><span class="jeu-piste" aria-hidden="true"><span class="jeu-plein" style="{{c.j1Style}}"></span></span><span class="jeu-jauge-val">{{c.j1Val}}</span></div>
-<div class="jeu-jauge"><span class="jeu-jauge-nom">{{c.j2Nom}}</span><span class="jeu-piste" aria-hidden="true"><span class="jeu-plein" style="{{c.j2Style}}"></span></span><span class="jeu-jauge-val">{{c.j2Val}}</span></div>
-<div class="jeu-jauge"><span class="jeu-jauge-nom">{{c.j3Nom}}</span><span class="jeu-piste" aria-hidden="true"><span class="jeu-plein" style="{{c.j3Style}}"></span></span><span class="jeu-jauge-val">{{c.j3Val}}</span></div>
-</div>
-<div class="tile-actions">
-<a href="{{c.kneadHref}}" data-act="knead" data-id="{{c.id}}" class="btn-petrir act-knead"><svg class="pain-ico" viewBox="0 0 24 16" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z" fill="var(--petrir-pain)" stroke="currentColor" stroke-width="1.3"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6" stroke="var(--petrir-grigne)" stroke-width="1.6" stroke-linecap="round" fill="none"></path></svg><span>{{c.knead}}<span class="act-suite">{{c.kneadSuite}}</span></span></a>
-<button type="button" class="act" data-act="save" data-id="{{c.id}}" aria-pressed="{{c.saved}}" title="{{c.saveLabel}}" onClick="{{toggleSave}}"><svg class="ico-vide" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><svg class="ico-plein" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg><span class="pq-sr">{{c.saveLabel}}</span></button>
-<button type="button" class="act" data-act="skip" data-id="{{c.id}}" title="{{c.skipLabel}}" onClick="{{skip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="pq-sr">{{c.skipLabel}}</span></button>
-<a class="act" data-act="read" data-id="{{c.id}}" href="{{c.url}}" target="_blank" rel="noopener" aria-label="{{c.readLabel}}" title="{{c.readLabel}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="act-label">{{c.read}}</span></a>
-</div>
-</article>
-</li>
-</sc-for>
-</ul>
 </main>
 </div>
 </script>
@@ -365,6 +346,14 @@ graphTitle: 'Your latest posts', graphSub: 'impressions per post'
 var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
 function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
 function cleCompte() { try { return Jeu.cleDuCompte(Auth.utilisateurCourant()); } catch (e) { return null; } }
+function refs(liste) { return liste.map(function (a) { return a.ref; }); }
+// Lot 34 : retournement sans animation si la case Animations est décochée ou sous prefers-reduced-motion.
+function animationsCoupees() {
+var h = document.documentElement;
+if (h.getAttribute('data-animations') === 'off') return true;
+if (h.getAttribute('data-animations') === 'on') return false;
+return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
 function prenomCourant() { try { var u = Auth.utilisateurCourant(); return u ? u.prenom : ''; } catch (e) { return ''; } }
 function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
 function mepIds() { return Bento.PRESETS.map(function (p) { return p.id; }).concat(Bento.PRESET_PERSO); }
@@ -377,11 +366,16 @@ constructor(props) {
 super(props);
 var layout;
 try { layout = Bento.loadLayout(window.localStorage); } catch (e) { layout = Bento.defaultLayout(); }
-this.state = { lang: 'fr', editing: false, layout: layout, perso: Bento.loadPerso(stockage()), data: null, posts: [], loadError: false, store: Store.charger(stockage()), vue: Jeu.lireVue(stockage(), cleCompte()) };
+this.state = { lang: 'fr', editing: false, layout: layout, perso: Bento.loadPerso(stockage()), data: null, posts: [], loadError: false, store: Store.charger(stockage()) };
 // Arrivée depuis le four du comptoir (/fournee#n1) : traitée une seule fois, au premier rendu de la bento.
 this.ancre = window.location.hash || null;
 this.halo = null;
 var self = this;
+// Lot 34 : pendant la visite guidée, les étapes « fournée » et « pétrir » ont besoin du n°1 face visible.
+document.addEventListener('pq:visite-etape', function (e) {
+var id = e.detail && e.detail.id;
+if (id === 'fournee' || id === 'petrir') self.decouvrir('n1', { visite: true });
+});
 BentoUI.initDrag({
 isEditing: function () { return !!self.state.editing; },
 onDrop: function (id, index) { self.updateLayout(Bento.moveTile(self.state.layout, id, index)); }
@@ -395,10 +389,6 @@ Promise.all([Api.chargerFournee(), Api.chargerPosts().catch(function () { return
 .then(function (res) {
 if (res[0].etat === 'invalide') throw new Error('identifiant invalide');
 self.setState({ data: res[0], posts: res[1] });
-if (res[0].etat === 'pret' && !self.fourneeVue) {
-self.fourneeVue = true;
-try { Jeu.ouvrirFournee(stockage(), cleCompte(), self.restants().slice(0, self.state.layout.newsCount), new Date()); } catch (e) {}
-}
 if (res[0].etat === 'attente') setTimeout(function () { self.charger(); }, 2000);
 })
 .catch(function () { self.setState({ loadError: true }); });
@@ -411,6 +401,55 @@ if (!d || d.etat !== 'pret') return [];
 return Bento.pickTopics(d.articles, d.articles.length, Store.refsIgnorees(st.store || Store.etatInitial(), Store.dateDuJour(new Date())));
 }
 available() { return this.restants().length; }
+// Lot 34 : news affichées aujourd'hui (rang, nombre réglé) et celles encore face cachée pour ce compte.
+affichees() { return this.restants().slice(0, this.state.layout.newsCount); }
+cachees() {
+var compte = Jeu.lireCompte(stockage(), cleCompte(), new Date());
+var date = Jeu.dateDuJour(new Date());
+return this.affichees().filter(function (a) { return Jeu.estCachee(compte, a.ref, date); });
+}
+// Retourner la carte de l'emplacement id : la tuile pivote (sauf animations coupées), la news est enregistrée
+// comme découverte aujourd'hui, puis le focus va sur son titre et son contenu est annoncé.
+// opts.visite : appel de la visite guidée (pas d'animation, focus laissé à la bulle).
+decouvrir(id, opts) {
+var o = opts || {};
+if (this.state.editing && !o.visite) return;
+var k = Bento.rankOf(id);
+var a = this.affichees()[k - 1];
+if (!a || refs(this.cachees()).indexOf(a.ref) === -1 || this.enCours) return;
+var self = this;
+var fin = function () {
+self.enCours = null;
+var r = Jeu.decouvrir(stockage(), cleCompte(), [a], new Date());
+if (!o.visite) {
+self.revele = animationsCoupees() ? null : id;
+self.pendingFocus = { titre: id };
+}
+self.setState({ jeu: (self.state.jeu || 0) + 1 });
+var lang = self.state.lang || 'fr';
+var dire = Jeu.annonce(a, k, self.affichees().length, lang);
+var gain = Jeu.messageDecouverte(r, lang);
+if (!o.visite && window.annoncer) window.annoncer(dire + (gain ? ' ' + gain : ''));
+};
+var tuile = document.querySelector('.tile[data-tile="' + id + '"]');
+if (o.visite || animationsCoupees() || !tuile) { fin(); return; }
+this.enCours = id;
+tuile.setAttribute('data-tourne', '');
+setTimeout(fin, 200);
+}
+// « Tout retourner » : toutes les cartes du jour d'un coup, un seul gain ; le focus va sur le titre de la première.
+toutRetourner() {
+var cachees = this.cachees();
+if (!cachees.length) return;
+var r = Jeu.decouvrir(stockage(), cleCompte(), cachees, new Date());
+var lang = this.state.lang || 'fr';
+var premier = SLOT_IDS[refs(this.affichees()).indexOf(cachees[0].ref)];
+this.pendingFocus = { titre: premier };
+this.revele = null;
+this.setState({ jeu: (this.state.jeu || 0) + 1 });
+var gain = Jeu.messageDecouverte(r, lang);
+if (window.annoncer) window.annoncer(Jeu.compteDecouvertes(this.affichees().length, this.affichees().length, lang) + '.' + (gain ? ' ' + gain : ''));
+}
 // Mettre de côté (bascule) ou ignorer l'article de l'emplacement id. Le store est relu avant
 // d'écrire pour ne pas écraser un changement fait dans un autre onglet.
 // clavier : action déclenchée au clavier (clic d'activation, e.detail === 0) : le focus passe sur « Annuler ».
@@ -536,9 +575,20 @@ pause: function () { clearTimeout(self.toastTimer); },
 reprise: function () { clearTimeout(self.toastTimer); if (self.state.toast) self.toastTimer = setTimeout(function () { self.expirer(); }, 5000); },
 echap: function () { var t = self.state.toast; clearTimeout(self.toastTimer); self.pendingFocus = t && t.origine; self.setState({ toast: null }); }
 });
+// Lot 34 : la tuile tout juste retournée finit son quart de tour (animation retirée après coup).
+if (this.revele) {
+var vue = root.querySelector('.tile[data-tile="' + this.revele + '"]');
+this.revele = null;
+if (vue) { vue.setAttribute('data-revele', ''); setTimeout(function () { vue.removeAttribute('data-revele'); }, 320); }
+}
 var f = this.pendingFocus;
 this.pendingFocus = null;
 if (!f) return;
+if (f.titre) {
+var titre = root.querySelector('#tt-' + f.titre);
+if (titre && titre.offsetParent) { try { titre.focus({ preventScroll: true }); } catch (e) { titre.focus(); } return; }
+f = { act: 'edit' };
+}
 var el = f.toast ? document.querySelector('[data-toast-undo]') : null;
 if (!el || !el.offsetParent) el = [].slice.call(root.querySelectorAll('[data-act="' + f.act + '"]' + (f.id ? '[data-id="' + f.id + '"]' : ''))).filter(function (x) { return !!x.offsetParent; })[0] || null;
 if ((!el || !el.offsetParent) && f.repli) el = document.querySelector(f.repli);
@@ -568,11 +618,14 @@ var available = this.available();
 var idOf = function (e) { return e.currentTarget.getAttribute('data-id'); };
 var ready = !!data && data.etat === 'pret';
 var j = Jeu.textes(lang);
-// Lot 33 : jeu coupé au profil, plus de bascule ni de vue cartes (les données sont gardées).
+// Lot 33 : jeu coupé au profil (ou sans compte) : fournée face visible, comme avant le lot 32.
+// Lot 34 : sinon, chaque news non découverte aujourd'hui est face cachée dans sa tuile.
 var compteJeu = Jeu.lireCompte(stockage(), cleCompte(), new Date());
 var jeuActif = !!cleCompte() && compteJeu.actif;
-var cartesVue = jeuActif && st.vue === 'cartes';
+var dateJeu = Jeu.dateDuJour(new Date());
 var picked = this.restants();
+var nbAffichees = Math.min(picked.length, layout.newsCount);
+var nbCachees = picked.slice(0, nbAffichees).filter(function (a) { return jeuActif && Jeu.estCachee(compteJeu, a.ref, dateJeu); }).length;
 var store = st.store || Store.etatInitial();
 var posts = st.posts || [];
 var today = new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
@@ -582,35 +635,11 @@ var barres = Comptoir.graphique(Comptoir.fusionner(Comptoir.depuisExemples(posts
 return {
 t: t, j: j,
 eyebrow: eyebrow,
-// Lot 32 : bascule Vue fournée / Vue cartes, mémorisée par compte. Personnaliser n'existe qu'en vue fournée.
-choisirVue: function (e) {
-var vue = e.currentTarget.getAttribute('data-vue');
-Jeu.choisirVue(stockage(), cleCompte(), vue);
-self.pendingFocus = { act: 'vue-' + vue };
-self.setState({ vue: vue, editing: vue === 'cartes' ? false : st.editing });
-},
-vueFourneePressed: String(!cartesVue), vueCartesPressed: String(cartesVue),
-basculeStyle: ready && jeuActif ? '' : HIDE,
-cartesStyle: ready && cartesVue && available > 0 ? '' : HIDE,
-cartes: (ready && cartesVue ? picked.slice(0, layout.newsCount) : []).map(function (c, i) {
-var id = SLOT_IDS[i];
-var r = Jeu.rarete(c);
-var etat = FEU[c.feu];
-var o = {
-id: id, rarete: r.id, grignes: r.grignes, rareteNom: j.raretes[r.id], chip: CHIP(etat), state: etat ? t.states[etat] : '',
-title: c.titre, source: c.source, famille: c.axe || '', money: fill(t.money, { m: r.total }),
-url: Bento.safeUrl(c.url), readLabel: fill(t.readFull, { titre: c.titre }), read: t.read,
-knead: t.knead, kneadSuite: t.kneadSuite, kneadHref: Bento.lienFournil(c.ref),
-saveLabel: t.save, skipLabel: t.skip, saved: String(Store.estDeCote(store, c.ref)),
-cuite: String(Jeu.estCuite(compteJeu, c.ref)), cuiteStyle: Jeu.estCuite(compteJeu, c.ref) ? '' : HIDE
-};
-Jeu.notes(c).forEach(function (n, k) {
-o['j' + (k + 1) + 'Nom'] = t.jauges[n.cle];
-o['j' + (k + 1) + 'Val'] = fill(t.sur5, { v: num(n.valeur) });
-o['j' + (k + 1) + 'Style'] = 'width: ' + n.pct + '%';
-});
-return o;
-}),
+decouvrir: function (e) { self.decouvrir(idOf(e)); },
+toutRetourner: function () { self.toutRetourner(); },
+compteStyle: ready && jeuActif && available > 0 ? '' : HIDE,
+compteTexte: ready && jeuActif ? Jeu.compteDecouvertes(nbAffichees - nbCachees, nbAffichees, lang) : '',
+toutStyle: ready && jeuActif && nbCachees > 0 ? '' : HIDE,
 toggleEdit: function () { self.pendingFocus = { act: 'edit' }; self.setState({ editing: !st.editing }); },
 tileUp: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, -1, available), { id: id, act: 'up' }); },
 tileDown: function (e) { var id = idOf(e); self.updateLayout(Bento.stepTile(layout, id, 1, available), { id: id, act: 'down' }); },
@@ -644,16 +673,16 @@ skip: function (e) { self.agir(idOf(e), 'skip', e.detail === 0); },
 unskipAll: function () { self.toutFaireRevenir(); },
 emptyStyle: ready && data.articles.length > 0 && available === 0 ? 'display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding: 32px 24px; border-radius: 18px; background: var(--miel)' : HIDE,
 editLabel: st.editing ? t.done : t.customize,
-editBtnStyle: (cartesVue ? 'display: none; ' : '') + 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--braise); background: ' + (st.editing ? 'var(--braise); color: var(--sur-plein)' : 'var(--creme); color: var(--braise)') + '; font: inherit; font-weight: 700; cursor: pointer',
+editBtnStyle: 'min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--braise); background: ' + (st.editing ? 'var(--braise); color: var(--sur-plein)' : 'var(--creme); color: var(--braise)') + '; font: inherit; font-weight: 700; cursor: pointer',
 loadingStyle: !data && !st.loadError ? 'margin: 0; color: var(--doux)' : HIDE,
 waitStyle: data && data.etat === 'attente' && !st.loadError ? 'display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 40px 24px; border-radius: 18px; background: var(--miel)' : HIDE,
 waitTitle: fill(t.waitTitle, { prenom: prenomCourant() }),
 exempleStyle: data && data.source === 'exemple' ? 'margin:0;font-size:13px;color:var(--doux);padding:6px 12px;border-radius:10px;border:1px dashed var(--bord-fort);align-self:flex-start' : HIDE,
 errorStyle: st.loadError ? 'margin: 0; padding: 14px 18px; border-radius: 14px; background: var(--erreur-fond); color: var(--erreur); font-weight: 600' : HIDE,
-editBarStyle: ready && st.editing && !cartesVue ? 'display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 14px 18px; border-radius: 16px; background: var(--miel)' : HIDE,
+editBarStyle: ready && st.editing ? 'display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; padding: 14px 18px; border-radius: 16px; background: var(--miel)' : HIDE,
 gridClass: st.editing ? 'editing' : '',
-mainClass: ready && !st.editing && !cartesVue && available > 0 && Bento.rangees(layout, available, 4) <= 3 ? 'fournee-tient' : '',
-gridStyle: ready && !cartesVue ? '' : HIDE,
+mainClass: ready && !st.editing && available > 0 && Bento.rangees(layout, available, 4) <= 3 ? 'fournee-tient' : '',
+gridStyle: ready ? '' : HIDE,
 slots: SLOT_IDS.map(function (id) {
 var k = Bento.rankOf(id);
 var c = picked[k - 1];
@@ -661,7 +690,8 @@ var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
 chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', money: '', j1Nom: '', j2Nom: '', j3Nom: '', j1Aide: '', j2Aide: '', j3Aide: '', j1Val: '', j2Val: '', j3Val: '', j1Style: 'width: 0%', j2Style: 'width: 0%', j3Style: 'width: 0%', url: '#',
-knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false'
+knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false',
+cachee: 'false', labelId: 'tt-' + id, dosStyle: HIDE, dosRarete: 'mie', dosGrignes: 1, dosRang: '', dosRareteNom: '', dosAide: '', dosLabel: '', dosDisabled: 'false', cuiteStyle: HIDE
 };
 if (c) {
 var etat = FEU[c.feu];
@@ -678,6 +708,14 @@ s['j' + (i + 1) + 'Style'] = 'width: ' + j.pct + '%';
 s.readLabel = fill(t.readFull, { titre: c.titre });
 s.kneadHref = Bento.lienFournil(c.ref);
 s.saved = String(Store.estDeCote(store, c.ref));
+s.cuiteStyle = jeuActif && Jeu.estCuite(compteJeu, c.ref) ? '' : HIDE;
+// Lot 34 : dos de la carte tant qu'elle n'a pas été découverte aujourd'hui (rang et rareté écrits en clair).
+if (k <= layout.newsCount && jeuActif && Jeu.estCachee(compteJeu, c.ref, dateJeu)) {
+var d = Jeu.dos(c, k, lang);
+s.cachee = 'true'; s.labelId = 'td-' + id; s.dosStyle = '';
+s.dosRarete = d.rarete; s.dosGrignes = d.grignes; s.dosRang = d.rang; s.dosRareteNom = d.rareteNom; s.dosAide = d.aide; s.dosLabel = d.label;
+s.dosDisabled = String(!!st.editing);
+}
 }
 return Object.assign(s, labels);
 }),
@@ -691,4 +729,4 @@ barStyle: 'width: 100%; max-width: 44px; height: ' + b.hauteur + '%; background:
 };
 }
 }
-</script><script src="/jeu.js"></script><script src="/rituel.js"></script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/jeu.js"></script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>
