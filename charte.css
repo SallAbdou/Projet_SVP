@@ -21,7 +21,7 @@
   /* Lots 15 et 16 : couleurs imposées (tools/palette-oklch.js, IMPOSEES), héritées par classique et Nuit. */
   --etiquette-fond:#ABBF9B;--etiquette-texte:#2C1910;
   --lire-fond:#A9642E;--lire-survol:#7A4420;--lire-texte:#FFFFFF;
-  --petrir-btn-fond:#F27016;--petrir-btn-survol:#B4500A;--petrir-btn-texte:#2C1910;--petrir-btn-survol-texte:#FFFFFF;--petrir-btn-bord:#D9620F;--petrir-btn-survol-bord:#9E4608;--petrir-pain:#2C1910;--petrir-pain-survol:#FFFFFF;--petrir-grigne:#F27016;--petrir-grigne-survol:#B4500A;
+  --petrir-btn-fond:#C2560B;--petrir-btn-survol:#F27016;--petrir-btn-texte:#FFFFFF;--petrir-btn-survol-texte:#000000;--petrir-btn-bord:#9E4608;--petrir-btn-survol-bord:#D9620F;--petrir-pain:#FFFFFF;--petrir-pain-survol:#000000;--petrir-grigne:#C2560B;--petrir-grigne-survol:#F27016;
   --rassis-fond:#615945;--barre-rassis:#615945;--rassis-texte:#FFFFFF;
   --linkedin-fond:#0A66C2;--linkedin-survol:#004182;--linkedin-texte:#FFFFFF;--linkedin-bord:#0A66C2;
   --panneau:#311D14;--panneau-texte:#F7EFE5;--panneau-doux:#E7DCCF;--panneau-or:#F2CB88;--ombre-teinte:#3D2013;
@@ -108,7 +108,7 @@ html[data-animations="off"] *,html[data-animations="off"] *::before,html[data-an
    décoratif (svg.pain-ico, aria-hidden) à gauche du texte. S'enfonce légèrement à l'appui. */
 .btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--petrir-btn-bord);border-radius:999px;background:var(--petrir-btn-fond);color:var(--petrir-btn-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sur-plein) 28%,transparent),0 2px 8px color-mix(in srgb,var(--petrir-btn-bord) 28%,transparent);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease,border-color .12s ease,color .12s ease}
 .btn-petrir .pain-ico{flex:none;width:22px;height:15px;overflow:visible}
-.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol-bord);color:var(--petrir-btn-survol-texte)}
+.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol-bord);color:var(--petrir-btn-survol-texte);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sur-plein) 28%,transparent),0 2px 8px color-mix(in srgb,var(--petrir-btn-survol-bord) 34%,transparent)}
 .btn-petrir:hover .pain-ico path:first-child{fill:var(--petrir-pain-survol)}.btn-petrir:hover .pain-ico path+path{stroke:var(--petrir-grigne-survol)}
 .btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 4px color-mix(in srgb,var(--ombre-teinte) 28%,transparent)}
 .btn-petrir:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
@@ -118,6 +118,11 @@ html[data-animations="off"] .btn-petrir:active{transform:none}
 
 /* Étiquette de source d'un article : même forme que les puces d'état (lot 20), couleur imposée propre.
    Un nom trop long est coupé par une ellipse plutôt que de casser la pastille sur deux lignes. */
+/* Lot 35 : thème de la news, même forme que la source, en neutre sable cerné. Sur grand écran elle rétrécit
+   sur la ligne (texte complet en title et pour le lecteur d'écran) : passer dessous agrandirait toute la rangée. */
+.etiquette-theme{display:inline-block;vertical-align:middle;flex:1 1 0;min-width:4.5em;max-width:max-content;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--sable);color:var(--texte-2);box-shadow:inset 0 0 0 1px var(--bord-fort)}
+.etiquette-theme:not(:has(.pq-sr:not(:empty))){display:none}
+@media (max-width:640px){.etiquette-theme{flex:0 1 auto;max-width:100%}}
 .etiquette-source{display:inline-block;vertical-align:middle;flex:0 1 auto;min-width:0;max-width:100%;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--etiquette-fond);color:var(--etiquette-texte)}
 
 /* Texte lu par les lecteurs d'écran mais masqué à l'écran. */

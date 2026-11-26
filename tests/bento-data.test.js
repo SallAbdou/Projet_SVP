@@ -79,8 +79,8 @@ test('fournee.html : jauges de monétisation accessibles à la place de la ligne
     assert.match(bloc[1], new RegExp('<span class="jauge-nom"><button type="button" class="jauge-aide" aria-describedby="ja' + n + '-\{\{s\.id\}\}">\{\{s\.j' + n + 'Nom\}\}</button><span id="ja' + n + '-\{\{s\.id\}\}" role="tooltip" class="pq-cache">\{\{s\.j' + n + 'Aide\}\}</span></span><span class="jauge-piste" aria-hidden="true"><span class="jauge-plein" style="\{\{s\.j' + n + 'Style\}\}"></span></span><span class="jauge-val">\{\{s\.j' + n + 'Val\}\}</span>'));
   }
   assert.match(h, /\.jauge-plein\{[^}]*background:var\(--brun\)/);
-  assert.match(h, /jauges: \{ durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' \}/);
-  assert.match(h, /jauges: \{ durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' \}/);
+  assert.match(h, /jauges: \{ durabilite: 'Durabilité', propension: 'Intérêt business', lienOffre: 'Pertinence' \}/);
+  assert.match(h, /jauges: \{ durabilite: 'Durability', propension: 'Business interest', lienOffre: 'Relevance' \}/);
 });
 
 test('fournee.html : mode sans défilement réservé aux grilles de 3 rangées, sans couper le contenu', () => {

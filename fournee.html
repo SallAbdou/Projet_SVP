@@ -77,6 +77,8 @@ main.fournee-tient .jauges{margin-top:auto}
 .tile[data-tile="n1"]{--texte:var(--or-texte);--texte-2:var(--or-texte-2);--doux:var(--or-texte-2);--brun:var(--or-brun);--brun-fonce:var(--or-texte-2);--creme:var(--or-surface);--sur-plein:var(--or-sur-plein);--source:var(--or-source);--source-fonce:var(--or-source-fonce);--bord-fort:var(--or-bord);color:var(--sur-clair);background:var(--maillard);border:2px solid var(--cuivre);box-shadow:0 8px 22px color-mix(in srgb,var(--or-bord) 30%,transparent)}
 .bento.editing .tile[data-tile="n1"]{border:2px dashed var(--brun)}
 .tile[data-tile="n1"] .rank{background:var(--brun);color:var(--or-surface);box-shadow:0 0 0 2px var(--or-haut)}
+/* Lot 35 : sur le n°1 doré, --sable n'est pas redéfinie (sombre en Nuit) : la puce de thème prend --creme (or-surface). */
+.tile[data-tile="n1"] .etiquette-theme{background:var(--creme)}
 .tile[data-tile="n1"] .tile-body p{color:var(--sur-clair)!important}
 .tile[data-tile="n1"] .tile-body a[target]{background:var(--creme);border-color:var(--cuivre)!important}
 .tile[data-tile="n1"] .tile-tools .tool{background:var(--creme)}
@@ -220,6 +222,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <span class="rank" title="{{s.rankHint}}">{{s.rank}}</span>
 <span class="{{s.chip}}">{{s.state}}</span>
 <span class="etiquette-source">{{s.source}}</span>
+<span class="etiquette-theme" title="{{s.theme}}"><span class="pq-sr">{{s.themeSr}}</span>{{s.theme}}</span>
 <span class="jeu-cuite" style="{{s.cuiteStyle}}"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6"></path></svg>{{j.cuite}}</span>
 </div>
 <h2 id="tt-{{s.id}}" class="news-title" tabindex="-1">{{s.title}}</h2>
@@ -305,8 +308,8 @@ rank: 'n°{n}', rankHint: 'Emplacement n°{n} : la news classée {n} du jour',
 slotName: 'l’emplacement n°{n}', graphName: 'le graphique',
 annoncePosition: '{name} est maintenant en position {p}', annonceTaille: '{name} : taille {s}',
 toolsGroup: 'Outils pour {name}', up: 'Monter {name}', down: 'Descendre {name}', size: 'Taille pour {name}', drag: 'Glisser pour déplacer',
-money: 'Monétisation {m}/15', jauges: { durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' }, sur5: '{v}/5',
-aides: { durabilite: 'Le sujet sera-t-il encore valable dans une semaine ?', propension: 'Ton client est-il prêt à payer pour être aidé là-dessus ? Y a-t-il une valeur ajoutée pour lui ? Est-ce que ça l’instruit ?', lienOffre: 'Le sujet mène-t-il à une offre payante, monétisable pour toi via tes posts LinkedIn ?' },
+money: 'Monétisation {m}/15', themeSr: 'Thème : ', jauges: { durabilite: 'Durabilité', propension: 'Intérêt business', lienOffre: 'Pertinence' }, sur5: '{v}/5',
+aides: { durabilite: 'Le sujet sera-t-il encore valable dans une semaine ?', propension: 'Le sujet touche-t-il un problème pour lequel une entreprise paie ?', lienOffre: 'Le sujet est-il lié à ton ou tes métiers et à ta ou tes thématiques ?' },
 knead: 'Pétrir', kneadSuite: ' un post', graphShow: 'Afficher le graphique', graphHide: 'Masquer le graphique', read: 'Lire la source', save: 'Mettre de côté', skip: 'Ignorer',
 undo: 'Annuler', toastSave: 'Mis de côté', toastUnsave: 'Retiré du garde-manger', toastSkip: 'Sujet ignoré', toastUndone: 'Action annulée',
 allDone: 'Tu as tout passé en revue pour aujourd’hui', bringBack: 'Tout faire revenir',
@@ -335,8 +338,8 @@ rank: '#{n}', rankHint: 'Slot #{n}: the day’s number {n} news',
 slotName: 'slot #{n}', graphName: 'the chart',
 annoncePosition: '{name} is now in position {p}', annonceTaille: '{name}: size {s}',
 toolsGroup: 'Tools for {name}', up: 'Move {name} up', down: 'Move {name} down', size: 'Size of {name}', drag: 'Drag to move',
-money: 'Monetisation {m}/15', jauges: { durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' }, sur5: '{v}/5',
-aides: { durabilite: 'Will the topic still hold up in a week?', propension: 'Is your client ready to pay for help on this? Does it add value for them? Does it teach them something?', lienOffre: 'Does the topic lead to a paid offer you can monetise through your LinkedIn posts?' },
+money: 'Monetisation {m}/15', themeSr: 'Topic: ', jauges: { durabilite: 'Durability', propension: 'Business interest', lienOffre: 'Relevance' }, sur5: '{v}/5',
+aides: { durabilite: 'Will the topic still hold up in a week?', propension: 'Does the topic touch on a problem a business pays to solve?', lienOffre: 'Is the topic linked to your line or lines of work and to your topic or topics?' },
 knead: 'Knead', kneadSuite: ' a post', graphShow: 'Show the chart', graphHide: 'Hide the chart', read: 'Read the source', save: 'Save for later', skip: 'Skip',
 undo: 'Undo', toastSave: 'Saved for later', toastUnsave: 'Removed from the pantry', toastSkip: 'Topic skipped', toastUndone: 'Undone',
 allDone: 'You have gone through everything for today', bringBack: 'Bring everything back',
@@ -354,6 +357,8 @@ if (h.getAttribute('data-animations') === 'off') return true;
 if (h.getAttribute('data-animations') === 'on') return false;
 return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
+// Lot 35 : thématiques du profil connecté, pour traduire l'axe WF3 (« Axe N ») en thème lisible.
+function thematiquesCourantes() { try { var u = Auth.utilisateurCourant(); return u && u.profil ? u.profil.thematiques : []; } catch (e) { return []; } }
 function prenomCourant() { try { var u = Auth.utilisateurCourant(); return u ? u.prenom : ''; } catch (e) { return ''; } }
 function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
 function mepIds() { return Bento.PRESETS.map(function (p) { return p.id; }).concat(Bento.PRESET_PERSO); }
@@ -427,7 +432,7 @@ self.pendingFocus = { titre: id };
 }
 self.setState({ jeu: (self.state.jeu || 0) + 1 });
 var lang = self.state.lang || 'fr';
-var dire = Jeu.annonce(a, k, self.affichees().length, lang);
+var dire = Jeu.annonce(a, k, self.affichees().length, lang, thematiquesCourantes());
 var gain = Jeu.messageDecouverte(r, lang);
 if (!o.visite && window.annoncer) window.annoncer(dire + (gain ? ' ' + gain : ''));
 };
@@ -624,6 +629,7 @@ var compteJeu = Jeu.lireCompte(stockage(), cleCompte(), new Date());
 var jeuActif = !!cleCompte() && compteJeu.actif;
 var dateJeu = Jeu.dateDuJour(new Date());
 var picked = this.restants();
+var thematiques = thematiquesCourantes();
 var nbAffichees = Math.min(picked.length, layout.newsCount);
 var nbCachees = picked.slice(0, nbAffichees).filter(function (a) { return jeuActif && Jeu.estCachee(compteJeu, a.ref, dateJeu); }).length;
 var store = st.store || Store.etatInitial();
@@ -689,13 +695,14 @@ var c = picked[k - 1];
 var labels = toolLabels(t, fill(t.slotName, { n: k }));
 var s = {
 id: id, rank: fill(t.rank, { n: k }), rankHint: fill(t.rankHint, { n: k }),
-chip: 'pq-cache', state: '', source: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', money: '', j1Nom: '', j2Nom: '', j3Nom: '', j1Aide: '', j2Aide: '', j3Aide: '', j1Val: '', j2Val: '', j3Val: '', j1Style: 'width: 0%', j2Style: 'width: 0%', j3Style: 'width: 0%', url: '#',
+chip: 'pq-cache', state: '', source: '', theme: '', themeSr: '', title: '', summary: '', forYou: '', why: '', whyLabel: t.why, whyClass: Bento.montreRaison(id) ? 'only-L' : 'pq-cache', money: '', j1Nom: '', j2Nom: '', j3Nom: '', j1Aide: '', j2Aide: '', j3Aide: '', j1Val: '', j2Val: '', j3Val: '', j1Style: 'width: 0%', j2Style: 'width: 0%', j3Style: 'width: 0%', url: '#',
 knead: t.knead, kneadSuite: t.kneadSuite, read: t.read, readLabel: t.read, saveLabel: t.save, skipLabel: t.skip, kneadHref: '/fournil', saved: 'false',
 cachee: 'false', labelId: 'tt-' + id, dosStyle: HIDE, dosRarete: 'mie', dosGrignes: 1, dosRang: '', dosRareteNom: '', dosAide: '', dosLabel: '', dosDisabled: 'false', cuiteStyle: HIDE
 };
 if (c) {
 var etat = FEU[c.feu];
 s.chip = CHIP(etat); s.state = t.states[etat]; s.source = c.source;
+s.theme = Jeu.theme(c.axe, thematiques); s.themeSr = s.theme ? t.themeSr : '';
 s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
 s.url = Bento.safeUrl(c.url);
 s.money = fill(t.money, { m: Bento.totalScore(c) });

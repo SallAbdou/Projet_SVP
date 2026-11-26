@@ -83,10 +83,11 @@ var CONTRASTE = { source: [.320, .055, PATINE], 'source-fonce': [.250, .045, PAT
 var IMPOSEES = {
   'etiquette-fond': '#ABBF9B', 'etiquette-texte': '#2C1910',
   'lire-fond': '#A9642E', 'lire-survol': '#7A4420', 'lire-texte': '#FFFFFF',
-  // Lot 17 : survol de Pétrir nettement plus foncé, texte et pain passent en blanc ; bord orange un peu plus foncé.
-  'petrir-btn-fond': '#F27016', 'petrir-btn-survol': '#B4500A', 'petrir-btn-texte': '#2C1910', 'petrir-btn-survol-texte': '#FFFFFF',
-  'petrir-btn-bord': '#D9620F', 'petrir-btn-survol-bord': '#9E4608',
-  'petrir-pain': '#2C1910', 'petrir-pain-survol': '#FFFFFF', 'petrir-grigne': '#F27016', 'petrir-grigne-survol': '#B4500A',
+  // Lot 35 : Pétrir inversé. Repos orange foncé, texte et pain blancs (4,54:1) ; survol orange vif,
+  // texte et pain noirs (7,1:1). Bords de la même teinte, un peu plus foncés que leur fond.
+  'petrir-btn-fond': '#C2560B', 'petrir-btn-survol': '#F27016', 'petrir-btn-texte': '#FFFFFF', 'petrir-btn-survol-texte': '#000000',
+  'petrir-btn-bord': '#9E4608', 'petrir-btn-survol-bord': '#D9620F',
+  'petrir-pain': '#FFFFFF', 'petrir-pain-survol': '#000000', 'petrir-grigne': '#C2560B', 'petrir-grigne-survol': '#F27016',
   'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
   'linkedin-fond': '#0A66C2', 'linkedin-survol': '#004182', 'linkedin-texte': '#FFFFFF', 'linkedin-bord': '#0A66C2'
 };
