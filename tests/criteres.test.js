@@ -73,8 +73,11 @@ test('branchement-back : note pour le prompt de notation de lienOffre', () => {
 
 test('fournee.html : puce de thème (axe) dans la rangée d’étiquettes, après la source', () => {
   const h = lire('fournee.html');
-  assert.match(h, /<span class="etiquette-source">\{\{s\.source\}\}<\/span>\r?\n<span class="etiquette-theme"><span class="pq-sr">\{\{s\.themeSr\}\}<\/span>\{\{s\.theme\}\}<\/span>/);
-  assert.match(h, /s\.theme = c\.axe \|\| '';/);
+  assert.match(h, /<span class="etiquette-source">\{\{s\.source\}\}<\/span>\r?\n<span class="etiquette-theme" title="\{\{s\.theme\}\}"><span class="pq-sr">\{\{s\.themeSr\}\}<\/span>\{\{s\.theme\}\}<\/span>/);
+  assert.match(h, /s\.theme = Jeu\.theme\(c\.axe, thematiques\);/);
+  assert.match(h, /var thematiques = thematiquesCourantes\(\);/);
+  assert.match(h, /function thematiquesCourantes\(\) \{ try \{ var u = Auth\.utilisateurCourant\(\); return u && u\.profil \? u\.profil\.thematiques : \[\]; \} catch \(e\) \{ return \[\]; \} \}/);
+  assert.match(h, /Jeu\.annonce\(a, k, self\.affichees\(\)\.length, lang, thematiquesCourantes\(\)\)/);
   assert.match(h, /theme: '', themeSr: ''/, 'valeurs vides tant que la case est vide');
   assert.match(h, /themeSr: 'Thème : '/);
   assert.match(h, /themeSr: 'Topic: '/);
@@ -98,6 +101,10 @@ test('charte.css : .etiquette-theme a la forme des puces, couleur neutre, texte 
   for (const p of ['font-size:12px', 'font-weight:700', 'line-height:1.5', 'padding:3px 10px', 'border-radius:999px',
     'white-space:nowrap', 'text-overflow:ellipsis', 'background:var(--sable)', 'color:var(--texte-2)', 'box-shadow:inset 0 0 0 1px var(--bord-fort)', 'max-width:']) assert.ok(r[1].includes(p), p);
   assert.match(css, /\.etiquette-theme:empty\{display:none\}|\.etiquette-theme:not\(:has\(/);
+  // Grand écran : la puce rétrécit sur la ligne au lieu de passer dessous (sinon toute la rangée de la grille
+  // grandit et la fournée ne tient plus à 1280x800). Mobile : elle passe à la ligne entière.
+  for (const p of ['flex:1 1 0', 'min-width:4.5em', 'max-width:max-content']) assert.ok(r[1].includes(p), p);
+  assert.match(css, /@media \(max-width:640px\)\{\.etiquette-theme\{flex:0 1 auto;max-width:100%\}\}/);
   for (const [nom, v] of Object.entries(THEMES)) {
     const c = C.contraste(v['texte-2'], v.sable);
     assert.ok(c >= 4.5, nom + ' : texte-2 sur sable = ' + c.toFixed(2));
@@ -132,4 +139,68 @@ test('Pétrir : repos blanc sur orange foncé, survol noir sur orange vif, contr
   const c = vars(bloc('[data-theme="contraste"]'));
   assert.equal(c['petrir-btn-fond'], '#EEBE7C');
   assert.equal(c['petrir-btn-survol'], '#FBE7C0');
+});
+
+// Correction du lot 35 : l'axe WF3 (« Axe N ») est traduit en thématique du profil, jamais montré tel quel.
+const Jeu = require('../jeu.js');
+const TH = ['Automatisation et agents', 'IA en entreprise', 'LLMs'];
+
+test('Jeu.theme : « Axe N » devient la N-ième thématique du profil, un nom de thème passe tel quel', () => {
+  assert.equal(Jeu.theme('Axe 1', TH), 'Automatisation et agents');
+  assert.equal(Jeu.theme('Axe 2', TH), 'IA en entreprise');
+  assert.equal(Jeu.theme(' axe 3 ', TH), 'LLMs');
+  assert.equal(Jeu.theme('AXE  2', TH), 'IA en entreprise');
+  assert.equal(Jeu.theme('Axe 4', TH), '', 'hors liste : pas de puce');
+  assert.equal(Jeu.theme('Axe 0', TH), '');
+  assert.equal(Jeu.theme('Axe 1', []), '', 'profil sans thématique');
+  assert.equal(Jeu.theme('Axe 1', null), '', 'pas de profil');
+  assert.equal(Jeu.theme('Axe 1'), '');
+  assert.equal(Jeu.theme('Cybersécurité', TH), 'Cybersécurité', 'déjà un nom de thème');
+  assert.equal(Jeu.theme('  LLMs ', null), 'LLMs');
+  assert.equal(Jeu.theme('', TH), '');
+  assert.equal(Jeu.theme(null, TH), '');
+  assert.equal(Jeu.theme(42, TH), '');
+});
+
+const artJ = (ref, axe) => ({ ref, rang: 1, titre: 'Titre ' + ref, source: 'Src', feu: 'vert', axe, durabilite: 4, propension: 4, lienOffre: 3 });
+
+test('annonce : thématique du profil, et rien plutôt que « Axe N »', () => {
+  assert.equal(Jeu.annonce(artJ('a', 'Axe 2'), 1, 5, 'fr', TH), 'Carte 1 sur 5 : Dorée. Titre a. Tout chaud, Src, IA en entreprise. Monétisation 11/15.');
+  assert.equal(Jeu.annonce(artJ('a', 'Axe 2'), 1, 5, 'fr'), 'Carte 1 sur 5 : Dorée. Titre a. Tout chaud, Src. Monétisation 11/15.');
+  assert.equal(Jeu.annonce(artJ('a', 'Axe 1'), 1, 5, 'en', TH), 'Card 1 of 5: Golden. Titre a. Piping hot, Src, Automatisation et agents. Monetisation 11/15.');
+});
+
+function memoire() { const m = {}; return { getItem: k => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: k => { delete m[k]; } }; }
+
+test('collection et historique : familles nommées par la thématique du profil', () => {
+  const s = memoire();
+  const J = new Date(2026, 10, 24, 9);
+  Jeu.decouvrir(s, 'x', [artJ('a', 'Axe 1'), artJ('b', 'Axe 3'), artJ('c', 'Axe 1'), artJ('d', 'Axe 9'), artJ('e', 'Vidéo')], J);
+  const compte = Jeu.lireCompte(s, 'x', J);
+  const col = Jeu.collection(compte, 'fr', TH);
+  assert.deepEqual(col.familles.map(f => [f.famille, f.cartes.length]), [['Automatisation et agents', 2], ['Autres', 1], ['LLMs', 1], ['Vidéo', 1]]);
+  assert.deepEqual(Jeu.collection(compte, 'fr').familles.map(f => f.famille), ['Autres', 'Vidéo'], 'sans profil, « Axe N » va dans Autres');
+  const h = Jeu.historique(compte, {}, TH);
+  assert.deepEqual(h.familles, ['Automatisation et agents', 'LLMs', 'Vidéo']);
+  assert.deepEqual(Jeu.historique(compte, { famille: 'Automatisation et agents' }, TH).cartes.map(c => c.ref).sort(), ['a', 'c']);
+  const carteD = h.cartes.filter(c => c.ref === 'd')[0];
+  assert.equal(carteD.famille, '', 'Axe 9 hors liste : pas de famille');
+  assert.equal(h.cartes.filter(c => c.ref === 'b')[0].famille, 'LLMs');
+  for (const f of h.familles) assert.doesNotMatch(f, /^Axe \d/);
+});
+
+test('garde-manger : collection et historique passent les thématiques du profil, carte nommée par sa famille', () => {
+  const h = lire('garde-manger.html');
+  assert.match(h, /Jeu\.collection\(compte, lang, thematiques\)/);
+  assert.match(h, /Jeu\.historique\(compte, \{ rarete: st\.colRarete, famille: st\.colFamille \}, thematiques\)/);
+  assert.match(h, /Jeu\.historique\(compte, \{ rarete: colRarete, famille: colFamille \}, thematiques\)/);
+  assert.match(h, /famille: c\.famille \|\| j\.collection\.autres/);
+  assert.doesNotMatch(h, /c\.axe/);
+});
+
+test('branchement-back : convention retenue pour l’axe (thématique ou « Axe N » traduit par le front)', () => {
+  const d = lire('docs/branchement-back.md');
+  assert.match(d, /Convention retenue/);
+  assert.match(d, /« Axe N »[^\n]*N-ième thématique du profil/);
+  assert.match(d, /nom de la thématique/);
 });

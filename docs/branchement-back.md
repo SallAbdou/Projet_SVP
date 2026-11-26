@@ -249,7 +249,16 @@ Pour Abdou. Les noms de champs du contrat WF3 ne changent pas (`durabilite`, `pr
 
 À noter : le sens affiché de `lienOffre` est désormais la pertinence par rapport au métier et aux thématiques de l’utilisateur (et non plus le lien avec une offre payante). Cela peut demander d'ajuster le prompt de notation dans n8n pour que la note colle à ce que l'abonné lit. De même, `propension` se lit maintenant comme l'intérêt business du sujet (un problème pour lequel une entreprise paie).
 
-La fournée affiche aussi le champ `axe` de chaque article dans une puce « thème » en haut de la tuile : un libellé court y reste lisible (tronqué au-delà d'environ 14 caractères larges).
+### Thème de la news (champ `axe`)
+
+La fournée montre le thème de chaque article dans une puce en haut de la tuile ; les cartes et la collection du garde-manger s'en servent comme « famille », et l'annonce lue au lecteur d'écran le cite. Deux façons de remplir `axe` sont possibles :
+
+- soit WF3 envoie directement le nom de la thématique (par exemple « LLMs ») : le front l'affiche tel quel ;
+- soit WF3 garde « Axe N » : le front le traduit.
+
+**Convention retenue** : le front accepte les deux. « Axe N » est lu comme la N-ième thématique du profil de l'abonné connecté (`profil.thematiques`, dans l'ordre où elles sont enregistrées, dans leur langue d'origine) ; pour Léa, « Axe 2 » donne « IA en entreprise ». Tout autre texte est pris comme le nom de la thématique. Sans profil, ou si N dépasse le nombre de thématiques, la puce n'est pas affichée (jamais « Axe N », qui ne veut rien dire pour l'abonné) et la carte est rangée sous « Autres » dans la collection. Le plus sûr côté n8n reste d'envoyer le nom de la thématique, ou de garantir que N suit bien l'ordre de `profil.thematiques`.
+
+La fonction est `Jeu.theme(axe, thematiques)` dans `jeu.js`.
 
 ## 8. Tester de bout en bout
 

@@ -133,15 +133,31 @@
 
   function fraicheur(article) { return FEU[(article || {}).feu] || ''; }
 
+  // Lot 35 : thème d'un article. WF3 envoie « Axe N » : c'est la N-ième thématique du profil (dans sa langue
+  // d'origine). Un axe qui est déjà un nom de thème passe tel quel. Sans profil ou N hors liste : '' (pas de
+  // puce), jamais « Axe N », qui ne veut rien dire pour l'abonné.
+  function theme(axe, thematiques) {
+    if (typeof axe !== 'string') return '';
+    var a = axe.trim();
+    var m = /^axe\s*(\d+)$/i.exec(a);
+    if (!m) return a;
+    var liste = Array.isArray(thematiques) ? thematiques : [];
+    var t = liste[Number(m[1]) - 1];
+    return typeof t === 'string' ? t.trim() : '';
+  }
+
   // Annonce d'une carte qui vient d'être découverte (lecteur d'écran) : tout est dit en clair.
-  function annonce(article, n, total, lang) {
+  function annonce(article, n, total, lang, thematiques) {
     var a = article || {};
     var t = textes(lang);
     var r = rarete(a);
     var f = fraicheur(a);
-    return remplir(t.annonce, {
+    var famille = theme(a.axe, thematiques);
+    // Sans thème connu, la famille est omise avec sa virgule.
+    var modele = famille ? t.annonce : t.annonce.replace(', {famille}', '');
+    return remplir(modele, {
       n: n, total: total, rarete: t.raretes[r.id], titre: a.titre || '', fraicheur: f ? t.fraicheur[f] : '',
-      source: a.source || '', famille: a.axe || '', money: remplir(t.money, { m: r.total })
+      source: a.source || '', famille: famille, money: remplir(t.money, { m: r.total })
     });
   }
 
@@ -437,21 +453,23 @@
 
   function estCuite(compte, ref) { return !!(compte && compte.cartes && compte.cartes[ref] && compte.cartes[ref].cuite); }
 
-  function copieCarte(ref, c) {
-    return { ref: ref, titre: c.titre, source: c.source, axe: c.axe, rarete: c.rarete, fraicheur: c.fraicheur, vue: c.vue, cuite: c.cuite, gain: c.gain };
+  // famille : thème lisible de la carte (voir theme), '' s'il n'est pas connu.
+  function copieCarte(ref, c, thematiques) {
+    return { ref: ref, titre: c.titre, source: c.source, axe: c.axe, famille: theme(c.axe, thematiques), rarete: c.rarete, fraicheur: c.fraicheur, vue: c.vue, cuite: c.cuite, gain: c.gain };
   }
   function ordreRarete(x, y) { return IDS_RARETE.indexOf(x.rarete) - IDS_RARETE.indexOf(y.rarete); }
 
-  // Collection par famille (axe de l'article) : cuites d'abord, puis de la plus rare à la plus courante.
-  function collection(compte, lang) {
+  // Collection par famille (thème de l'article, voir theme) : cuites d'abord, puis de la plus rare à la plus courante.
+  function collection(compte, lang, thematiques) {
     var t = textes(lang);
     var cartes = (compte && compte.cartes) || {};
     var parFamille = {};
     var total = { vues: 0, cuites: 0 };
     Object.keys(cartes).forEach(function (ref) {
       var c = cartes[ref];
-      var f = c.axe || t.collection.autres;
-      (parFamille[f] = parFamille[f] || []).push(copieCarte(ref, c));
+      var copie = copieCarte(ref, c, thematiques);
+      var f = copie.famille || t.collection.autres;
+      (parFamille[f] = parFamille[f] || []).push(copie);
       total.vues++;
       if (c.cuite) total.cuites++;
     });
@@ -467,24 +485,24 @@
   // Lot 34 : historique de la collection de pains, toutes journées confondues, du plus récent au plus
   // ancien (la plus rare d'abord le même jour). filtres : { rarete, famille } facultatifs. familles et
   // raretes listent les valeurs présentes (options des filtres) ; total ignore les filtres.
-  function historique(compte, filtres) {
+  function historique(compte, filtres, thematiques) {
     var f = filtres || {};
     var cartes = (compte && compte.cartes) || {};
-    var toutes = Object.keys(cartes).map(function (ref) { return copieCarte(ref, cartes[ref]); });
+    var toutes = Object.keys(cartes).map(function (ref) { return copieCarte(ref, cartes[ref], thematiques); });
     toutes.sort(function (x, y) {
       return (x.vue < y.vue ? 1 : x.vue > y.vue ? -1 : 0) || ordreRarete(x, y) || x.titre.localeCompare(y.titre, 'fr');
     });
     var familles = [];
     var raretes = [];
     toutes.forEach(function (c) {
-      if (c.axe && familles.indexOf(c.axe) === -1) familles.push(c.axe);
+      if (c.famille && familles.indexOf(c.famille) === -1) familles.push(c.famille);
       if (raretes.indexOf(c.rarete) === -1) raretes.push(c.rarete);
     });
     familles.sort(function (a, b) { return a.localeCompare(b, 'fr'); });
     raretes.sort(function (a, b) { return IDS_RARETE.indexOf(a) - IDS_RARETE.indexOf(b); });
     return {
       total: toutes.length, familles: familles, raretes: raretes,
-      cartes: toutes.filter(function (c) { return (!f.rarete || c.rarete === f.rarete) && (!f.famille || c.axe === f.famille); })
+      cartes: toutes.filter(function (c) { return (!f.rarete || c.rarete === f.rarete) && (!f.famille || c.famille === f.famille); })
     };
   }
 
@@ -524,7 +542,7 @@
   }
 
   var Jeu = {
-    CLE: CLE, RARETES: RARETES, TEXTES: TEXTES, PUCE: PUCE, FEU: FEU,
+    CLE: CLE, RARETES: RARETES, TEXTES: TEXTES, PUCE: PUCE, FEU: FEU, theme: theme,
     POINTS: POINTS, NIVEAUX: NIVEAUX, LEVAIN: LEVAIN, COMPTE_DEMO: COMPTE_DEMO,
     rarete: rarete, notes: notes, fraicheur: fraicheur, cartesDuJour: cartesDuJour,
     annonce: annonce, dos: dos, compteDecouvertes: compteDecouvertes, remplir: remplir, textes: textes,

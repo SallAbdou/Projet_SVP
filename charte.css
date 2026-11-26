@@ -118,9 +118,11 @@ html[data-animations="off"] .btn-petrir:active{transform:none}
 
 /* Étiquette de source d'un article : même forme que les puces d'état (lot 20), couleur imposée propre.
    Un nom trop long est coupé par une ellipse plutôt que de casser la pastille sur deux lignes. */
-/* Lot 35 : thème (axe) de la news, même forme que la source, en neutre sable cerné. */
-.etiquette-theme{display:inline-block;vertical-align:middle;flex:0 1 auto;min-width:0;max-width:14em;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--sable);color:var(--texte-2);box-shadow:inset 0 0 0 1px var(--bord-fort)}
+/* Lot 35 : thème de la news, même forme que la source, en neutre sable cerné. Sur grand écran elle rétrécit
+   sur la ligne (texte complet en title et pour le lecteur d'écran) : passer dessous agrandirait toute la rangée. */
+.etiquette-theme{display:inline-block;vertical-align:middle;flex:1 1 0;min-width:4.5em;max-width:max-content;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--sable);color:var(--texte-2);box-shadow:inset 0 0 0 1px var(--bord-fort)}
 .etiquette-theme:not(:has(.pq-sr:not(:empty))){display:none}
+@media (max-width:640px){.etiquette-theme{flex:0 1 auto;max-width:100%}}
 .etiquette-source{display:inline-block;vertical-align:middle;flex:0 1 auto;min-width:0;max-width:100%;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--etiquette-fond);color:var(--etiquette-texte)}
 
 /* Texte lu par les lecteurs d'écran mais masqué à l'écran. */

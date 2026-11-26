@@ -222,7 +222,7 @@ html.is-dragging,html.is-dragging *{cursor:grabbing!important;user-select:none}
 <span class="rank" title="{{s.rankHint}}">{{s.rank}}</span>
 <span class="{{s.chip}}">{{s.state}}</span>
 <span class="etiquette-source">{{s.source}}</span>
-<span class="etiquette-theme"><span class="pq-sr">{{s.themeSr}}</span>{{s.theme}}</span>
+<span class="etiquette-theme" title="{{s.theme}}"><span class="pq-sr">{{s.themeSr}}</span>{{s.theme}}</span>
 <span class="jeu-cuite" style="{{s.cuiteStyle}}"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6"></path></svg>{{j.cuite}}</span>
 </div>
 <h2 id="tt-{{s.id}}" class="news-title" tabindex="-1">{{s.title}}</h2>
@@ -357,6 +357,8 @@ if (h.getAttribute('data-animations') === 'off') return true;
 if (h.getAttribute('data-animations') === 'on') return false;
 return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
+// Lot 35 : thématiques du profil connecté, pour traduire l'axe WF3 (« Axe N ») en thème lisible.
+function thematiquesCourantes() { try { var u = Auth.utilisateurCourant(); return u && u.profil ? u.profil.thematiques : []; } catch (e) { return []; } }
 function prenomCourant() { try { var u = Auth.utilisateurCourant(); return u ? u.prenom : ''; } catch (e) { return ''; } }
 function fill(s, vals) { return s.replace(/\{(\w+)\}/g, function (m, k) { return vals[k] == null ? m : vals[k]; }); }
 function mepIds() { return Bento.PRESETS.map(function (p) { return p.id; }).concat(Bento.PRESET_PERSO); }
@@ -430,7 +432,7 @@ self.pendingFocus = { titre: id };
 }
 self.setState({ jeu: (self.state.jeu || 0) + 1 });
 var lang = self.state.lang || 'fr';
-var dire = Jeu.annonce(a, k, self.affichees().length, lang);
+var dire = Jeu.annonce(a, k, self.affichees().length, lang, thematiquesCourantes());
 var gain = Jeu.messageDecouverte(r, lang);
 if (!o.visite && window.annoncer) window.annoncer(dire + (gain ? ' ' + gain : ''));
 };
@@ -627,6 +629,7 @@ var compteJeu = Jeu.lireCompte(stockage(), cleCompte(), new Date());
 var jeuActif = !!cleCompte() && compteJeu.actif;
 var dateJeu = Jeu.dateDuJour(new Date());
 var picked = this.restants();
+var thematiques = thematiquesCourantes();
 var nbAffichees = Math.min(picked.length, layout.newsCount);
 var nbCachees = picked.slice(0, nbAffichees).filter(function (a) { return jeuActif && Jeu.estCachee(compteJeu, a.ref, dateJeu); }).length;
 var store = st.store || Store.etatInitial();
@@ -699,7 +702,7 @@ cachee: 'false', labelId: 'tt-' + id, dosStyle: HIDE, dosRarete: 'mie', dosGrign
 if (c) {
 var etat = FEU[c.feu];
 s.chip = CHIP(etat); s.state = t.states[etat]; s.source = c.source;
-s.theme = c.axe || ''; s.themeSr = s.theme ? t.themeSr : '';
+s.theme = Jeu.theme(c.axe, thematiques); s.themeSr = s.theme ? t.themeSr : '';
 s.title = c.titre; s.summary = c.resume || ''; s.forYou = c.pourToi || ''; s.why = c.raisonFeu || '';
 s.url = Bento.safeUrl(c.url);
 s.money = fill(t.money, { m: Bento.totalScore(c) });

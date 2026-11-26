@@ -149,7 +149,7 @@ test('historique de la collection : du plus récent au plus ancien, filtres par 
   const c = Jeu.lireCompte(s, 'lea', J('2026-11-24'));
   const h = Jeu.historique(c);
   assert.deepEqual(h.cartes.map(x => x.ref), ['c', 'b', 'a'], 'récent d’abord, puis la plus rare le même jour');
-  assert.deepEqual(h.cartes[2], { ref: 'a', titre: 'Titre a', source: 'Src', axe: 'Agents', rarete: 'mie', fraicheur: 'hot', vue: '2026-11-22', cuite: '2026-11-24', gain: 60 });
+  assert.deepEqual(h.cartes[2], { ref: 'a', titre: 'Titre a', source: 'Src', axe: 'Agents', famille: 'Agents', rarete: 'mie', fraicheur: 'hot', vue: '2026-11-22', cuite: '2026-11-24', gain: 60 });
   assert.deepEqual(h.familles, ['Agents', 'Modèles']);
   assert.deepEqual(h.raretes, ['maillard', 'croute', 'mie'], 'raretés présentes, de la plus rare à la plus courante');
   assert.equal(h.total, 3);
@@ -164,7 +164,9 @@ test('données d’exemple de Léa : quelques jours passés, rien de découvert 
   const c = Jeu.lireCompte(memoire(), Jeu.COMPTE_DEMO, J('2026-11-26'));
   assert.equal(c.exemple, true);
   assert.deepEqual(Jeu.decouvertesDuJour(c, '2026-11-26'), []);
-  const h = Jeu.historique(c);
+  // Lot 35 : les axes « Axe N » de l'exemple se lisent avec les thématiques du profil de Léa.
+  const h = Jeu.historique(c, {}, require('../auth.js').COMPTE_DEMO.profil.thematiques);
+  assert.ok(h.familles.every(f => !/^Axe \d/.test(f)), h.familles.join(', '));
   assert.ok(h.total >= 8, 'au moins 8 cartes');
   assert.ok(h.familles.length >= 3, 'au moins 3 familles');
   const jours = new Set(h.cartes.map(x => x.vue));
