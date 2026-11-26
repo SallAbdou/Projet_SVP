@@ -97,6 +97,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 </fieldset>
 <div class="pf-anim"><input id="animations" type="checkbox" aria-describedby="animations-aide" data-focus="animations" onChange="{{choisirAnimations}}" {{animCoche}}><label for="animations" class="pf-label">{{t.animLabel}}</label></div>
 <p id="animations-aide" class="pf-note">{{t.animAide}}</p>
+<div class="pf-anim"><input id="jeu-actif" type="checkbox" aria-describedby="jeu-actif-aide" data-focus="jeu-actif" onChange="{{choisirJeu}}" {{jeuCoche}}><label for="jeu-actif" class="pf-label">{{t.jeuLabel}}</label></div>
+<p id="jeu-actif-aide" class="pf-note">{{t.jeuAide}}</p>
 <p role="status" aria-live="polite" class="pf-succes">{{apparenceAnnonce}}</p>
 </section>
 <section aria-labelledby="retour-t" class="pf-carte" data-visite="retours">
@@ -147,7 +149,9 @@ apparenceT: 'Apparence', themeLegende: 'Thème de couleur',
 visiteT: 'Visite guidée', visiteIntro: 'Miette te refait le tour du fournil, page par page.', visiteBtn: 'Revoir la visite',
 themes: { bronze: 'Bronze', classique: 'Boulangerie classique', nuit: 'Nuit', contraste: 'Contraste élevé' }, themeApplique: 'Thème « {nom} » appliqué.',
 animLabel: 'Animations activées', animAide: 'Décochée, coupe les animations décoratives : four du comptoir, braise de « Tout chaud »…',
-animOn: 'Animations activées.', animOff: 'Animations coupées.'
+animOn: 'Animations activées.', animOff: 'Animations coupées.',
+jeuLabel: 'Jeu des cartes activé', jeuAide: 'Décochée, retire le rituel du matin, la vue cartes, l’encart du comptoir et la collection. Ta progression est gardée.',
+jeuOn: 'Jeu des cartes activé.', jeuOff: 'Jeu des cartes coupé. Ta progression est gardée.'
 },
 en: {
 navLabel: 'Main navigation', eyebrow: 'Your account', title: 'My profile',
@@ -170,17 +174,20 @@ apparenceT: 'Appearance', themeLegende: 'Colour theme',
 visiteT: 'Guided tour', visiteIntro: 'Miette shows you around the bakery again, page by page.', visiteBtn: 'Replay the tour',
 themes: { bronze: 'Bronze', classique: 'Classic bakery', nuit: 'Night', contraste: 'High contrast' }, themeApplique: '“{nom}” theme applied.',
 animLabel: 'Animations on', animAide: 'Unticked, stops decorative animations: the counter oven, the “Tout chaud” glow…',
-animOn: 'Animations on.', animOff: 'Animations off.'
+animOn: 'Animations on.', animOff: 'Animations off.',
+jeuLabel: 'Card game on', jeuAide: 'Unticked, removes the morning ritual, the card view, the counter panel and the collection. Your progress is kept.',
+jeuOn: 'Card game on.', jeuOff: 'Card game off. Your progress is kept.'
 }
 };
 var CACHE = 'display: none';
 function stockageTheme() { try { return window.localStorage; } catch (e) { return null; } }
 function cleTheme() { try { return Theme.cleCompte(Auth.utilisateurCourant()); } catch (e) { return null; } }
+function jeuActifDuCompte() { try { return Jeu.estActif(window.localStorage, Jeu.cleDuCompte(Auth.utilisateurCourant())); } catch (e) { return true; } }
 class Component extends DCLogic {
 constructor(props) {
 super(props);
 // retour : saisie en cours ; succes : booléen (texte traduit au rendu) ; derniers : null tant que la liste charge.
-this.state = { lang: 'fr', retour: '', retourErreur: null, succes: false, envoi: false, derniers: null, derniersErreur: false, theme: Theme.lire(stockageTheme(), cleTheme()), themeAnnonce: null, animations: document.documentElement.getAttribute('data-animations') === 'off' ? 'off' : 'on', animAnnonce: null };
+this.state = { lang: 'fr', retour: '', retourErreur: null, succes: false, envoi: false, derniers: null, derniersErreur: false, theme: Theme.lire(stockageTheme(), cleTheme()), themeAnnonce: null, animations: document.documentElement.getAttribute('data-animations') === 'off' ? 'off' : 'on', animAnnonce: null, jeuActif: jeuActifDuCompte(), jeuAnnonce: null };
 this.chargerDerniers();
 }
 chargerDerniers() {
@@ -236,21 +243,28 @@ self.setState({ envoi: false, retourErreur: r.erreur });
 });
 },
 themes: Theme.THEMES.map(function (v) { return { id: 'theme-' + v, valeur: v, label: t.themes[v], coche: v === s.theme ? 'checked' : '' }; }),
-apparenceAnnonce: s.animAnnonce ? (s.animAnnonce === 'off' ? t.animOff : t.animOn) : (s.themeAnnonce ? t.themeApplique.replace('{nom}', t.themes[s.themeAnnonce]) : ''),
+apparenceAnnonce: s.jeuAnnonce ? (s.jeuAnnonce === 'off' ? t.jeuOff : t.jeuOn) : s.animAnnonce ? (s.animAnnonce === 'off' ? t.animOff : t.animOn) : (s.themeAnnonce ? t.themeApplique.replace('{nom}', t.themes[s.themeAnnonce]) : ''),
 animCoche: s.animations === 'off' ? '' : 'checked',
 choisirAnimations: function (e) {
 var v = e.target.checked ? 'on' : 'off';
 Animations.appliquer(document, v);
 var st = stockageTheme();
 if (st) Animations.enregistrer(st, Animations.cleCompte(Auth.utilisateurCourant()), v);
-self.setState({ animations: v, animAnnonce: v });
+self.setState({ animations: v, animAnnonce: v, jeuAnnonce: null });
+},
+// Lot 33 : jeu des cartes, mémorisé par compte comme les animations. Coupé : données gardées.
+jeuCoche: s.jeuActif ? 'checked' : '',
+choisirJeu: function (e) {
+var oui = !!e.target.checked;
+try { Jeu.activer(window.localStorage, Jeu.cleDuCompte(Auth.utilisateurCourant()), oui); } catch (err) {}
+self.setState({ jeuActif: oui, jeuAnnonce: oui ? 'on' : 'off', animAnnonce: null });
 },
 choisirTheme: function (e) {
 var v = Theme.normaliser(e.target.getAttribute('data-valeur'));
 Theme.appliquer(document, v);
 var st = stockageTheme();
 if (st) Theme.enregistrer(st, cleTheme(), v);
-self.setState({ theme: v, themeAnnonce: v, animAnnonce: null });
+self.setState({ theme: v, themeAnnonce: v, animAnnonce: null, jeuAnnonce: null });
 },
 deconnexion: function () { try { Auth.seDeconnecter(); } catch (e) {} window.location.href = '/'; }
 };
