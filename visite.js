@@ -21,7 +21,7 @@
     { id: 'four', page: 'comptoir', cible: 'four', action: true },
     { id: 'fournee', page: 'fournee', cible: 'grille' },
     // Deuxième étape à faire : « Pétrir un post » du n°1 ouvre le fournil sur cette news.
-    { id: 'petrir', page: 'fournee', cible: 'petrir', selecteur: '[data-bento] [data-tile="n1"] a[data-act="knead"]', action: true },
+    { id: 'petrir', page: 'fournee', cible: 'petrir', selecteur: '[data-bento] [data-tile="n1"] a[data-act="knead"], [data-cartes] [data-id="n1"] a[data-act="knead"]', action: true },
     // amorce : sans sujet choisi (étape Pétrir sautée), le fournil montre la liste de choix ; la visite suit
     // alors le premier lien « Pétrir » (une fois, sans ?ref= déjà présent) pour montrer un vrai brouillon.
     { id: 'fournil', page: 'fournil', cible: 'brouillon', amorce: 'section[aria-labelledby="choix-t"] a.btn-petrir' },
@@ -729,6 +729,11 @@
     var enc = lireEncours(ls, compte);
     if (enc && ETAPES[enc.index].page === page) { reprendre(enc); return; }
     if (enc) effacerEncours(ls);
+    // Lot 32 : le rituel du matin passe d'abord, l'accueil attend sa fin (jamais les deux en même temps).
+    if (root.Rituel && root.Rituel.prevu()) {
+      doc.addEventListener('pq:rituel-fin', function apres() { doc.removeEventListener('pq:rituel-fin', apres); lancer(); });
+      return;
+    }
     // Première connexion : l'accueil de Miette (sans cible) s'ouvre sur la page d'arrivée
     // (la connexion mène à la fournée) ; « C'est parti » emmène ensuite au comptoir.
     if (doitLancer(lireCompte(ls, compte), marqueurSession(ls))) {

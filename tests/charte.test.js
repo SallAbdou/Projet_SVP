@@ -279,7 +279,7 @@ test('bouton Pétrir en pastille rouge imposée : fond uni sous le texte, petit 
   assert.doesNotMatch(css, /\.btn-petrir::before/);
   assert.doesNotMatch(css, /\.btn-petrir\{[^}]*gradient/);
   assert.match(css, /\.btn-petrir \.pain-ico\{[^}]*width:/);
-  const gabarits = { 'comptoir.html': 1, 'fournee.html': 1, 'fournil.html': 2, 'garde-manger.html': 1 };
+  const gabarits = { 'comptoir.html': 1, 'fournee.html': 2, 'fournil.html': 2, 'garde-manger.html': 1 };
   for (const [p, n] of Object.entries(gabarits)) {
     const h = fs.readFileSync(path.join(RACINE, p), 'utf8');
     const boutons = h.match(/<a [^>]*class="btn-petrir[^"]*"[^>]*>[\s\S]*?<\/a>/g) || [];
