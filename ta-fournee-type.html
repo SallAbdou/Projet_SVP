@@ -25,7 +25,7 @@
 <div><dt class="sur-titre" style="font-size:12px">{{t.langue}}</dt><dd style="margin:6px 0 0;font-weight:600">{{recap.langue}}</dd></div>
 <div><dt class="sur-titre" style="font-size:12px">{{t.news}}</dt><dd style="margin:6px 0 0;font-weight:600">{{recap.news}}</dd></div>
 <div style="grid-column:1/-1"><dt class="sur-titre" style="font-size:12px">{{t.thematiques}}</dt>
-<dd style="margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{thematiques}}" as="th"><span style="font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--sable);color:var(--brun-fonce)">{{th.label}}</span></sc-for></dd></div>
+<dd style="margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{thematiques}}" as="th"><span class="puce-theme" data-teinte="{{th.teinte}}" style="font-size:13px;padding:4px 10px">{{th.label}}</span></sc-for></dd></div>
 </dl>
 <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
 <div class="mini-bento" role="group" aria-label="{{apercuLabel}}">
@@ -43,7 +43,7 @@
 <footer class="pied" data-pied></footer>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/questionnaire.js"></script><script>
+<script src="/dc.js"></script><script src="/questionnaire.js"></script><script src="/charte.js"></script><script>
 var TONS = {
 fr: { 'Timide': 'Timide : des mots simples', 'En couple': 'En couple : un ton normal', 'Marié': 'Marié : un ton expert' },
 en: { 'Timide': 'Shy: plain words', 'En couple': 'In a relationship: normal tone', 'Marié': 'Married: expert tone' }
@@ -86,7 +86,7 @@ return {
 t: t,
 titre: t.titre.replace('{prenom}', c.prenom),
 recap: { metiers: p.metiers.map(function (x) { return Questionnaire.libelle(x, lang); }).join(', '), ton: TONS[lang][p.relation] || p.relation, langue: LANGUES[lang][p.langue] || p.langue, news: t.newsN.replace('{n}', n) },
-thematiques: p.thematiques.map(function (x) { return { label: Questionnaire.libelle(x, lang) }; }),
+thematiques: p.thematiques.map(function (x) { return { label: Questionnaire.libelle(x, lang), teinte: Charte.teinteTheme(x) }; }),
 apercuLabel: t.apercu.replace('{n}', n),
 tuiles: tuiles
 };

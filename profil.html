@@ -17,6 +17,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .pf-ligne:first-child{border-top:0;padding-top:4px}
 .pf-ligne dt{color:var(--doux);font-weight:600}
 .pf-ligne dd{margin:0;font-weight:600;color:var(--texte);overflow-wrap:anywhere}
+.pf-puces{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .pf-note{margin:0;font-size:14px;color:var(--doux)}
 .pf-lien{display:inline-flex;align-items:center;min-height:44px;align-self:flex-start;font-size:14px;font-weight:600;color:var(--brun);text-decoration:underline;text-underline-offset:3px}
 .pf-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--brun);background:var(--creme);color:var(--brun);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
@@ -86,7 +87,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <section aria-labelledby="prefs-t" class="pf-carte" data-visite="preferences">
 <h2 id="prefs-t" class="pf-titre">{{t.prefs}}</h2>
 <dl class="pf-liste">
-<sc-for list="{{prefs}}" as="l" hint-placeholder-count="4"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
+<sc-for list="{{prefsAvant}}" as="l" hint-placeholder-count="1"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
+<div class="pf-ligne"><dt>{{ligneThemes.label}}</dt><dd><span style="{{themesVideStyle}}">{{ligneThemes.valeur}}</span><ul class="pf-puces" style="{{pucesStyle}}"><sc-for list="{{puces}}" as="p" hint-placeholder-count="3"><li class="puce-theme" data-teinte="{{p.teinte}}">{{p.label}}</li></sc-for></ul></dd></div>
+<sc-for list="{{prefsApres}}" as="l" hint-placeholder-count="2"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
 </dl>
 <p class="pf-note">{{t.source}}</p>
 <a href="/questionnaire" class="pf-btn" data-focus="profil-modifier">{{t.redo}}</a>
@@ -214,12 +217,15 @@ var t = T[lang];
 var u = null;
 try { u = Auth.utilisateurCourant(); } catch (e) {}
 var l = Profil.lignes(u, lang, Questionnaire.libelle);
+// Lot 37 : la ligne Thématiques (2e préférence) s'affiche en puces colorées.
+var puces = Profil.puces(u, lang, Questionnaire.libelle);
 var maintenant = new Date();
 var derniers = (s.derniers || []).map(function (r) { return { texte: r.texte, date: Retours.pur.dateRelative(r.cree_le, maintenant, lang) }; });
 var erreur = s.retourErreur ? t.erreurs[s.retourErreur] || t.erreurs.reseau : '';
 var vide = s.derniers !== null && !derniers.length;
 return {
-t: t, infos: l.infos, prefs: l.prefs,
+t: t, infos: l.infos, prefsAvant: l.prefs.slice(0, 1), ligneThemes: l.prefs[1], prefsApres: l.prefs.slice(2),
+puces: puces, pucesStyle: puces.length ? '' : CACHE, themesVideStyle: puces.length ? CACHE : '',
 retour: s.retour,
 retourDecrit: (erreur ? 'retour-erreur ' : '') + 'retour-aide retour-compteur',
 retourInvalide: erreur ? 'true' : 'false',

@@ -73,17 +73,17 @@ test('branchement-back : note pour le prompt de notation de lienOffre', () => {
 
 test('fournee.html : puce de thème (axe) dans la rangée d’étiquettes, après la source', () => {
   const h = lire('fournee.html');
-  assert.match(h, /<span class="etiquette-source">\{\{s\.source\}\}<\/span>\r?\n<span class="etiquette-theme" title="\{\{s\.theme\}\}"><span class="pq-sr">\{\{s\.themeSr\}\}<\/span>\{\{s\.theme\}\}<\/span>/);
+  assert.match(h, /<span class="etiquette-source">\{\{s\.source\}\}<\/span>\r?\n<span class="etiquette-theme" data-teinte="{{s.teinte}}" title="\{\{s\.theme\}\}"><span class="pq-sr">\{\{s\.themeSr\}\}<\/span>\{\{s\.theme\}\}<\/span>/);
   assert.match(h, /s\.theme = Jeu\.theme\(c\.axe, thematiques\);/);
   assert.match(h, /var thematiques = thematiquesCourantes\(\);/);
   assert.match(h, /function thematiquesCourantes\(\) \{ try \{ var u = Auth\.utilisateurCourant\(\); return u && u\.profil \? u\.profil\.thematiques : \[\]; \} catch \(e\) \{ return \[\]; \} \}/);
   assert.match(h, /Jeu\.annonce\(a, k, self\.affichees\(\)\.length, lang, thematiquesCourantes\(\)\)/);
-  assert.match(h, /theme: '', themeSr: ''/, 'valeurs vides tant que la case est vide');
+  assert.match(h, /theme: '', teinte: 'gris', themeSr: ''/, 'valeurs vides tant que la case est vide');
   assert.match(h, /themeSr: 'Thème : '/);
   assert.match(h, /themeSr: 'Topic: '/);
 });
 
-// Même forme que les autres puces, couleur neutre lisible AA dans les quatre thèmes et sur le n°1 doré.
+// Même forme que les autres puces, couleur de la thématique (lot 37) lisible AA dans les quatre thèmes.
 const css = lire('charte.css');
 function bloc(sel) { const i = css.indexOf(sel + '{'); return css.slice(i, css.indexOf('}', i)); }
 const vars = corps => { const r = {}; corps.replace(/--([\w-]+):\s*(#[0-9A-Fa-f]{6})\b/g, (m, n, h) => { r[n] = h; }); return r; };
@@ -95,28 +95,21 @@ const THEMES = {
   contraste: Object.assign({}, BRONZE, vars(bloc('[data-theme="contraste"]')))
 };
 
-test('charte.css : .etiquette-theme a la forme des puces, couleur neutre, texte tronqué', () => {
-  const r = /\.etiquette-theme\{([^}]*)\}/.exec(css);
+// Lot 37 : la couleur neutre est remplacée par la teinte de la thématique (contrastes dans tests/themes.test.js).
+test('charte.css : .etiquette-theme a la forme des puces, couleur de sa thématique, texte tronqué', () => {
+  const r = /\n\.etiquette-theme\{([^}]*)\}/.exec(css);
   assert.ok(r, 'règle .etiquette-theme absente');
   for (const p of ['font-size:12px', 'font-weight:700', 'line-height:1.5', 'padding:3px 10px', 'border-radius:999px',
-    'white-space:nowrap', 'text-overflow:ellipsis', 'background:var(--sable)', 'color:var(--texte-2)', 'box-shadow:inset 0 0 0 1px var(--bord-fort)', 'max-width:']) assert.ok(r[1].includes(p), p);
+    'white-space:nowrap', 'text-overflow:ellipsis', 'background:var(--t-fond)', 'color:var(--t-texte)', 'box-shadow:inset 0 0 0 1px var(--t-bord)', 'max-width:']) assert.ok(r[1].includes(p), p);
   assert.match(css, /\.etiquette-theme:empty\{display:none\}|\.etiquette-theme:not\(:has\(/);
   // Grand écran : la puce rétrécit sur la ligne au lieu de passer dessous (sinon toute la rangée de la grille
   // grandit et la fournée ne tient plus à 1280x800). Mobile : elle passe à la ligne entière.
   for (const p of ['flex:1 1 0', 'min-width:4.5em', 'max-width:max-content']) assert.ok(r[1].includes(p), p);
   assert.match(css, /@media \(max-width:640px\)\{\.etiquette-theme\{flex:0 1 auto;max-width:100%\}\}/);
-  for (const [nom, v] of Object.entries(THEMES)) {
-    const c = C.contraste(v['texte-2'], v.sable);
-    assert.ok(c >= 4.5, nom + ' : texte-2 sur sable = ' + c.toFixed(2));
-  }
-  // Tuile n°1 dorée : --texte-2 y devient or-texte-2 mais --sable reste celle du thème (sombre en Nuit),
-  // d'où un fond --creme (redéfini en or-surface) sur cette tuile.
+  // Tuile n°1 dorée : les variables --th-* ne sont pas redéfinies par la tuile, la puce garde fond et
+  // texte de sa teinte (plus de fond --creme forcé).
   const h = lire('fournee.html');
-  assert.match(h, /\.tile\[data-tile="n1"\] \.etiquette-theme\{background:var\(--creme\)\}/);
-  for (const [nom, v] of Object.entries(THEMES)) {
-    const c = C.contraste(v['or-texte-2'], v['or-surface']);
-    assert.ok(c >= 4.5, nom + ' : puce de thème sur le n°1 = ' + c.toFixed(2));
-  }
+  assert.doesNotMatch(h, /\.tile\[data-tile="n1"\] \.etiquette-theme\{background/);
 });
 
 test('Pétrir : repos blanc sur orange foncé, survol noir sur orange vif, contrastes AA', () => {

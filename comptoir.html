@@ -13,6 +13,9 @@ a:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
 .btn-plein:hover{background:var(--or-milieu);color:var(--sur-clair)}
 .btn-ligne{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--braise);color:var(--braise);font-weight:700;font-size:14px;text-decoration:none}
 .btn-ligne:hover{background:var(--braise);color:var(--sur-plein)}
+/* Lot 37 : bouton principal du site (plein, accent braise) sous Tes meilleures fournées. */
+.btn-action{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;min-height:44px;padding:0 22px;border-radius:999px;background:var(--braise);color:var(--sur-plein);font-weight:700;text-decoration:none}
+.btn-action:hover{background:var(--braise-fonce);color:var(--sur-plein)}
 /* Four illustré : un seul lien vers la news n°1 de la fournée. */
 .four-lien{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 12px 14px;border-radius:16px;color:var(--texte);text-decoration:none;text-align:center;transition:background .2s,transform .2s}
 .four-lien:hover{background:var(--miel);color:var(--texte);transform:translateY(-2px)}
@@ -95,6 +98,7 @@ html[data-animations="off"] .four-lien,html[data-animations="off"] .four-lien:ho
 </div>
 <p style="{{noBarsStyle}}">{{noBars}}</p>
 <p class="pq-pleine" style="margin:0;padding:12px 16px;border-radius:12px;background:var(--miel);color:var(--brun-fonce);{{insStyle}}">{{ins.avant}}<strong>{{ins.gras}}</strong>{{ins.apres}}</p>
+<a href="/fournil" class="btn-action" data-focus="aller-fournil">{{t.allerFournil}}</a>
 </section>
 <div style="flex:1 1 330px;min-width:0;display:flex;flex-direction:column;gap:16px">
 <section aria-labelledby="next-t" style="background:var(--creme);border:1px solid var(--bord);border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:10px">
@@ -191,7 +195,7 @@ waitOne: '1 post attend ses chiffres', waitMany: '{n} posts attendent leurs chif
 kpiLabel: 'Chiffres clés', kpiTitle: 'Tes posts, ces 30 derniers jours',
 kpis: ['Posts publiés', 'Impressions', 'Réactions', 'Republications', 'Prises de contact'],
 ecart: { hausseN: '+{n} vs mois dernier', baisseN: '-{n} vs mois dernier', hausseP: '+{n} %', baisseP: '-{n} %', stable: 'stable', nouveau: 'nouveau' },
-visTitle: 'Tes meilleures fournées', visSub: 'Impressions de tes 6 derniers posts',
+visTitle: 'Tes meilleures fournées', visSub: 'Impressions de tes 6 derniers posts', allerFournil: 'Aller au fournil',
 bar: '{label} : {n} impressions, sujet {etat}',
 etats: { vert: 'Tout chaud', orange: 'À pétrir', rouge: 'Rassis' },
 noBars: 'Pas encore de chiffres : publie un post depuis le fournil puis reporte ses chiffres.',
@@ -213,7 +217,7 @@ waitOne: '1 post is waiting for its figures', waitMany: '{n} posts are waiting f
 kpiLabel: 'Key figures', kpiTitle: 'Your posts, these last 30 days',
 kpis: ['Posts published', 'Impressions', 'Reactions', 'Reposts', 'Contact requests'],
 ecart: { hausseN: '+{n} vs last month', baisseN: '-{n} vs last month', hausseP: '+{n}%', baisseP: '-{n}%', stable: 'steady', nouveau: 'new' },
-visTitle: 'Your best batches', visSub: 'Impressions of your last 6 posts',
+visTitle: 'Your best batches', visSub: 'Impressions of your last 6 posts', allerFournil: 'Go to the kitchen',
 bar: '{label}: {n} impressions, topic {etat}',
 etats: { vert: 'Piping hot', orange: 'Needs kneading', rouge: 'Gone stale' },
 noBars: 'No figures yet: publish a post from the kitchen, then report its figures.',
