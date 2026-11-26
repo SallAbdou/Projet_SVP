@@ -237,6 +237,20 @@ using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id)
 - Points de vigilance : une carte ne doit cuire qu'une fois (`cuite_le` rempli une seule fois) et la découverte ne rapporter qu'une fois par jour. Côté base, le plus sûr serait de calculer les points dans une fonction (RPC) plutôt que de laisser le navigateur écrire `points` directement ; à décider en équipe, ce n'est pas un enjeu de sécurité fort (jeu personnel, sans classement).
 - Dates : le front compte les jours en heure locale de l'abonné (`AAAA-MM-JJ`).
 
+## 7 quater. Critères de monétisation renommés (lot 35)
+
+Pour Abdou. Les noms de champs du contrat WF3 ne changent pas (`durabilite`, `propension`, `lienOffre`, toujours notés de 0 à 5, total sur 15) : seuls les libellés et les bulles d'aide affichés changent.
+
+| Champ | Libellé affiché (FR / EN) | Bulle d'aide |
+| --- | --- | --- |
+| `durabilite` | Durabilité / Durability | Le sujet sera-t-il encore valable dans une semaine ? (inchangée) |
+| `propension` | Intérêt business / Business interest | Le sujet touche-t-il un problème pour lequel une entreprise paie ? |
+| `lienOffre` | Pertinence / Relevance | Le sujet est-il lié à ton ou tes métiers et à ta ou tes thématiques ? |
+
+À noter : le sens affiché de `lienOffre` est désormais la pertinence par rapport au métier et aux thématiques de l’utilisateur (et non plus le lien avec une offre payante). Cela peut demander d'ajuster le prompt de notation dans n8n pour que la note colle à ce que l'abonné lit. De même, `propension` se lit maintenant comme l'intérêt business du sujet (un problème pour lequel une entreprise paie).
+
+La fournée affiche aussi le champ `axe` de chaque article dans une puce « thème » en haut de la tuile : un libellé court y reste lisible (tronqué au-delà d'environ 14 caractères larges).
+
 ## 8. Tester de bout en bout
 
 1. Remplir `config.js` (étape 1) sur une branche de test, déployer (ou servir en local et ajouter `localhost` dans Supabase et le CORS de WF3).

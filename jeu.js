@@ -33,7 +33,7 @@
       money: 'Monétisation {m}/15', sur5: '{v}/5',
       raretes: { maillard: 'Maillard', doree: 'Dorée', croute: 'Croûte', mie: 'Mie' },
       fraicheur: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
-      jauges: { durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' },
+      jauges: { durabilite: 'Durabilité', propension: 'Intérêt business', lienOffre: 'Pertinence' },
       // Lot 33 : progression personnelle.
       cuite: 'Cuite',
       niveaux: { apprenti: 'Apprenti', mitron: 'Mitron', boulanger: 'Boulanger', maitre: 'Maître artisan' },
@@ -70,7 +70,7 @@
       money: 'Monetisation {m}/15', sur5: '{v}/5',
       raretes: { maillard: 'Maillard', doree: 'Golden', croute: 'Crust', mie: 'Crumb' },
       fraicheur: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
-      jauges: { durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' },
+      jauges: { durabilite: 'Durability', propension: 'Business interest', lienOffre: 'Relevance' },
       cuite: 'Baked',
       niveaux: { apprenti: 'Apprentice', mitron: 'Baker’s helper', boulanger: 'Baker', maitre: 'Master baker' },
       points: '{n} baking points', suite: '{n} points to {niveau}', sommet: 'Highest level reached',
