@@ -25,7 +25,7 @@ const art = (ref, feu, d, p, l, axe) => ({ ref, titre: 'Titre ' + ref, source: '
 test('constantes uniques : points, niveaux, levain', () => {
   assert.deepEqual(Jeu.POINTS.cuisson, { hot: 60, knead: 40, stale: 15 });
   assert.deepEqual(Jeu.POINTS.bonus, { maillard: 15, doree: 10, croute: 5, mie: 0 });
-  assert.equal(Jeu.POINTS.rituel, 10);
+  assert.equal(Jeu.POINTS.decouverte, 10);
   assert.deepEqual(Jeu.NIVEAUX.map(n => [n.id, n.min]), [['apprenti', 0], ['mitron', 100], ['boulanger', 250], ['maitre', 600]]);
   assert.deepEqual(Jeu.LEVAIN, { sommeil: 2, garde: 0.5 });
 });
@@ -74,36 +74,12 @@ test('levain : s’endort après 2 jours manqués d’affilée, se réveille en 
   assert.equal(Jeu.nourrirLevain({ jours: 3, dernier: '2026-12-31' }, '2027-01-01').jours, 4);
 });
 
-test('ouvrir la fournée : levain nourri et cartes du jour vues, une fois', () => {
-  const s = memoire();
-  const cartes = [art('a', 'vert', 5, 5, 4), art('b', 'rouge', 1, 1, 1, 'Axe 2')];
-  Jeu.ouvrirFournee(s, 'lea', cartes, J('2026-11-24'));
-  let c = Jeu.lireCompte(s, 'lea', J('2026-11-24'));
-  assert.deepEqual(c.levain, { jours: 1, dernier: '2026-11-24' });
-  assert.deepEqual(Object.keys(c.cartes).sort(), ['a', 'b']);
-  assert.deepEqual(c.cartes.a, { titre: 'Titre a', source: 'Src', axe: 'Axe 1', rarete: 'maillard', vue: '2026-11-24', cuite: '', gain: 0 });
-  Jeu.ouvrirFournee(s, 'lea', cartes, J('2026-11-25'));
-  c = Jeu.lireCompte(s, 'lea', J('2026-11-25'));
-  assert.equal(c.cartes.a.vue, '2026-11-24', 'la première vue est gardée');
-  assert.equal(c.levain.jours, 2);
-  assert.equal(c.points, 0, 'ouvrir la fournée ne rapporte pas de points');
-});
-
-test('rituel du matin : petit gain une seule fois par jour', () => {
-  const s = memoire();
-  assert.equal(Jeu.gagnerRituel(s, 'lea', J('2026-11-24')).gain, 10);
-  assert.equal(Jeu.gagnerRituel(s, 'lea', J('2026-11-24')).gain, 0);
-  assert.equal(Jeu.gagnerRituel(s, 'lea', J('2026-11-25')).gain, 10);
-  assert.equal(Jeu.lireCompte(s, 'lea', J('2026-11-25')).points, 20);
-  assert.equal(Jeu.gagnerRituel(s, null, J('2026-11-25')).gain, 0);
-});
-
 test('cuisson : une carte ne cuit qu’une fois, gain pondéré, passage de niveau signalé', () => {
   const s = memoire();
   const a = art('a', 'vert', 5, 5, 4);
-  Jeu.ouvrirFournee(s, 'lea', [a], J('2026-11-24'));
+  Jeu.decouvrir(s, 'lea', [a], J('2026-11-24'));
   let r = Jeu.cuire(s, 'lea', a, 'hot', J('2026-11-24'));
-  assert.deepEqual(r, { gain: 75, dejaCuite: false, avant: 'apprenti', apres: 'apprenti', monte: false, points: 75 });
+  assert.deepEqual(r, { gain: 75, dejaCuite: false, avant: 'apprenti', apres: 'apprenti', monte: false, points: 85 }, 'découverte (+10) puis cuisson');
   assert.equal(Jeu.estCuite(Jeu.lireCompte(s, 'lea', J('2026-11-24')), 'a'), true);
   r = Jeu.cuire(s, 'lea', a, 'hot', J('2026-11-25'));
   assert.equal(r.gain, 0);
@@ -118,12 +94,12 @@ test('cuisson : une carte ne cuit qu’une fois, gain pondéré, passage de nive
   assert.equal(c.cartes.z.cuite, '2026-11-25');
   assert.equal(c.cartes.z.gain, 40);
   assert.equal(c.cartes.a.cuite, '2026-11-24');
-  assert.equal(c.points, 115);
+  assert.equal(c.points, 125);
 });
 
 test('cuisson : la rareté de la carte déjà vue l’emporte sur un article sans notes', () => {
   const s = memoire();
-  Jeu.ouvrirFournee(s, 'lea', [art('a', 'vert', 5, 4, 4)], J('2026-11-24'));
+  Jeu.decouvrir(s, 'lea', [art('a', 'vert', 5, 4, 4)], J('2026-11-24'));
   const r = Jeu.cuire(s, 'lea', { ref: 'a', titre: 'Titre a' }, 'stale', J('2026-11-27'));
   assert.equal(r.gain, 15 + 15);
 });
@@ -140,39 +116,26 @@ test('fraîcheur de cuisson : feu de la fournée ou catégorie du garde-manger',
 test('jeu désactivé : aucun gain ni carte enregistrée, données conservées et rendues', () => {
   const s = memoire();
   const a = art('a', 'vert', 5, 5, 4);
-  Jeu.ouvrirFournee(s, 'lea', [a], J('2026-11-24'));
+  Jeu.decouvrir(s, 'lea', [a], J('2026-11-24'));
   Jeu.cuire(s, 'lea', a, 'hot', J('2026-11-24'));
   assert.equal(Jeu.estActif(s, 'lea'), true, 'activé par défaut');
   assert.equal(Jeu.activer(s, 'lea', false), true);
   assert.equal(Jeu.estActif(s, 'lea'), false);
-  assert.equal(Jeu.rituelAFaire(s, 'lea', J('2026-11-25')), false, 'pas de rituel');
-  assert.equal(Jeu.lireVue(s, 'lea'), 'fournee', 'retour à la vue fournée');
-  Jeu.ouvrirFournee(s, 'lea', [art('b', 'vert', 1, 1, 1)], J('2026-11-25'));
+  assert.equal(Jeu.estCachee(Jeu.lireCompte(s, 'lea', J('2026-11-25')), 'b', '2026-11-25'), false, 'fournée face visible');
+  Jeu.decouvrir(s, 'lea', [art('b', 'vert', 1, 1, 1)], J('2026-11-25'));
   assert.equal(Jeu.cuire(s, 'lea', art('b', 'vert', 1, 1, 1), 'hot', J('2026-11-25')).gain, 0);
-  assert.equal(Jeu.gagnerRituel(s, 'lea', J('2026-11-25')).gain, 0);
+  assert.equal(Jeu.decouvrir(s, 'lea', [art('c', 'vert', 1, 1, 1)], J('2026-11-25')).gain, 0);
   let c = Jeu.lireCompte(s, 'lea', J('2026-11-25'));
-  assert.equal(c.points, 75);
+  assert.equal(c.points, 85);
   assert.deepEqual(Object.keys(c.cartes), ['a']);
   assert.equal(c.levain.dernier, '2026-11-24');
   Jeu.activer(s, 'lea', true);
   c = Jeu.lireCompte(s, 'lea', J('2026-11-25'));
-  assert.equal(c.points, 75);
+  assert.equal(c.points, 85);
   assert.equal(c.cartes.a.cuite, '2026-11-24');
   assert.equal(Jeu.estActif(s, 'other'), true);
   assert.equal(Jeu.estActif(CASSE, 'lea'), true);
   assert.equal(Jeu.activer(CASSE, 'lea', false), false);
-});
-
-test('compte du lot 32 ({ rituel, vue }) relu sans perte', () => {
-  const s = memoire();
-  s.setItem('pq-jeu', JSON.stringify({ version: 1, comptes: { lea: { rituel: '2026-11-24', vue: 'cartes' } } }));
-  const c = Jeu.lireCompte(s, 'lea', J('2026-11-25'));
-  assert.equal(c.rituel, '2026-11-24');
-  assert.equal(c.vue, 'cartes');
-  assert.equal(c.actif, true);
-  assert.equal(c.points, 0);
-  assert.deepEqual(c.cartes, {});
-  assert.deepEqual(c.levain, { jours: 0, dernier: '' });
 });
 
 test('données abîmées : valeurs par défaut, cartes invalides écartées', () => {
@@ -188,7 +151,7 @@ test('données abîmées : valeurs par défaut, cartes invalides écartées', ()
 
 test('collection : par famille, progression par série, cuites d’abord', () => {
   const s = memoire();
-  Jeu.ouvrirFournee(s, 'lea', [art('a', 'vert', 2, 2, 2, 'Agents IA'), art('b', 'vert', 5, 5, 5, 'Agents IA'), art('c', 'rouge', 3, 3, 3, 'Modèles'), art('d', 'vert', 4, 4, 4, 'Agents IA')], J('2026-11-24'));
+  Jeu.decouvrir(s, 'lea', [art('a', 'vert', 2, 2, 2, 'Agents IA'), art('b', 'vert', 5, 5, 5, 'Agents IA'), art('c', 'rouge', 3, 3, 3, 'Modèles'), art('d', 'vert', 4, 4, 4, 'Agents IA')], J('2026-11-24'));
   Jeu.cuire(s, 'lea', { ref: 'a' }, 'hot', J('2026-11-24'));
   const col = Jeu.collection(Jeu.lireCompte(s, 'lea', J('2026-11-24')));
   assert.deepEqual(col.total, { vues: 4, cuites: 1 });
@@ -200,7 +163,7 @@ test('collection : par famille, progression par série, cuites d’abord', () =>
   assert.deepEqual(Jeu.collection(Jeu.lireCompte(memoire(), 'x', J('2026-11-24'))), { total: { vues: 0, cuites: 0 }, familles: [] });
   // Carte sans famille : rangée sous « Autres »
   const s2 = memoire();
-  Jeu.ouvrirFournee(s2, 'x', [{ ref: 'q', titre: 'Q', feu: 'vert' }], J('2026-11-24'));
+  Jeu.decouvrir(s2, 'x', [{ ref: 'q', titre: 'Q', feu: 'vert' }], J('2026-11-24'));
   assert.equal(Jeu.collection(Jeu.lireCompte(s2, 'x', J('2026-11-24')), 'en').familles[0].famille, 'Other');
 });
 
@@ -216,15 +179,15 @@ test('données d’exemple de Léa : compte démo sans entrée, plausibles, marq
   assert.ok(col.total.vues >= 5);
   assert.ok(col.total.cuites >= 1 && col.total.cuites <= 2);
   assert.ok(col.familles.length >= 2);
-  assert.equal(c.rituel, '', 'le rituel du lot 32 reste à faire');
-  assert.ok(Jeu.niveau(c.points + Jeu.POINTS.rituel + Jeu.gainCuisson('hot', 'maillard')).id === 'boulanger', 'démo : le rituel puis une cuisson font passer Boulanger');
+  assert.deepEqual(Jeu.decouvertesDuJour(c, '2026-11-25'), [], 'la fournée du jour reste face cachée');
+  assert.ok(Jeu.niveau(c.points + Jeu.POINTS.decouverte + Jeu.gainCuisson('hot', 'maillard')).id === 'boulanger', 'démo : la première carte puis une cuisson font passer Boulanger');
   // Autre compte : rien
   assert.deepEqual(Jeu.lireCompte(s, 'autre@x.fr', J('2026-11-25')).cartes, {});
   // Une fois écrit, l'exemple est conservé tel quel (une visite le fait grandir)
-  Jeu.ouvrirFournee(s, Jeu.COMPTE_DEMO, [], J('2026-11-25'));
+  Jeu.decouvrir(s, Jeu.COMPTE_DEMO, [art('recDemo01', 'vert', 5, 5, 4, 'Axe 2')], J('2026-11-25'));
   const apres = Jeu.lireCompte(s, Jeu.COMPTE_DEMO, J('2026-11-25'));
   assert.equal(apres.levain.jours, c.levain.jours + 1);
-  assert.equal(apres.points, c.points);
+  assert.equal(apres.points, c.points + Jeu.POINTS.decouverte);
   // ?demo=reset : pq-jeu effacé, l'exemple revient à neuf
   require('../store.js').reinitialiserDemo(s);
   assert.equal(s.getItem('pq-jeu'), null);
@@ -275,19 +238,11 @@ test('fournil : la confirmation de publication cuit la carte et l’annonce', ()
   assert.match(h, /<div id="pq-toast" role="status"/);
 });
 
-test('fournée : cartes vues à l’ouverture, carte cuite marquée en texte, bascule masquée si jeu coupé', () => {
+test('fournée : cartes découvertes au clic, carte cuite marquée en texte, rien de caché si jeu coupé', () => {
   const h = lire('fournee.html');
-  assert.match(h, /Jeu\.ouvrirFournee\(/);
-  assert.match(h, /data-cuite="\{\{c\.cuite\}\}"/);
+  assert.match(h, /Jeu\.decouvrir\(/);
   assert.match(h, /class="jeu-cuite"[^>]*>[^<]*<svg[^>]*aria-hidden="true"[\s\S]*?\{\{j\.cuite\}\}/);
   assert.match(h, /var jeuActif = !!cleCompte\(\) && compteJeu\.actif;/);
-  assert.match(h, /basculeStyle: ready && jeuActif \?/);
-});
-
-test('rituel : rien si le jeu est coupé (rituelAFaire), petit gain à l’ouverture', () => {
-  const r = lire('rituel.js');
-  assert.match(r, /Jeu\.gagnerRituel\(/);
-  assert.match(r, /Jeu\.ouvrirFournee\(/);
 });
 
 test('comptoir : encart levain et niveau, texte lisible, barre décorative', () => {

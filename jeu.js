@@ -1,11 +1,11 @@
-/* Lot 32 : cartes à collectionner (jeu personnel, sans classement ni achat). Logique pure, testée sous Node.
+/* Lots 32 à 34 : cartes à collectionner (jeu personnel, sans classement ni achat). Logique pure, testée sous Node.
    Chaque news de la fournée devient une carte dont la rareté vient du score de monétisation sur 15.
-   Mémoire en localStorage « pq-jeu » = { version: 1, comptes: { [clé]: { rituel: 'AAAA-MM-JJ', vue, ...lot 33 } } },
-   lot 33 : actif, points, rituelPoints, levain, cartes vues et cuites (voir la spec 2026-11-25-lot33-progression-design.md).
-   clé de compte comme visite.js et theme.js. La partie navigateur du rituel vit dans rituel.js. */
+   Lot 34 : les cartes se découvrent dans la fournée elle-même (face cachée, un clic les retourne), plus de rituel
+   plein écran ni de vue cartes. Mémoire en localStorage « pq-jeu » = { version: 1, comptes: { [clé]: compte } },
+   compte = { actif, points, pointsJour, levain, decouvertes: { date, refs }, cartes } (voir les specs des lots 33
+   et 34). Clé de compte comme visite.js et theme.js. La partie navigateur vit dans fournee.html. */
 (function (root) {
   var CLE = 'pq-jeu';
-  var VUES = ['fournee', 'cartes'];
 
   // Seuils de rareté sur le total /15, du plus rare au plus courant : la première atteinte l'emporte.
   // grignes : repère visuel en plus du mot (jamais la couleur seule).
@@ -22,76 +22,77 @@
 
   var TEXTES = {
     fr: {
-      titre: 'La fournée sort du four',
-      intro: 'Retourne tes cartes une à une : le n°1 arrive en dernier.',
-      retourner: 'Retourner la carte {n} sur {total}',
-      dernier: 'Carte {n} sur {total} : le n°1, à retourner en dernier',
-      garde: 'Le n°1 vient en dernier : retourne d’abord les autres cartes.',
-      dos: 'Carte {n}', dosAide: 'Retourner', dosDernier: 'Le n°1, en dernier',
-      toutRetourner: 'Tout retourner', passer: 'Passer', voir: 'Voir ma fournée',
-      fini: 'Toute la fournée est sortie du four.',
+      // Lot 34 : dos des cartes dans la fournée.
+      intro: 'Tes news arrivent face cachée : clique sur une carte pour la découvrir. Garde le n°1 pour la fin.',
+      rang: 'n°{n}', dosAide: 'Découvrir', dosDernier: 'À garder pour la fin',
+      dosLabel: 'Découvrir la news n°{n}, rareté {rarete}', dosLabelDernier: 'Découvrir la news n°{n}, rareté {rarete}, à garder pour la fin',
+      toutRetourner: 'Tout retourner',
+      compte: { aucune: 'Aucune carte découverte sur {total}', une: '1 carte sur {total} découverte', plusieurs: '{n} cartes sur {total} découvertes', toutes: 'Toute la fournée est découverte' },
+      decouverteGain: 'Première carte du jour : +{n} points de cuisson.',
       annonce: 'Carte {n} sur {total} : {rarete}. {titre}. {fraicheur}, {source}, {famille}. {money}.',
       money: 'Monétisation {m}/15', sur5: '{v}/5',
       raretes: { maillard: 'Maillard', doree: 'Dorée', croute: 'Croûte', mie: 'Mie' },
       fraicheur: { hot: 'Tout chaud', knead: 'À pétrir', stale: 'Rassis' },
       jauges: { durabilite: 'Durabilité', propension: 'Propension', lienOffre: 'Lien offre' },
-      vue: { groupe: 'Affichage de la fournée', fournee: 'Vue fournée', cartes: 'Vue cartes' },
       // Lot 33 : progression personnelle.
       cuite: 'Cuite',
       niveaux: { apprenti: 'Apprenti', mitron: 'Mitron', boulanger: 'Boulanger', maitre: 'Maître artisan' },
       points: '{n} points de cuisson', suite: '{n} points avant {niveau}', sommet: 'Niveau le plus haut atteint',
       cuisson: 'Carte cuite : +{gain} points de cuisson.', nouveauNiveau: 'Nouveau niveau : {niveau}.',
-      dejaCuite: 'Cette carte était déjà cuite.', rituelGain: 'Rituel du jour : +{n} points de cuisson.',
+      dejaCuite: 'Cette carte était déjà cuite.',
       levain: {
         un: 'Ton levain : 1 jour', plusieurs: 'Ton levain : {n} jours', vide: 'Ton levain attend ta première fournée',
-        nourri: 'Nourri aujourd’hui.', aNourrir: 'Ouvre ta fournée du jour pour le nourrir.',
+        nourri: 'Nourri aujourd’hui.', aNourrir: 'Découvre une carte de ta fournée du jour pour le nourrir.',
         endormi: 'Il s’est endormi. Il se réveillera à ta prochaine fournée, en gardant une bonne partie de sa force.',
         etatEndormi: 'Endormi'
       },
       encart: { titre: 'Ta progression', niveau: 'Niveau {niveau}', voir: 'Voir ma collection' },
       collection: {
-        onglets: 'Rubriques du garde-manger', cote: 'Mis de côté', titre: 'Ma collection',
-        intro: 'Chaque carte vue dans ta fournée rejoint ta collection. Elle cuit quand tu publies son post.',
-        total: '{v} cartes vues, dont {c} cuites', vide: 'Ta collection est vide. Ouvre ta fournée du jour : ses cartes viendront s’y ranger.',
-        autres: 'Autres', vueLe: 'Vue le {d}', cuiteLe: 'Cuite le {d}', exemple: 'Collection d’exemple pour la démo.',
+        onglets: 'Rubriques du garde-manger', cote: 'Mis de côté', titre: 'Collection de pains',
+        intro: 'Chaque carte découverte dans ta fournée rejoint ta collection. Elle cuit quand tu publies son post.',
+        total: '{v} cartes découvertes, dont {c} cuites', vide: 'Ta collection est vide. Découvre les cartes de ta fournée du jour : elles viendront s’y ranger.',
+        autres: 'Autres', vueLe: 'Découverte le {d}', cuiteLe: 'cuite le {d}', exemple: 'Collection d’exemple pour la démo.',
         carte1: '1 carte', carteN: '{n} cartes', cuites0: 'aucune cuite pour l’instant', cuites1: 'dont 1 cuite', cuitesN: 'dont {c} cuites',
-        serie: '{famille} : {cartes}, {cuites}'
+        serie: '{famille} : {cartes}, {cuites}',
+        familles: 'Par famille', historique: 'Historique des cartes',
+        filtreRarete: 'Rareté', filtreFamille: 'Famille', toutes: 'Toutes',
+        affichees: '{n} cartes affichées', affichee1: '{n} carte affichée', aucune: 'Aucune carte pour ces filtres.'
       }
     },
     en: {
-      titre: 'The batch is out of the oven',
-      intro: 'Turn your cards over one by one: number 1 comes last.',
-      retourner: 'Turn over card {n} of {total}',
-      dernier: 'Card {n} of {total}: number 1, to turn over last',
-      garde: 'Number 1 comes last: turn over the other cards first.',
-      dos: 'Card {n}', dosAide: 'Turn over', dosDernier: 'Number 1, last',
-      toutRetourner: 'Turn them all over', passer: 'Skip', voir: 'See my batch',
-      fini: 'The whole batch is out of the oven.',
+      intro: 'Your stories arrive face down: click a card to discover it. Keep number 1 for last.',
+      rang: '#{n}', dosAide: 'Discover', dosDernier: 'Keep it for last',
+      dosLabel: 'Discover story #{n}, rarity {rarete}', dosLabelDernier: 'Discover story #{n}, rarity {rarete}, keep it for last',
+      toutRetourner: 'Turn them all over',
+      compte: { aucune: 'No card discovered out of {total}', une: '1 of {total} cards discovered', plusieurs: '{n} of {total} cards discovered', toutes: 'The whole batch is discovered' },
+      decouverteGain: 'First card of the day: +{n} baking points.',
       annonce: 'Card {n} of {total}: {rarete}. {titre}. {fraicheur}, {source}, {famille}. {money}.',
       money: 'Monetisation {m}/15', sur5: '{v}/5',
       raretes: { maillard: 'Maillard', doree: 'Golden', croute: 'Crust', mie: 'Crumb' },
       fraicheur: { hot: 'Piping hot', knead: 'Needs kneading', stale: 'Gone stale' },
       jauges: { durabilite: 'Shelf life', propension: 'Shareability', lienOffre: 'Offer fit' },
-      vue: { groupe: 'Batch display', fournee: 'Batch view', cartes: 'Card view' },
       cuite: 'Baked',
       niveaux: { apprenti: 'Apprentice', mitron: 'Baker’s helper', boulanger: 'Baker', maitre: 'Master baker' },
       points: '{n} baking points', suite: '{n} points to {niveau}', sommet: 'Highest level reached',
       cuisson: 'Card baked: +{gain} baking points.', nouveauNiveau: 'New level: {niveau}.',
-      dejaCuite: 'This card was already baked.', rituelGain: 'Morning ritual: +{n} baking points.',
+      dejaCuite: 'This card was already baked.',
       levain: {
         un: 'Your starter: 1 day', plusieurs: 'Your starter: {n} days', vide: 'Your starter is waiting for your first batch',
-        nourri: 'Fed today.', aNourrir: 'Open today’s batch to feed it.',
+        nourri: 'Fed today.', aNourrir: 'Discover a card from today’s batch to feed it.',
         endormi: 'It fell asleep. It will wake up with your next batch, keeping a good part of its strength.',
         etatEndormi: 'Asleep'
       },
       encart: { titre: 'Your progress', niveau: 'Level: {niveau}', voir: 'See my collection' },
       collection: {
-        onglets: 'Pantry sections', cote: 'Saved', titre: 'My collection',
-        intro: 'Every card seen in your batch joins your collection. It gets baked when you post about it.',
-        total: '{v} cards seen, {c} baked', vide: 'Your collection is empty. Open today’s batch: its cards will be filed here.',
-        autres: 'Other', vueLe: 'Seen on {d}', cuiteLe: 'Baked on {d}', exemple: 'Sample collection for the demo.',
+        onglets: 'Pantry sections', cote: 'Saved', titre: 'Bread collection',
+        intro: 'Every card discovered in your batch joins your collection. It gets baked when you post about it.',
+        total: '{v} cards discovered, {c} baked', vide: 'Your collection is empty. Discover the cards of today’s batch: they will be filed here.',
+        autres: 'Other', vueLe: 'Discovered on {d}', cuiteLe: 'baked on {d}', exemple: 'Sample collection for the demo.',
         carte1: '1 card', carteN: '{n} cards', cuites0: 'none baked yet', cuites1: '1 baked', cuitesN: '{c} baked',
-        serie: '{famille}: {cartes}, {cuites}'
+        serie: '{famille}: {cartes}, {cuites}',
+        familles: 'By family', historique: 'Card history',
+        filtreRarete: 'Rarity', filtreFamille: 'Family', toutes: 'All',
+        affichees: '{n} cards shown', affichee1: '{n} card shown', aucune: 'No card for these filters.'
       }
     }
   };
@@ -130,48 +131,9 @@
       .slice(0, n);
   }
 
-  // Ordre du rituel : du dernier rang au n°1, qui arrive en dernier.
-  function ordreRetournement(cartes) { return (cartes || []).slice().reverse(); }
-
-  // retournees : un booléen par carte, dans l'ordre de retournement. La dernière (le n°1) attend les autres.
-  function peutRetourner(retournees, i) {
-    if (retournees[i]) return false;
-    if (i !== retournees.length - 1) return true;
-    return retournees.slice(0, -1).every(Boolean);
-  }
-
-  // Prochaine carte à proposer : la première encore cachée, ou -1 quand tout est retourné.
-  function suivante(retournees) { return retournees.indexOf(false); }
-
   function fraicheur(article) { return FEU[(article || {}).feu] || ''; }
 
-  // Face d'une carte (rituel) : HTML échappé, sans action. La vue cartes de fournee.html reprend
-  // les mêmes classes dans son gabarit, avec les actions.
-  function grignesSvg(n) {
-    var traits = '';
-    for (var i = 0; i < n; i++) traits += '<path d="M' + (3 + i * 7) + ' 12l4-8"></path>';
-    return '<svg class="jeu-grignes" viewBox="0 0 30 16" aria-hidden="true" focusable="false">' + traits + '</svg>';
-  }
-
-  function faceHtml(article, lang) {
-    var a = article || {};
-    var t = textes(lang);
-    var r = rarete(a);
-    var f = fraicheur(a);
-    var jauges = notes(a).map(function (n) {
-      return '<div class="jeu-jauge"><span class="jeu-jauge-nom">' + esc(t.jauges[n.cle]) + '</span>' +
-        '<span class="jeu-piste" aria-hidden="true"><span class="jeu-plein" style="width:' + n.pct + '%"></span></span>' +
-        '<span class="jeu-jauge-val">' + esc(remplir(t.sur5, { v: n.valeur })) + '</span></div>';
-    }).join('');
-    return '<div class="jeu-carte" data-rarete="' + r.id + '">' +
-      '<div class="jeu-tete"><span class="jeu-rarete">' + grignesSvg(r.grignes) + '<span>' + esc(t.raretes[r.id]) + '</span></span>' +
-      (f ? '<span class="' + PUCE[f] + '">' + esc(t.fraicheur[f]) + '</span>' : '') + '</div>' +
-      '<h3 class="jeu-titre">' + esc(a.titre) + '</h3>' +
-      '<div class="jeu-meta"><span class="etiquette-source">' + esc(a.source) + '</span><span class="jeu-famille">' + esc(a.axe) + '</span></div>' +
-      '<div class="jeu-jauges"><p class="jeu-total">' + esc(remplir(t.money, { m: r.total })) + '</p>' + jauges + '</div>' +
-      '</div>';
-  }
-
+  // Annonce d'une carte qui vient d'être découverte (lecteur d'écran) : tout est dit en clair.
   function annonce(article, n, total, lang) {
     var a = article || {};
     var t = textes(lang);
@@ -183,14 +145,35 @@
     });
   }
 
+  // Lot 34 : dos d'une carte face cachée dans la fournée. Rang et rareté écrits pour donner envie ;
+  // le n°1 se garde pour la fin (ordre suggéré, jamais imposé).
+  function dos(article, rang, lang) {
+    var t = textes(lang);
+    var r = rarete(article);
+    var vals = { n: rang, rarete: t.raretes[r.id] };
+    return {
+      rarete: r.id, grignes: r.grignes, rang: remplir(t.rang, { n: rang }), rareteNom: t.raretes[r.id],
+      aide: rang === 1 ? t.dosDernier : t.dosAide,
+      label: remplir(rang === 1 ? t.dosLabelDernier : t.dosLabel, vals)
+    };
+  }
+
+  function compteDecouvertes(n, total, lang) {
+    var t = textes(lang).compte;
+    var vals = { n: n, total: total };
+    if (total > 0 && n >= total) return t.toutes;
+    return remplir(n === 0 ? t.aucune : n === 1 ? t.une : t.plusieurs, vals);
+  }
+
   /* ---------- Mémoire par compte ---------- */
 
   // Lot 33 : règles de progression, chacune dans une constante unique.
   // Points de cuisson : selon la fraîcheur au moment de la cuisson, plus un petit bonus de rareté.
+  // Lot 34 : decouverte remplace le gain du rituel, une fois par jour à la première carte découverte.
   var POINTS = {
     cuisson: { hot: 60, knead: 40, stale: 15 },
     bonus: { maillard: 15, doree: 10, croute: 5, mie: 0 },
-    rituel: 10
+    decouverte: 10
   };
   var NIVEAUX = [
     { id: 'apprenti', min: 0 },
@@ -202,6 +185,7 @@
   var LEVAIN = { sommeil: 2, garde: 0.5 };
   var GARDE_VERS_FRAICHEUR = { chaud: 'hot', enfourner: 'knead', rassis: 'stale' };
   var IDS_RARETE = RARETES.map(function (r) { return r.id; });
+  var FRAICHEURS = ['hot', 'knead', 'stale'];
 
   function cleDuCompte(u) {
     if (!u) return null;
@@ -226,26 +210,30 @@
   function decaler(d, jours) { var x = new Date(d.getTime()); x.setDate(x.getDate() + jours); return dateDuJour(x); }
 
   /* DONNÉES D'EXEMPLE (démo jury) : progression plausible de Léa, le compte de démo, tant qu'elle n'a pas
-     d'entrée « pq-jeu ». Rien de réel : cartes inventées (refs « exLea… ») et deux cartes de la fournée de démo
-     vues la veille. Mitron à 185 points : le rituel du jour puis une cuisson Tout chaud Maillard la font passer
-     Boulanger. ?demo=reset efface pq-jeu et ces données repartent à neuf. */
+     d'entrée « pq-jeu ». Rien de réel : cartes inventées (refs « exLea… ») découvertes ces cinq derniers jours,
+     et deux cartes de la fournée de démo découvertes la veille. Aucune carte découverte aujourd'hui : la fournée
+     du jour s'ouvre face cachée. Mitron à 185 points : la première carte du jour puis une cuisson Tout chaud
+     Maillard la font passer Boulanger. ?demo=reset efface pq-jeu et ces données repartent à neuf. */
   var COMPTE_DEMO = 'lea@demo.painquotidien.fr';
   function exempleLea(maintenant) {
     var j = function (n) { return decaler(maintenant, -n); };
-    var carte = function (titre, source, axe, rarete, vue, cuite, gain) {
-      return { titre: titre, source: source, axe: axe, rarete: rarete, vue: vue, cuite: cuite || '', gain: gain || 0 };
+    var carte = function (titre, source, axe, rarete, fraicheur, vue, cuite, gain) {
+      return { titre: titre, source: source, axe: axe, rarete: rarete, fraicheur: fraicheur, vue: vue, cuite: cuite || '', gain: gain || 0 };
     };
     return {
-      rituel: '', vue: 'fournee', actif: true, exemple: true,
-      points: 185, rituelPoints: j(1),
+      actif: true, exemple: true,
+      points: 185, pointsJour: j(1),
       levain: { jours: 4, dernier: j(1) },
+      decouvertes: { date: j(1), refs: ['recDemo06', 'recDemo07'] },
       cartes: {
-        exLea01: carte('Un agent IA prend les rendez-vous d’un cabinet de kinés', 'The Decoder', 'Axe 2', 'maillard', j(4), j(4), 75),
-        exLea02: carte('Transcrire ses réunions : cinq outils comparés', 'Hugging Face Blog', 'Axe 1', 'doree', j(3), j(3), 70),
-        exLea03: carte('Ce que l’AI Act change pour les TPE', 'MIT Technology Review', 'Axe 2', 'mie', j(3)),
-        exLea04: carte('Un petit modèle tourne sur un ordinateur portable', 'Mistral AI', 'Axe 1', 'croute', j(2)),
-        recDemo06: carte('Les marchés réagissent aux résultats d’un géant des puces', 'TechCrunch AI', 'Axe 2', 'mie', j(1)),
-        recDemo07: carte('Le RGPD face aux modèles de langage', 'The Verge', 'Axe 2', 'mie', j(1))
+        exLea01: carte('Un agent IA prend les rendez-vous d’un cabinet de kinés', 'The Decoder', 'Axe 2', 'maillard', 'hot', j(5), j(4), 75),
+        exLea05: carte('Facturer un audit IA : trois formules testées', 'Les Echos', 'Axe 3', 'croute', 'knead', j(5)),
+        exLea02: carte('Transcrire ses réunions : cinq outils comparés', 'Hugging Face Blog', 'Axe 1', 'doree', 'hot', j(4), j(3), 70),
+        exLea03: carte('Ce que l’AI Act change pour les TPE', 'MIT Technology Review', 'Axe 2', 'mie', 'stale', j(3)),
+        exLea06: carte('Un chatbot de devis pour artisans', 'Maddyness', 'Axe 3', 'doree', 'knead', j(3)),
+        exLea04: carte('Un petit modèle tourne sur un ordinateur portable', 'Mistral AI', 'Axe 1', 'croute', 'knead', j(2)),
+        recDemo06: carte('Les marchés réagissent aux résultats d’un géant des puces', 'TechCrunch AI', 'Axe 2', 'mie', 'stale', j(1)),
+        recDemo07: carte('Le RGPD face aux modèles de langage', 'The Verge', 'Axe 2', 'mie', 'stale', j(1))
       }
     };
   }
@@ -266,18 +254,22 @@
     return {
       titre: chaine(c.titre), source: chaine(c.source), axe: chaine(c.axe),
       rarete: IDS_RARETE.indexOf(c.rarete) !== -1 ? c.rarete : 'mie',
+      fraicheur: FRAICHEURS.indexOf(c.fraicheur) !== -1 ? c.fraicheur : '',
       vue: chaine(c.vue), cuite: chaine(c.cuite), gain: entier(c.gain)
     };
   }
 
-  // Compte complet et propre. Un compte du lot 32 ({ rituel, vue }) reste valide.
+  // Compte complet et propre. Un compte des lots 32 et 33 reste valide : rituel et vue ne sont plus lus,
+  // rituelPoints (dernier jour où le rituel a rapporté) vaut pointsJour.
   function normaliser(c) {
     var o = estObjet(c) ? c : {};
     var lev = estObjet(o.levain) ? o.levain : {};
+    var dec = estObjet(o.decouvertes) ? o.decouvertes : {};
     var r = {
-      rituel: chaine(o.rituel), vue: VUES.indexOf(o.vue) !== -1 ? o.vue : 'fournee',
-      actif: o.actif !== false, points: entier(o.points), rituelPoints: chaine(o.rituelPoints),
-      levain: { jours: entier(lev.jours), dernier: chaine(lev.dernier) }, cartes: {}
+      actif: o.actif !== false, points: entier(o.points), pointsJour: chaine(o.pointsJour) || chaine(o.rituelPoints),
+      levain: { jours: entier(lev.jours), dernier: chaine(lev.dernier) },
+      decouvertes: { date: chaine(dec.date), refs: Array.isArray(dec.refs) ? dec.refs.filter(function (x) { return typeof x === 'string' && x; }) : [] },
+      cartes: {}
     };
     if (estObjet(o.cartes)) {
       Object.keys(o.cartes).forEach(function (ref) { var n = normaliserCarte(o.cartes[ref]); if (n) r.cartes[ref] = n; });
@@ -287,7 +279,7 @@
   }
 
   function lireCompte(storage, cle, maintenant) {
-    if (!cle) return normaliser(null);
+    if (!cle) return normaliser({ actif: false });
     var c = etat(storage).comptes[cle];
     if (!estObjet(c) && cle === COMPTE_DEMO) c = exempleLea(maintenant || new Date());
     return normaliser(c);
@@ -310,17 +302,19 @@
   function estActif(storage, cle) { return lireCompte(storage, cle).actif; }
   function activer(storage, cle, oui) { return modifierCompte(storage, cle, { actif: !!oui }); }
 
-  function rituelAFaire(storage, cle, maintenant) {
-    if (!cle) return false;
-    var c = lireCompte(storage, cle, maintenant);
-    return c.actif && c.rituel !== dateDuJour(maintenant);
+  /* ---------- Découverte des cartes (lot 34) ---------- */
+
+  // Refs retournées le jour donné : une autre date vaut une liste vide (chaque jour, la fournée revient face cachée).
+  function decouvertesDuJour(compte, date) {
+    var d = compte && compte.decouvertes;
+    return d && d.date === date ? d.refs.slice() : [];
   }
-  function marquerRituel(storage, cle, maintenant) { return modifierCompte(storage, cle, { rituel: dateDuJour(maintenant) }, maintenant); }
-  // Jeu coupé : retour à la vue fournée (le choix mémorisé est gardé pour plus tard).
-  function lireVue(storage, cle) { var c = lireCompte(storage, cle); return c.actif ? c.vue : 'fournee'; }
-  function choisirVue(storage, cle, vue) {
-    if (VUES.indexOf(vue) === -1) return false;
-    return modifierCompte(storage, cle, { vue: vue });
+
+  // Face cachée : jeu actif sur un compte connu et carte pas encore retournée aujourd'hui.
+  // Sans compte, lireCompte rend un jeu coupé : on ne cache rien.
+  function estCachee(compte, ref, date) {
+    if (!compte || !compte.actif) return false;
+    return decouvertesDuJour(compte, date).indexOf(ref) === -1;
   }
 
   /* ---------- Progression (lot 33) ---------- */
@@ -355,7 +349,7 @@
     return { jours: jours, endormi: jours > 0 && ecart > LEVAIN.sommeil, nourriAujourdhui: jours > 0 && ecart === 0 };
   }
 
-  // Une ouverture de fournée par jour nourrit le levain ; endormi, il se réveille en gardant une part de ses jours.
+  // Un jour de découverte nourrit le levain ; endormi, il se réveille en gardant une part de ses jours.
   function nourrirLevain(levain, date) {
     var l = estObjet(levain) ? levain : {};
     var jours = entier(l.jours);
@@ -369,20 +363,49 @@
   function aDesNotes(a) { return CRITERES.some(function (k) { return a[k] != null && isFinite(Number(a[k])); }); }
 
   function nouvelleCarte(a, date) {
-    return { titre: chaine(a.titre), source: chaine(a.source), axe: chaine(a.axe), rarete: aDesNotes(a) ? rarete(a).id : 'mie', vue: date, cuite: '', gain: 0 };
+    return { titre: chaine(a.titre), source: chaine(a.source), axe: chaine(a.axe), rarete: aDesNotes(a) ? rarete(a).id : 'mie', fraicheur: fraicheur(a), vue: date, cuite: '', gain: 0 };
   }
 
-  // Ouverture de la fournée (page ou rituel) : cartes du jour vues, levain nourri. Rien si le jeu est coupé.
-  function ouvrirFournee(storage, cle, cartes, maintenant) {
-    if (!cle) return false;
+  function niveauDe(c) { return niveau(c.points).id; }
+
+  // Lot 34 : découvrir une ou plusieurs cartes du jour (clic sur le dos, ou « Tout retourner »).
+  // Chaque carte rejoint la collection (date et fraîcheur du moment, gardées si elle y était déjà) ;
+  // le premier jour de découverte nourrit le levain et rapporte POINTS.decouverte, une seule fois par jour.
+  // Rien si le jeu est coupé ou sans compte. ok : écriture réussie.
+  function decouvrir(storage, cle, articles, maintenant) {
     var c = lireCompte(storage, cle, maintenant);
-    if (!c.actif) return false;
+    var n = niveauDe(c);
+    var r = { ok: false, gain: 0, premiere: false, refs: [], avant: n, apres: n, monte: false, points: c.points };
+    if (!cle || !c.actif) return r;
     var date = dateDuJour(maintenant);
-    (cartes || []).forEach(function (a) {
-      if (a && typeof a.ref === 'string' && a.ref && !c.cartes[a.ref]) c.cartes[a.ref] = nouvelleCarte(a, date);
+    var refs = decouvertesDuJour(c, date);
+    (articles || []).forEach(function (a) {
+      if (!a || typeof a.ref !== 'string' || !a.ref || refs.indexOf(a.ref) !== -1) return;
+      refs.push(a.ref);
+      r.refs.push(a.ref);
+      if (!c.cartes[a.ref]) c.cartes[a.ref] = nouvelleCarte(a, date);
     });
-    c.levain = nourrirLevain(c.levain, date);
-    return ecrire(storage, cle, c);
+    c.decouvertes = { date: date, refs: refs };
+    if (r.refs.length) {
+      c.levain = nourrirLevain(c.levain, date);
+      if (c.pointsJour !== date) {
+        c.pointsJour = date;
+        c.points += POINTS.decouverte;
+        r.gain = POINTS.decouverte;
+        r.premiere = true;
+      }
+    }
+    r.ok = ecrire(storage, cle, c);
+    r.points = c.points;
+    r.apres = niveauDe(c);
+    r.monte = niveau(c.points).index > niveau(c.points - r.gain).index;
+    return r;
+  }
+
+  function messageDecouverte(r, lang) {
+    if (!r || !r.gain) return '';
+    var t = textes(lang);
+    return remplir(t.decouverteGain, { n: r.gain }) + (r.monte ? ' ' + remplir(t.nouveauNiveau, { niveau: t.niveaux[r.apres] }) : '');
   }
 
   function gagner(storage, cle, c, gain) {
@@ -396,14 +419,6 @@
   function rien(c) {
     var n = niveau(c.points).id;
     return { gain: 0, dejaCuite: false, avant: n, apres: n, monte: false, points: c.points };
-  }
-
-  function gagnerRituel(storage, cle, maintenant) {
-    var c = lireCompte(storage, cle, maintenant);
-    var date = dateDuJour(maintenant);
-    if (!cle || !c.actif || c.rituelPoints === date) return rien(c);
-    c.rituelPoints = date;
-    return gagner(storage, cle, c, POINTS.rituel);
   }
 
   // Publication confirmée au fournil : la carte de même ref cuit, une seule fois.
@@ -422,6 +437,11 @@
 
   function estCuite(compte, ref) { return !!(compte && compte.cartes && compte.cartes[ref] && compte.cartes[ref].cuite); }
 
+  function copieCarte(ref, c) {
+    return { ref: ref, titre: c.titre, source: c.source, axe: c.axe, rarete: c.rarete, fraicheur: c.fraicheur, vue: c.vue, cuite: c.cuite, gain: c.gain };
+  }
+  function ordreRarete(x, y) { return IDS_RARETE.indexOf(x.rarete) - IDS_RARETE.indexOf(y.rarete); }
+
   // Collection par famille (axe de l'article) : cuites d'abord, puis de la plus rare à la plus courante.
   function collection(compte, lang) {
     var t = textes(lang);
@@ -431,17 +451,41 @@
     Object.keys(cartes).forEach(function (ref) {
       var c = cartes[ref];
       var f = c.axe || t.collection.autres;
-      (parFamille[f] = parFamille[f] || []).push({ ref: ref, titre: c.titre, source: c.source, axe: c.axe, rarete: c.rarete, vue: c.vue, cuite: c.cuite, gain: c.gain });
+      (parFamille[f] = parFamille[f] || []).push(copieCarte(ref, c));
       total.vues++;
       if (c.cuite) total.cuites++;
     });
     var familles = Object.keys(parFamille).sort(function (a, b) { return a.localeCompare(b, 'fr'); }).map(function (f) {
       var liste = parFamille[f].sort(function (x, y) {
-        return (!!y.cuite - !!x.cuite) || (IDS_RARETE.indexOf(x.rarete) - IDS_RARETE.indexOf(y.rarete)) || x.titre.localeCompare(y.titre, 'fr');
+        return (!!y.cuite - !!x.cuite) || ordreRarete(x, y) || x.titre.localeCompare(y.titre, 'fr');
       });
       return { famille: f, cartes: liste, cuites: liste.filter(function (x) { return x.cuite; }).length };
     });
     return { total: total, familles: familles };
+  }
+
+  // Lot 34 : historique de la collection de pains, toutes journées confondues, du plus récent au plus
+  // ancien (la plus rare d'abord le même jour). filtres : { rarete, famille } facultatifs. familles et
+  // raretes listent les valeurs présentes (options des filtres) ; total ignore les filtres.
+  function historique(compte, filtres) {
+    var f = filtres || {};
+    var cartes = (compte && compte.cartes) || {};
+    var toutes = Object.keys(cartes).map(function (ref) { return copieCarte(ref, cartes[ref]); });
+    toutes.sort(function (x, y) {
+      return (x.vue < y.vue ? 1 : x.vue > y.vue ? -1 : 0) || ordreRarete(x, y) || x.titre.localeCompare(y.titre, 'fr');
+    });
+    var familles = [];
+    var raretes = [];
+    toutes.forEach(function (c) {
+      if (c.axe && familles.indexOf(c.axe) === -1) familles.push(c.axe);
+      if (raretes.indexOf(c.rarete) === -1) raretes.push(c.rarete);
+    });
+    familles.sort(function (a, b) { return a.localeCompare(b, 'fr'); });
+    raretes.sort(function (a, b) { return IDS_RARETE.indexOf(a) - IDS_RARETE.indexOf(b); });
+    return {
+      total: toutes.length, familles: familles, raretes: raretes,
+      cartes: toutes.filter(function (c) { return (!f.rarete || c.rarete === f.rarete) && (!f.famille || c.axe === f.famille); })
+    };
   }
 
   function libelleSerie(famille, n, cuites, lang) {
@@ -480,18 +524,17 @@
   }
 
   var Jeu = {
-    CLE: CLE, RARETES: RARETES, TEXTES: TEXTES, PUCE: PUCE,
+    CLE: CLE, RARETES: RARETES, TEXTES: TEXTES, PUCE: PUCE, FEU: FEU,
     POINTS: POINTS, NIVEAUX: NIVEAUX, LEVAIN: LEVAIN, COMPTE_DEMO: COMPTE_DEMO,
     rarete: rarete, notes: notes, fraicheur: fraicheur, cartesDuJour: cartesDuJour,
-    ordreRetournement: ordreRetournement, peutRetourner: peutRetourner, suivante: suivante,
-    faceHtml: faceHtml, annonce: annonce, remplir: remplir, textes: textes,
-    cleDuCompte: cleDuCompte, dateDuJour: dateDuJour, rituelAFaire: rituelAFaire, marquerRituel: marquerRituel,
-    lireVue: lireVue, choisirVue: choisirVue,
+    annonce: annonce, dos: dos, compteDecouvertes: compteDecouvertes, remplir: remplir, textes: textes,
+    cleDuCompte: cleDuCompte, dateDuJour: dateDuJour,
     lireCompte: lireCompte, estActif: estActif, activer: activer, exempleLea: exempleLea,
+    decouvertesDuJour: decouvertesDuJour, estCachee: estCachee, decouvrir: decouvrir, messageDecouverte: messageDecouverte,
     niveau: niveau, gainCuisson: gainCuisson, fraicheurCuisson: fraicheurCuisson,
-    etatLevain: etatLevain, nourrirLevain: nourrirLevain, ouvrirFournee: ouvrirFournee,
-    gagnerRituel: gagnerRituel, cuire: cuire, estCuite: estCuite,
-    collection: collection, libelleSerie: libelleSerie, resume: resume, messageCuisson: messageCuisson
+    etatLevain: etatLevain, nourrirLevain: nourrirLevain,
+    cuire: cuire, estCuite: estCuite,
+    collection: collection, historique: historique, libelleSerie: libelleSerie, resume: resume, messageCuisson: messageCuisson
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Jeu;
