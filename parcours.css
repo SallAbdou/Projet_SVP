@@ -134,6 +134,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
   .mini-bento{grid-auto-rows:70px;gap:8px}
   .grisee-fond{padding:12px}
   .actions .bouton,.actions .bouton-secondaire{flex:1 1 auto}
+  .pied-encadres{flex-direction:column;align-items:stretch}
 }
 /* Fenêtre modale (faux e-mail, QR code de la landing) */
 .voile{position:fixed;inset:0;z-index:10;background:var(--voile);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -197,6 +198,9 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .lien-texte{font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
 
 .pied-lanceur{padding-bottom:104px}
+/* Lot 36 : Confidentialité et Accessibilité en boutons secondaires encadrés dans le pied de l'accueil. */
+.pied-encadres{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;flex-basis:100%;order:-1}
+.pied-encadres .bouton-secondaire{min-height:44px;padding:0 20px;font-size:15px}
 html:has(.chat-lanceur){scroll-padding-bottom:104px}
 .chat-lanceur{position:fixed;right:24px;bottom:24px;z-index:9;display:inline-flex;align-items:center;gap:12px;min-height:64px;padding:6px 20px 6px 6px;border:0;border-radius:999px;background:var(--panneau);color:var(--panneau-texte);font:inherit;font-weight:700;cursor:pointer;box-shadow:var(--ombre-2)}
 .chat-lanceur:hover{box-shadow:var(--ombre-3)}

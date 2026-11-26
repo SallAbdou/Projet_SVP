@@ -67,13 +67,47 @@ test('toutes les pages publiques ont le pied commun (ou un lien en dur)', () => 
     assert.match(h, /<(footer|span)\b[^>]*\sdata-pied\b/, p + ' : pied commun absent');
     assert.match(h, /<script src="\/parcours\.js"><\/script>/, p + ' : parcours.js non chargé');
   }
-  assert.match(lire('index.html'), /<a href="\/accessibilite">\{\{t\.accessibilite\}\}<\/a>/);
 });
 
-test('pages connectées : lien Accessibilité dans la nav, FR et EN', () => {
+// Lot 36 : sur l'accueil, Confidentialité et Accessibilité deviennent deux boutons secondaires encadrés dans le pied.
+test('accueil : Confidentialité et Accessibilité en encadrés côte à côte dans le pied', () => {
+  const h = lire('index.html');
+  const pied = h.match(/<footer class="pied pied-lanceur">[\s\S]*?<\/footer>/)[0];
+  const groupe = pied.match(/<div class="pied-encadres">([\s\S]*?)<\/div>/);
+  assert.ok(groupe, 'groupe .pied-encadres absent du pied');
+  assert.match(groupe[1], /<a class="bouton-secondaire" href="\/confidentialite">\{\{t\.confidentialite\}\}<\/a>/);
+  assert.match(groupe[1], /<a class="bouton-secondaire" href="\/accessibilite">\{\{t\.accessibilite\}\}<\/a>/);
+  // Plus de lien simple en double dans le pied.
+  assert.equal((pied.match(/href="\/accessibilite"/g) || []).length, 1);
+  assert.equal((pied.match(/href="\/confidentialite"/g) || []).length, 1);
+});
+
+test('encadrés du pied : 44 px mini, côte à côte, empilés sur mobile', () => {
+  const css = lire('parcours.css');
+  assert.match(css, /\.pied-encadres\{[^}]*display:flex[^}]*\}/);
+  assert.match(css, /\.pied-encadres \.bouton-secondaire\{[^}]*min-height:44px[^}]*\}/);
+  const mobile = css.match(/@media \(max-width:640px\)\{[\s\S]*?\n\}/)[0];
+  assert.match(mobile, /\.pied-encadres\{[^}]*flex-direction:column[^}]*\}/);
+});
+
+// Lot 36 : choix de l'utilisateur, plus de lien Accessibilité dans la nav des pages connectées ;
+// la déclaration reste joignable depuis le profil (section Apparence).
+test('pages connectées : plus de lien Accessibilité dans la nav, FR et EN', () => {
   const connectees = PAGES.filter(p => /data-nav\b/.test(lire(p)));
   assert.ok(connectees.length >= 5, connectees.join(', '));
   for (const p of connectees) assert.match(lire(p), /<script src="\/nav\.js"><\/script>/, p);
-  assert.match(Nav.html({ lang: 'fr', page: 'comptoir', prenom: 'Léa' }), /<a href="\/accessibilite"[^>]*>Accessibilité<\/a>/);
-  assert.match(Nav.html({ lang: 'en', page: 'comptoir', prenom: 'Léa' }), /<a href="\/accessibilite"[^>]*>Accessibility<\/a>/);
+  for (const lang of ['fr', 'en']) {
+    for (const page of ['comptoir', 'fournee', 'fournil', 'garde-manger', 'profil']) {
+      assert.doesNotMatch(Nav.html({ lang, page, prenom: 'Léa' }), /\/accessibilite/, lang + ' ' + page);
+    }
+  }
+});
+
+test('profil : lien vers la déclaration dans la section Apparence, FR et EN', () => {
+  const h = lire('profil.html');
+  const section = h.match(/<section aria-labelledby="apparence-t"[\s\S]*?<\/section>/)[0];
+  assert.match(section, /<a class="pf-lien" href="\/accessibilite">\{\{t\.accessibiliteLien\}\}<\/a>/);
+  assert.match(h, /accessibiliteLien: 'Lire la déclaration d’accessibilité'/);
+  assert.match(h, /accessibiliteLien: 'Read the accessibility statement'/);
+  assert.match(h, /\.pf-lien\{[^}]*min-height:44px[^}]*\}/);
 });
