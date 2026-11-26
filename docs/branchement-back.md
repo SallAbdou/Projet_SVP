@@ -183,6 +183,60 @@ Note pour Abdou : en mode réel comme en démo, le fait d'avoir vu la visite gui
 - « Plus tard » reporte la visite jusqu'à la connexion suivante. En mode réel, le repère de connexion est `session.user.last_sign_in_at` de `pq-auth-reel` ; s'il manque, « Plus tard » vaut jusqu'à « Revoir la visite » (profil).
 - Une synchro Supabase pourra venir plus tard (par exemple une colonne `visite_vue` sur le profil de l'abonné) ; elle n'est pas faite dans ce lot.
 
+## 7 ter. Jeu des cartes et progression (lots 32 à 34)
+
+Note pour Abdou : **rien n'est branché**. Aujourd'hui, dans les deux modes, le jeu vit dans le navigateur (localStorage `pq-jeu`, par compte, clé = e-mail en minuscules) : case « Jeu des cartes activé », points de cuisson, dernier jour où la découverte a rapporté, levain (jours et dernier jour nourri), cartes retournées aujourd'hui, cartes découvertes (avec leur fraîcheur du moment) et cuites. Depuis le lot 34, plus de rituel du matin ni de vue cartes : les cartes se découvrent dans la fournée. Règles et constantes dans `jeu.js` (`POINTS`, `NIVEAUX`, `LEVAIN`), design dans `docs/superpowers/specs/2026-11-25-lot33-progression-design.md` et `docs/superpowers/specs/2026-11-26-lot34-cartes-fournee-design.md`. Le compte de démo Léa a des données d'exemple (`exempleLea` dans `jeu.js`).
+
+En mode réel, cette progression devrait vivre dans Supabase pour suivre l'abonné d'un appareil à l'autre. Schéma **indicatif**, pas exécuté :
+
+```sql
+create table public.jeu_progression (
+  user_id uuid primary key default auth.uid() references auth.users (id) on delete cascade,
+  actif boolean not null default true,
+  points integer not null default 0 check (points >= 0),
+  points_jour date,             -- dernier jour où la première carte découverte a rapporté
+  levain_jours integer not null default 0 check (levain_jours >= 0),
+  levain_dernier date,         -- dernier jour où au moins une carte a été découverte
+  maj_le timestamptz not null default now()
+);
+
+create table public.jeu_cartes (
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  ref text not null,           -- même ref que l'article de la fournée
+  titre text not null,
+  source text,
+  axe text,
+  rarete text not null check (rarete in ('maillard', 'doree', 'croute', 'mie')),
+  fraicheur text check (fraicheur in ('hot', 'knead', 'stale')), -- au moment de la découverte
+  vue_le date not null,        -- date de découverte (retournée dans la fournée)
+  cuite_le date,               -- null tant que le post n'est pas publié
+  gain integer not null default 0 check (gain >= 0),
+  primary key (user_id, ref)
+);
+
+-- Cartes retournées un jour donné (face visible dans la fournée ce jour-là ; le lendemain, tout est recaché).
+create table public.jeu_decouvertes (
+  user_id uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  jour date not null,
+  ref text not null,
+  primary key (user_id, jour, ref)
+);
+
+alter table public.jeu_progression enable row level security;
+alter table public.jeu_cartes enable row level security;
+alter table public.jeu_decouvertes enable row level security;
+
+create policy "ma progression" on public.jeu_progression for all to authenticated
+using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+create policy "mes cartes" on public.jeu_cartes for all to authenticated
+using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+create policy "mes découvertes" on public.jeu_decouvertes for all to authenticated
+using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+```
+
+- Points de vigilance : une carte ne doit cuire qu'une fois (`cuite_le` rempli une seule fois) et la découverte ne rapporter qu'une fois par jour. Côté base, le plus sûr serait de calculer les points dans une fonction (RPC) plutôt que de laisser le navigateur écrire `points` directement ; à décider en équipe, ce n'est pas un enjeu de sécurité fort (jeu personnel, sans classement).
+- Dates : le front compte les jours en heure locale de l'abonné (`AAAA-MM-JJ`).
+
 ## 8. Tester de bout en bout
 
 1. Remplir `config.js` (étape 1) sur une branche de test, déployer (ou servir en local et ajouter `localhost` dans Supabase et le CORS de WF3).

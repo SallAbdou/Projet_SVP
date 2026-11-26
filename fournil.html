@@ -42,7 +42,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 </style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script>
 </head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
-<div id="pq-toast" aria-live="polite"></div>
+<div id="pq-toast" role="status" aria-live="polite"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
 <nav data-nav data-page="fournil" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
@@ -187,7 +187,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 </div>
 </div>
 </script>
-<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/fournil.js"></script><script src="/charte.js"></script><script src="/parcours.js"></script><script>
+<script src="/dc.js"></script><script src="/api.js"></script><script src="/bento.js"></script><script src="/bento-ui.js"></script><script src="/garde-manger.js"></script><script src="/fournil.js"></script><script src="/charte.js"></script><script src="/parcours.js"></script><script>
 var HIDE = 'display: none';
 var CHIP = { vert: Charte.puce('vert'), orange: Charte.puce('orange'), rouge: Charte.puce('rouge') };
 var BOX_ON = 'flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px; background: var(--panneau-or); color: var(--sur-clair); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800';
@@ -346,22 +346,29 @@ self.annoncer(ok ? 'copie' : 'copieKo');
 if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texte).then(function () { self.annoncer('copie'); }, repli);
 else repli();
 }
-annoncer(cle) {
+annoncer(cle, cuisson) {
 var self = this;
 clearTimeout(this.toastTimer);
 this.toastN = (this.toastN || 0) + 1;
 this.toastTimer = setTimeout(function () { self.setState({ toast: null }); }, 5000);
-this.setState({ toast: { cle: cle, n: this.toastN } });
+this.setState({ toast: { cle: cle, n: this.toastN, cuisson: cuisson || null } });
 }
 fermerModale() { this.pendingFocus = 'publier'; this.setState({ modale: false }); }
 confirmerPublication() {
-var a = this.state.sujet.article;
+var sujet = this.state.sujet;
+var a = sujet.article;
 var store = Store.publier(Store.charger(stockage()), { ref: a.ref, titre: a.titre }, this.maintenant());
 Store.enregistrer(stockage(), store);
+// Lot 33 : la carte de même ref cuit (une seule fois), selon sa fraîcheur au moment de la cuisson.
+var cuisson = null;
+try {
+var cat = sujet.origine === 'garde-manger' ? GardeManger.fraicheur(a, this.maintenant()) : '';
+cuisson = Jeu.cuire(stockage(), Jeu.cleDuCompte(Auth.utilisateurCourant()), a, Jeu.fraicheurCuisson(a, sujet.origine, cat), new Date());
+} catch (e) {}
 this.pendingFocus = 'publier';
 this.state.store = store;
 this.state.modale = false;
-this.annoncer('publie');
+this.annoncer('publie', cuisson);
 }
 enregistrerChiffres(form) {
 var i = form.getAttribute('data-index');
@@ -392,7 +399,7 @@ return Object.assign(base, this.state.saisies[i] || {});
 afterRender(root) {
 var lang = this.state.lang || 'fr';
 var toast = this.state.toast;
-BentoUI.toast(document.getElementById('pq-toast'), toast ? { cle: toast.n + '-' + lang, texte: T[lang][toast.cle], annuler: '' } : null, function () {});
+BentoUI.toast(document.getElementById('pq-toast'), toast ? { cle: toast.n + '-' + lang, texte: T[lang][toast.cle] + (toast.cuisson && Jeu.messageCuisson(toast.cuisson, lang) ? ' ' + Jeu.messageCuisson(toast.cuisson, lang) : ''), annuler: '' } : null, function () {});
 var z = root.querySelector('#brouillon');
 if (z && this.zone) { z.style.height = this.zone.hauteur; z.scrollTop = this.zone.haut; }
 if (this.state.modale && this.pendingFocus === 'modale') {
@@ -515,4 +522,4 @@ enregistrerChiffres: function (e) { self.enregistrerChiffres(e.currentTarget); }
 };
 }
 }
-</script><script src="/jeu.js"></script><script src="/rituel.js"></script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>
+</script><script src="/jeu.js"></script><script src="/nav.js"></script><script src="/visite.js"></script><script src="/boot.js"></script></body></html>
