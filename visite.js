@@ -42,9 +42,9 @@
         menu: { titre: 'Au menu', texte: 'Tous les outils de ta boulangerie réunis : du comptoir à ton profil.' },
         comptoir: { titre: 'Tes chiffres du matin', texte: 'Impressions, réactions, contacts : un coup d’œil suffit pour savoir si ta pâte lève. En dessous : ton graphique montre tes posts qui ont le mieux levé.' },
         four: { titre: 'Le four', texte: 'La news n°1 du jour t’attend au chaud. Ouvre le four avec « Suivant » ou d’un clic sur « Voir ma fournée ».' },
-        fournee: { titre: 'La fournée du jour', texte: 'Chaque matin, tes articles arrivent face cachée : clique sur une carte pour découvrir s’il est Tout chaud, À pétrir ou Rassis. Je t’ai retourné le n°1, tout doré avec ses jauges, et « Personnaliser » arrange ta vitrine.' },
+        fournee: { titre: 'La fournée du jour', texte: 'Chaque matin, tes articles arrivent face cachée : clique sur une carte pour découvrir s’il est « Tout chaud », « À pétrir » ou « Rassis ». Je t’ai retourné le n°1, tout doré avec ses jauges.' },
         petrir: { titre: 'À toi de pétrir', texte: 'Sur chaque news, tu peux lire la source, la mettre de côté ou l’écarter. Avec « Suivant » ou d’un clic sur « Pétrir un post », l’IA te prépare un brouillon au fournil.' },
-        fournil: { titre: 'Le fournil, ton atelier à posts', texte: 'L’IA a créé un premier brouillon LinkedIn avec ton sujet : choisis le ton, retouche le texte, puis clique sur « Valider et publier sur LinkedIn » quand il te plaît.' },
+        fournil: { titre: 'Le fournil, ton atelier à posts', texte: 'L’IA a créé un premier brouillon LinkedIn avec ton sujet : après la visite, choisis le ton, retouche le texte, puis clique sur « Valider et publier sur LinkedIn » quand il te plaît.' },
         garde: { titre: 'Le garde-manger', texte: 'Une news mise de côté depuis la fournée t’attend ici, au frais. Tu la pétris quand tu as le temps.' },
         profil: { titre: 'Ton profil', texte: 'Tes préférences choisissent ta fournée, l’apparence règle thèmes et animations, et la boîte à retours nous aide à mieux viser. Tu peux revoir cette visite à tout moment depuis ton profil.' }
       }
@@ -59,9 +59,9 @@
         menu: { titre: 'On the menu', texte: 'All your bakery tools in one place: from the counter to your profile.' },
         comptoir: { titre: 'Your morning numbers', texte: 'Impressions, reactions, contacts: one glance tells you whether your dough is rising. Below: your chart shows the posts that rose the best.' },
         four: { titre: 'The oven', texte: 'Today’s top story is waiting, still warm. Open the oven with “Next” or a click on “See my batch”.' },
-        fournee: { titre: 'Today’s batch', texte: 'Every morning, your articles arrive face down: click a card to find out if it is Piping hot, Needs kneading or Gone stale. I turned number 1 over for you, golden with its gauges, and “Customise” arranges your shop window.' },
+        fournee: { titre: 'Today’s batch', texte: 'Every morning, your articles arrive face down: click a card to find out if it is “Piping hot”, “Needs kneading” or “Gone stale”. I turned number 1 over for you, golden with its gauges.' },
         petrir: { titre: 'Your turn to knead', texte: 'On every story, you can read the source, save it for later or skip it. With “Next” or a click on “Knead a post”, the AI prepares a draft in the kitchen.' },
-        fournil: { titre: 'The kitchen, your post workshop', texte: 'The AI created a first LinkedIn draft from your topic: pick the tone, edit the text, then click “Confirm and post to LinkedIn” when you like it.' },
+        fournil: { titre: 'The kitchen, your post workshop', texte: 'The AI created a first LinkedIn draft from your topic: after the tour, pick the tone, edit the text, then click “Confirm and post to LinkedIn” when you like it.' },
         garde: { titre: 'The pantry', texte: 'A story saved from your batch waits here, kept cool. Knead it whenever you have time.' },
         profil: { titre: 'Your profile', texte: 'Your preferences pick your batch, appearance sets themes and animations, and the feedback box helps us aim better. You can replay this tour anytime from your profile.' }
       }
