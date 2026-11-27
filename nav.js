@@ -52,7 +52,7 @@
     return '<div class="pq-nav"' + (o.ouvert ? ' data-ouvert' : '') + '>' +
       '<div class="pq-nav-tete">' +
       '<div class="pq-nav-marque" style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
-      '<img class="pq-nav-logo" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '">' +
+      '<span class="pq-nav-logo"><img src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '"></span>' +
       '<span class="pq-nav-tagline" style="font-size:13px;color:var(--doux)">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
       '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
@@ -75,7 +75,9 @@
     // Bloc marque (logo image du lot 41, accroche) centré dans la colonne latérale ; à gauche dans la barre mobile.
     '.pq-nav-tete{display:flex;align-items:center;justify-content:center;gap:10px}' +
     '.pq-nav-marque{align-items:center;text-align:center;width:100%}' +
-    '.pq-nav-logo{display:block;width:100%;max-width:214px;height:auto;border-radius:10px}' +
+    // Logo recadré sur sa carte crème (sans la marge presque blanche de l'image), comme dans parcours.css.
+    '.pq-nav-logo{display:block;overflow:hidden;width:100%;max-width:214px;aspect-ratio:1658/720;border-radius:4.9%/11.25%}' +
+    '.pq-nav-logo img{display:block;width:calc(100% * 1774 / 1658);max-width:none;height:auto;margin:calc(-100% * 82 / 1658) 0 0 calc(-100% * 57 / 1658)}' +
     '.pq-nav-menu,.pq-nav-prenom{display:none}' +
     '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
     '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
@@ -87,7 +89,7 @@
     '.pq-nav-tete{justify-content:flex-start}' +
     '.pq-nav-marque{align-items:flex-start;text-align:left}' +
     '.pq-nav-tagline{display:none}' +
-    '.pq-nav-logo{width:auto;height:36px;max-width:none;border-radius:6px}' +
+    '.pq-nav-logo{width:auto;height:36px;max-width:none}' +
     '.pq-nav-marque{width:auto;flex:none}' +
     '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
     '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:700;cursor:pointer}' +

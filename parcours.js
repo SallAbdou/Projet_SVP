@@ -32,7 +32,7 @@
     var lang = o.lang === 'en' ? 'en' : 'fr';
     var t = TEXTES[lang];
     return '<a class="logo" href="/" aria-label="' + esc(t.accueil) + '">' +
-      '<img class="logo-img" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '"></a>' +
+      '<span class="logo-cadre"><img class="logo-img" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '"></span></a>' +
       '<div class="entete-droite">' +
       (o.qr ? '<button type="button" class="entete-qr" data-qr-ouvrir aria-haspopup="dialog" data-focus="entete-qr">' +
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20h1M20 14h1"></path></svg>' +

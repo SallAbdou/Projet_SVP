@@ -37,17 +37,19 @@ test('en-tête : logo image avec alt, dimensions déclarées, dans le lien vers 
     const h = P.enteteHtml({ lang });
     const lien = /<a class="logo" href="\/"[^>]*>([\s\S]*?)<\/a>/.exec(h);
     assert.ok(lien, lang);
-    assert.match(lien[1], /^<img class="logo-img" src="\/assets\/logo-votre-pain-quotidien\.webp" width="1774" height="887" alt="Votre pAIn quotidien">$/);
+    assert.match(lien[1], /^<span class="logo-cadre"><img class="logo-img" src="\/assets\/logo-votre-pain-quotidien\.webp" width="1774" height="887" alt="Votre pAIn quotidien"><\/span>$/);
     assert.doesNotMatch(h, /logo-icone|logo-nom/);
   }
   assert.match(P.enteteHtml({ lang: 'en' }), /aria-label="Votre pAIn quotidien, home"/);
 });
 
-test('en-tête : taille du logo bornée (64 px, 48 px sur mobile), coins arrondis', () => {
+// Recadrage CSS sur la carte crème (sans la marge presque blanche de l'image) : carte de 1658 x 720
+// à partir de (57, 82) dans l'image de 1774 x 887.
+test('en-tête : logo recadré sur la carte crème, 56 px (44 px sur mobile), coins arrondis', () => {
   const css = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'parcours.css'), 'utf8');
-  assert.match(css, /\.logo-img\{[^}]*height:64px[^}]*width:auto/);
-  assert.match(css, /\.logo-img\{[^}]*border-radius/);
-  assert.match(css, /@media \(max-width:640px\)\{[^@]*\.logo-img\{height:48px/);
+  assert.match(css, /\.logo-cadre\{[^}]*overflow:hidden[^}]*height:56px[^}]*aspect-ratio:1658\/720[^}]*border-radius:4\.9%\/11\.25%/);
+  assert.match(css, /\.logo-img\{[^}]*width:calc\(100% \* 1774 \/ 1658\)[^}]*margin:calc\(-100% \* 82 \/ 1658\) 0 0 calc\(-100% \* 57 \/ 1658\)/);
+  assert.match(css, /@media \(max-width:640px\)\{[^@]*\.logo-cadre\{height:44px/);
   assert.doesNotMatch(css, /\.logo-icone|\.logo-nom/);
 });
 
