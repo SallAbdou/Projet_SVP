@@ -56,7 +56,7 @@
     var role = o.role != null ? o.role : t.role;
     // Lot 35 : le titre choisi dans la vitrine remplace le métier sous le prénom ; c'est un lien vers la vitrine.
     var sousPrenom = o.titre
-      ? '<a href="/vitrine" data-nav-titre aria-label="' + esc(o.titre + ', ' + t.titreLien) + '" style="display:inline-flex;align-items:center;gap:5px;min-height:28px;margin-top:4px;padding:0 10px 0 6px;border-radius:999px;background:var(--croute);color:var(--chaud-texte);font-size:12px;font-weight:700;text-decoration:none;max-width:100%"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--brun-fonce);color:var(--croute);font-size:10px">★</span>' + esc(o.titre) + '</a>'
+      ? '<a href="/vitrine" data-nav-titre aria-label="' + esc(o.titre + ', ' + t.titreLien) + '" style="display:inline-block;align-self:flex-start;max-width:100%;padding:4px 9px;border-radius:8px;background:var(--croute);color:var(--chaud-texte);font-size:11px;font-weight:700;line-height:1.3;text-decoration:none"><span aria-hidden="true">★ </span>' + esc(o.titre) + '</a>'
       : '<span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span>';
     return '<div class="pq-nav"' + (o.ouvert ? ' data-ouvert' : '') + '>' +
       '<div class="pq-nav-tete">' +
@@ -76,7 +76,7 @@
       '<button type="button" data-lang="en" data-focus="lang-en" aria-pressed="' + !fr + '" style="' + (fr ? LANG_OFF : LANG_ON) + '">EN</button></div>' +
       '<div style="border-top:1px solid var(--bord);padding-top:14px;display:flex;align-items:center;gap:10px">' +
       '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
-      '<div style="display:flex;flex-direction:column;align-items:flex-start;min-width:0"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span>' + sousPrenom + '</div></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-start;min-width:0"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span>' + (o.titre ? '' : sousPrenom) + '</div></div>' + (o.titre ? sousPrenom : '') +
       '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button>' +
       '<a href="/accessibilite" style="' + PIED + '">' + esc(t.accessibilite) + '</a></div></div></div>';
   }

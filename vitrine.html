@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr" data-protegee><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
 <title>La vitrine · Votre pAIn quotidien</title>
+<meta name="description" content="Tes titres par thématique, gagnés en publiant sur LinkedIn.">
 <meta name="pq-titre-en" content="The showcase · Votre pAIn quotidien">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="/charte.css">
@@ -34,7 +35,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid va
 .vt-theme[data-vide="true"]{background:transparent;border-style:dashed}
 .vt-theme[data-vide="true"] .vt-nom,.vt-theme[data-vide="true"] .vt-chiffres{color:var(--doux)}
 .vt-ligne{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
-.vt-nom{margin:0;font-size:16px;font-weight:700;line-height:1.35;color:var(--texte);overflow-wrap:anywhere}
+.vt-nom{margin:0;font-size:16px;font-weight:700;line-height:1.35;color:var(--texte);overflow-wrap:break-word}
 .vt-pastille{flex:none;font-size:12.5px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--miel);color:var(--brun-fonce);border:1px solid var(--bord-fort)}
 .vt-pastille[data-obtenu="true"]{background:var(--croute);color:var(--chaud-texte);border-color:var(--croute)}
 .vt-pastille[data-palier="visionnaire"]{background:var(--brun-fonce);color:var(--sur-plein);border-color:var(--brun-fonce)}
@@ -46,6 +47,15 @@ html[data-animations="off"] .vt-barre-plein{animation:none}
 .vt-chiffres{font-size:14px;color:var(--texte-2)}
 .vt-afficher{min-height:44px;padding:0 12px;margin:-8px -12px -8px 0;border:0;border-radius:10px;background:none;color:var(--braise);font:inherit;font-weight:800;font-size:14px;cursor:pointer}
 .vt-afficher:hover{text-decoration:underline}
+/* Case cliquable : le bouton « Afficher » couvre toute la case, sans texte visible (son aria-label reste lu).
+   Survol : contour plus marqué. La case affichée garde son « ★ Affiché » visible. */
+.vt-theme{position:relative;transition:border-color .18s ease}
+.vt-afficher[aria-pressed="false"]{position:absolute;inset:0;z-index:1;margin:0;padding:0;min-height:0;border-radius:inherit;color:transparent}
+.vt-afficher[aria-pressed="false"]:focus-visible{outline:3px solid var(--braise);outline-offset:2px}
+.vt-theme:hover{border-color:var(--brun)}
+.vt-theme[data-affiche="true"]:hover{border-color:var(--braise)}
+html[data-animations="off"] .vt-theme{transition:none}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .vt-theme{transition:none}}
 .vt-attente{font-size:13px;color:var(--doux)}
 /* Partage : aperçu de la carte vue sur LinkedIn, toujours sombre. */
 .vt-partage{display:flex;flex-wrap:wrap;gap:22px 28px;padding:22px}
