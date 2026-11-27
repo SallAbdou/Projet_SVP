@@ -29,6 +29,7 @@ var PQ_CONFIG = {
   supabaseUrl: 'https://<votre-projet>.supabase.co',
   supabaseCleAnon: '<clé publique : anon ou publishable>',
   webhookFournee: 'https://<votre-n8n>/webhook/<chemin-de-WF3>',
+  suppressionCompteUrl: '', // facultatif, voir 7 quinquies
   tallyUrl: 'https://tally.so/r/RWWqKd',
   siteUrl: 'https://team42svp.vercel.app',
   delaiReseauMs: 8000
@@ -259,6 +260,55 @@ La fournée montre le thème de chaque article dans une puce en haut de la tuile
 **Convention retenue** : le front accepte les deux. « Axe N » est lu comme la N-ième thématique du profil de l'abonné connecté (`profil.thematiques`, dans l'ordre où elles sont enregistrées, dans leur langue d'origine) ; pour Léa, « Axe 2 » donne « IA en entreprise ». Tout autre texte est pris comme le nom de la thématique. Sans profil, ou si N dépasse le nombre de thématiques, la puce n'est pas affichée (jamais « Axe N », qui ne veut rien dire pour l'abonné) et la carte est rangée sous « Autres » dans la collection. Le plus sûr côté n8n reste d'envoyer le nom de la thématique, ou de garantir que N suit bien l'ordre de `profil.thematiques`.
 
 La fonction est `Jeu.theme(axe, thematiques)` dans `jeu.js`.
+
+## 7 quinquies. Supprimer le compte (lot 41)
+
+Note pour Abdou. « Mon profil » a, tout en bas, une **Zone sensible** avec « Supprimer mon compte ». L'abonné confirme dans une boîte de dialogue (il tape `SUPPRIMER`, ou `DELETE` en anglais).
+
+- **Mode démo** : tout se passe dans le navigateur (`compte.js`). Le compte sort de `pq-auth`, ses entrées sortent de `pq-theme`, `pq-animations`, `pq-visite`, `pq-jeu` et `pq-retours` (les autres comptes restent), et `pq-store`, `pq-layout`, `pq-layout-perso`, `pq-questionnaire` sont vidés. `pq-lang` reste. Léa supprimée revient avec `?demo=reset`.
+- **Mode réel** : le front **ne peut pas** supprimer un utilisateur Supabase Auth : il faudrait la clé `service_role`, interdite dans le front. Il appelle donc un point d'entrée que le back doit fournir, renseigné dans `config.js` :
+
+```js
+suppressionCompteUrl: 'https://<votre-n8n>/webhook/<suppression-compte>' // ou une Edge Function Supabase
+```
+
+Tant que ce champ est vide (valeur commitée), le bouton affiche « La suppression du compte en ligne arrive bientôt. En attendant, écris-nous… Rien n'a été effacé. » et **n'efface rien**. Ce champ n'est pas requis pour passer en mode réel.
+
+### Contrat de l'appel
+
+```
+POST <suppressionCompteUrl>
+Authorization: Bearer <jeton de session de l'abonné (access_token, renouvelé si besoin)>
+Content-Type: application/json
+
+{ "confirmation": "SUPPRIMER" }
+```
+
+Réponses attendues :
+- **2xx** (200 ou 204, corps libre) : compte supprimé. Le site efface alors les données du compte dans le navigateur, retire la session `pq-auth-reel`, renvoie vers l'accueil et affiche « Ton compte a bien été supprimé… ».
+- **401 ou 403** : jeton invalide ou expiré. Le site dit « Ta session a expiré : reconnecte-toi puis recommence » et n'efface rien.
+- **Autre code, panne ou plus de 8 s** (`delaiReseauMs`) : « Suppression impossible pour l'instant… » ; rien n'est effacé côté navigateur, l'abonné peut réessayer. Le traitement doit donc être **idempotent** (un second appel après un succès partiel doit finir le travail, ou répondre 2xx si le compte n'existe plus).
+
+### Ce que le back doit faire
+
+1. **Vérifier le jeton**, jamais un identifiant lu dans le corps : `GET https://<votre-projet>.supabase.co/auth/v1/user` avec `apikey: <clé>` et l'en-tête `Authorization` reçu recopié tel quel (comme pour WF3, section 4). 200 : prendre `id` (uuid de l'utilisateur) et `app_metadata.abonne_id`. 401 ou 403 : répondre 401.
+2. **Vérifier `confirmation === "SUPPRIMER"`** (garde-fou contre un appel accidentel) ; sinon 400.
+3. **Supprimer les données de l'abonné**, côté serveur, avec la clé `service_role` (dans n8n ou la fonction, jamais dans le front) :
+   - tables liées à `auth.users` par `user_id ... references auth.users (id) on delete cascade` (`retours`, et `jeu_progression`, `jeu_cartes`, `jeu_decouvertes` si elles sont créées comme en 7 ter) : elles partent **toutes seules** à l'étape 4 ;
+   - tables rangées par `abonne_id` sans clé étrangère vers `auth.users` (abonnés, réponses Tally, fournées générées, articles mis de côté, posts, selon votre schéma n8n) : `delete ... where abonne_id = <abonne_id>` **avant** l'étape 4 ;
+   - données hors Supabase : réponse Tally (supprimable dans Tally ou par son API), historique d'exécutions n8n contenant l'e-mail (purge ou rétention courte).
+4. **Supprimer l'utilisateur Auth** : `DELETE https://<votre-projet>.supabase.co/auth/v1/admin/users/<id>` avec `apikey` et `Authorization: Bearer <service_role>`. Les sessions et jetons de rafraîchissement sont révoqués avec lui.
+5. Répondre **204**.
+6. **CORS** : mêmes en-têtes que pour WF3 (`OPTIONS` et `POST`, `Authorization, Content-Type`, origine `https://team42svp.vercel.app`).
+
+### RGPD
+
+- C'est le droit à l'effacement (article 17) : supprimer **sans retard injustifié** (au plus un mois). Le traitement immédiat ci-dessus le respecte.
+- Ne garder ensuite que ce qu'une obligation légale impose (rien de tel ici a priori). Ne pas garder l'e-mail « pour mémoire » ; si un journal technique est nécessaire, garder seulement la date et un identifiant non réversible.
+- Penser aux **sauvegardes** Supabase : les données supprimées y disparaissent à l'expiration de la rétention ; l'indiquer dans la page Confidentialité au lancement réel (hébergeur, durées, contact).
+- Tant que `suppressionCompteUrl` est vide, il faut une **adresse de contact** pour traiter les demandes à la main (dans le même mois) : à ajouter dans la page Confidentialité au lancement réel.
+
+**Rien de ceci n'a été testé avec un vrai Supabase ou un vrai n8n** : le front est testé avec un `fetch` simulé (`tests/compte.test.js`).
 
 ## 8. Tester de bout en bout
 

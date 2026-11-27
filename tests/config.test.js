@@ -5,7 +5,7 @@ const C = require('../config.js');
 const complet = { mode: 'reel', supabaseUrl: 'https://abc.supabase.co', supabaseCleAnon: 'cle-publique', webhookFournee: 'https://n8n.exemple.fr/webhook/file', tallyUrl: 'https://tally.so/r/RWWqKd', siteUrl: 'https://team42svp.vercel.app', contactAccessibilite: '', delaiReseauMs: 8000 };
 
 test('config par défaut : mode démo, aucune valeur secrète commitée', () => {
-  assert.deepEqual(C.DEFAUT, { mode: 'demo', supabaseUrl: '', supabaseCleAnon: '', webhookFournee: '', tallyUrl: 'https://tally.so/r/RWWqKd', siteUrl: 'https://team42svp.vercel.app', contactAccessibilite: '', delaiReseauMs: 8000 });
+  assert.deepEqual(C.DEFAUT, { mode: 'demo', supabaseUrl: '', supabaseCleAnon: '', webhookFournee: '', suppressionCompteUrl: '', tallyUrl: 'https://tally.so/r/RWWqKd', siteUrl: 'https://team42svp.vercel.app', contactAccessibilite: '', delaiReseauMs: 8000 });
 });
 
 test('modeEffectif : démo par défaut, réel seulement si tout est rempli en https', () => {

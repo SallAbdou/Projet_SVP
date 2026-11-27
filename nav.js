@@ -4,12 +4,12 @@
 (function (root) {
   var TEXTES = {
     fr: {
-      tagline: 'L’actu IA, pétrie pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
+      tagline: 'L’actu IA, pétrie pour toi.', logoAlt: 'Votre pAIn quotidien', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
       liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', profil: 'Mon profil' },
       compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu'
     },
     en: {
-      tagline: 'AI news, kneaded for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
+      tagline: 'AI news, kneaded for you.', logoAlt: 'Votre pAIn quotidien', langLabel: 'Language', role: 'AI consultant · solopreneur',
       liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', profil: 'My profile' },
       compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu'
     }
@@ -52,8 +52,7 @@
     return '<div class="pq-nav"' + (o.ouvert ? ' data-ouvert' : '') + '>' +
       '<div class="pq-nav-tete">' +
       '<div class="pq-nav-marque" style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
-      '<div style="display:flex;align-items:center;gap:10px">' +
-      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:var(--braise)">AI</span>n quotidien</span></div>' +
+      '<img class="pq-nav-logo" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '">' +
       '<span class="pq-nav-tagline" style="font-size:13px;color:var(--doux)">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
       '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
@@ -73,9 +72,10 @@
 
   // Sous 900 px, la nav latérale devient une barre en haut avec un bouton Menu (modèle disclosure).
   var CSS = '.pq-nav{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
-    // Bloc marque (nom, accroche, sans logo) centré dans la colonne latérale ; à gauche dans la barre mobile.
+    // Bloc marque (logo image du lot 41, accroche) centré dans la colonne latérale ; à gauche dans la barre mobile.
     '.pq-nav-tete{display:flex;align-items:center;justify-content:center;gap:10px}' +
-    '.pq-nav-marque{align-items:center;text-align:center}' +
+    '.pq-nav-marque{align-items:center;text-align:center;width:100%}' +
+    '.pq-nav-logo{display:block;width:100%;max-width:214px;height:auto;border-radius:10px}' +
     '.pq-nav-menu,.pq-nav-prenom{display:none}' +
     '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
     '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
@@ -87,9 +87,8 @@
     '.pq-nav-tete{justify-content:flex-start}' +
     '.pq-nav-marque{align-items:flex-start;text-align:left}' +
     '.pq-nav-tagline{display:none}' +
-    '.pq-nav-nom{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
-    '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
-    '.pq-nav-nom span{color:var(--brun)!important}' +
+    '.pq-nav-logo{width:auto;height:36px;max-width:none;border-radius:6px}' +
+    '.pq-nav-marque{width:auto;flex:none}' +
     '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
     '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:700;cursor:pointer}' +
     '.pq-nav-panneau{display:none;position:absolute;left:-16px;right:-16px;top:calc(100% + 10px);padding:16px;background:var(--sable);border-bottom:1px solid var(--bord);box-shadow:var(--ombre-2);max-height:calc(100vh - 64px);overflow:auto;gap:18px}' +
