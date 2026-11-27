@@ -45,6 +45,9 @@ test('accueil : encart final avec le four du comptoir, décoratif, en version an
   // Bascule animé / figé comme au comptoir (lot 24 bis), et empilement sur mobile.
   const css = fs.readFileSync(path.join(RACINE, 'parcours.css'), 'utf8');
   assert.match(css, /\.four-vapeur-fixe\{[^}]*opacity:\.8/);
+  // Four centré au-dessus du titre et du bouton, centrés eux aussi, quelle que soit la largeur.
+  assert.match(css, /\n\.fin\{display:flex;[^}]*flex-direction:column[^}]*text-align:center/);
+  assert.match(css, /\n\.fin-texte\{display:flex;[^}]*align-items:center/);
   assert.ok(css.indexOf('.four-svg-fixe{display:none}') > css.indexOf('.four-svg{'), 'règle placée après .four-svg');
   assert.match(css, /html\[data-animations="off"\] \.four-svg-anime\{display:none\}html\[data-animations="off"\] \.four-svg-fixe\{display:block\}/);
   assert.match(css, /@media \(prefers-reduced-motion:reduce\)\{html:not\(\[data-animations="on"\]\) \.four-svg-anime\{display:none\}html:not\(\[data-animations="on"\]\) \.four-svg-fixe\{display:block\}/);
