@@ -4,8 +4,8 @@
    piedHtml() remplit de même [data-pied] : liens Confidentialité et Accessibilité (lot 26). */
 (function (root) {
   var TEXTES = {
-    fr: { langue: 'Langue', accueil: 'Votre pAIn quotidien, accueil', connexion: 'Se connecter', confidentialite: 'Confidentialité', accessibilite: 'Accessibilité' },
-    en: { langue: 'Language', accueil: 'Votre pAIn quotidien, home', connexion: 'Log in', confidentialite: 'Privacy', accessibilite: 'Accessibility' }
+    fr: { langue: 'Langue', accueil: 'Votre pAIn quotidien, accueil', logoAlt: 'Votre pAIn quotidien', connexion: 'Se connecter', confidentialite: 'Confidentialité', accessibilite: 'Accessibilité' },
+    en: { langue: 'Language', accueil: 'Votre pAIn quotidien, home', logoAlt: 'Votre pAIn quotidien', connexion: 'Log in', confidentialite: 'Privacy', accessibilite: 'Accessibility' }
   };
 
   var LIENS_PIED = [{ id: 'confidentialite', href: '/confidentialite' }, { id: 'accessibilite', href: '/accessibilite' }];
@@ -25,8 +25,7 @@
     var lang = o.lang === 'en' ? 'en' : 'fr';
     var t = TEXTES[lang];
     return '<a class="logo" href="/" aria-label="' + esc(t.accueil) + '">' +
-      '<span class="logo-icone"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14c0-4.4 3.6-8 8-8s8 3.6 8 8v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M9 10l1.5 2M12 9.5l1.5 2M15 10l1.5 2"></path></svg></span>' +
-      '<span class="logo-nom" aria-hidden="true">Votre p<span>AI</span>n quotidien</span></a>' +
+      '<img class="logo-img" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '"></a>' +
       '<div class="entete-droite">' +
       (o.qr ? '<button type="button" class="entete-qr" data-qr-ouvrir aria-haspopup="dialog" data-focus="entete-qr">' +
         '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20h1M20 14h1"></path></svg>' +

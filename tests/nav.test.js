@@ -87,12 +87,15 @@ test('icône flamme pour la fournée du jour, même taille que les autres', () =
   assert.match(lien, /<svg width="18" height="18"[^>]*data-icone="flamme"[^>]*stroke-width="2"/);
 });
 
-test('bloc marque (logo, nom, accroche) centré dans la colonne, à gauche dans la barre mobile', () => {
+test('bloc marque (logo image, accroche) centré dans la colonne, à gauche dans la barre mobile', () => {
   const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'nav.js'), 'utf8');
-  assert.match(html({}), /<div class="pq-nav-marque"[^>]*>[\s\S]*pq-nav-nom[\s\S]*pq-nav-tagline/);
-  // Lot 17 : plus de logo, le nom et l'accroche sont centrés sur le même axe.
-  assert.doesNotMatch(html({}), /pq-nav-logo/);
+  // Lot 41 : le titre texte devient le logo image fourni, l'accroche reste dessous.
+  assert.match(html({}), /<div class="pq-nav-marque"[^>]*>\s*<img class="pq-nav-logo" src="\/assets\/logo-votre-pain-quotidien\.webp" width="1774" height="887" alt="Votre pAIn quotidien">\s*<span class="pq-nav-tagline"/);
+  assert.match(html({ lang: 'en' }), /<img class="pq-nav-logo"[^>]*alt="Votre pAIn quotidien">/);
+  assert.doesNotMatch(html({}), /pq-nav-nom/);
   assert.match(src, /'\.pq-nav-tete\{[^}]*justify-content:center/);
   assert.match(src, /'\.pq-nav-marque\{[^}]*align-items:center[^}]*text-align:center/);
+  assert.match(src, /'\.pq-nav-logo\{[^}]*width:100%[^}]*max-width:214px[^}]*height:auto/);
   assert.match(src, /@media \(max-width:899\.98px\)\{'[\s\S]*'\.pq-nav-tete\{justify-content:flex-start\}'[\s\S]*'\.pq-nav-marque\{align-items:flex-start;text-align:left\}'/);
+  assert.match(src, /@media \(max-width:899\.98px\)\{'[\s\S]*'\.pq-nav-logo\{width:auto;height:36px/);
 });

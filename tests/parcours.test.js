@@ -30,3 +30,32 @@ test('en-tête : bouton QR code optionnel qui ouvre une fenêtre', () => {
   assert.ok(fr.indexOf('data-qr-ouvrir') < fr.indexOf('/connexion'), 'le QR vient avant « Se connecter »');
   assert.ok(P.enteteHtml({ lang: 'en', qr: true }).includes('QR code'));
 });
+
+// Lot 41 : nouveau logo (Miette lit le journal « IA »), image fournie, sans icône pain ni texte doublé.
+test('en-tête : logo image avec alt, dimensions déclarées, dans le lien vers l’accueil', () => {
+  for (const lang of ['fr', 'en']) {
+    const h = P.enteteHtml({ lang });
+    const lien = /<a class="logo" href="\/"[^>]*>([\s\S]*?)<\/a>/.exec(h);
+    assert.ok(lien, lang);
+    assert.match(lien[1], /^<img class="logo-img" src="\/assets\/logo-votre-pain-quotidien\.webp" width="1774" height="887" alt="Votre pAIn quotidien">$/);
+    assert.doesNotMatch(h, /logo-icone|logo-nom/);
+  }
+  assert.match(P.enteteHtml({ lang: 'en' }), /aria-label="Votre pAIn quotidien, home"/);
+});
+
+test('en-tête : taille du logo bornée (grand écran et mobile), coins arrondis', () => {
+  const css = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'parcours.css'), 'utf8');
+  assert.match(css, /\.logo-img\{[^}]*height:56px[^}]*width:auto/);
+  assert.match(css, /\.logo-img\{[^}]*border-radius/);
+  assert.match(css, /@media \(max-width:640px\)\{[^@]*\.logo-img\{height:44px/);
+  assert.doesNotMatch(css, /\.logo-icone|\.logo-nom/);
+});
+
+test('toutes les pages à en-tête commun chargent parcours.js (donc le logo)', () => {
+  const fs = require('node:fs'), path = require('node:path');
+  const racine = path.join(__dirname, '..');
+  const pages = fs.readdirSync(racine).filter(f => f.endsWith('.html') && !f.includes('copy'));
+  const avecEntete = pages.filter(p => fs.readFileSync(path.join(racine, p), 'utf8').includes('data-entete'));
+  assert.ok(avecEntete.length >= 11, avecEntete.join(','));
+  for (const p of avecEntete) assert.match(fs.readFileSync(path.join(racine, p), 'utf8'), /<script src="\/parcours\.js"><\/script>/, p);
+});
