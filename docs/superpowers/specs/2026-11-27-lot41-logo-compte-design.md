@@ -6,8 +6,13 @@
 - En-tête public (`parcours.js`, `enteteHtml`) : le carré pain + le texte sont remplacés par
   `<img class="logo-img" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="Votre pAIn quotidien">`
   dans le lien vers l'accueil. Le lien garde son `aria-label` (« Votre pAIn quotidien, accueil » / « …, home ») :
-  il remplace le contenu, rien n'est lu deux fois. Hauteur CSS 64 px (48 px sous 640 px), largeur automatique.
-- Menu latéral (`nav.js`) : le titre texte devient la même image (largeur 100 %, bornée à 214 px), accroche gardée
+  il remplace le contenu, rien n'est lu deux fois. Hauteur CSS 56 px (44 px sous 640 px), largeur automatique.
+- Recadrage (retour utilisateur : « cadre blanc » autour du logo) : l'image a une marge presque blanche (#FEFAF2)
+  autour d'une carte crème (#FEF3E2, x 48 à 1724, y 73 à 811). Un cadre `span` (`.logo-cadre`, `.pq-nav-logo`)
+  aux proportions 1658 x 720, `overflow:hidden` et coins arrondis, montre seulement la carte (image décalée de
+  57 et 82 px en proportions). Le fichier n'est pas modifié (pas d'outil d'image sur le poste, le navigateur intégré
+  ne peut pas écrire de fichier).
+- Menu latéral (`nav.js`) : le titre texte devient la même image (largeur 100 %, bornée à 214 px, même recadrage), accroche gardée
   dessous. Barre mobile (< 900 px) : image de 36 px de haut à gauche, accroche masquée (comme avant).
 - `alt` identique en FR et EN (nom de marque), porté par `TEXTES.fr/en.logoAlt`.
 - Thèmes Nuit et Contraste élevé : l'image garde son fond crème, coins arrondis en CSS (`border-radius`).
