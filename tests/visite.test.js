@@ -59,8 +59,13 @@ test('textes FR et EN : même forme, une ou deux phrases, aucun tiret long', () 
   assert.match(V.TEXTES.fr.etapes.fournil.texte, /ton/);
   assert.match(V.TEXTES.fr.etapes.comptoir.texte, /graphique/);
   assert.match(V.TEXTES.fr.etapes.fournee.texte, /Tout chaud.*À pétrir.*Rassis/);
-  assert.match(V.TEXTES.fr.etapes.fournee.texte, /« Personnaliser »/);
-  assert.match(V.TEXTES.en.etapes.fournee.texte, /“Customise”/);
+  // Lot 38 : « Personnaliser » est inerte pendant la visite et la bulle tient en deux phrases : on ne le cite plus.
+  assert.equal(V.TEXTES.fr.etapes.fournee.texte, 'Chaque matin, tes articles arrivent face cachée : clique sur une carte pour découvrir s’il est « Tout chaud », « À pétrir » ou « Rassis ». Je t’ai retourné le n°1, tout doré avec ses jauges.');
+  assert.equal(V.TEXTES.en.etapes.fournee.texte, 'Every morning, your articles arrive face down: click a card to find out if it is “Piping hot”, “Needs kneading” or “Gone stale”. I turned number 1 over for you, golden with its gauges.');
+  for (const l of ['fr', 'en']) assert.doesNotMatch(V.TEXTES[l].etapes.fournee.texte, /Personnaliser|Customi[sz]e/);
+  // Lot 38 : le fournil est inerte pendant la visite (étape sans action), ses gestes sont pour après.
+  assert.match(V.TEXTES.fr.etapes.fournil.texte, /sujet : après la visite, choisis le ton/);
+  assert.match(V.TEXTES.en.etapes.fournil.texte, /topic: after the tour, pick the tone/);
   assert.match(V.TEXTES.fr.etapes.petrir.texte, /lire la source.*de côté.*écarter/);
   assert.match(V.TEXTES.fr.etapes.profil.texte, /préférences.*thèmes.*animations.*retour/s);
   assert.match(V.TEXTES.fr.etapes.garde.texte, /de côté/);

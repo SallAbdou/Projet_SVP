@@ -223,6 +223,24 @@ html:has(.chat-lanceur){scroll-padding-bottom:104px}
 .chat-suggestions .lien{font-size:14px}
 .chat-note{padding:0 16px 12px;background:var(--creme);font-size:12px;color:var(--doux)}
 @media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .faq-chevron{transition:none}}
+/* Lot 38 : encart final « Ta première fournée est à 2 minutes » avec le four du comptoir (décoratif).
+   Côte à côte sur grand écran, titre et bouton alignés à gauche ; empilés et centrés sur mobile. */
+.fin{display:flex;align-items:center;justify-content:center;gap:20px 40px;margin-top:56px;padding:28px 32px;background:var(--creme);border:1px solid var(--bord);border-radius:22px}
+.fin-defs{position:absolute;width:0;height:0;overflow:hidden}
+.fin-four{flex:0 0 auto;width:190px}
+.fin-texte{display:flex;flex-direction:column;align-items:flex-start;gap:16px;min-width:0}
+.fin-texte .section-titre{margin:0}
+/* Four repris du comptoir (lot 24 bis) : <use> échappe à html[data-animations="off"] *, on bascule entre deux <svg>. */
+.four-svg{display:block;width:100%;height:auto}
+.four-vapeur{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:0;animation:pq-four-vapeur 3s ease-out infinite}
+.four-lueur{animation:pq-four-lueur 2.4s ease-in-out infinite alternate}
+@keyframes pq-four-vapeur{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
+@keyframes pq-four-lueur{from{opacity:.5}to{opacity:1}}
+.four-vapeur-fixe{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:.8}
+.four-svg-fixe{display:none}
+html[data-animations="off"] .four-svg-anime{display:none}html[data-animations="off"] .four-svg-fixe{display:block}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .four-svg-anime{display:none}html:not([data-animations="on"]) .four-svg-fixe{display:block}html:not([data-animations="on"]) .four-vapeur,html:not([data-animations="on"]) .four-lueur{animation:none}}
+@media (max-width:640px){.fin{flex-direction:column;text-align:center;padding:24px 18px}.fin-texte{align-items:center}.fin-four{width:150px}}
 @media (max-width:640px){
   .miette-accueil{flex-basis:108px}
   .miette-grande{width:100px}
