@@ -1,0 +1,7 @@
+# Secrets LinkedIn (et tout fichier d'environnement local)
+.env
+.env.local
+.env.*.local
+.vercel
+node_modules
+.DS_Store
