@@ -1,0 +1,45 @@
+{
+  "_note": "Chiffres d'exemple, affichés tant que LinkedIn n'a pas accordé l'accès aux statistiques.",
+  "posts": {
+    "totaux": {
+      "impressions": 17150,
+      "membresAtteints": 9261,
+      "reactions": 412,
+      "commentaires": 87,
+      "republications": 23
+    },
+    "jours": [
+      420,
+      484,
+      543,
+      592,
+      626,
+      644,
+      905,
+      889,
+      599,
+      559,
+      512,
+      466,
+      425,
+      393,
+      376,
+      375,
+      391,
+      424,
+      471,
+      790,
+      854,
+      658,
+      718,
+      768,
+      804,
+      824,
+      827,
+      813
+    ]
+  },
+  "abonnes": {
+    "total": 1284
+  }
+}

@@ -137,6 +137,15 @@
       b.addEventListener('click', onUndo);
       box.appendChild(b);
     }
+    // Lot 35 : lien facultatif après le texte (ex. « Voir ma vitrine » après un nouveau titre).
+    if (vue.lien && vue.lien.href) {
+      var a = document.createElement('a');
+      a.href = vue.lien.href;
+      a.className = 'toast-lien';
+      if (vue.lien.externe) { a.target = '_blank'; a.rel = 'noopener'; }
+      a.textContent = vue.lien.texte;
+      box.appendChild(a);
+    }
     el.appendChild(box);
   }
 
