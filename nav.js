@@ -4,15 +4,15 @@
 (function (root) {
   var TEXTES = {
     fr: {
-      tagline: 'L’actu IA, pétrie pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
+      tagline: 'L’actu IA, pétrie pour toi.', logoAlt: 'Votre pAIn quotidien', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
       liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', vitrine: 'La vitrine', profil: 'Mon profil' },
-      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu', accessibilite: 'Accessibilité',
+      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu',
       titreLien: 'Ton titre, voir ta vitrine'
     },
     en: {
-      tagline: 'AI news, kneaded for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
+      tagline: 'AI news, kneaded for you.', logoAlt: 'Votre pAIn quotidien', langLabel: 'Language', role: 'AI consultant · solopreneur',
       liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', vitrine: 'The showcase', profil: 'My profile' },
-      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu', accessibilite: 'Accessibility',
+      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu',
       titreLien: 'Your title, see your showcase'
     }
   };
@@ -35,7 +35,6 @@
   var DECO = 'min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--bord-fort);background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer;align-self:flex-start';
 
   // Lot 26 : lien discret vers la déclaration d'accessibilité, sous « Se déconnecter ».
-  var PIED = 'display:inline-flex;align-items:center;min-height:44px;align-self:flex-start;font-size:13px;color:var(--doux)';
 
   function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -61,8 +60,7 @@
     return '<div class="pq-nav"' + (o.ouvert ? ' data-ouvert' : '') + '>' +
       '<div class="pq-nav-tete">' +
       '<div class="pq-nav-marque" style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
-      '<div style="display:flex;align-items:center;gap:10px">' +
-      '<span class="pq-nav-nom" style="font-family:Fraunces, Georgia, serif;font-weight:800;font-size:20px;line-height:1.1">Votre p<span style="color:var(--braise)">AI</span>n quotidien</span></div>' +
+      '<span class="pq-nav-logo"><img src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="' + esc(t.logoAlt) + '"></span>' +
       '<span class="pq-nav-tagline" style="font-size:13px;color:var(--doux)">' + esc(t.tagline) + '</span></div>' +
       '<span class="pq-nav-prenom">' + esc(prenom) + '</span>' +
       '<button type="button" class="pq-nav-menu" data-nav-menu data-focus="nav-menu" aria-expanded="' + !!o.ouvert + '" aria-controls="pq-nav-panneau">' +
@@ -77,15 +75,17 @@
       '<div style="border-top:1px solid var(--bord);padding-top:14px;display:flex;align-items:center;gap:10px">' +
       '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
       '<div style="display:flex;flex-direction:column;align-items:flex-start;min-width:0"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span>' + (o.titre ? '' : sousPrenom) + '</div></div>' + (o.titre ? sousPrenom : '') +
-      '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button>' +
-      '<a href="/accessibilite" style="' + PIED + '">' + esc(t.accessibilite) + '</a></div></div></div>';
+      '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button></div></div></div>';
   }
 
   // Sous 900 px, la nav latérale devient une barre en haut avec un bouton Menu (modèle disclosure).
   var CSS = '.pq-nav{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
-    // Bloc marque (nom, accroche, sans logo) centré dans la colonne latérale ; à gauche dans la barre mobile.
+    // Bloc marque (logo image du lot 41, accroche) centré dans la colonne latérale ; à gauche dans la barre mobile.
     '.pq-nav-tete{display:flex;align-items:center;justify-content:center;gap:10px}' +
-    '.pq-nav-marque{align-items:center;text-align:center}' +
+    '.pq-nav-marque{align-items:center;text-align:center;width:100%}' +
+    // Logo recadré sur sa carte crème (sans la marge presque blanche de l'image), comme dans parcours.css.
+    '.pq-nav-logo{display:block;overflow:hidden;width:100%;max-width:214px;aspect-ratio:1658/720;border-radius:4.9%/11.25%}' +
+    '.pq-nav-logo img{display:block;width:calc(100% * 1774 / 1658);max-width:none;height:auto;margin:calc(-100% * 82 / 1658) 0 0 calc(-100% * 57 / 1658)}' +
     '.pq-nav-menu,.pq-nav-prenom{display:none}' +
     '.pq-nav-panneau{display:flex;flex-direction:column;gap:26px;flex:1 1 auto}' +
     '[data-nav] a:focus-visible,[data-nav] button:focus-visible{outline:3px solid var(--braise);outline-offset:2px}' +
@@ -97,9 +97,8 @@
     '.pq-nav-tete{justify-content:flex-start}' +
     '.pq-nav-marque{align-items:flex-start;text-align:left}' +
     '.pq-nav-tagline{display:none}' +
-    '.pq-nav-nom{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
-    '.pq-nav-tete>div:first-child,.pq-nav-tete>div:first-child>div{min-width:0}' +
-    '.pq-nav-nom span{color:var(--brun)!important}' +
+    '.pq-nav-logo{width:auto;height:36px;max-width:none}' +
+    '.pq-nav-marque{width:auto;flex:none}' +
     '.pq-nav-prenom{display:block;margin-left:auto;flex:0 1 auto;max-width:30%;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}' +
     '.pq-nav-menu{display:inline-flex;align-items:center;gap:6px;flex:none;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--bord-fort);background:var(--creme);color:var(--brun-fonce);font:inherit;font-weight:700;cursor:pointer}' +
     '.pq-nav-panneau{display:none;position:absolute;left:-16px;right:-16px;top:calc(100% + 10px);padding:16px;background:var(--sable);border-bottom:1px solid var(--bord);box-shadow:var(--ombre-2);max-height:calc(100vh - 64px);overflow:auto;gap:18px}' +

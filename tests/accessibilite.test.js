@@ -65,7 +65,8 @@ const NUIT = Object.assign({}, BRONZE, vars(bloc('[data-theme="nuit"]')));
 
 test('Nuit : constat de départ, les fonds pleins imposés se détachent mal sur certains fonds', () => {
   assert.ok(C.contraste(NUIT['linkedin-fond'], NUIT.sable) < 3);
-  assert.ok(C.contraste(NUIT['petrir-btn-survol'], NUIT.miel) < 3);
+  // Lot 35 : Pétrir (repos #C2560B, survol #F27016) se détache désormais à 3:1 ; son contour est gardé.
+  assert.ok(C.contraste(NUIT['petrir-btn-fond'], NUIT.miel) >= 3);
   assert.ok(C.contraste(NUIT['rassis-fond'], NUIT.fond) < 3);
   assert.ok(C.contraste(NUIT['lire-survol'], NUIT.fond) < 3);
 });

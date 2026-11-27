@@ -150,9 +150,9 @@ test('états reconnaissables : mêmes puces dans tous les thèmes (Rassis : sauf
 // Lot 15 : couleurs imposées par l'équipe, identiques en Bronze, Boulangerie classique et Nuit.
 // Le Contraste élevé garde ses propres valeurs (celles d'avant le lot).
 const IMPOSEES = {
-  // Lot 16 : Pétrir en orange avec texte et pain brun foncé, Lire la source en brun cuivré.
+  // Lot 35 : Pétrir en orange foncé avec texte et pain blancs au repos (orange vif et noir au survol).
   'etiquette-fond': '#ABBF9B', 'lire-fond': '#A9642E', 'lire-texte': '#FFFFFF',
-  'petrir-btn-fond': '#F27016', 'petrir-btn-texte': '#2C1910', 'petrir-pain': '#2C1910', 'petrir-grigne': '#F27016',
+  'petrir-btn-fond': '#C2560B', 'petrir-btn-texte': '#FFFFFF', 'petrir-pain': '#FFFFFF', 'petrir-grigne': '#C2560B',
   'rassis-fond': '#615945', 'barre-rassis': '#615945', 'rassis-texte': '#FFFFFF',
   'linkedin-fond': '#0A66C2', 'linkedin-texte': '#FFFFFF'
 };
@@ -184,11 +184,12 @@ test('Contraste élevé garde ses propres valeurs pour les éléments aux couleu
   assert.equal(c['etiquette-fond'], '#000000');
 });
 
-test('Pétrir et Lire la source : le survol assombrit le fond, texte et pain gardent leur contraste', () => {
+test('Pétrir et Lire la source : le survol change nettement le fond, texte et pain gardent leur contraste', () => {
   // Contraste élevé hors lot 16 : il garde son bouton Pétrir clair qui s'éclaircit au survol.
+  // Lot 35 : Pétrir s'inverse, le survol éclaircit le fond (texte noir) ; Lire la source s'assombrit toujours.
   for (const nom of ['bronze', 'classique', 'nuit']) {
     const v = THEMES[nom];
-    assert.ok(C.luminance(v['petrir-btn-survol']) < C.luminance(v['petrir-btn-fond']), nom + ' petrir survol');
+    assert.ok(C.luminance(v['petrir-btn-survol']) > C.luminance(v['petrir-btn-fond']), nom + ' petrir survol plus clair');
     assert.ok(C.luminance(v['lire-survol']) < C.luminance(v['lire-fond']), nom + ' lire survol');
     // Le pain dessiné est rempli de --petrir-pain et cerné de la couleur du texte, sur le fond du bouton.
     assert.ok(C.contraste(v['petrir-pain'], v['petrir-btn-fond']) >= 3, nom + ' pain sur fond');
@@ -196,11 +197,14 @@ test('Pétrir et Lire la source : le survol assombrit le fond, texte et pain gar
     // Lot 17 : l'assombrissement doit se voir (écart de luminance d'au moins 1,5 entre repos et survol).
     assert.ok(C.contraste(v['petrir-btn-fond'], v['petrir-btn-survol']) >= 1.5, nom + ' petrir survol visible');
     assert.ok(C.contraste(v['lire-fond'], v['lire-survol']) >= 1.5, nom + ' lire survol visible');
-    // Bord : même teinte orange, un peu plus foncée que le fond, sans liseré brun.
+    // Bord : même teinte orange, un peu plus foncée que le fond, sans liseré brun (repos et survol).
     assert.ok(C.luminance(v['petrir-btn-bord']) < C.luminance(v['petrir-btn-fond']), nom + ' bord plus foncé');
     assert.ok(C.contraste(v['petrir-btn-bord'], v['petrir-btn-fond']) < 1.5, nom + ' bord proche du fond');
+    assert.ok(C.luminance(v['petrir-btn-survol-bord']) < C.luminance(v['petrir-btn-survol']), nom + ' bord de survol plus foncé');
+    assert.ok(C.contraste(v['petrir-btn-survol-bord'], v['petrir-btn-survol']) < 1.5, nom + ' bord de survol proche du fond');
   }
-  assert.equal(THEMES.bronze['petrir-btn-bord'], '#D9620F');
+  assert.equal(THEMES.bronze['petrir-btn-bord'], '#9E4608');
+  assert.equal(THEMES.bronze['petrir-btn-survol-bord'], '#D9620F');
 });
 
 test('boutons aux couleurs imposées : règles par variables, survol, appui et focus visibles', () => {

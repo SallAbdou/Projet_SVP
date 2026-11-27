@@ -7,6 +7,7 @@
     supabaseUrl: '',         // ex. https://<projet>.supabase.co
     supabaseCleAnon: '',     // clé publique (anon / publishable)
     webhookFournee: '',      // adresse https du webhook WF3
+    suppressionCompteUrl: '', // adresse https qui supprime le compte (lot 41) ; vide : « bientôt disponible »
     tallyUrl: 'https://tally.so/r/RWWqKd',
     siteUrl: 'https://team42svp.vercel.app',
     contactAccessibilite: '', // À COMPLÉTER : adresse e-mail de contact de la déclaration d'accessibilité (/accessibilite)

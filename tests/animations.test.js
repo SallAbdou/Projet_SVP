@@ -180,6 +180,7 @@ test('aucune animation CSS dans un <symbol> utilisé par <use> hors du comptoir 
   for (const f of fs.readdirSync(RACINE).filter(n => n.endsWith('.html') && n !== 'index copy.html')) {
     const h = lire(f);
     if (!/<use /.test(h)) continue;
-    assert.equal(f, 'comptoir.html', f + ' : <use> animé à couvrir comme le four du comptoir');
+    // Lot 38 : l'accueil reprend le four du comptoir (bascule testée dans accueil.test.js).
+    assert.ok(['comptoir.html', 'index.html'].includes(f), f + ' : <use> animé à couvrir comme le four du comptoir');
   }
 });

@@ -51,11 +51,11 @@ test('fournee.html : textes d’aide dans les chaînes FR et EN', () => {
   const h = fs.readFileSync(path.join(__dirname, '..', 'fournee.html'), 'utf8');
   const fr = [
     'Le sujet sera-t-il encore valable dans une semaine\u00a0?',
-    'Ton client est-il prêt à payer pour être aidé là-dessus\u00a0? Y a-t-il une valeur ajoutée pour lui\u00a0? Est-ce que ça l’instruit\u00a0?',
-    'Le sujet mène-t-il à une offre payante, monétisable pour toi via tes posts LinkedIn\u00a0?'
+    'Le sujet touche-t-il un problème pour lequel une entreprise paie\u00a0?',
+    'Le sujet est-il lié à ton ou tes métiers et à ta ou tes thématiques\u00a0?'
   ];
   assert.ok(h.includes("aides: { durabilite: '" + fr[0] + "', propension: '" + fr[1] + "', lienOffre: '" + fr[2] + "' }"), 'aides FR');
-  assert.match(h, /aides: \{ durabilite: 'Will the topic still hold up in a week\?', propension: '[^']+\?', lienOffre: '[^']+LinkedIn posts\?' \}/);
+  assert.match(h, /aides: \{ durabilite: 'Will the topic still hold up in a week\?', propension: '[^']+\?', lienOffre: '[^']+topic or topics\?' \}/);
 });
 
 test('bulle.js : fermeture par Échap, ouverture au survol, au focus et au doigt', () => {

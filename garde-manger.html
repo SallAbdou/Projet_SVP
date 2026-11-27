@@ -114,7 +114,7 @@ a.gm-source:active{transform:translateY(1px)}
 <h2 id="col-fam-t" class="jeu-famille-titre">{{j.collection.familles}}</h2>
 <ul class="col-series">
 <sc-for list="{{colSeries}}" as="f" hint-placeholder-count="3">
-<li>{{f.serie}}</li>
+<li><span class="puce-theme" data-teinte="{{f.teinte}}">{{f.famille}}</span>{{f.detail}}</li>
 </sc-for>
 </ul>
 </section>
@@ -139,7 +139,7 @@ a.gm-source:active{transform:translateY(1px)}
 <li><article class="jeu-carte jeu-carte-mini" data-rarete="{{x.rarete}}" data-cuite="{{x.cuite}}" aria-labelledby="{{x.id}}-t">
 <div class="jeu-tete"><span class="jeu-rarete"><svg class="jeu-grignes" data-n="{{x.grignes}}" viewBox="0 0 30 16" aria-hidden="true" focusable="false"><path d="M3 12l4-8"></path><path d="M10 12l4-8"></path><path d="M17 12l4-8"></path><path d="M24 12l4-8"></path></svg><span>{{x.rareteNom}}</span></span><span class="{{x.chip}}">{{x.fraicheurNom}}</span><span class="jeu-cuite" style="{{x.cuiteStyle}}"><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1.5 11.2C1.5 6.4 6.2 3 12 3s10.5 3.4 10.5 8.2c0 1.6-1.2 2.8-2.8 2.8H4.3c-1.6 0-2.8-1.2-2.8-2.8z"></path><path d="M6.8 7.4l2.2 2.6M10.9 6.4l2.2 2.6M15 7.4l2.2 2.6"></path></svg>{{j.cuite}}</span></div>
 <h3 id="{{x.id}}-t" class="jeu-titre">{{x.titre}}</h3>
-<div class="jeu-meta"><span class="etiquette-source" style="{{x.sourceStyle}}">{{x.source}}</span><span class="jeu-famille">{{x.famille}}</span></div>
+<div class="jeu-meta"><span class="etiquette-source" style="{{x.sourceStyle}}">{{x.source}}</span><span class="jeu-famille puce-theme" data-teinte="{{x.teinte}}">{{x.famille}}</span></div>
 <p class="jeu-carte-date">{{x.date}}</p>
 </article></li>
 </sc-for>
@@ -192,6 +192,8 @@ learnTitle: 'Today’s choices make a better batch tomorrow', learnText: 'What y
 };
 var ONGLETS = ['cote', 'collection'];
 function ongletDemande() { try { return new URLSearchParams(window.location.search).get('onglet') === 'collection' ? 'collection' : 'cote'; } catch (e) { return 'cote'; } }
+// Lot 35 : thématiques du profil connecté, pour nommer les familles (l'axe WF3 vaut « Axe N »).
+function thematiquesCourantes() { try { var u = Auth.utilisateurCourant(); return u && u.profil ? u.profil.thematiques : []; } catch (e) { return []; } }
 function cleJeu() { try { return Jeu.cleDuCompte(Auth.utilisateurCourant()); } catch (e) { return null; } }
 function dateLisible(iso, lang) {
 var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
@@ -303,13 +305,15 @@ var cle = cleJeu();
 var compte = Jeu.lireCompte(stockage(), cle, new Date());
 var jeuActif = !!cle && compte.actif;
 var onglet = jeuActif && st.onglet === 'collection' ? 'collection' : 'cote';
-var col = Jeu.collection(compte, lang);
+var thematiques = thematiquesCourantes();
+var col = Jeu.collection(compte, lang, thematiques);
 // Lot 34 : progression par famille, puis historique de toutes les cartes découvertes, filtrable.
-var colSeries = col.familles.map(function (fam) { return { serie: Jeu.libelleSerie(fam.famille, fam.cartes.length, fam.cuites, lang) }; });
-var hist = Jeu.historique(compte, { rarete: st.colRarete, famille: st.colFamille });
+// Lot 37 : la famille s'affiche en puce de la teinte de sa thématique, suivie du reste de la phrase.
+var colSeries = col.familles.map(function (fam) { var serie = Jeu.libelleSerie(fam.famille, fam.cartes.length, fam.cuites, lang); return { famille: fam.famille, teinte: Charte.teinteTheme(fam.famille), detail: serie.slice(fam.famille.length) }; });
+var hist = Jeu.historique(compte, { rarete: st.colRarete, famille: st.colFamille }, thematiques);
 var colRarete = hist.raretes.indexOf(st.colRarete) === -1 ? '' : st.colRarete;
 var colFamille = hist.familles.indexOf(st.colFamille) === -1 ? '' : st.colFamille;
-if (colRarete !== st.colRarete || colFamille !== st.colFamille) hist = Jeu.historique(compte, { rarete: colRarete, famille: colFamille });
+if (colRarete !== st.colRarete || colFamille !== st.colFamille) hist = Jeu.historique(compte, { rarete: colRarete, famille: colFamille }, thematiques);
 var option = function (v, nom, courant) { return { v: v, nom: nom, sel: v === courant ? 'selected' : '' }; };
 var optRarete = [option('', j.collection.toutes, colRarete)].concat(hist.raretes.map(function (id) { return option(id, j.raretes[id], colRarete); }));
 var optFamille = [option('', j.collection.toutes, colFamille)].concat(hist.familles.map(function (f) { return option(f, f, colFamille); }));
@@ -321,7 +325,7 @@ return {
 id: 'col-c' + i, rarete: c.rarete, rareteNom: j.raretes[c.rarete], grignes: r.grignes,
 chip: c.fraicheur ? Jeu.PUCE[c.fraicheur] : 'pq-cache', fraicheurNom: c.fraicheur ? j.fraicheur[c.fraicheur] : '',
 cuite: String(!!c.cuite), cuiteStyle: c.cuite ? '' : HIDE,
-titre: c.titre, source: c.source, sourceStyle: c.source ? '' : HIDE, famille: c.axe || j.collection.autres, date: date
+titre: c.titre, source: c.source, sourceStyle: c.source ? '' : HIDE, famille: c.famille || j.collection.autres, teinte: Charte.teinteTheme(c.famille), date: date
 };
 });
 var nAff = hist.cartes.length;

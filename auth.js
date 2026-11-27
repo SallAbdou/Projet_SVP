@@ -53,8 +53,10 @@
         fourOuvertLe: typeof c.fourOuvertLe === 'string' ? c.fourOuvertLe : null
       };
     }) : [];
-    // Le compte de démo est toujours présent (jamais perdu, même si l'état est abîmé).
-    if (!comptes.some(function (c) { return c.email === COMPTE_DEMO.email; })) comptes.unshift(copie(COMPTE_DEMO));
+    // Le compte de démo est toujours présent (jamais perdu, même si l'état est abîmé),
+    // sauf s'il a été supprimé depuis le profil (lot 41) : ?demo=reset le rend.
+    if (raw.demoSupprime === true) e.demoSupprime = true;
+    else if (!comptes.some(function (c) { return c.email === COMPTE_DEMO.email; })) comptes.unshift(copie(COMPTE_DEMO));
     e.comptes = comptes;
     if (estObjet(raw.session) && typeof raw.session.email === 'string') {
       e.session = { email: cleEmail(raw.session.email), depuis: String(raw.session.depuis || '') };
@@ -137,6 +139,18 @@
   function seDeconnecter(etat) {
     var e = copie(etat);
     e.session = null;
+    return res(e);
+  }
+
+  // Lot 41 : suppression du compte (démo). Session et demande de ce compte fermées.
+  function supprimerCompte(etat, email) {
+    var e = copie(etat);
+    var cle = cleEmail(email);
+    if (!compteParEmail(e, cle)) return res(e, 'aucun-compte');
+    e.comptes = e.comptes.filter(function (c) { return c.email !== cle; });
+    if (e.session && e.session.email === cle) e.session = null;
+    if (e.demande && e.demande.email === cle) e.demande = null;
+    if (cle === COMPTE_DEMO.email) e.demoSupprime = true;
     return res(e);
   }
 
@@ -478,7 +492,8 @@
     charger: reelActif ? actif.charger : charger, enregistrer: enregistrer, avecStockage: avecStockage,
     pur: {
       inscrire: inscrire, definirMotDePasse: definirMotDePasse, seConnecter: seConnecter,
-      motDePasseOublie: motDePasseOublie, seDeconnecter: seDeconnecter, utilisateurCourant: utilisateurCourant, ouvrirFour: ouvrirFour
+      motDePasseOublie: motDePasseOublie, seDeconnecter: seDeconnecter, utilisateurCourant: utilisateurCourant, ouvrirFour: ouvrirFour,
+      supprimerCompte: supprimerCompte
     },
     reel: {
       CLE: CLE_REEL, base: base, requete: requete, lireFragment: lireFragment, decoderJwt: decoderJwt,

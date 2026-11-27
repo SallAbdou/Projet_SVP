@@ -175,7 +175,7 @@ test('données d’exemple de Léa : compte démo sans entrée, plausibles, marq
   assert.equal(Jeu.niveau(c.points).id, 'mitron');
   assert.equal(c.levain.dernier, '2026-11-24', 'nourri la veille : la visite du jour le fait grandir');
   assert.ok(c.levain.jours >= 3);
-  const col = Jeu.collection(c);
+  const col = Jeu.collection(c, 'fr', Auth.COMPTE_DEMO.profil.thematiques);
   assert.ok(col.total.vues >= 5);
   assert.ok(col.total.cuites >= 1 && col.total.cuites <= 2);
   assert.ok(col.familles.length >= 2);

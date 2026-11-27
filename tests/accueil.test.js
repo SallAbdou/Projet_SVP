@@ -8,16 +8,51 @@ const vm = require('node:vm');
 const RACINE = path.join(__dirname, '..');
 
 function lire(page) {
-  const html = fs.readFileSync(path.join(RACINE, page), 'utf8');
+  // Fins de ligne ramenées à LF : une copie Windows (core.autocrlf) ne doit pas casser les comparaisons.
+  const html = fs.readFileSync(path.join(RACINE, page), 'utf8').replace(/\r\n/g, '\n');
   const tpl = html.split('<script type="text/plain" id="tpl">')[1].split('</script>')[0];
   const objet = html.split('var T = ')[1].split('\nclass Component')[0].trim().replace(/;$/, '');
   return { tpl, T: vm.runInNewContext('(' + objet + ')') };
 }
 
-test('accueil : étape 3 relue (lot 27), en FR comme en EN', () => {
+test('accueil : étape 3 relue (lot 38), en FR comme en EN', () => {
   const { T } = lire('index.html');
-  assert.equal(T.fr.etapes[2][1], 'Tu pétris la news en post LinkedIn en quelques minutes seulement. Tu valides la publication (ton et style d’écriture), puis tu suis les réactions.');
-  assert.equal(T.en.etapes[2][1], 'Knead the story into a LinkedIn post in just a few minutes. Approve the post (tone and writing style), then follow the reactions.');
+  assert.equal(T.fr.etapes[2][1], 'Tu pétris la news en post LinkedIn (quelques minutes seulement), tu choisis le ton donné à ton texte et ton style d’écriture. Valide la publication et suis les réactions.');
+  assert.equal(T.en.etapes[2][1], 'Knead the story into a LinkedIn post (just a few minutes), pick the tone of your text and your writing style. Approve the post and follow the reactions.');
+});
+
+// Lot 38 : l'encart final garde son titre et son bouton, avec le four du comptoir (décoratif) à côté.
+function symbole(h, id) {
+  const m = h.match(new RegExp('<symbol id="' + id + '"[^>]*>([\\s\\S]*?)</symbol>'));
+  assert.ok(m, 'symbole ' + id);
+  return m[1];
+}
+
+test('accueil : encart final avec le four du comptoir, décoratif, en version animée et figée (lot 38)', () => {
+  const { tpl } = lire('index.html');
+  const comptoir = fs.readFileSync(path.join(RACINE, 'comptoir.html'), 'utf8').replace(/\r\n/g, '\n');
+  const fin = tpl.match(/<section class="fin" aria-labelledby="fin-t">([\s\S]*?)<\/section>/);
+  assert.ok(fin, 'section .fin');
+  const f = fin[1];
+  // Même dessin que le comptoir, animé comme figé.
+  for (const id of ['pq-four', 'pq-four-fige']) assert.equal(symbole(tpl, id), symbole(comptoir, id), id);
+  assert.match(f, /<div class="fin-four" aria-hidden="true"><svg class="four-svg four-svg-anime" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four"><\/use><\/svg><svg class="four-svg four-svg-fixe" viewBox="0 0 200 170" aria-hidden="true" focusable="false"><use href="#pq-four-fige"><\/use><\/svg><\/div>/);
+  assert.equal((tpl.match(/<use href="#pq-four"/g) || []).length, 1, 'aucun four animé sans jumeau figé');
+  // Titre et bouton dans le même bloc, sans style en ligne qui les décalerait.
+  assert.match(f, /<div class="fin-texte">\s*<h2 id="fin-t" class="section-titre">\{\{t\.finTitre\}\}<\/h2>\s*<a class="bouton" href="\{\{ctaHref\}\}">\{\{ctaLabel\}\}<\/a>\s*<\/div>/);
+  assert.doesNotMatch(f.replace(/<svg width="0"[\s\S]*?<\/svg>/, ''), /style="/, 'hors des symboles du four');
+  assert.equal(lire('index.html').T.fr.finTitre, 'Ta première fournée est à 2 minutes');
+  // Bascule animé / figé comme au comptoir (lot 24 bis), et empilement sur mobile.
+  const css = fs.readFileSync(path.join(RACINE, 'parcours.css'), 'utf8');
+  assert.match(css, /\.four-vapeur-fixe\{[^}]*opacity:\.8/);
+  // Four centré au-dessus du titre et du bouton, centrés eux aussi, quelle que soit la largeur.
+  assert.match(css, /\n\.fin\{display:flex;[^}]*flex-direction:column[^}]*text-align:center/);
+  assert.match(css, /\n\.fin-texte\{display:flex;[^}]*align-items:center/);
+  assert.ok(css.indexOf('.four-svg-fixe{display:none}') > css.indexOf('.four-svg{'), 'règle placée après .four-svg');
+  assert.match(css, /html\[data-animations="off"\] \.four-svg-anime\{display:none\}html\[data-animations="off"\] \.four-svg-fixe\{display:block\}/);
+  assert.match(css, /@media \(prefers-reduced-motion:reduce\)\{html:not\(\[data-animations="on"\]\) \.four-svg-anime\{display:none\}html:not\(\[data-animations="on"\]\) \.four-svg-fixe\{display:block\}/);
+  assert.match(css, /\.fin\{[^}]*display:flex/);
+  assert.match(css, /@media \(max-width:640px\)\{[^@]*\.fin\{[^}]*flex-direction:column/);
 });
 
 test('accueil : titre relu, sans « Chaque matin », fin de titre insécable (lot 27)', () => {
@@ -32,8 +67,10 @@ test('accueil : titre relu, sans « Chaque matin », fin de titre insécable (lo
 test('accueil : le chapo passe à la ligne par le gabarit, pas par la chaîne traduite (lot 27)', () => {
   const { tpl, T } = lire('index.html');
   assert.match(tpl, /<p class="chapo">\{\{t\.chapo\}\}<br>\{\{t\.chapoSuite\}\}<\/p>/);
-  assert.equal(T.fr.chapo, 'Tu choisis tes thèmes et ton niveau.');
-  assert.equal(T.en.chapo, 'Pick your topics and your level.');
+  assert.equal(T.fr.chapo, 'Tu choisis tes thèmes et ton niveau avec l’IA.');
+  assert.equal(T.fr.chapoSuite, 'On sélectionne, on note et on résume pour toi les meilleures news IA du jour, avec l’angle le plus pertinent pour faire réagir tes clients.');
+  assert.equal(T.en.chapo, 'Pick your topics and your level with AI.');
+  assert.equal(T.en.chapoSuite, 'We select, rate and sum up the best AI news of the day for you, with the most relevant angle to get your clients reacting.');
   for (const lang of ['fr', 'en']) assert.ok(!/<|>/.test(T[lang].chapo + T[lang].chapoSuite), lang);
 });
 

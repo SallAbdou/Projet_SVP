@@ -38,7 +38,18 @@
     };
   }
 
-  var Profil = { lignes: lignes };
+  // Lot 37 : thématiques du profil en puces, libellé traduit et teinte du questionnaire (Charte.teinteTheme,
+  // calculée sur la valeur enregistrée). Sous Node, charte.js est chargé à la demande.
+  function puces(u, lang, libelle) {
+    var l = lang === 'en' ? 'en' : 'fr';
+    var Ch = root.Charte || (typeof require === 'function' ? require('./charte.js') : null);
+    var pr = (u && u.profil) || {};
+    return liste(pr.thematiques).map(function (x) {
+      return { label: libelle ? libelle(x, l) : x, teinte: Ch ? Ch.teinteTheme(x) : 'gris' };
+    });
+  }
+
+  var Profil = { lignes: lignes, puces: puces };
   if (typeof module === 'object' && module.exports) module.exports = Profil;
   else root.Profil = Profil;
 })(this);

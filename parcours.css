@@ -14,9 +14,10 @@ p{margin:0}
 .entete{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding:18px 32px;max-width:1180px;width:100%;margin:0 auto}
 .entete-droite{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
 .logo{display:inline-flex;align-items:center;gap:10px;color:var(--texte);text-decoration:none;min-height:44px}
-.logo-icone{width:38px;height:38px;border-radius:12px;background:var(--braise);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;flex:none}
-.logo-nom{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:20px;line-height:1.1}
-.logo-nom span{color:var(--dore)}
+/* Lot 41 : logo image fourni, recadré en CSS sur sa carte crème (1658 x 720 à partir de (57, 82)) pour retirer la marge presque blanche. */
+.logo-cadre{display:block;flex:none;overflow:hidden;height:56px;aspect-ratio:1658/720;border-radius:4.9%/11.25%}
+.logo-img{display:block;width:calc(100% * 1774 / 1658);max-width:none;height:auto;margin:calc(-100% * 82 / 1658) 0 0 calc(-100% * 57 / 1658)}
+.adieu{box-sizing:border-box;max-width:1116px;width:calc(100% - 32px);margin:4px auto 8px;padding:12px 16px;border-radius:12px;border:1px solid var(--bord);border-left:4px solid var(--ok);background:var(--creme);color:var(--texte);font-weight:600}
 .langues{display:flex;gap:4px;padding:4px;border-radius:999px;background:var(--sable)}
 .langues button{min-height:40px;min-width:48px;padding:0 12px;border-radius:999px;border:0;background:transparent;color:var(--brun-fonce);font:inherit;font-weight:600;cursor:pointer}
 .langues button[aria-pressed="true"]{background:var(--braise);color:var(--sur-plein);font-weight:700}
@@ -126,6 +127,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 }
 @media (max-width:640px){
   .entete{padding:14px 16px}
+  .logo-cadre{height:44px}
   .contenu{padding:16px 16px 40px}
   .pied{padding:16px}
   .carte{padding:24px 18px;border-radius:18px}
@@ -134,6 +136,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
   .mini-bento{grid-auto-rows:70px;gap:8px}
   .grisee-fond{padding:12px}
   .actions .bouton,.actions .bouton-secondaire{flex:1 1 auto}
+  .pied-encadres{flex-direction:column;align-items:stretch}
 }
 /* Fenêtre modale (faux e-mail, QR code de la landing) */
 .voile{position:fixed;inset:0;z-index:10;background:var(--voile);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -166,6 +169,15 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .miette-grande{width:140px}
 .miette-ombre{fill:var(--bord)}
 .miette-membre{fill:none;stroke:var(--pain-bas);stroke-width:5;stroke-linecap:round}
+/* Lot 39 : coucou de Miette (accueil). Chaque bras pivote autour de son épaule, cachée derrière le corps. */
+.miette-bras{transform-box:view-box}
+.miette-bras-g{transform-origin:14px 76px}
+.miette-bras-d{transform-origin:106px 82px}
+.miette-accueil:hover .miette-bras-g,.miette-coucou .miette-bras-g{animation:miette-coucou-g 1.1s ease-in-out}
+.miette-accueil:hover .miette-bras-d,.miette-coucou .miette-bras-d{animation:miette-coucou-d 1.2s ease-in-out}
+@keyframes miette-coucou-g{0%,100%{transform:none}20%{transform:rotate(-22deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-22deg)}80%{transform:rotate(4deg)}}
+@keyframes miette-coucou-d{0%,100%{transform:none}25%{transform:rotate(-20deg)}50%{transform:rotate(-4deg)}75%{transform:rotate(-18deg)}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .miette-accueil .miette-bras{animation:none}}
 .miette-mie{fill:var(--pain-haut);stroke:var(--pain-bas);stroke-width:3}
 .miette-grigne{fill:none;stroke:var(--pain-grigne);stroke-width:5;stroke-linecap:round}
 .miette-trait{fill:var(--pain-texte)}
@@ -197,6 +209,9 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .lien-texte{font-weight:600;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
 
 .pied-lanceur{padding-bottom:104px}
+/* Lot 36 : Confidentialité et Accessibilité en boutons secondaires encadrés dans le pied de l'accueil. */
+.pied-encadres{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;flex-basis:100%;order:-1}
+.pied-encadres .bouton-secondaire{min-height:44px;padding:0 20px;font-size:15px}
 html:has(.chat-lanceur){scroll-padding-bottom:104px}
 .chat-lanceur{position:fixed;right:24px;bottom:24px;z-index:9;display:inline-flex;align-items:center;gap:12px;min-height:64px;padding:6px 20px 6px 6px;border:0;border-radius:999px;background:var(--panneau);color:var(--panneau-texte);font:inherit;font-weight:700;cursor:pointer;box-shadow:var(--ombre-2)}
 .chat-lanceur:hover{box-shadow:var(--ombre-3)}
@@ -219,6 +234,24 @@ html:has(.chat-lanceur){scroll-padding-bottom:104px}
 .chat-suggestions .lien{font-size:14px}
 .chat-note{padding:0 16px 12px;background:var(--creme);font-size:12px;color:var(--doux)}
 @media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .faq-chevron{transition:none}}
+/* Lot 38 : encart final « Ta première fournée est à 2 minutes » avec le four du comptoir (décoratif).
+   Four centré au-dessus du titre et du bouton, centrés eux aussi, à toutes les largeurs. */
+.fin{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;margin-top:56px;padding:28px 32px;background:var(--creme);border:1px solid var(--bord);border-radius:22px}
+.fin-defs{position:absolute;width:0;height:0;overflow:hidden}
+.fin-four{flex:0 0 auto;width:190px}
+.fin-texte{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:0}
+.fin-texte .section-titre{margin:0}
+/* Four repris du comptoir (lot 24 bis) : <use> échappe à html[data-animations="off"] *, on bascule entre deux <svg>. */
+.four-svg{display:block;width:100%;height:auto}
+.four-vapeur{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:0;animation:pq-four-vapeur 3s ease-out infinite}
+.four-lueur{animation:pq-four-lueur 2.4s ease-in-out infinite alternate}
+@keyframes pq-four-vapeur{0%{opacity:0;transform:translateY(8px)}30%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
+@keyframes pq-four-lueur{from{opacity:.5}to{opacity:1}}
+.four-vapeur-fixe{fill:none;stroke:var(--bord-fort);stroke-width:4;stroke-linecap:round;opacity:.8}
+.four-svg-fixe{display:none}
+html[data-animations="off"] .four-svg-anime{display:none}html[data-animations="off"] .four-svg-fixe{display:block}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .four-svg-anime{display:none}html:not([data-animations="on"]) .four-svg-fixe{display:block}html:not([data-animations="on"]) .four-vapeur,html:not([data-animations="on"]) .four-lueur{animation:none}}
+@media (max-width:640px){.fin{flex-direction:column;text-align:center;padding:24px 18px}.fin-texte{align-items:center}.fin-four{width:150px}}
 @media (max-width:640px){
   .miette-accueil{flex-basis:108px}
   .miette-grande{width:100px}

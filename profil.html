@@ -17,10 +17,17 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .pf-ligne:first-child{border-top:0;padding-top:4px}
 .pf-ligne dt{color:var(--doux);font-weight:600}
 .pf-ligne dd{margin:0;font-weight:600;color:var(--texte);overflow-wrap:anywhere}
+.pf-puces{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .pf-note{margin:0;font-size:14px;color:var(--doux)}
+.pf-lien{display:inline-flex;align-items:center;min-height:44px;align-self:flex-start;font-size:14px;font-weight:600;color:var(--brun);text-decoration:underline;text-underline-offset:3px}
 .pf-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid var(--brun);background:var(--creme);color:var(--brun);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
 .pf-btn:hover{background:var(--sable);color:var(--brun-fonce)}
 .pf-sortie{border-color:var(--bord-fort);color:var(--brun-fonce)}
+/* Lot 41 : zone sensible, bouton secondaire au style danger (rouge --erreur du thème). */
+.pf-zone-danger{border-color:var(--erreur)}
+.pf-zone-danger .pf-titre{color:var(--erreur)}
+.pf-danger{min-height:44px;border-color:var(--erreur);background:var(--creme);color:var(--erreur)}
+.pf-danger:hover{background:var(--erreur-fond);color:var(--erreur)}
 .pf-intro{margin:0;color:var(--texte-2)}
 .pf-form{display:flex;flex-direction:column;gap:8px;margin:0}
 .pf-label{font-weight:700;color:var(--texte)}
@@ -63,7 +70,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 @media (max-width:640px){.pf-carte{padding:18px}.pf-ligne{grid-template-columns:1fr}}
 </style>
 <style>*{box-sizing:border-box}html{overflow-x:hidden}body{overflow-x:clip}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
-<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script><script src="/retours.js"></script>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script><script src="/retours.js"></script><script src="/compte.js"></script>
 </head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
 <script type="text/plain" id="tpl">
 <div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
@@ -85,7 +92,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <section aria-labelledby="prefs-t" class="pf-carte" data-visite="preferences">
 <h2 id="prefs-t" class="pf-titre">{{t.prefs}}</h2>
 <dl class="pf-liste">
-<sc-for list="{{prefs}}" as="l" hint-placeholder-count="4"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
+<sc-for list="{{prefsAvant}}" as="l" hint-placeholder-count="1"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
+<div class="pf-ligne"><dt>{{ligneThemes.label}}</dt><dd><span style="{{themesVideStyle}}">{{ligneThemes.valeur}}</span><ul class="pf-puces" style="{{pucesStyle}}"><sc-for list="{{puces}}" as="p" hint-placeholder-count="3"><li class="puce-theme" data-teinte="{{p.teinte}}">{{p.label}}</li></sc-for></ul></dd></div>
+<sc-for list="{{prefsApres}}" as="l" hint-placeholder-count="2"><div class="pf-ligne"><dt>{{l.label}}</dt><dd>{{l.valeur}}</dd></div></sc-for>
 </dl>
 <p class="pf-note">{{t.source}}</p>
 <a href="/questionnaire" class="pf-btn" data-focus="profil-modifier">{{t.redo}}</a>
@@ -99,6 +108,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <p id="animations-aide" class="pf-note">{{t.animAide}}</p>
 <div class="pf-anim"><input id="jeu-actif" type="checkbox" aria-describedby="jeu-actif-aide" data-focus="jeu-actif" onChange="{{choisirJeu}}" {{jeuCoche}}><label for="jeu-actif" class="pf-label">{{t.jeuLabel}}</label></div>
 <p id="jeu-actif-aide" class="pf-note">{{t.jeuAide}}</p>
+<a class="pf-lien" href="/accessibilite">{{t.accessibiliteLien}}</a>
 <p role="status" aria-live="polite" class="pf-succes">{{apparenceAnnonce}}</p>
 </section>
 <section aria-labelledby="retour-t" class="pf-carte" data-visite="retours">
@@ -122,6 +132,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <button type="button" class="pf-btn" data-visite-revoir data-focus="visite-revoir">{{t.visiteBtn}}</button>
 </section>
 <button type="button" class="pf-btn pf-sortie" data-focus="profil-logout" onClick="{{deconnexion}}">{{t.logout}}</button>
+<section aria-labelledby="danger-t" class="pf-carte pf-zone-danger">
+<h2 id="danger-t" class="pf-titre">{{t.dangerT}}</h2>
+<p class="pf-intro">{{t.dangerIntro}}</p>
+<button type="button" class="pf-btn pf-danger" data-focus="supprimer-compte" aria-haspopup="dialog" onClick="{{supprimerCompte}}">{{t.supprimer}}</button>
+</section>
 </main>
 </div>
 </script>
@@ -145,13 +160,14 @@ reseau: 'Envoi impossible pour l’instant (connexion ou serveur). Ton texte est
 session: 'Ta session a expiré : reconnecte-toi, ton texte sera à réécrire.'
 },
 derniersT: 'Tes derniers retours', listeVide: 'Aucun retour pour l’instant.', listeErreur: 'Impossible d’afficher tes retours pour l’instant.',
-apparenceT: 'Apparence', themeLegende: 'Thème de couleur',
+apparenceT: 'Apparence', themeLegende: 'Thème de couleur', accessibiliteLien: 'Lire la déclaration d’accessibilité',
 visiteT: 'Visite guidée', visiteIntro: 'Miette te refait le tour du fournil, page par page.', visiteBtn: 'Revoir la visite',
 themes: { bronze: 'Bronze', classique: 'Boulangerie classique', nuit: 'Nuit', contraste: 'Contraste élevé' }, themeApplique: 'Thème « {nom} » appliqué.',
 animLabel: 'Animations activées', animAide: 'Décochée, coupe les animations décoratives : four du comptoir, braise de « Tout chaud »…',
 animOn: 'Animations activées.', animOff: 'Animations coupées.',
 jeuLabel: 'Jeu des cartes activé', jeuAide: 'Décochée, ta fournée s’affiche directement, sans cartes face cachée, ni encart au comptoir, ni collection de pains. Ta progression est gardée.',
-jeuOn: 'Jeu des cartes activé.', jeuOff: 'Jeu des cartes coupé. Ta progression est gardée.'
+jeuOn: 'Jeu des cartes activé.', jeuOff: 'Jeu des cartes coupé. Ta progression est gardée.',
+dangerT: 'Zone sensible', dangerIntro: 'Supprimer ton compte efface ton profil, tes préférences et tout ce que tu as gardé ici. C’est définitif.', supprimer: 'Supprimer mon compte'
 },
 en: {
 navLabel: 'Main navigation', eyebrow: 'Your account', title: 'My profile',
@@ -170,13 +186,14 @@ reseau: 'Could not send right now (connection or server). Your text is kept: try
 session: 'Your session has expired: log in again, you will need to rewrite your text.'
 },
 derniersT: 'Your latest feedback', listeVide: 'No feedback yet.', listeErreur: 'Your feedback can’t be shown right now.',
-apparenceT: 'Appearance', themeLegende: 'Colour theme',
+apparenceT: 'Appearance', themeLegende: 'Colour theme', accessibiliteLien: 'Read the accessibility statement',
 visiteT: 'Guided tour', visiteIntro: 'Miette shows you around the bakery again, page by page.', visiteBtn: 'Replay the tour',
 themes: { bronze: 'Bronze', classique: 'Classic bakery', nuit: 'Night', contraste: 'High contrast' }, themeApplique: '“{nom}” theme applied.',
 animLabel: 'Animations on', animAide: 'Unticked, stops decorative animations: the counter oven, the “Tout chaud” glow…',
 animOn: 'Animations on.', animOff: 'Animations off.',
 jeuLabel: 'Card game on', jeuAide: 'Unticked, your batch shows straight away, with no face-down cards, counter panel or bread collection. Your progress is kept.',
-jeuOn: 'Card game on.', jeuOff: 'Card game off. Your progress is kept.'
+jeuOn: 'Card game on.', jeuOff: 'Card game off. Your progress is kept.',
+dangerT: 'Danger zone', dangerIntro: 'Deleting your account erases your profile, your preferences and everything you kept here. This cannot be undone.', supprimer: 'Delete my account'
 }
 };
 var CACHE = 'display: none';
@@ -212,12 +229,15 @@ var t = T[lang];
 var u = null;
 try { u = Auth.utilisateurCourant(); } catch (e) {}
 var l = Profil.lignes(u, lang, Questionnaire.libelle);
+// Lot 37 : la ligne Thématiques (2e préférence) s'affiche en puces colorées.
+var puces = Profil.puces(u, lang, Questionnaire.libelle);
 var maintenant = new Date();
 var derniers = (s.derniers || []).map(function (r) { return { texte: r.texte, date: Retours.pur.dateRelative(r.cree_le, maintenant, lang) }; });
 var erreur = s.retourErreur ? t.erreurs[s.retourErreur] || t.erreurs.reseau : '';
 var vide = s.derniers !== null && !derniers.length;
 return {
-t: t, infos: l.infos, prefs: l.prefs,
+t: t, infos: l.infos, prefsAvant: l.prefs.slice(0, 1), ligneThemes: l.prefs[1], prefsApres: l.prefs.slice(2),
+puces: puces, pucesStyle: puces.length ? '' : CACHE, themesVideStyle: puces.length ? CACHE : '',
 retour: s.retour,
 retourDecrit: (erreur ? 'retour-erreur ' : '') + 'retour-aide retour-compteur',
 retourInvalide: erreur ? 'true' : 'false',
@@ -266,7 +286,9 @@ var st = stockageTheme();
 if (st) Theme.enregistrer(st, cleTheme(), v);
 self.setState({ theme: v, themeAnnonce: v, animAnnonce: null, jeuAnnonce: null });
 },
-deconnexion: function () { try { Auth.seDeconnecter(); } catch (e) {} window.location.href = '/'; }
+deconnexion: function () { try { Auth.seDeconnecter(); } catch (e) {} window.location.href = '/'; },
+// Lot 41 : dialogue de confirmation (compte.js), focus rendu à ce bouton à la fermeture.
+supprimerCompte: function () { Compte.ouvrir({ lang: lang, retour: '[data-focus="supprimer-compte"]' }); }
 };
 }
 }

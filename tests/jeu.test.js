@@ -63,7 +63,9 @@ test('textes FR et EN de même forme, sans tiret long', () => {
 
 test('annonce d’une carte retournée', () => {
   const a = art(2, 4, 4, 3, { titre: 'Titre', source: 'Src', feu: 'vert' });
-  assert.equal(Jeu.annonce(a, 3, 5, 'fr'), 'Carte 3 sur 5 : Dorée. Titre. Tout chaud, Src, Axe 1. Monétisation 11/15.');
+  // Lot 35 : sans profil, « Axe 1 » n'est pas lu (voir tests/criteres.test.js pour la thématique).
+  assert.equal(Jeu.annonce(a, 3, 5, 'fr'), 'Carte 3 sur 5 : Dorée. Titre. Tout chaud, Src. Monétisation 11/15.');
+  assert.equal(Jeu.annonce(a, 3, 5, 'fr', ['LLMs']), 'Carte 3 sur 5 : Dorée. Titre. Tout chaud, Src, LLMs. Monétisation 11/15.');
   assert.match(Jeu.annonce(a, 3, 5, 'en'), /^Card 3 of 5: /);
 });
 

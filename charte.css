@@ -21,11 +21,20 @@
   /* Lots 15 et 16 : couleurs imposées (tools/palette-oklch.js, IMPOSEES), héritées par classique et Nuit. */
   --etiquette-fond:#ABBF9B;--etiquette-texte:#2C1910;
   --lire-fond:#A9642E;--lire-survol:#7A4420;--lire-texte:#FFFFFF;
-  --petrir-btn-fond:#F27016;--petrir-btn-survol:#B4500A;--petrir-btn-texte:#2C1910;--petrir-btn-survol-texte:#FFFFFF;--petrir-btn-bord:#D9620F;--petrir-btn-survol-bord:#9E4608;--petrir-pain:#2C1910;--petrir-pain-survol:#FFFFFF;--petrir-grigne:#F27016;--petrir-grigne-survol:#B4500A;
+  --petrir-btn-fond:#C2560B;--petrir-btn-survol:#F27016;--petrir-btn-texte:#FFFFFF;--petrir-btn-survol-texte:#000000;--petrir-btn-bord:#9E4608;--petrir-btn-survol-bord:#D9620F;--petrir-pain:#FFFFFF;--petrir-pain-survol:#000000;--petrir-grigne:#C2560B;--petrir-grigne-survol:#F27016;
   --rassis-fond:#615945;--barre-rassis:#615945;--rassis-texte:#FFFFFF;
   --linkedin-fond:#0A66C2;--linkedin-survol:#004182;--linkedin-texte:#FFFFFF;--linkedin-bord:#0A66C2;
   --panneau:#311D14;--panneau-texte:#F7EFE5;--panneau-doux:#E7DCCF;--panneau-or:#F2CB88;--ombre-teinte:#3D2013;
   --qr-fond:#FFFFFF;
+  /* Lot 37 : étiquettes des thématiques, teintes du questionnaire Tally (fond pastel, texte foncé, liseré léger). */
+  --th-rouge-fond:#FDE2E4;--th-rouge-texte:#8A1C2B;--th-rouge-bord:#EFA9B2;
+  --th-orange-fond:#FDE6D4;--th-orange-texte:#8A3B0E;--th-orange-bord:#EFB58C;
+  --th-jaune-fond:#FBF0C2;--th-jaune-texte:#6B4E00;--th-jaune-bord:#E2C966;
+  --th-vert-fond:#DDF1DB;--th-vert-texte:#24592A;--th-vert-bord:#9CCB99;
+  --th-bleu-fond:#DCEAFB;--th-bleu-texte:#1B4A80;--th-bleu-bord:#9DC0EA;
+  --th-violet-fond:#ECE2F8;--th-violet-texte:#4E2A86;--th-violet-bord:#C3AAE6;
+  --th-rose-fond:#FADDF0;--th-rose-texte:#7F1F63;--th-rose-bord:#E5A3D2;
+  --th-gris-fond:#E9E9EB;--th-gris-texte:#3D4045;--th-gris-bord:#B6B9BE;
   --maillard:linear-gradient(140deg,var(--or-haut) 0%,var(--or-milieu) 55%,var(--or-bas) 100%);
   --chaud-degrade:linear-gradient(135deg,var(--croute) 0%,var(--braise-vive) 55%,var(--croute) 100%);
   --barre-chaud:linear-gradient(180deg,var(--croute) 0%,var(--braise-vive) 100%);
@@ -51,6 +60,14 @@
   --barre-rassis-contour:#858D94;--sur-plein:#140E0A;--champ:#0D0805;--bord-champ:#977E67;--panneau:#3A2A20;--panneau-texte:#F5EBDE;
   --panneau-doux:#E4D7C7;--panneau-or:#F2CB88;--ombre-teinte:#030101;
   --contour-plein:#A38A73;
+  --th-rouge-fond:#3A1A1F;--th-rouge-texte:#F7C1C8;--th-rouge-bord:#6E333D;
+  --th-orange-fond:#3A2216;--th-orange-texte:#F7C9A6;--th-orange-bord:#6E412A;
+  --th-jaune-fond:#332B12;--th-jaune-texte:#F1DC92;--th-jaune-bord:#66562A;
+  --th-vert-fond:#18301B;--th-vert-texte:#B5E0B2;--th-vert-bord:#355E38;
+  --th-bleu-fond:#152739;--th-bleu-texte:#B3D3F5;--th-bleu-bord:#30506F;
+  --th-violet-fond:#271C3A;--th-violet-texte:#D3C1F2;--th-violet-bord:#4C3A6E;
+  --th-rose-fond:#361830;--th-rose-texte:#F2BCE2;--th-rose-bord:#693361;
+  --th-gris-fond:#26272A;--th-gris-texte:#D6D8DC;--th-gris-bord:#4C4F54;
   color-scheme:dark;
 }
 [data-theme="contraste"]{
@@ -64,6 +81,7 @@
   --etiquette-fond:#000000;--etiquette-texte:#FFFFFF;--focus:#000000;
   --panneau:#000000;--panneau-texte:#FFFFFF;--panneau-doux:#FFFFFF;--ombre-teinte:#000000;
   --lire-fond:#033C36;--lire-survol:#012824;--lire-texte:#FFFFFF;
+  --th-rouge-fond:#FFFFFF;--th-rouge-texte:#000000;--th-rouge-bord:#000000;--th-orange-fond:#FFFFFF;--th-orange-texte:#000000;--th-orange-bord:#000000;--th-jaune-fond:#FFFFFF;--th-jaune-texte:#000000;--th-jaune-bord:#000000;--th-vert-fond:#FFFFFF;--th-vert-texte:#000000;--th-vert-bord:#000000;--th-bleu-fond:#FFFFFF;--th-bleu-texte:#000000;--th-bleu-bord:#000000;--th-violet-fond:#FFFFFF;--th-violet-texte:#000000;--th-violet-bord:#000000;--th-rose-fond:#FFFFFF;--th-rose-texte:#000000;--th-rose-bord:#000000;--th-gris-fond:#FFFFFF;--th-gris-texte:#000000;--th-gris-bord:#000000;
   --petrir-btn-fond:#EEBE7C;--petrir-btn-survol:#FBE7C0;--petrir-btn-texte:#2B160A;--petrir-btn-survol-texte:#2B160A;--petrir-btn-bord:#BD7D41;--petrir-btn-survol-bord:#BD7D41;--petrir-pain:#BD7D41;--petrir-pain-survol:#BD7D41;--petrir-grigne:#FBE7C0;--petrir-grigne-survol:#FBE7C0;
   --rassis-fond:#3A4147;--barre-rassis:#C5CBD1;--rassis-texte:#F4F7FB;
   --linkedin-fond:#FFFFFF;--linkedin-survol:#F2F2F2;--linkedin-texte:#000000;--linkedin-bord:#000000;
@@ -108,7 +126,7 @@ html[data-animations="off"] *,html[data-animations="off"] *::before,html[data-an
    décoratif (svg.pain-ico, aria-hidden) à gauche du texte. S'enfonce légèrement à l'appui. */
 .btn-petrir{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:44px;min-width:76px;padding:0 16px 0 12px;border:1.5px solid var(--petrir-btn-bord);border-radius:999px;background:var(--petrir-btn-fond);color:var(--petrir-btn-texte);font:inherit;font-weight:800;font-size:14px;line-height:1.2;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sur-plein) 28%,transparent),0 2px 8px color-mix(in srgb,var(--petrir-btn-bord) 28%,transparent);transition:transform .12s ease,box-shadow .12s ease,background-color .12s ease,border-color .12s ease,color .12s ease}
 .btn-petrir .pain-ico{flex:none;width:22px;height:15px;overflow:visible}
-.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol-bord);color:var(--petrir-btn-survol-texte)}
+.btn-petrir:hover{background:var(--petrir-btn-survol);border-color:var(--petrir-btn-survol-bord);color:var(--petrir-btn-survol-texte);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--sur-plein) 28%,transparent),0 2px 8px color-mix(in srgb,var(--petrir-btn-survol-bord) 34%,transparent)}
 .btn-petrir:hover .pain-ico path:first-child{fill:var(--petrir-pain-survol)}.btn-petrir:hover .pain-ico path+path{stroke:var(--petrir-grigne-survol)}
 .btn-petrir:active{transform:translateY(1px) scale(.97);box-shadow:inset 0 2px 4px color-mix(in srgb,var(--ombre-teinte) 28%,transparent)}
 .btn-petrir:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
@@ -118,6 +136,22 @@ html[data-animations="off"] .btn-petrir:active{transform:none}
 
 /* Étiquette de source d'un article : même forme que les puces d'état (lot 20), couleur imposée propre.
    Un nom trop long est coupé par une ellipse plutôt que de casser la pastille sur deux lignes. */
+/* Lot 35 : thème de la news, même forme que la source, en neutre sable cerné. Sur grand écran elle rétrécit
+   sur la ligne (texte complet en title et pour le lecteur d'écran) : passer dessous agrandirait toute la rangée. */
+/* Lot 37 : puces de thématique colorées par data-teinte (Charte.teinteTheme), gris par défaut. */
+.puce-theme,.etiquette-theme{--t-fond:var(--th-gris-fond);--t-texte:var(--th-gris-texte);--t-bord:var(--th-gris-bord)}
+[data-teinte="rouge"]{--t-fond:var(--th-rouge-fond);--t-texte:var(--th-rouge-texte);--t-bord:var(--th-rouge-bord)}
+[data-teinte="orange"]{--t-fond:var(--th-orange-fond);--t-texte:var(--th-orange-texte);--t-bord:var(--th-orange-bord)}
+[data-teinte="jaune"]{--t-fond:var(--th-jaune-fond);--t-texte:var(--th-jaune-texte);--t-bord:var(--th-jaune-bord)}
+[data-teinte="vert"]{--t-fond:var(--th-vert-fond);--t-texte:var(--th-vert-texte);--t-bord:var(--th-vert-bord)}
+[data-teinte="bleu"]{--t-fond:var(--th-bleu-fond);--t-texte:var(--th-bleu-texte);--t-bord:var(--th-bleu-bord)}
+[data-teinte="violet"]{--t-fond:var(--th-violet-fond);--t-texte:var(--th-violet-texte);--t-bord:var(--th-violet-bord)}
+[data-teinte="rose"]{--t-fond:var(--th-rose-fond);--t-texte:var(--th-rose-texte);--t-bord:var(--th-rose-bord)}
+[data-teinte="gris"]{--t-fond:var(--th-gris-fond);--t-texte:var(--th-gris-texte);--t-bord:var(--th-gris-bord)}
+.etiquette-theme{display:inline-block;vertical-align:middle;flex:1 1 0;min-width:4.5em;max-width:max-content;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--t-fond);color:var(--t-texte);box-shadow:inset 0 0 0 1px var(--t-bord)}
+.puce-theme{display:inline-block;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;background:var(--t-fond);color:var(--t-texte);box-shadow:inset 0 0 0 1px var(--t-bord)}
+.etiquette-theme:not(:has(.pq-sr:not(:empty))){display:none}
+@media (max-width:640px){.etiquette-theme{flex:0 1 auto;max-width:100%}}
 .etiquette-source{display:inline-block;vertical-align:middle;flex:0 1 auto;min-width:0;max-width:100%;font-size:12px;font-weight:700;line-height:1.5;padding:3px 10px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--etiquette-fond);color:var(--etiquette-texte)}
 
 /* Texte lu par les lecteurs d'écran mais masqué à l'écran. */
