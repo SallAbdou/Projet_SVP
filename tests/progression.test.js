@@ -79,7 +79,7 @@ test('cuisson : une carte ne cuit qu’une fois, gain pondéré, passage de nive
   const a = art('a', 'vert', 5, 5, 4);
   Jeu.decouvrir(s, 'lea', [a], J('2026-11-24'));
   let r = Jeu.cuire(s, 'lea', a, 'hot', J('2026-11-24'));
-  assert.deepEqual(r, { gain: 75, dejaCuite: false, avant: 'apprenti', apres: 'apprenti', monte: false, points: 85 }, 'découverte (+10) puis cuisson');
+  assert.deepEqual(r, { gain: 75, dejaCuite: false, avant: 'apprenti', apres: 'apprenti', monte: false, points: 85, nouveauxTitres: [] }, 'découverte (+10) puis cuisson');
   assert.equal(Jeu.estCuite(Jeu.lireCompte(s, 'lea', J('2026-11-24')), 'a'), true);
   r = Jeu.cuire(s, 'lea', a, 'hot', J('2026-11-25'));
   assert.equal(r.gain, 0);
@@ -233,7 +233,7 @@ test('fournil : la confirmation de publication cuit la carte et l’annonce', ()
   const conf = h.slice(h.indexOf('confirmerPublication() {'), h.indexOf('enregistrerChiffres(form)'));
   assert.match(conf, /Jeu\.cuire\(/);
   assert.match(conf, /Jeu\.fraicheurCuisson\(/);
-  assert.match(conf, /this\.annoncer\('publie', cuisson\)/);
+  assert.match(conf, /this\.annoncer\(lien \? 'publieLi' : 'publie', cuisson\b/);
   assert.match(h, /texte: T\[lang\]\[toast\.cle\] \+ \(toast\.cuisson && Jeu\.messageCuisson\(/);
   assert.match(h, /<div id="pq-toast" role="status"/);
 });

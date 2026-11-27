@@ -9,8 +9,8 @@ const RACINE = path.join(__dirname, '..');
 const lire = f => fs.readFileSync(path.join(RACINE, f), 'utf8');
 const PAGES = fs.readdirSync(RACINE).filter(f => f.endsWith('.html') && !f.includes(' copy'));
 
-test('17 pages couvertes (lot 26 : accessibilite.html)', () => {
-  assert.equal(PAGES.length, 17);
+test('18 pages couvertes (lot 26 : accessibilite.html, lot 35 : vitrine.html)', () => {
+  assert.equal(PAGES.length, 18);
 });
 
 test('chaque page : le lien d’évitement est le premier élément de <body>, donc le premier focusable', () => {
