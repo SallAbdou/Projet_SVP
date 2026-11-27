@@ -167,6 +167,15 @@ fieldset{border:0;margin:0;padding:0;min-width:0}
 .miette-grande{width:140px}
 .miette-ombre{fill:var(--bord)}
 .miette-membre{fill:none;stroke:var(--pain-bas);stroke-width:5;stroke-linecap:round}
+/* Lot 39 : coucou de Miette (accueil). Chaque bras pivote autour de son épaule, cachée derrière le corps. */
+.miette-bras{transform-box:view-box}
+.miette-bras-g{transform-origin:14px 76px}
+.miette-bras-d{transform-origin:106px 82px}
+.miette-accueil:hover .miette-bras-g,.miette-coucou .miette-bras-g{animation:miette-coucou-g 1.1s ease-in-out}
+.miette-accueil:hover .miette-bras-d,.miette-coucou .miette-bras-d{animation:miette-coucou-d 1.2s ease-in-out}
+@keyframes miette-coucou-g{0%,100%{transform:none}20%{transform:rotate(-22deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-22deg)}80%{transform:rotate(4deg)}}
+@keyframes miette-coucou-d{0%,100%{transform:none}25%{transform:rotate(-20deg)}50%{transform:rotate(-4deg)}75%{transform:rotate(-18deg)}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .miette-accueil .miette-bras{animation:none}}
 .miette-mie{fill:var(--pain-haut);stroke:var(--pain-bas);stroke-width:3}
 .miette-grigne{fill:none;stroke:var(--pain-grigne);stroke-width:5;stroke-linecap:round}
 .miette-trait{fill:var(--pain-texte)}

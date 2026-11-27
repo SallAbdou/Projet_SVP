@@ -27,7 +27,7 @@
 <p class="miette-bulle">{{t.mietteBulle}}</p>
 <svg class="miette miette-grande" viewBox="0 0 120 120" role="img" aria-label="{{t.mietteAlt}}" focusable="false">
 <ellipse class="miette-ombre" cx="60" cy="110" rx="36" ry="5"></ellipse>
-<path class="miette-membre" d="M14 76c-9-3-13-12-9-20M106 82c6 3 9 8 8 13M44 100v8M76 100v8"></path>
+<path class="miette-membre miette-bras miette-bras-g" d="M14 76c-9-3-13-12-9-20"></path><path class="miette-membre miette-bras miette-bras-d" d="M106 82c6 3 9 8 8 13"></path><path class="miette-membre" d="M44 100v8M76 100v8"></path>
 <path class="miette-mie" d="M14 78c0-30 20-52 46-52s46 22 46 52c0 14-10 22-24 22H38c-14 0-24-8-24-22z"></path>
 <path class="miette-grigne" d="M40 42l8 12M58 36l8 12M76 42l8 12"></path>
 <circle class="miette-trait" cx="48" cy="74" r="4.5"></circle><circle class="miette-trait" cx="72" cy="74" r="4.5"></circle>
@@ -280,6 +280,7 @@ setTimeout(function () { var titre = root.querySelector('#faq-t'); if (titre) { 
 }
 var fil = root.querySelector('.chat-fil');
 if (fil) fil.scrollTop = fil.scrollHeight;
+brancherCoucou(root);
 }
 renderVals() {
 var self = this;
@@ -338,4 +339,15 @@ poser: function (e) { self.poser(e.currentTarget.getAttribute('data-id')); }
 }
 // Une réponse de FAQ est une chaîne ou une liste de paragraphes ; le chat les met bout à bout.
 function reponseTexte(r) { return [].concat(r).join(' '); }
+// Lot 39 : coucou de Miette. Le survol l'anime en CSS ; un appui (écran tactile, sans survol) pose la classe miette-coucou,
+// qui garde aussi le geste jusqu'au bout si la souris part en cours de route. Retirée à la fin du bras droit (le plus long).
+// Aucun gestionnaire touch ou pointer : le défilement n'est pas gêné. Miette reste une image décorative, pas un bouton.
+function brancherCoucou(root) {
+var m = root.querySelector('.miette-accueil');
+if (!m) return;
+function saluer() { m.classList.add('miette-coucou'); }
+m.addEventListener('click', saluer);
+m.addEventListener('mouseenter', saluer);
+m.addEventListener('animationend', function (e) { if (e.animationName === 'miette-coucou-d') m.classList.remove('miette-coucou'); });
+}
 </script><script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/parcours.js"></script><script src="/animations.js"></script><script src="/boot.js"></script></body></html>
