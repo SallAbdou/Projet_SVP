@@ -43,11 +43,11 @@ test('en-tête : logo image avec alt, dimensions déclarées, dans le lien vers 
   assert.match(P.enteteHtml({ lang: 'en' }), /aria-label="Votre pAIn quotidien, home"/);
 });
 
-test('en-tête : taille du logo bornée (grand écran et mobile), coins arrondis', () => {
+test('en-tête : taille du logo bornée (64 px, 48 px sur mobile), coins arrondis', () => {
   const css = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'parcours.css'), 'utf8');
-  assert.match(css, /\.logo-img\{[^}]*height:56px[^}]*width:auto/);
+  assert.match(css, /\.logo-img\{[^}]*height:64px[^}]*width:auto/);
   assert.match(css, /\.logo-img\{[^}]*border-radius/);
-  assert.match(css, /@media \(max-width:640px\)\{[^@]*\.logo-img\{height:44px/);
+  assert.match(css, /@media \(max-width:640px\)\{[^@]*\.logo-img\{height:48px/);
   assert.doesNotMatch(css, /\.logo-icone|\.logo-nom/);
 });
 

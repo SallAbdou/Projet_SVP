@@ -6,7 +6,7 @@
 - En-tête public (`parcours.js`, `enteteHtml`) : le carré pain + le texte sont remplacés par
   `<img class="logo-img" src="/assets/logo-votre-pain-quotidien.webp" width="1774" height="887" alt="Votre pAIn quotidien">`
   dans le lien vers l'accueil. Le lien garde son `aria-label` (« Votre pAIn quotidien, accueil » / « …, home ») :
-  il remplace le contenu, rien n'est lu deux fois. Hauteur CSS 56 px (44 px sous 640 px), largeur automatique.
+  il remplace le contenu, rien n'est lu deux fois. Hauteur CSS 64 px (48 px sous 640 px), largeur automatique.
 - Menu latéral (`nav.js`) : le titre texte devient la même image (largeur 100 %, bornée à 214 px), accroche gardée
   dessous. Barre mobile (< 900 px) : image de 36 px de haut à gauche, accroche masquée (comme avant).
 - `alt` identique en FR et EN (nom de marque), porté par `TEXTES.fr/en.logoAlt`.

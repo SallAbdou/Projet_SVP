@@ -4,8 +4,10 @@
    piedHtml() remplit de même [data-pied] : liens Confidentialité et Accessibilité (lot 26). */
 (function (root) {
   var TEXTES = {
-    fr: { langue: 'Langue', accueil: 'Votre pAIn quotidien, accueil', logoAlt: 'Votre pAIn quotidien', connexion: 'Se connecter', confidentialite: 'Confidentialité', accessibilite: 'Accessibilité' },
-    en: { langue: 'Language', accueil: 'Votre pAIn quotidien, home', logoAlt: 'Votre pAIn quotidien', connexion: 'Log in', confidentialite: 'Privacy', accessibilite: 'Accessibility' }
+    fr: { langue: 'Langue', accueil: 'Votre pAIn quotidien, accueil', logoAlt: 'Votre pAIn quotidien', connexion: 'Se connecter', confidentialite: 'Confidentialité', accessibilite: 'Accessibilité',
+      adieu: 'Ton compte a bien été supprimé, ainsi que tes données dans ce navigateur. À bientôt peut-être !' },
+    en: { langue: 'Language', accueil: 'Votre pAIn quotidien, home', logoAlt: 'Votre pAIn quotidien', connexion: 'Log in', confidentialite: 'Privacy', accessibilite: 'Accessibility',
+      adieu: 'Your account has been deleted, along with your data in this browser. Hope to see you again!' }
   };
 
   var LIENS_PIED = [{ id: 'confidentialite', href: '/confidentialite' }, { id: 'accessibilite', href: '/accessibilite' }];
@@ -20,6 +22,11 @@
   }
 
   function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  // Lot 41 : après « Supprimer mon compte », message affiché une fois sous l'en-tête (accueil).
+  function adieuHtml(lang) { return '<p class="adieu" role="status">' + esc(TEXTES[lang === 'en' ? 'en' : 'fr'].adieu) + '</p>'; }
+  var adieu = false, adieuDit = false;
+  try { if (root.sessionStorage && root.sessionStorage.getItem('pq-adieu')) { adieu = true; root.sessionStorage.removeItem('pq-adieu'); } } catch (err) {}
 
   function enteteHtml(o) {
     var lang = o.lang === 'en' ? 'en' : 'fr';
@@ -44,6 +51,11 @@
     var el = rootEl && rootEl.querySelector('[data-entete]');
     if (!el) return;
     el.innerHTML = enteteHtml({ lang: e.detail.lang, connexion: el.hasAttribute('data-connexion'), qr: el.hasAttribute('data-qr') });
+    if (adieu) {
+      el.insertAdjacentHTML('afterend', adieuHtml(e.detail.lang));
+      // Premier rendu : boot.js n'annonce pas l'état initial, on passe donc par son relais une fois.
+      if (!adieuDit && root.annoncer) { adieuDit = true; root.annoncer(TEXTES[e.detail.lang === 'en' ? 'en' : 'fr'].adieu); }
+    }
     var qr = el.querySelector('[data-qr-ouvrir]');
     if (qr) qr.addEventListener('click', function () { if (root.__app && root.__app.ouvrirQr) root.__app.ouvrirQr(); });
     el.querySelectorAll('[data-lang]').forEach(function (b) {
@@ -73,7 +85,7 @@
     else if (!e.shiftKey && document.activeElement === dernier) { e.preventDefault(); premier.focus(); }
   }
 
-  var Parcours = { enteteHtml: enteteHtml, piedHtml: piedHtml, focaliser: focaliser, focalisables: focalisables, clavierModale: clavierModale };
+  var Parcours = { enteteHtml: enteteHtml, adieuHtml: adieuHtml, piedHtml: piedHtml, focaliser: focaliser, focalisables: focalisables, clavierModale: clavierModale };
   if (typeof module === 'object' && module.exports) module.exports = Parcours;
   else {
     root.Parcours = Parcours;
