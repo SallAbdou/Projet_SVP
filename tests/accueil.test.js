@@ -8,7 +8,8 @@ const vm = require('node:vm');
 const RACINE = path.join(__dirname, '..');
 
 function lire(page) {
-  const html = fs.readFileSync(path.join(RACINE, page), 'utf8');
+  // Fins de ligne ramenées à LF : une copie Windows (core.autocrlf) ne doit pas casser les comparaisons.
+  const html = fs.readFileSync(path.join(RACINE, page), 'utf8').replace(/\r\n/g, '\n');
   const tpl = html.split('<script type="text/plain" id="tpl">')[1].split('</script>')[0];
   const objet = html.split('var T = ')[1].split('\nclass Component')[0].trim().replace(/;$/, '');
   return { tpl, T: vm.runInNewContext('(' + objet + ')') };
