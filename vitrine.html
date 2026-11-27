@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="fr" data-protegee><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script src="/config.js"></script>
+<title>La vitrine · Votre pAIn quotidien</title>
+<meta name="pq-titre-en" content="The showcase · Votre pAIn quotidien">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&amp;family=DM+Sans:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="/charte.css">
+<style>
+body{margin:0;background:var(--fond-page)}
+a{color:var(--brun)}a:hover{color:var(--brun-fonce)}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid var(--braise);outline-offset:2px}
+</style>
+<style>*{box-sizing:border-box}html{overflow-x:hidden}body{overflow-x:clip}@media (max-width:640px){main{padding:24px 16px 40px!important}h1{font-size:30px!important}}</style>
+<style>
+/* Lot 35 : la vitrine des titres. Couleurs du thème uniquement ; le palier est toujours écrit en toutes lettres. */
+.vt-tete{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-start;justify-content:space-between}
+.vt-encadre{margin:0;font-size:13px;color:var(--doux);padding:6px 12px;border-radius:12px;border:1px dashed var(--bord-fort);background:var(--creme)}
+.vt-boite{background:var(--creme);border:1px solid var(--bord);border-radius:20px;box-shadow:var(--ombre-1)}
+/* Bandeau des 5 paliers : pastilles numérotées de plus en plus foncées. */
+.vt-paliers{list-style:none;margin:0;padding:22px 16px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.vt-palier{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
+.vt-rond{width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:Fraunces, Georgia, serif;font-weight:800;font-size:19px;color:var(--chaud-texte);margin-bottom:6px}
+.vt-rond[data-n="1"]{background:var(--or-haut)}
+.vt-rond[data-n="2"]{background:var(--or-milieu)}
+.vt-rond[data-n="3"]{background:var(--croute)}
+.vt-rond[data-n="4"]{background:var(--braise);color:var(--sur-plein)}
+.vt-rond[data-n="5"]{background:var(--brun-fonce);color:var(--sur-plein)}
+.vt-palier strong{font-family:Fraunces, Georgia, serif;font-size:16px;overflow-wrap:anywhere}
+.vt-palier span{font-size:13px;color:var(--doux)}
+/* Grille des thématiques. */
+.vt-grille{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.vt-grille>li{display:flex;min-width:0}
+.vt-theme{flex:1 1 auto;display:flex;flex-direction:column;gap:12px;padding:18px 20px;border-radius:18px;background:var(--creme);border:1.5px solid var(--bord)}
+.vt-theme[data-affiche="true"]{border:2.5px solid var(--braise);box-shadow:0 0 0 4px color-mix(in srgb,var(--braise) 14%,transparent)}
+.vt-theme[data-vide="true"]{background:transparent;border-style:dashed}
+.vt-theme[data-vide="true"] .vt-nom,.vt-theme[data-vide="true"] .vt-chiffres{color:var(--doux)}
+.vt-ligne{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.vt-nom{margin:0;font-size:16px;font-weight:700;line-height:1.35;color:var(--texte);overflow-wrap:anywhere}
+.vt-pastille{flex:none;font-size:12.5px;font-weight:700;padding:2px 10px;border-radius:999px;background:var(--miel);color:var(--brun-fonce);border:1px solid var(--bord-fort)}
+.vt-pastille[data-obtenu="true"]{background:var(--croute);color:var(--chaud-texte);border-color:var(--croute)}
+.vt-pastille[data-palier="visionnaire"]{background:var(--brun-fonce);color:var(--sur-plein);border-color:var(--brun-fonce)}
+.vt-barre{display:block;height:10px;border-radius:999px;background:color-mix(in srgb,var(--brun) 14%,transparent);overflow:hidden}
+.vt-barre-plein{display:block;height:100%;border-radius:inherit;background:var(--braise);transform-origin:left center;animation:jeu-remplit .8s cubic-bezier(.3,.7,.3,1) both}
+html[data-animations="off"] .vt-barre-plein{animation:none}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .vt-barre-plein{animation:none}}
+.vt-bas{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;margin-top:auto}
+.vt-chiffres{font-size:14px;color:var(--texte-2)}
+.vt-afficher{min-height:44px;padding:0 12px;margin:-8px -12px -8px 0;border:0;border-radius:10px;background:none;color:var(--braise);font:inherit;font-weight:800;font-size:14px;cursor:pointer}
+.vt-afficher:hover{text-decoration:underline}
+.vt-attente{font-size:13px;color:var(--doux)}
+/* Partage : aperçu de la carte vue sur LinkedIn, toujours sombre. */
+.vt-partage{display:flex;flex-wrap:wrap;gap:22px 28px;padding:22px}
+.vt-apercu{flex:1 1 320px;max-width:420px;border-radius:16px;overflow:hidden;border:1px solid var(--bord);background:var(--creme);box-shadow:var(--ombre-2)}
+.vt-apercu-haut{display:flex;flex-direction:column;gap:6px;min-height:190px;padding:22px 24px;background:linear-gradient(135deg,var(--panneau) 0%,color-mix(in srgb,var(--panneau) 55%,var(--braise)) 100%);color:var(--panneau-texte)}
+.vt-apercu-marque{margin:0 0 auto;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--panneau-doux)}
+.vt-apercu-qui{margin:18px 0 0;font-size:14px;color:var(--panneau-doux)}
+.vt-apercu-titre{margin:0;font-family:Fraunces, Georgia, serif;font-size:28px;line-height:1.1;font-weight:800;color:var(--panneau-or)}
+.vt-apercu-theme{margin:0;font-family:Fraunces, Georgia, serif;font-size:22px;line-height:1.15;font-weight:700;color:var(--panneau-texte)}
+.vt-apercu-url{margin:0;padding:10px 16px;font-size:13px;color:var(--doux);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vt-partage-texte{flex:1 1 300px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.vt-h2{margin:0;font-family:Fraunces, Georgia, serif;font-size:24px;font-weight:800;color:var(--texte)}
+.vt-doux{margin:0;color:var(--doux)}
+.vt-boutons{display:flex;flex-wrap:wrap;gap:10px}
+.vt-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;border:1.5px solid var(--bord-fort);background:var(--creme);color:var(--texte);font:inherit;font-weight:700;font-size:15px;text-decoration:none;cursor:pointer}
+.vt-btn:hover{border-color:var(--brun);color:var(--texte)}
+.vt-btn-plein{background:var(--brun-fonce);border-color:var(--brun-fonce);color:var(--sur-plein)}
+.vt-btn-plein:hover{background:var(--braise-fonce);border-color:var(--braise-fonce);color:var(--sur-plein)}
+.vt-brouillon{display:flex;flex-direction:column;gap:8px}
+.vt-brouillon label{font-weight:700;font-size:14px}
+.vt-brouillon textarea{width:100%;min-height:220px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--bord-champ);background:var(--champ);color:var(--texte);font:inherit;font-size:14px;line-height:1.5;resize:vertical}
+.vt-regles{margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:6px;color:var(--texte-2)}
+.vt-coupe{display:flex;flex-direction:column;align-items:flex-start;gap:12px;background:var(--creme);border:1.5px dashed var(--bord-fort);border-radius:20px;padding:28px;max-width:760px}
+@media (max-width:640px){.vt-paliers{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:18px}.vt-partage{padding:16px}}
+</style>
+<script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script>
+</head><body><a class="pq-evitement" href="#contenu">Aller au contenu</a><div id="root"></div>
+<script type="text/plain" id="tpl">
+<div style="display:flex;flex-wrap:wrap;min-height:100vh;background:var(--fond);color:var(--texte);font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;font-size:15px;line-height:1.5">
+<nav data-nav data-page="vitrine" aria-label="{{t.navLabel}}" style="flex:1 1 250px;max-width:100%;box-sizing:border-box;background:var(--sable);border-right:1px solid var(--bord);padding:28px 18px;display:flex;flex-direction:column;gap:26px"></nav>
+<main id="contenu" tabindex="-1" style="flex:999 1 560px;min-width:0;box-sizing:border-box;padding:40px 44px 60px;display:flex;flex-direction:column;gap:22px;max-width:1180px">
+<header class="vt-tete">
+<div style="display:flex;flex-direction:column;gap:6px;max-width:760px">
+<p style="margin:0;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{t.eyebrow}}</p>
+<h1 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:40px;line-height:1.1;font-weight:800;letter-spacing:-0.01em">{{t.title}}</h1>
+<p style="margin:0;color:var(--texte-2);font-size:17px">{{t.subtitle}}</p>
+</div>
+<p class="vt-encadre" style="{{exempleStyle}}">{{t.exemple}}</p>
+</header>
+<div class="vt-coupe" style="{{coupeStyle}}">
+<p style="margin:0;font-weight:600">{{t.coupe}}</p>
+<a href="/profil" class="vt-btn vt-btn-plein">{{t.allerProfil}}</a>
+</div>
+<section class="vt-boite" aria-label="{{t.paliersLabel}}" style="{{jeuStyle}}">
+<ol class="vt-paliers">
+<sc-for list="{{paliers}}" as="p" hint-placeholder-count="5">
+<li class="vt-palier"><span class="vt-rond" data-n="{{p.n}}" aria-hidden="true">{{p.n}}</span><strong>{{p.nom}}</strong><span>{{p.seuil}}</span></li>
+</sc-for>
+</ol>
+</section>
+<section aria-labelledby="vt-themes-t" style="{{jeuBlocStyle}}">
+<h2 id="vt-themes-t" class="pq-sr">{{t.themesTitre}}</h2>
+<p id="vt-affiche-etat" role="status" class="pq-sr">{{afficheEtat}}</p>
+<ol class="vt-grille">
+<sc-for list="{{cartes}}" as="c" hint-placeholder-count="6">
+<li><article class="vt-theme" data-affiche="{{c.affiche}}" data-vide="{{c.vide}}" aria-labelledby="vt-{{c.id}}-t">
+<div class="vt-ligne"><h3 id="vt-{{c.id}}-t" class="vt-nom">{{c.nom}}</h3><span class="vt-pastille" data-obtenu="{{c.obtenu}}" data-palier="{{c.idPalier}}">{{c.palier}}</span></div>
+<span class="vt-barre" aria-hidden="true"><span class="vt-barre-plein" style="{{c.barre}}"></span></span>
+<div class="vt-bas">
+<span class="vt-chiffres">{{c.chiffres}}</span>
+<button type="button" class="vt-afficher" data-act="afficher" data-id="{{c.id}}" aria-pressed="{{c.affiche}}" aria-label="{{c.boutonLabel}}" onClick="{{afficher}}" style="{{c.boutonStyle}}">{{c.bouton}}</button>
+<span class="vt-attente" style="{{c.attenteStyle}}">{{c.attente}}</span>
+</div>
+</article></li>
+</sc-for>
+</ol>
+</section>
+<section class="vt-boite vt-partage" aria-labelledby="vt-partage-t" style="{{partageStyle}}">
+<div class="vt-apercu" aria-hidden="true">
+<div class="vt-apercu-haut">
+<p class="vt-apercu-marque">Votre pAIn quotidien</p>
+<p class="vt-apercu-qui">{{apercu.qui}}</p>
+<p class="vt-apercu-titre">{{apercu.palier}}</p>
+<p class="vt-apercu-theme">{{apercu.theme}}</p>
+</div>
+<p class="vt-apercu-url">{{apercu.url}}</p>
+</div>
+<div class="vt-partage-texte">
+<h2 id="vt-partage-t" class="vt-h2">{{t.partageTitre}}</h2>
+<p class="vt-doux">{{partageTexte}}</p>
+<div class="vt-boutons">
+<button type="button" class="vt-btn vt-btn-plein" data-act="rediger" aria-expanded="{{redigeOuvert}}" aria-controls="vt-brouillon" onClick="{{rediger}}">{{t.rediger}}</button>
+<a class="vt-btn" href="{{lienPartage}}" target="_blank" rel="noopener" aria-label="{{t.partagerLabel}}">{{t.partager}}</a>
+</div>
+<div id="vt-brouillon" class="vt-brouillon" style="{{brouillonStyle}}">
+<label for="vt-annonce">{{t.brouillonLabel}}</label>
+<textarea id="vt-annonce" data-focus="annonce">{{brouillon}}</textarea>
+<div class="vt-boutons"><button type="button" class="vt-btn" data-act="copier" onClick="{{copier}}">{{t.copier}}</button><span role="status" class="vt-doux" style="align-self:center">{{copieEtat}}</span></div>
+</div>
+</div>
+</section>
+<section aria-labelledby="vt-regles-t" style="{{jeuBlocStyle}}">
+<h2 id="vt-regles-t" class="vt-h2" style="font-size:20px;margin-bottom:8px">{{t.reglesTitre}}</h2>
+<ul class="vt-regles">
+<sc-for list="{{regles}}" as="r" hint-placeholder-count="4">
+<li>{{r.texte}}</li>
+</sc-for>
+</ul>
+</section>
+</main>
+</div>
+</script>
+<script src="/dc.js"></script><script src="/charte.js"></script><script>
+var HIDE = 'display: none';
+var T = {
+fr: {
+navLabel: 'Navigation principale',
+eyebrow: '12 thématiques · 5 paliers', title: 'La vitrine',
+subtitle: 'Chaque post publié et chaque source lue font progresser tes thématiques. Les sujets encore chauds rapportent le plus.',
+coupe: 'Le jeu et les titres sont coupés dans ton profil. Ta progression est gardée : réactive-les pour la retrouver ici.', allerProfil: 'Aller à mon profil',
+exemple: 'Données d’exemple', paliersLabel: 'Les 5 paliers', seuil: '{n} points',
+themesTitre: 'Tes thématiques',
+afficher: 'Afficher', affiche: '★ Affiché', afficherLabel: 'Afficher {titre} sous ton prénom', retirerLabel: '{titre}, affiché sous ton prénom. Retirer',
+chiffres: '{p} / {s} points', chiffresSommet: '{p} points', aucunTitre: 'Pas encore de titre', sansActivite: 'Pas encore d’activité',
+qui: '{prenom} a obtenu le titre', quiSans: 'Titre obtenu',
+partageTitre: 'Partager ton titre',
+partageTexte: 'L’aperçu ci-contre est la carte que verra ton réseau LinkedIn. En démo, la page partagée est générique : elle ne prouve pas que tu as ce titre.',
+rediger: 'Rédiger le post d’annonce', partager: 'Partager le lien', partagerLabel: 'Partager le lien sur LinkedIn (nouvel onglet)',
+brouillonLabel: 'Brouillon à relire avant de publier', copier: 'Copier le texte', copie: 'Texte copié.', copieKo: 'Copie impossible : sélectionne le texte à la main.',
+reglesTitre: 'Comment progresser',
+regles: {
+lecture: 'Lire la source d’une carte découverte : {n} points, une fois par article, {max} lectures comptées par jour au plus.',
+cuisson: 'Publier un post (la carte cuit) : {hot} points si le sujet est Tout chaud, {knead} À pétrir, {stale} Rassis.',
+bonus: 'Bonus de rareté à la cuisson : +{maillard} Maillard, +{doree} Dorée, +{croute} Croûte.',
+partage: 'Chaque point gagné sur un article compte pour chacune de ses thématiques. Un titre obtenu ne se perd jamais, et il n’y a pas de classement.'
+}
+},
+en: {
+navLabel: 'Main navigation',
+eyebrow: '12 topics · 5 tiers', title: 'The showcase',
+subtitle: 'Every post published and every source read moves your topics forward. Topics that are still hot earn the most.',
+coupe: 'The game and titles are off in your profile. Your progress is kept: turn them back on to see it here.', allerProfil: 'Go to my profile',
+exemple: 'Sample data', paliersLabel: 'The 5 tiers', seuil: '{n} points',
+themesTitre: 'Your topics',
+afficher: 'Show', affiche: '★ Shown', afficherLabel: 'Show {titre} under your name', retirerLabel: '{titre}, shown under your name. Remove',
+chiffres: '{p} / {s} points', chiffresSommet: '{p} points', aucunTitre: 'No title yet', sansActivite: 'No activity yet',
+qui: '{prenom} earned the title', quiSans: 'Title earned',
+partageTitre: 'Share your title',
+partageTexte: 'The preview is the card your LinkedIn network will see. In the demo, the shared page is generic: it does not prove you hold this title.',
+rediger: 'Write the announcement post', partager: 'Share the link', partagerLabel: 'Share the link on LinkedIn (new tab)',
+brouillonLabel: 'Draft to review before posting', copier: 'Copy text', copie: 'Text copied.', copieKo: 'Could not copy: select the text by hand.',
+reglesTitre: 'How to progress',
+regles: {
+lecture: 'Read the source of a discovered card: {n} points, once per article, {max} readings counted per day at most.',
+cuisson: 'Post about it (the card gets baked): {hot} points if the topic is Piping hot, {knead} Needs kneading, {stale} Gone stale.',
+bonus: 'Rarity bonus when baking: +{maillard} Maillard, +{doree} Golden, +{croute} Crust.',
+partage: 'Every point earned on an article counts for each of its topics. A title you earned is never lost, and there is no ranking.'
+}
+}
+};
+var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
+function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
+function utilisateur() { try { return Auth.utilisateurCourant(); } catch (e) { return null; } }
+function siteUrl() { try { return (window.PQ_CONFIG && window.PQ_CONFIG.siteUrl) || window.location.origin; } catch (e) { return ''; } }
+class Component extends DCLogic {
+constructor(props) { super(props); this.state = { lang: 'fr', n: 0, redige: false, copie: '' }; }
+afficher(id) {
+var cle = Jeu.cleDuCompte(utilisateur());
+var compte = Jeu.lireCompte(stockage(), cle, new Date());
+Jeu.choisirTitre(stockage(), cle, compte.titreAffiche === id ? '' : id, new Date());
+this.setState({ n: (this.state.n || 0) + 1, copie: '' });
+}
+copier() {
+var self = this;
+var zone = document.getElementById('vt-annonce');
+var texte = zone ? zone.value : '';
+function fin(ok) { self.setState({ copie: ok ? 'copie' : 'copieKo' }); }
+function repli() { var ok = false; try { zone.select(); ok = document.execCommand('copy'); } catch (e) {} fin(ok); }
+if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texte).then(function () { fin(true); }, repli);
+else repli();
+}
+renderVals() {
+var st = this.state || {};
+var lang = st.lang || 'fr';
+var t = T[lang];
+var j = Jeu.textes(lang);
+var self = this;
+var u = utilisateur();
+var cle = Jeu.cleDuCompte(u);
+var compte = Jeu.lireCompte(stockage(), cle, new Date());
+var actif = !!cle && compte.actif;
+var tous = Jeu.titres(compte, lang);
+var choisies = (u && u.profil && u.profil.thematiques) || [];
+// Ordre : titres obtenus (du plus haut palier), puis thématiques en cours, puis celles sans activité.
+var rang = function (x) { return x.palier * 10000 + x.points + (choisies.indexOf(x.libelle) !== -1 ? 0.5 : 0); };
+var liste = tous.slice().sort(function (a, b) { return rang(b) - rang(a); });
+var affiche = compte.titreAffiche && Jeu.titreAffiche(compte, lang) ? compte.titreAffiche : '';
+var cartes = liste.map(function (x) {
+var on = x.id === affiche;
+var seuil = x.suivant ? Jeu.PALIERS.filter(function (p) { return p.id === x.suivant; })[0].min : 0;
+return {
+id: x.id, nom: x.libelle === 'Ecosystèmes' && lang === 'fr' ? x.nom : (lang === 'en' ? x.nom : x.libelle),
+palier: x.points || x.obtenu ? x.nomPalier : '–', idPalier: x.idPalier, obtenu: String(x.obtenu),
+affiche: String(on), vide: String(!x.points && !x.obtenu),
+barre: 'width: ' + (x.points || x.obtenu ? Math.max(3, x.pct) : 0) + '%',
+chiffres: x.suivant ? Jeu.remplir(t.chiffres, { p: x.points, s: seuil }) : Jeu.remplir(t.chiffresSommet, { p: x.points }),
+bouton: on ? t.affiche : t.afficher,
+boutonLabel: Jeu.remplir(on ? t.retirerLabel : t.afficherLabel, { titre: x.titre }),
+boutonStyle: x.obtenu ? '' : HIDE,
+attente: x.points ? t.aucunTitre : t.sansActivite, attenteStyle: x.obtenu ? HIDE : ''
+};
+});
+// Partage : le titre affiché, sinon le plus haut titre obtenu.
+var cible = tous.filter(function (x) { return x.id === affiche; })[0] || liste.filter(function (x) { return x.obtenu; })[0] || null;
+var url = cible ? siteUrl().replace(/\/+$/, '') + '/titres/' + cible.slug : '';
+var P = Jeu.POINTS;
+return {
+t: t,
+coupeStyle: actif ? HIDE : '',
+jeuStyle: actif ? '' : HIDE,
+jeuBlocStyle: actif ? 'display: flex; flex-direction: column; gap: 10px' : HIDE,
+exempleStyle: actif && compte.exemple ? '' : HIDE,
+paliers: Jeu.PALIERS.map(function (p, i) { return { n: i + 1, nom: j.paliers[p.id], seuil: Jeu.remplir(t.seuil, { n: p.min.toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR') }) }; }),
+cartes: cartes,
+afficheEtat: affiche ? Jeu.remplir(j.vitrine.affiche, { titre: Jeu.titreAffiche(compte, lang) }) : j.vitrine.aucunAffiche,
+afficher: function (e) { self.afficher(e.currentTarget.getAttribute('data-id')); },
+partageStyle: actif && cible ? '' : HIDE,
+apercu: cible ? {
+qui: u && u.prenom ? Jeu.remplir(t.qui, { prenom: u.prenom }) : t.quiSans,
+palier: cible.nomPalier, theme: lang === 'en' ? cible.nom : cible.libelle,
+url: url.replace(/^https?:\/\//, '')
+} : { qui: '', palier: '', theme: '', url: '' },
+partageTexte: t.partageTexte,
+lienPartage: cible ? Jeu.lienPartage(cible.slug, siteUrl()) : '#',
+redigeOuvert: String(!!st.redige),
+rediger: function () { self.setState({ redige: !self.state.redige, copie: '' }); },
+brouillonStyle: st.redige ? '' : HIDE,
+brouillon: cible ? Jeu.annonceTitre(cible.slug, 'expert', lang) : '',
+copier: function () { self.copier(); },
+copieEtat: st.copie ? t[st.copie] : '',
+regles: [
+{ texte: Jeu.remplir(t.regles.lecture, { n: P.lecture, max: Jeu.LECTURES_PAR_JOUR }) },
+{ texte: Jeu.remplir(t.regles.cuisson, P.cuisson) },
+{ texte: Jeu.remplir(t.regles.bonus, P.bonus) },
+{ texte: t.regles.partage }
+]
+};
+}
+}
+</script><script src="/jeu.js"></script><script src="/nav.js"></script><script src="/boot.js"></script></body></html>

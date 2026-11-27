@@ -57,6 +57,21 @@
         familles: 'Par famille', historique: 'Historique des cartes',
         filtreRarete: 'Rareté', filtreFamille: 'Famille', toutes: 'Toutes',
         affichees: '{n} cartes affichées', affichee1: '{n} carte affichée', aucune: 'Aucune carte pour ces filtres.'
+      },
+      // Lot 35 : titres par thématique (épicènes). Libellés courts des thématiques dans Jeu.THEMATIQUES.
+      paliers: { novice: 'Novice', analyste: 'Analyste', specialiste: 'Spécialiste', stratege: 'Stratège', visionnaire: 'Visionnaire' },
+      lecture: 'Lecture : +{n} points en {thematiques}.', lectureSans: 'Lecture : +{n} points de cuisson.',
+      nouveauTitre: 'Nouveau titre : {titre}.', et: ' et ',
+      vitrine: {
+        ptsTheme: '{n} points', ptsTheme1: '1 point', suite: '{n} points avant {palier}', sommet: 'Palier le plus haut atteint',
+        cuites0: 'Aucune carte cuite pour l’instant', cuites1: '1 carte cuite', cuitesN: '{n} cartes cuites', depuis: 'Obtenu le {d}',
+        sansPoints: 'Pas encore de points en : {liste}.', affiche: 'Titre affiché : {titre}.', aucunAffiche: 'Aucun titre affiché : ton métier reste sous ton prénom.'
+      },
+      // Brouillon d'annonce d'un titre, proposé au fournil : à relire comme tout texte généré.
+      annonceTitre: {
+        expert: 'Nouveau titre sur Votre pAIn quotidien : {titre}.\n\nIl ne se gagne pas en un jour : il récompense des posts publiés sur {thematique} quand le sujet était encore chaud, et des sources vraiment lues.\n\nCe que j’en retiens :\n→ suivre un sujet de près vaut mieux qu’en survoler dix\n→ publier tôt compte plus que publier beaucoup\n→ le score est personnel, sans classement\n\nEt vous, quel sujet suivez-vous de près en ce moment ?',
+        retour: 'Je viens d’obtenir le titre {titre} sur Votre pAIn quotidien.\n\nDerrière le badge : des news lues chaque matin, et des posts publiés sur {thematique} quand le sujet était encore chaud.\n\nCe que j’ai appris en chemin :\n→ l’habitude compte plus que l’outil\n→ un seul sujet à la fois suffit\n→ écrire tôt oblige à prendre position\n\nEt vous, comment suivez-vous l’actu IA ?',
+        provoc: 'Un titre sur LinkedIn ne prouve rien. Le mien dit {titre}.\n\nIl ne récompense pas une audience : il récompense la régularité sur {thematique}, et des sources lues avant d’écrire.\n\nMon avis :\n→ l’expertise se construit en public\n→ la régularité bat le talent\n→ le badge compte moins que les posts derrière\n\nVous êtes d’accord, ou c’est un badge de plus ?'
       }
     },
     en: {
@@ -93,6 +108,19 @@
         familles: 'By family', historique: 'Card history',
         filtreRarete: 'Rarity', filtreFamille: 'Family', toutes: 'All',
         affichees: '{n} cards shown', affichee1: '{n} card shown', aucune: 'No card for these filters.'
+      },
+      paliers: { novice: 'Novice', analyste: 'Analyst', specialiste: 'Specialist', stratege: 'Strategist', visionnaire: 'Visionary' },
+      lecture: 'Reading: +{n} points in {thematiques}.', lectureSans: 'Reading: +{n} baking points.',
+      nouveauTitre: 'New title: {titre}.', et: ' and ',
+      vitrine: {
+        ptsTheme: '{n} points', ptsTheme1: '1 point', suite: '{n} points to {palier}', sommet: 'Highest tier reached',
+        cuites0: 'No card baked yet', cuites1: '1 card baked', cuitesN: '{n} cards baked', depuis: 'Earned on {d}',
+        sansPoints: 'No points yet in: {liste}.', affiche: 'Title shown: {titre}.', aucunAffiche: 'No title shown: your job stays under your name.'
+      },
+      annonceTitre: {
+        expert: 'New title on Votre pAIn quotidien: {titre}.\n\nIt does not come in a day. It rewards posts published on {thematique} while the topic was still hot, and sources actually read.\n\nMy takeaway:\n→ following one topic closely beats skimming ten\n→ posting early matters more than posting a lot\n→ the score is personal, no ranking\n\nWhich topic are you following closely right now?',
+        retour: 'I just earned the {titre} title on Votre pAIn quotidien.\n\nBehind the badge: news read every morning, and posts published on {thematique} when the topic was still warm.\n\nWhat I learned along the way:\n→ the habit matters more than the tool\n→ one topic at a time is enough\n→ writing early forces me to take a stand\n\nHow do you keep up with AI news?',
+        provoc: 'A title on LinkedIn proves nothing. Mine says {titre}.\n\nIt does not reward an audience: it rewards regularity on {thematique}, and sources read before writing.\n\nMy point:\n→ expertise is built in public\n→ consistency beats talent\n→ the badge matters less than the posts behind it\n\nDo you agree, or is it just one more badge?'
       }
     }
   };
@@ -173,8 +201,48 @@
   var POINTS = {
     cuisson: { hot: 60, knead: 40, stale: 15 },
     bonus: { maillard: 15, doree: 10, croute: 5, mie: 0 },
-    decouverte: 10
+    decouverte: 10,
+    // Lot 35 : « Lire la source » d'une carte découverte, une fois par article, LECTURES_PAR_JOUR par jour au plus.
+    lecture: 5
   };
+  var LECTURES_PAR_JOUR = 3;
+  // Lot 35 : paliers de titre, sur les points cumulés dans une thématique. Le palier 1 ne s'affiche pas.
+  var PALIERS = [
+    { id: 'novice', min: 0 },
+    { id: 'analyste', min: 50 },
+    { id: 'specialiste', min: 150 },
+    { id: 'stratege', min: 400 },
+    { id: 'visionnaire', min: 1000 }
+  ];
+  // Les 12 thématiques du questionnaire (libellé exact), libellé court FR et EN, identifiant stable.
+  var THEMATIQUES = [
+    { id: 'llms', libelle: 'LLMs', fr: 'LLMs', en: 'LLMs' },
+    { id: 'video', libelle: 'Vidéo', fr: 'Vidéo', en: 'Video' },
+    { id: 'image', libelle: 'Image', fr: 'Image', en: 'Image' },
+    { id: 'automatisation', libelle: 'Automatisation et agents', fr: 'Automatisation', en: 'Automation' },
+    { id: 'cybersecurite', libelle: 'Cybersécurité', fr: 'Cybersécurité', en: 'Cybersecurity' },
+    { id: 'grandes-firmes', libelle: 'Actualité des grandes firmes', fr: 'Grandes firmes', en: 'Big Tech' },
+    { id: 'monetisation', libelle: 'Monétisation', fr: 'Monétisation', en: 'Monetisation' },
+    { id: 'finance', libelle: 'Finance et spéculation', fr: 'Finance', en: 'Finance' },
+    { id: 'hardware', libelle: 'Hardware', fr: 'Hardware', en: 'Hardware' },
+    { id: 'ia-entreprise', libelle: 'IA en entreprise', fr: 'IA en entreprise', en: 'AI at work' },
+    { id: 'ecosystemes', libelle: 'Ecosystèmes', fr: 'Écosystèmes', en: 'Ecosystems' },
+    { id: 'rd', libelle: 'Ingénierie R&D', fr: 'R&D', en: 'R&D' }
+  ];
+  var PAR_ID = Object.create(null);
+  var PAR_NOM = Object.create(null);
+  THEMATIQUES.forEach(function (t) { PAR_ID[t.id] = t; PAR_NOM[t.id] = t; PAR_NOM[t.libelle] = t; });
+
+  // Liste propre de thématiques : libellés exacts du questionnaire (ou identifiants), sans doublon, 3 au plus.
+  // Tout le reste est ignoré.
+  function thematiquesValides(v) {
+    var r = [];
+    (Array.isArray(v) ? v : []).forEach(function (x) {
+      var t = typeof x === 'string' ? PAR_NOM[x.trim()] : null;
+      if (t && r.indexOf(t.libelle) === -1 && r.length < 3) r.push(t.libelle);
+    });
+    return r;
+  }
   var NIVEAUX = [
     { id: 'apprenti', min: 0 },
     { id: 'mitron', min: 100 },
@@ -217,24 +285,34 @@
   var COMPTE_DEMO = 'lea@demo.painquotidien.fr';
   function exempleLea(maintenant) {
     var j = function (n) { return decaler(maintenant, -n); };
-    var carte = function (titre, source, axe, rarete, fraicheur, vue, cuite, gain) {
-      return { titre: titre, source: source, axe: axe, rarete: rarete, fraicheur: fraicheur, vue: vue, cuite: cuite || '', gain: gain || 0 };
+    var carte = function (titre, source, axe, rarete, fraicheur, vue, cuite, gain, thematiques) {
+      return { titre: titre, source: source, axe: axe, rarete: rarete, fraicheur: fraicheur, vue: vue, cuite: cuite || '', gain: gain || 0, thematiques: thematiques };
     };
+    var AUTO = 'Automatisation et agents', IAE = 'IA en entreprise';
+    // Lot 35 : thématiques sur les 8 cartes et 2 lectures. Automatisation 150 (Spécialiste, titre affiché),
+    // IA en entreprise 80 (Analyste), LLMs 70 (Analyste). Publier le n°1 de la fournée de démo (+75 en
+    // Automatisation et IA en entreprise) fait passer IA en entreprise Spécialiste, en direct.
     return {
       actif: true, exemple: true,
       points: 185, pointsJour: j(1),
       levain: { jours: 4, dernier: j(1) },
       decouvertes: { date: j(1), refs: ['recDemo06', 'recDemo07'] },
       cartes: {
-        exLea01: carte('Un agent IA prend les rendez-vous d’un cabinet de kinés', 'The Decoder', 'Axe 2', 'maillard', 'hot', j(5), j(4), 75),
-        exLea05: carte('Facturer un audit IA : trois formules testées', 'Les Echos', 'Axe 3', 'croute', 'knead', j(5)),
-        exLea02: carte('Transcrire ses réunions : cinq outils comparés', 'Hugging Face Blog', 'Axe 1', 'doree', 'hot', j(4), j(3), 70),
-        exLea03: carte('Ce que l’AI Act change pour les TPE', 'MIT Technology Review', 'Axe 2', 'mie', 'stale', j(3)),
-        exLea06: carte('Un chatbot de devis pour artisans', 'Maddyness', 'Axe 3', 'doree', 'knead', j(3)),
-        exLea04: carte('Un petit modèle tourne sur un ordinateur portable', 'Mistral AI', 'Axe 1', 'croute', 'knead', j(2)),
-        recDemo06: carte('Les marchés réagissent aux résultats d’un géant des puces', 'TechCrunch AI', 'Axe 2', 'mie', 'stale', j(1)),
-        recDemo07: carte('Le RGPD face aux modèles de langage', 'The Verge', 'Axe 2', 'mie', 'stale', j(1))
-      }
+        exLea01: carte('Un agent IA prend les rendez-vous d’un cabinet de kinés', 'The Decoder', 'Axe 2', 'maillard', 'hot', j(5), j(4), 75, [AUTO, IAE]),
+        exLea05: carte('Facturer un audit IA : trois formules testées', 'Les Echos', 'Axe 3', 'croute', 'knead', j(5), '', 0, ['Monétisation', IAE]),
+        exLea02: carte('Transcrire ses réunions : cinq outils comparés', 'Hugging Face Blog', 'Axe 1', 'doree', 'hot', j(4), j(3), 70, [AUTO, 'LLMs']),
+        exLea03: carte('Ce que l’AI Act change pour les TPE', 'MIT Technology Review', 'Axe 2', 'mie', 'stale', j(3), '', 0, [IAE, 'Cybersécurité']),
+        exLea06: carte('Un chatbot de devis pour artisans', 'Maddyness', 'Axe 3', 'doree', 'knead', j(3), '', 0, [AUTO, 'Monétisation']),
+        exLea04: carte('Un petit modèle tourne sur un ordinateur portable', 'Mistral AI', 'Axe 1', 'croute', 'knead', j(2), '', 0, ['LLMs', 'Hardware']),
+        recDemo06: carte('Les marchés réagissent aux résultats d’un géant des puces', 'TechCrunch AI', 'Axe 2', 'mie', 'stale', j(1), '', 0, ['Hardware', 'Finance et spéculation']),
+        recDemo07: carte('Le RGPD face aux modèles de langage', 'The Verge', 'Axe 2', 'mie', 'stale', j(1), '', 0, ['LLMs', 'Cybersécurité'])
+      },
+      lectures: {
+        exLea05: { jour: j(5), thematiques: ['Monétisation', IAE] },
+        exLea06: { jour: j(3), thematiques: [AUTO, 'Monétisation'] }
+      },
+      titres: { 'ia-entreprise': { palier: 2, depuis: j(4) }, automatisation: { palier: 3, depuis: j(3) }, llms: { palier: 2, depuis: j(3) } },
+      titreAffiche: 'automatisation'
     };
   }
 
@@ -249,14 +327,21 @@
   function chaine(v) { return typeof v === 'string' ? v : ''; }
   function entier(v) { return typeof v === 'number' && isFinite(v) && v > 0 ? Math.floor(v) : 0; }
 
+  // Lot 35 : thematiques n'est posé que s'il y en a (une carte du lot 34 garde exactement sa forme).
+  function avecThematiques(o, liste) {
+    var th = thematiquesValides(liste);
+    if (th.length) o.thematiques = th;
+    return o;
+  }
+
   function normaliserCarte(c) {
     if (!estObjet(c)) return null;
-    return {
+    return avecThematiques({
       titre: chaine(c.titre), source: chaine(c.source), axe: chaine(c.axe),
       rarete: IDS_RARETE.indexOf(c.rarete) !== -1 ? c.rarete : 'mie',
       fraicheur: FRAICHEURS.indexOf(c.fraicheur) !== -1 ? c.fraicheur : '',
       vue: chaine(c.vue), cuite: chaine(c.cuite), gain: entier(c.gain)
-    };
+    }, c.thematiques);
   }
 
   // Compte complet et propre. Un compte des lots 32 et 33 reste valide : rituel et vue ne sont plus lus,
@@ -274,6 +359,23 @@
     if (estObjet(o.cartes)) {
       Object.keys(o.cartes).forEach(function (ref) { var n = normaliserCarte(o.cartes[ref]); if (n) r.cartes[ref] = n; });
     }
+    // Lot 35 : lectures comptées, titres obtenus (plus haut palier et sa date), titre affiché sous le prénom.
+    r.lectures = {};
+    if (estObjet(o.lectures)) {
+      Object.keys(o.lectures).forEach(function (ref) {
+        var l = o.lectures[ref];
+        if (estObjet(l) && chaine(l.jour)) r.lectures[ref] = { jour: l.jour, thematiques: thematiquesValides(l.thematiques) };
+      });
+    }
+    r.titres = {};
+    if (estObjet(o.titres)) {
+      Object.keys(o.titres).forEach(function (id) {
+        var t = o.titres[id];
+        var p = estObjet(t) ? Math.min(entier(t.palier), PALIERS.length) : 0;
+        if (PAR_ID[id] && p >= 2) r.titres[id] = { palier: p, depuis: chaine(t.depuis) };
+      });
+    }
+    r.titreAffiche = typeof o.titreAffiche === 'string' && PAR_ID[o.titreAffiche] ? o.titreAffiche : '';
     if (o.exemple === true) r.exemple = true;
     return r;
   }
@@ -363,7 +465,7 @@
   function aDesNotes(a) { return CRITERES.some(function (k) { return a[k] != null && isFinite(Number(a[k])); }); }
 
   function nouvelleCarte(a, date) {
-    return { titre: chaine(a.titre), source: chaine(a.source), axe: chaine(a.axe), rarete: aDesNotes(a) ? rarete(a).id : 'mie', fraicheur: fraicheur(a), vue: date, cuite: '', gain: 0 };
+    return avecThematiques({ titre: chaine(a.titre), source: chaine(a.source), axe: chaine(a.axe), rarete: aDesNotes(a) ? rarete(a).id : 'mie', fraicheur: fraicheur(a), vue: date, cuite: '', gain: 0 }, a.thematiques);
   }
 
   function niveauDe(c) { return niveau(c.points).id; }
@@ -418,10 +520,17 @@
 
   function rien(c) {
     var n = niveau(c.points).id;
-    return { gain: 0, dejaCuite: false, avant: n, apres: n, monte: false, points: c.points };
+    return { gain: 0, dejaCuite: false, avant: n, apres: n, monte: false, points: c.points, nouveauxTitres: [] };
+  }
+
+  // Carte connue sans thématique (lot 34) : elle prend celles de l'article, s'il en a.
+  function completerThematiques(carte, a) {
+    if (!carte.thematiques) avecThematiques(carte, a.thematiques);
+    return carte.thematiques || [];
   }
 
   // Publication confirmée au fournil : la carte de même ref cuit, une seule fois.
+  // Lot 35 : le gain est aussi crédité à chaque thématique de la carte ; nouveauxTitres liste les paliers franchis.
   function cuire(storage, cle, article, fraicheurCuite, maintenant) {
     var c = lireCompte(storage, cle, maintenant);
     var a = article || {};
@@ -432,13 +541,201 @@
     carte.cuite = date;
     carte.gain = gainCuisson(fraicheurCuite, carte.rarete);
     c.cartes[a.ref] = carte;
-    return gagner(storage, cle, c, carte.gain);
+    var nouveaux = majTitres(c, date, completerThematiques(carte, a));
+    var g = gagner(storage, cle, c, carte.gain);
+    g.nouveauxTitres = nouveaux;
+    return g;
+  }
+
+  /* ---------- Titres par thématique (lot 35) ---------- */
+
+  // Points par thématique, jamais stockés : recalculés depuis les cartes cuites (gain) et les lectures.
+  function pointsParThematique(compte) {
+    var p = {};
+    THEMATIQUES.forEach(function (t) { p[t.id] = 0; });
+    var c = estObjet(compte) ? compte : {};
+    function crediter(liste, n) { thematiquesValides(liste).forEach(function (l) { p[PAR_NOM[l].id] += n; }); }
+    var cartes = estObjet(c.cartes) ? c.cartes : {};
+    Object.keys(cartes).forEach(function (ref) {
+      var k = cartes[ref];
+      if (estObjet(k) && k.cuite) crediter(k.thematiques, entier(k.gain));
+    });
+    var lectures = estObjet(c.lectures) ? c.lectures : {};
+    Object.keys(lectures).forEach(function (ref) { if (estObjet(lectures[ref])) crediter(lectures[ref].thematiques, POINTS.lecture); });
+    return p;
+  }
+
+  // Palier atteint pour un nombre de points ; minimum : palier déjà obtenu (un titre ne se perd jamais).
+  function palier(points, minimum) {
+    var p = entier(Number(points));
+    var i = PALIERS.length - 1;
+    while (i > 0 && p < PALIERS[i].min) i--;
+    i = Math.max(i, Math.min(entier(minimum), PALIERS.length) - 1);
+    var s = PALIERS[i + 1] || null;
+    var pct = s ? Math.round(Math.max(0, p - PALIERS[i].min) * 100 / (s.min - PALIERS[i].min)) : 100;
+    return { palier: i + 1, id: PALIERS[i].id, points: p, suivant: s ? s.id : null, reste: s ? Math.max(0, s.min - p) : 0, pct: Math.min(100, pct) };
+  }
+
+  // Enregistre la date du premier passage de chaque palier ; renvoie ceux des thématiques concernées.
+  function majTitres(c, date, concernees) {
+    var pts = pointsParThematique(c);
+    var nouveaux = [];
+    THEMATIQUES.forEach(function (t) {
+      var avant = c.titres[t.id] ? c.titres[t.id].palier : 1;
+      var n = palier(pts[t.id]).palier;
+      if (n <= avant) return;
+      c.titres[t.id] = { palier: n, depuis: date };
+      if (concernees.indexOf(t.libelle) !== -1) nouveaux.push({ thematique: t.id, palier: n });
+    });
+    return nouveaux;
+  }
+
+  function nomTitre(id, n, lang) {
+    var t = PAR_ID[id];
+    if (!t || !(n >= 2)) return '';
+    var x = textes(lang);
+    return x.paliers[PALIERS[Math.min(n, PALIERS.length) - 1].id] + ' · ' + t[lang === 'en' ? 'en' : 'fr'];
+  }
+
+  function nomsThematiques(liste, lang) {
+    var noms = thematiquesValides(liste).map(function (l) { return PAR_NOM[l][lang === 'en' ? 'en' : 'fr']; });
+    if (noms.length < 2) return noms.join('');
+    return noms.slice(0, -1).join(', ') + textes(lang).et + noms[noms.length - 1];
+  }
+
+  // Les 12 thématiques avec leur palier, dans l'ordre du questionnaire. titre : vide sous Analyste.
+  function titres(compte, lang) {
+    var c = normaliser(compte);
+    var pts = pointsParThematique(c);
+    var x = textes(lang);
+    return THEMATIQUES.map(function (t) {
+      var obtenu = c.titres[t.id];
+      var pa = palier(pts[t.id], obtenu ? obtenu.palier : 1);
+      var cuites = Object.keys(c.cartes).filter(function (ref) {
+        var k = c.cartes[ref];
+        return k.cuite && (k.thematiques || []).indexOf(t.libelle) !== -1;
+      }).length;
+      return {
+        id: t.id, libelle: t.libelle, nom: t[lang === 'en' ? 'en' : 'fr'], points: pts[t.id],
+        palier: pa.palier, idPalier: pa.id, nomPalier: x.paliers[pa.id], titre: nomTitre(t.id, pa.palier, lang), obtenu: pa.palier >= 2,
+        suivant: pa.suivant, nomSuivant: pa.suivant ? x.paliers[pa.suivant] : '', reste: pa.reste, pct: pa.pct,
+        cuites: cuites, depuis: obtenu ? obtenu.depuis : '', slug: pa.palier >= 2 ? slugTitre(t.id, pa.palier) : ''
+      };
+    });
+  }
+
+  function lecturesDuJour(c, date) {
+    return Object.keys(c.lectures).filter(function (ref) { return c.lectures[ref].jour === date; }).length;
+  }
+
+  // « Lire la source » : carte découverte, jeu actif, une fois par article, LECTURES_PAR_JOUR par jour au plus.
+  // Ajoute POINTS.lecture au total et les crédite aux thématiques de l'article (ou, à défaut, de sa carte).
+  // raison : 'coupe', 'inconnue' (carte pas découverte), 'dejaLue', 'plafond' quand rien n'est compté.
+  function lire(storage, cle, article, maintenant) {
+    var c = lireCompte(storage, cle, maintenant);
+    var a = article || {};
+    var n = niveauDe(c);
+    var r = { ok: false, gain: 0, raison: '', thematiques: [], nouveauxTitres: [], avant: n, apres: n, monte: false, points: c.points };
+    if (!cle || !c.actif) { r.raison = 'coupe'; return r; }
+    var carte = typeof a.ref === 'string' && a.ref && Object.prototype.hasOwnProperty.call(c.cartes, a.ref) ? c.cartes[a.ref] : null;
+    if (!carte) { r.raison = 'inconnue'; return r; }
+    if (c.lectures[a.ref]) { r.raison = 'dejaLue'; return r; }
+    var date = dateDuJour(maintenant);
+    if (lecturesDuJour(c, date) >= LECTURES_PAR_JOUR) { r.raison = 'plafond'; return r; }
+    var th = thematiquesValides(a.thematiques);
+    if (!th.length) th = (carte.thematiques || []).slice();
+    completerThematiques(carte, a);
+    c.lectures[a.ref] = { jour: date, thematiques: th };
+    r.thematiques = th;
+    r.nouveauxTitres = majTitres(c, date, th);
+    var avant = niveau(c.points);
+    c.points += POINTS.lecture;
+    var apres = niveau(c.points);
+    r.ok = ecrire(storage, cle, c);
+    r.gain = POINTS.lecture;
+    r.points = c.points;
+    r.apres = apres.id;
+    r.monte = apres.index > avant.index;
+    return r;
+  }
+
+  function messageTitres(r, lang) {
+    var t = textes(lang);
+    return ((r && r.nouveauxTitres) || []).map(function (x) { return ' ' + remplir(t.nouveauTitre, { titre: nomTitre(x.thematique, x.palier, lang) }); }).join('');
+  }
+
+  function messageLecture(r, lang) {
+    if (!r || !r.gain) return '';
+    var t = textes(lang);
+    var noms = nomsThematiques(r.thematiques, lang);
+    return remplir(noms ? t.lecture : t.lectureSans, { n: r.gain, thematiques: noms }) +
+      (r.monte ? ' ' + remplir(t.nouveauNiveau, { niveau: t.niveaux[r.apres] }) : '') + messageTitres(r, lang);
+  }
+
+  // Titre affiché sous le prénom, choisi dans la vitrine : un titre obtenu (Analyste au moins), ou '' (le métier).
+  function choisirTitre(storage, cle, id, maintenant) {
+    if (!cle) return false;
+    var c = lireCompte(storage, cle, maintenant);
+    var v = typeof id === 'string' ? id : '';
+    if (v && !titres(c).some(function (t) { return t.id === v && t.obtenu; })) return false;
+    c.titreAffiche = v;
+    return ecrire(storage, cle, c);
+  }
+
+  function titreAffiche(compte, lang) {
+    if (!compte || compte.actif === false || !compte.titreAffiche) return '';
+    var t = titres(compte, lang).filter(function (x) { return x.id === compte.titreAffiche; })[0];
+    return t && t.obtenu ? t.titre : '';
+  }
+
+  /* ---------- Partage (phase 1 : pages statiques génériques /titres/<thematique>-<palier>) ---------- */
+
+  function slugTitre(id, n) { return PAR_ID[id] && n >= 2 && n <= PALIERS.length ? id + '-' + PALIERS[n - 1].id : ''; }
+
+  function lireSlug(slug) {
+    var s = typeof slug === 'string' ? slug : '';
+    for (var i = 1; i < PALIERS.length; i++) {
+      var fin = '-' + PALIERS[i].id;
+      if (s.length > fin.length && s.slice(-fin.length) === fin && PAR_ID[s.slice(0, -fin.length)]) return { thematique: s.slice(0, -fin.length), palier: i + 1 };
+    }
+    return null;
+  }
+
+  // 12 thématiques × 4 paliers partageables (Analyste à Visionnaire).
+  function pagesTitres() {
+    var r = [];
+    THEMATIQUES.forEach(function (t) {
+      for (var n = 2; n <= PALIERS.length; n++) r.push({ slug: slugTitre(t.id, n), thematique: t.id, palier: n });
+    });
+    return r;
+  }
+
+  function lienPartage(slug, base) {
+    var url = String(base || '').replace(/\/+$/, '') + '/titres/' + slug;
+    return 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url);
+  }
+
+  // Sujet du fournil pour « Rédiger l'annonce » : seulement un titre obtenu, jeu actif.
+  function sujetTitre(compte, slug, lang) {
+    var s = lireSlug(slug);
+    if (!s || !compte || compte.actif === false) return null;
+    var t = titres(compte, lang).filter(function (x) { return x.id === s.thematique; })[0];
+    if (!t || t.palier < s.palier) return null;
+    return { ref: 'titre-' + slug, titre: nomTitre(s.thematique, s.palier, lang), source: 'Votre pAIn quotidien', annonceTitre: slug };
+  }
+
+  // Brouillon d'annonce, dans la langue du post. Ton inconnu : expert.
+  function annonceTitre(slug, ton, langue) {
+    var s = lireSlug(slug);
+    if (!s) return '';
+    var gab = textes(langue).annonceTitre;
+    return remplir(gab[ton] || gab.expert, { titre: nomTitre(s.thematique, s.palier, langue), thematique: PAR_ID[s.thematique][langue === 'en' ? 'en' : 'fr'] });
   }
 
   function estCuite(compte, ref) { return !!(compte && compte.cartes && compte.cartes[ref] && compte.cartes[ref].cuite); }
 
   function copieCarte(ref, c) {
-    return { ref: ref, titre: c.titre, source: c.source, axe: c.axe, rarete: c.rarete, fraicheur: c.fraicheur, vue: c.vue, cuite: c.cuite, gain: c.gain };
+    return avecThematiques({ ref: ref, titre: c.titre, source: c.source, axe: c.axe, rarete: c.rarete, fraicheur: c.fraicheur, vue: c.vue, cuite: c.cuite, gain: c.gain }, c.thematiques);
   }
   function ordreRarete(x, y) { return IDS_RARETE.indexOf(x.rarete) - IDS_RARETE.indexOf(y.rarete); }
 
@@ -520,7 +817,7 @@
     var t = textes(lang);
     if (r.dejaCuite) return t.dejaCuite;
     if (!r.gain) return '';
-    return remplir(t.cuisson, { gain: r.gain }) + (r.monte ? ' ' + remplir(t.nouveauNiveau, { niveau: t.niveaux[r.apres] }) : '');
+    return remplir(t.cuisson, { gain: r.gain }) + (r.monte ? ' ' + remplir(t.nouveauNiveau, { niveau: t.niveaux[r.apres] }) : '') + messageTitres(r, lang);
   }
 
   var Jeu = {
@@ -534,7 +831,14 @@
     niveau: niveau, gainCuisson: gainCuisson, fraicheurCuisson: fraicheurCuisson,
     etatLevain: etatLevain, nourrirLevain: nourrirLevain,
     cuire: cuire, estCuite: estCuite,
-    collection: collection, historique: historique, libelleSerie: libelleSerie, resume: resume, messageCuisson: messageCuisson
+    collection: collection, historique: historique, libelleSerie: libelleSerie, resume: resume, messageCuisson: messageCuisson,
+    // Lot 35 : titres par thématique et vitrine.
+    THEMATIQUES: THEMATIQUES, PALIERS: PALIERS, LECTURES_PAR_JOUR: LECTURES_PAR_JOUR,
+    thematiquesValides: thematiquesValides, pointsParThematique: pointsParThematique, palier: palier, titres: titres,
+    nomTitre: nomTitre, nomsThematiques: nomsThematiques, lire: lire, messageLecture: messageLecture,
+    choisirTitre: choisirTitre, titreAffiche: titreAffiche,
+    slugTitre: slugTitre, lireSlug: lireSlug, pagesTitres: pagesTitres, lienPartage: lienPartage,
+    sujetTitre: sujetTitre, annonceTitre: annonceTitre
   };
 
   if (typeof module === 'object' && module.exports) module.exports = Jeu;

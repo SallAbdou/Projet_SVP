@@ -5,13 +5,15 @@
   var TEXTES = {
     fr: {
       tagline: 'L’actu IA, pétrie pour toi.', langLabel: 'Langue', role: 'Consultante IA · solopreneuse',
-      liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', profil: 'Mon profil' },
-      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu', accessibilite: 'Accessibilité'
+      liens: { comptoir: 'Le comptoir', fournee: 'La fournée du jour', fournil: 'Le fournil', 'garde-manger': 'Le garde-manger', vitrine: 'La vitrine', profil: 'Mon profil' },
+      compteur: ['article mis de côté', 'articles mis de côté'], logout: 'Se déconnecter', menu: 'Menu', accessibilite: 'Accessibilité',
+      titreLien: 'Ton titre, voir ta vitrine'
     },
     en: {
       tagline: 'AI news, kneaded for you.', langLabel: 'Language', role: 'AI consultant · solopreneur',
-      liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', profil: 'My profile' },
-      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu', accessibilite: 'Accessibility'
+      liens: { comptoir: 'The counter', fournee: 'Today’s batch', fournil: 'The kitchen', 'garde-manger': 'The pantry', vitrine: 'The showcase', profil: 'My profile' },
+      compteur: ['saved article', 'saved articles'], logout: 'Log out', menu: 'Menu', accessibilite: 'Accessibility',
+      titreLien: 'Your title, see your showcase'
     }
   };
 
@@ -20,6 +22,8 @@
     { id: 'fournee', href: '/fournee', nom: 'flamme', icone: '<path d="M12 3c.6 3.4 5 5.6 5 10.5a5 5 0 0 1-10 0c0-2.4 1.3-3.9 2.6-5.1.3 1.7 1.2 2.8 2.3 3.1C11.3 9 11 6 12 3z"></path>' },
     { id: 'fournil', href: '/fournil', icone: '<rect x="3" y="4" width="18" height="16" rx="3"></rect><rect x="7" y="9" width="10" height="7" rx="2"></rect>' },
     { id: 'garde-manger', href: '/garde-manger', icone: '<path d="M6 3h12v18l-6-4-6 4z"></path>' },
+    // Lot 35 : seulement quand le jeu est actif (o.vitrine), ou sur la page elle-même.
+    { id: 'vitrine', href: '/vitrine', jeu: true, icone: '<circle cx="12" cy="9" r="5"></circle><path d="M9 13.5L7.5 21l4.5-2.5 4.5 2.5-1.5-7.5"></path>' },
     { id: 'profil', href: '/profil', icone: '<circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>' }
   ];
 
@@ -37,7 +41,7 @@
 
   function html(o) {
     var t = TEXTES[o.lang === 'en' ? 'en' : 'fr'];
-    var liens = PAGES.map(function (p) {
+    var liens = PAGES.filter(function (p) { return !p.jeu || o.vitrine || p.id === o.page; }).map(function (p) {
       var actif = p.id === o.page;
       var compteur = p.id === 'garde-manger' && o.compteurGardeManger > 0
         ? '<span data-compteur aria-hidden="true" style="margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--miel);color:var(--brun-fonce)">' + o.compteurGardeManger + '</span>' +
@@ -50,6 +54,10 @@
     var fr = o.lang !== 'en';
     var prenom = o.prenom || '';
     var role = o.role != null ? o.role : t.role;
+    // Lot 35 : le titre choisi dans la vitrine remplace le métier sous le prénom ; c'est un lien vers la vitrine.
+    var sousPrenom = o.titre
+      ? '<a href="/vitrine" data-nav-titre aria-label="' + esc(o.titre + ', ' + t.titreLien) + '" style="display:inline-flex;align-items:center;gap:5px;min-height:28px;margin-top:4px;padding:0 10px 0 6px;border-radius:999px;background:var(--croute);color:var(--chaud-texte);font-size:12px;font-weight:700;text-decoration:none;max-width:100%"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--brun-fonce);color:var(--croute);font-size:10px">★</span>' + esc(o.titre) + '</a>'
+      : '<span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span>';
     return '<div class="pq-nav"' + (o.ouvert ? ' data-ouvert' : '') + '>' +
       '<div class="pq-nav-tete">' +
       '<div class="pq-nav-marque" style="display:flex;flex-direction:column;gap:6px;min-width:0">' +
@@ -68,7 +76,7 @@
       '<button type="button" data-lang="en" data-focus="lang-en" aria-pressed="' + !fr + '" style="' + (fr ? LANG_OFF : LANG_ON) + '">EN</button></div>' +
       '<div style="border-top:1px solid var(--bord);padding-top:14px;display:flex;align-items:center;gap:10px">' +
       '<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;background:var(--brun);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">' + esc(prenom.charAt(0)) + '</span>' +
-      '<div style="display:flex;flex-direction:column"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span><span style="font-size:12px;color:var(--doux)">' + esc(role) + '</span></div></div>' +
+      '<div style="display:flex;flex-direction:column;align-items:flex-start;min-width:0"><span style="font-weight:700;font-size:14px">' + esc(prenom) + '</span>' + sousPrenom + '</div></div>' +
       '<button type="button" data-logout data-focus="logout" style="' + DECO + '">' + esc(t.logout) + '</button>' +
       '<a href="/accessibilite" style="' + PIED + '">' + esc(t.accessibilite) + '</a></div></div></div>';
   }
@@ -122,9 +130,17 @@
     try { compteur = root.Store.charger(window.localStorage).sauves.length; } catch (err) {}
     var u = null;
     try { u = root.Auth.utilisateurCourant(); } catch (err) {}
+    // Lot 35 : jeu actif → entrée Vitrine et titre affiché ; jeu coupé ou jeu.js absent → le métier, comme avant.
+    var vitrine = false, titre = '';
+    try {
+      var cle = root.Jeu.cleDuCompte(u);
+      var compte = root.Jeu.lireCompte(window.localStorage, cle, new Date());
+      vitrine = !!cle && compte.actif;
+      titre = vitrine ? root.Jeu.titreAffiche(compte, e.detail.lang) : '';
+    } catch (err) {}
     nav.innerHTML = html({
       page: nav.getAttribute('data-page'), lang: e.detail.lang, compteurGardeManger: compteur,
-      prenom: u ? u.prenom : '', role: u ? u.profil.metiers.join(', ') : '', ouvert: ouvert
+      prenom: u ? u.prenom : '', role: u ? u.profil.metiers.join(', ') : '', ouvert: ouvert, vitrine: vitrine, titre: titre
     });
     nav.querySelector('[data-nav-menu]').addEventListener('click', function () { basculer(!ouvert, false); });
     nav.addEventListener('keydown', function (ev) {
