@@ -11,6 +11,10 @@
       "feu": "vert",
       "raisonFeu": "Sujet sorti cette semaine et encore peu couvert en français.",
       "axe": "Axe 2",
+      "thematiques": [
+        "Automatisation et agents",
+        "IA en entreprise"
+      ],
       "resume": "Plusieurs éditeurs lancent des agents qui émettent et relancent les factures seuls. Le sujet est encore peu couvert en français.",
       "pourToi": "Pour toi : un cas d’usage concret à montrer à tes clients PME.",
       "durabilite": 4,
@@ -26,6 +30,10 @@
       "feu": "vert",
       "raisonFeu": "Enquête récente, peu reprise pour l’instant.",
       "axe": "Axe 2",
+      "thematiques": [
+        "IA en entreprise",
+        "Monétisation"
+      ],
       "resume": "Une enquête détaille les indicateurs que suivent les petites entreprises après un premier projet IA : temps gagné, erreurs évitées, chiffre d’affaires.",
       "pourToi": "Pour toi : des chiffres prêts à citer dans ton offre d’audit.",
       "durabilite": 4,
@@ -41,6 +49,10 @@
       "feu": "orange",
       "raisonFeu": "Déjà repris par plusieurs médias tech, mais des angles restent libres.",
       "axe": "Axe 1",
+      "thematiques": [
+        "LLMs",
+        "Ecosystèmes"
+      ],
       "resume": "Scores proches des modèles fermés sur les tests de raisonnement. Déjà repris par plusieurs médias tech.",
       "pourToi": "Pour toi : angle possible, ce que ça change au coût d’un projet client.",
       "durabilite": 4,
@@ -56,6 +68,10 @@
       "feu": "orange",
       "raisonFeu": "Annonce couverte par la presse spécialisée, l’angle métier reste à prendre.",
       "axe": "Axe 1",
+      "thematiques": [
+        "Image",
+        "Automatisation et agents"
+      ],
       "resume": "Extraction de tableaux et de champs depuis des PDF scannés, avec une API simple. Les premiers retours parlent surtout de documents administratifs.",
       "pourToi": "Pour toi : trouve l’angle « fin de la saisie manuelle » pour tes clients.",
       "durabilite": 3,
@@ -71,6 +87,10 @@
       "feu": "orange",
       "raisonFeu": "Tendance déjà commentée, à traiter sous un angle pratique.",
       "axe": "Axe 1",
+      "thematiques": [
+        "Automatisation et agents",
+        "Ingénierie R&D"
+      ],
       "resume": "Plusieurs plateformes no-code intègrent un assistant qui écrit les automatisations à partir d’une phrase.",
       "pourToi": "Pour toi : montre ce qu’une PME peut automatiser sans développeur.",
       "durabilite": 3,
@@ -86,6 +106,10 @@
       "feu": "rouge",
       "raisonFeu": "Repris partout depuis deux jours par les grands médias.",
       "axe": "Axe 2",
+      "thematiques": [
+        "Hardware",
+        "Finance et spéculation"
+      ],
       "resume": "Sujet repris partout depuis deux jours, peu d’angle neuf pour un solopreneur.",
       "pourToi": "Pour toi : à garder en tête, pas à publier.",
       "durabilite": 2,
@@ -101,6 +125,10 @@
       "feu": "rouge",
       "raisonFeu": "Débat largement commenté depuis une semaine, angles saturés.",
       "axe": "Axe 2",
+      "thematiques": [
+        "LLMs",
+        "Cybersécurité"
+      ],
       "resume": "Débat juridique largement commenté depuis une semaine, sans nouvelle décision.",
       "pourToi": "Pour toi : à garder comme référence.",
       "durabilite": 2,

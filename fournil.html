@@ -33,11 +33,40 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 .fo-champ input[aria-invalid="true"]{border-color:var(--erreur)}
 .fo-erreur{font-size:12px;font-weight:600;color:var(--erreur)}
 .fo-voile{position:fixed;inset:0;z-index:40;background:var(--voile);display:flex;align-items:center;justify-content:center;padding:16px}
-.fo-boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:var(--creme);border-radius:20px;box-shadow:var(--ombre-3);padding:22px;display:flex;flex-direction:column;gap:14px}
+.fo-boite{width:100%;max-width:560px;max-height:calc(100vh - 32px);overflow:auto;background:var(--creme);border-radius:20px;box-shadow:var(--ombre-3);padding:22px;display:flex;flex-direction:column;gap:14px;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 #pq-toast{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;display:flex;justify-content:center;pointer-events:none;font-family:'DM Sans', -apple-system, 'Segoe UI', Roboto, sans-serif}
 @keyframes pq-apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .toast-box{animation:none!important}}
 .toast-box{animation:pq-apparait .2s ease-out;pointer-events:auto;display:flex;align-items:center;gap:14px;max-width:520px;min-height:44px;padding:8px 18px;border-radius:14px;background:var(--texte);color:var(--fond);font-size:15px;font-weight:600;box-shadow:var(--ombre-3)}
+/* Lot 35 : « Voir ma vitrine » après un nouveau titre. */
+.toast-lien{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;background:var(--croute);color:var(--sur-clair);font-weight:700;text-decoration:none;white-space:nowrap}
+.toast-lien:hover{color:var(--sur-clair);text-decoration:underline}
+.toast-lien:focus-visible{outline:2px solid var(--fond);outline-offset:2px}
+/* Compte LinkedIn : profil, droits, tuiles de chiffres, courbe des impressions, squelette de chargement. */
+.fo-li-tete{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px}
+.fo-source{flex:0 0 auto;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--miel);color:var(--brun-fonce)}
+.fo-source[data-source="linkedin"]{background:var(--linkedin-fond);color:var(--linkedin-texte)}
+.fo-li-invite{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:16px 18px;border:1.5px dashed var(--bord-fort);border-radius:16px}
+.fo-li-logo{flex:0 0 auto;width:40px;height:40px;border-radius:10px;background:var(--linkedin-fond);color:var(--linkedin-texte);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;letter-spacing:-0.02em}
+.fo-li-profil{display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--trait);border-radius:16px;background:var(--fond)}
+.fo-li-photo{flex:0 0 auto;width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--linkedin-fond)}
+.fo-li-initiale{flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:var(--linkedin-fond);color:var(--linkedin-texte);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+.fo-droits{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.fo-droit{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600;border:1px dashed var(--bord-fort);color:var(--doux)}
+.fo-droit[data-ok="true"]{border:1px solid var(--ok);background:var(--ok-fond);color:var(--texte)}
+.fo-tuiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.fo-tuile{display:flex;flex-direction:column;gap:2px;padding:14px 16px;border:1px solid var(--trait);border-radius:16px;background:var(--fond);min-width:0}
+.fo-tuile-l{font-size:12px;font-weight:700;color:var(--texte-2)}
+.fo-tuile-v{font-family:Fraunces, Georgia, serif;font-size:26px;font-weight:800;line-height:1.15;overflow-wrap:anywhere}
+.fo-tuile-d{font-size:12px;color:var(--doux)}
+.fo-courbe-bloc{margin:0;display:flex;flex-direction:column;gap:8px;padding:14px 16px;border:1px solid var(--trait);border-radius:16px;background:var(--fond)}
+.fo-courbe-bloc figcaption{font-size:13px;font-weight:700;color:var(--texte-2)}
+.fo-courbe{display:flex;align-items:flex-end;gap:3px;height:96px;border-bottom:1px solid var(--trait)}
+.fo-barre{flex:1 1 0;min-width:2px;border-radius:4px 4px 0 0;background:var(--braise)}
+.fo-barre:hover{background:var(--brun)}
+.fo-squelette{border-radius:14px;background:var(--sable);animation:fo-pulse 1.1s ease-in-out infinite alternate}
+@keyframes fo-pulse{from{opacity:.5}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){html:not([data-animations="on"]) .fo-squelette{animation:none!important}}
 @media (max-width:640px){.fo-carte{padding:18px}.fo-choix{padding:14px 16px}}
 </style>
 <script src="/store.js"></script><script src="/demo.js"></script><script src="/auth.js"></script><script src="/garde.js"></script><script src="/theme.js"></script><script src="/animations.js"></script>
@@ -135,7 +164,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div style="background:var(--creme);border:1px solid var(--bord);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:12px">
 <h2 style="margin:0;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--sur-titre)">{{t.preview}}</h2>
 <div style="display:flex;align-items:center;gap:10px">
-<span aria-hidden="true" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--cuivre);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">{{auteur.initiale}}</span>
+<img src="{{auteur.photo}}" alt="" width="40" height="40" style="{{auteur.photoStyle}}"><span aria-hidden="true" style="{{auteur.initialeStyle}}">{{auteur.initiale}}</span>
 <div style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:700;font-size:14px">{{auteur.prenom}}</span><span style="font-size:12px;color:var(--doux)">{{auteur.role}}</span></div>
 </div>
 <p id="apercu-texte" style="margin:0;font-size:14px;color:var(--texte-2);white-space:pre-line;overflow-wrap:anywhere">{{apercu.texte}}</p>
@@ -144,6 +173,53 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 </div>
 </section>
 </div>
+<section class="fo-carte" aria-labelledby="li-t" aria-busy="{{li.occupe}}">
+<div class="fo-li-tete">
+<div style="display:flex;flex-direction:column;gap:4px;max-width:680px;min-width:0">
+<h2 id="li-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.li.titre}}</h2>
+<p style="margin:0;color:var(--doux);font-size:14px">{{li.sousTitre}}</p>
+</div>
+<span class="fo-source" data-source="{{li.source}}" style="{{li.sourceStyle}}">{{li.sourceTexte}}</span>
+</div>
+<div style="{{li.squeletteStyle}}" aria-hidden="true">
+<div class="fo-squelette" style="height:88px"></div>
+<div class="fo-tuiles"><div class="fo-squelette" style="height:84px"></div><div class="fo-squelette" style="height:84px"></div><div class="fo-squelette" style="height:84px"></div><div class="fo-squelette" style="height:84px"></div></div>
+</div>
+<p class="pq-pleine" style="{{li.chargementStyle}}">{{t.li.chargement}}</p>
+<div class="fo-li-invite" style="{{li.inviteStyle}}">
+<span class="fo-li-logo" aria-hidden="true">in</span>
+<p class="pq-pleine" style="margin:0;flex:1 1 260px;min-width:0;font-size:14px;color:var(--texte-2)">{{li.inviteTexte}}</p>
+<a href="{{li.connexionHref}}" class="fo-btn fo-btn-linkedin" data-focus="li-connecter" style="{{li.connexionStyle}}">{{li.connexionTexte}}</a>
+<button type="button" class="fo-btn" data-focus="li-reessayer" onClick="{{reessayerLinkedIn}}" style="{{li.reessayerStyle}}">{{t.li.reessayer}}</button>
+</div>
+<div class="fo-li-profil" style="{{li.profilStyle}}">
+<img class="fo-li-photo" src="{{li.photo}}" alt="" width="56" height="56" style="{{li.photoStyle}}">
+<span class="fo-li-initiale" aria-hidden="true" style="{{li.initialeStyle}}">{{li.initiale}}</span>
+<div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:1px">
+<span style="font-weight:700;font-size:17px;overflow-wrap:anywhere">{{li.nom}}</span>
+<span style="font-size:13px;color:var(--doux);overflow-wrap:anywhere">{{li.email}}</span>
+<span style="font-size:13px;font-weight:700;color:var(--ok)">{{li.connexion}}</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<button type="button" class="fo-btn" data-focus="li-actualiser" onClick="{{actualiserLinkedIn}}">{{t.li.actualiser}}</button>
+<button type="button" class="fo-btn" data-focus="li-deconnecter" onClick="{{deconnecterLinkedIn}}">{{t.li.deconnecter}}</button>
+</div>
+</div>
+<ul class="fo-droits" aria-label="{{t.li.droitsLabel}}" style="{{li.droitsStyle}}">
+<sc-for list="{{liDroits}}" as="d" hint-placeholder-count="5"><li class="fo-droit" data-ok="{{d.ok}}"><span aria-hidden="true">{{d.mark}}</span>{{d.label}}<span class="pq-sr">{{d.etat}}</span></li></sc-for>
+</ul>
+<div style="{{li.chiffresStyle}}">
+<p class="pq-pleine" style="{{li.noteStyle}}">{{li.note}}</p>
+<div class="fo-tuiles">
+<sc-for list="{{liTuiles}}" as="m" hint-placeholder-count="7"><div class="fo-tuile"><span class="fo-tuile-l">{{m.label}}</span><span class="fo-tuile-v">{{m.valeur}}</span><span class="fo-tuile-d">{{m.detail}}</span></div></sc-for>
+</div>
+<figure class="fo-courbe-bloc" style="{{li.courbeStyle}}">
+<figcaption>{{li.courbeTitre}}</figcaption>
+<div class="fo-courbe" aria-hidden="true"><sc-for list="{{liJours}}" as="j" hint-placeholder-count="28"><span class="fo-barre" style="{{j.style}}" title="{{j.titre}}"></span></sc-for></div>
+<p class="pq-sr">{{li.courbeResume}}</p>
+</figure>
+</div>
+</section>
 <section class="fo-carte" aria-labelledby="perf-t">
 <div style="display:flex;flex-direction:column;gap:4px;max-width:680px">
 <h2 id="perf-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:24px">{{t.perfTitle}}</h2>
@@ -154,6 +230,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <form class="fo-post" data-index="{{p.i}}" data-id="{{p.id}}" onSubmit="{{enregistrerChiffres}}" novalidate aria-label="{{p.formLabel}}">
 <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px"><h3 style="margin:0;font-family:Fraunces, Georgia, serif;font-size:17px;overflow-wrap:anywhere">{{p.titre}}</h3><span style="font-size:13px;color:var(--doux)">{{p.date}}</span></div>
 <p style="margin:0;font-size:14px;color:var(--texte-2)">{{p.resume}}</p>
+<div style="{{p.liStyle}}"><a href="{{p.liHref}}" target="_blank" rel="noopener" aria-label="{{p.liLabel}}" style="font-weight:700;font-size:14px;min-height:44px;display:inline-flex;align-items:center">{{t.voirPost}}</a><button type="button" class="fo-lien" data-index="{{p.i}}" data-focus="{{p.remplirFocus}}" onClick="{{remplirDepuisLinkedIn}}" style="{{p.remplirStyle}}">{{t.li.remplir}}</button></div>
 <span style="font-size:13px;font-weight:700;color:var(--texte-2)">{{t.formTitle}}</span>
 <div class="fo-champs">
 <label class="fo-champ" for="{{p.idImpressions}}">{{t.champs.impressions}}<input id="{{p.idImpressions}}" data-index="{{p.i}}" data-champ="impressions" inputmode="numeric" autocomplete="off" value="{{p.vImpressions}}" aria-invalid="{{p.invImpressions}}" aria-describedby="{{p.idImpressions}}-e" onInput="{{saisirChiffre}}"><span id="{{p.idImpressions}}-e" class="fo-erreur">{{p.eImpressions}}</span></label>
@@ -172,17 +249,23 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--braise);outline-off
 <div class="fo-voile" style="{{modaleStyle}}" onClick="{{clicVoile}}">
 <div class="fo-boite" role="dialog" aria-modal="true" aria-labelledby="modale-t" aria-describedby="modale-d" onKeydown="{{clavierModale}}">
 <h2 id="modale-t" style="margin:0;font-family:Fraunces, Georgia, serif;font-size:22px">{{t.modaleTitre}}</h2>
-<p id="modale-d" style="margin:0;font-size:13px;font-weight:700;padding:8px 12px;border-radius:12px;background:var(--miel);color:var(--brun-fonce)">{{t.modaleDemo}}</p>
+<p id="modale-d" style="{{modale.noteStyle}}">{{modale.note}}</p>
 <div style="border:1px solid var(--bord);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--champ)">
 <div style="display:flex;align-items:center;gap:10px">
-<span aria-hidden="true" style="flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--cuivre);color:var(--sur-plein);display:inline-flex;align-items:center;justify-content:center;font-weight:700">{{auteur.initiale}}</span>
+<img src="{{auteur.photo}}" alt="" width="40" height="40" style="{{auteur.photoStyle}}"><span aria-hidden="true" style="{{auteur.initialeStyle}}">{{auteur.initiale}}</span>
 <div style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:700;font-size:14px">{{auteur.prenom}}</span><span style="font-size:12px;color:var(--doux)">{{auteur.role}}</span></div>
 </div>
 <p style="margin:0;font-size:14px;color:var(--texte-2);white-space:pre-line;overflow-wrap:anywhere;max-height:40vh;overflow:auto">{{texteNet}}</p>
 </div>
+<label for="sel-visibilite" style="{{modale.visibiliteStyle}}">{{t.visibiliteLabel}}
+<select id="sel-visibilite" class="fo-select" onChange="{{choisirVisibilite}}">
+<sc-for list="{{visibilites}}" as="o" hint-placeholder-count="2"><option value="{{o.v}}" {{o.sel}}>{{o.label}}</option></sc-for>
+</select>
+</label>
+<p role="alert" style="{{modale.erreurStyle}}">{{modale.erreur}}</p>
 <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
 <button type="button" class="fo-btn" data-focus="modale-annuler" onClick="{{fermerModale}}">{{t.annuler}}</button>
-<button type="button" class="fo-btn fo-btn-plein" data-focus="modale-confirmer" onClick="{{confirmerPublication}}">{{t.confirmer}}</button>
+<button type="button" class="fo-btn {{modale.confirmerClasse}}" data-focus="modale-confirmer" onClick="{{confirmerPublication}}" {{modale.desactive}}>{{modale.confirmer}}</button>
 </div>
 </div>
 </div>
@@ -215,7 +298,7 @@ checkTitle: 'Avant d’enfourner', fait: 'fait', aFaire: 'à faire',
 checks: { accroche: 'Une accroche courte (120 caractères au plus)', chiffre: 'Un chiffre ou un fait vérifiable', pointDeVue: 'Ton point de vue, pas seulement l’info', question: 'Une question pour lancer les commentaires' },
 copie: 'Texte copié', copieKo: 'Copie impossible : sélectionne le texte à la main',
 modaleTitre: 'Publier sur LinkedIn', modaleDemo: 'Démo : rien n’est envoyé à LinkedIn.', annuler: 'Annuler', confirmer: 'Confirmer la publication',
-publie: 'Post publié (simulation). Reporte ses chiffres plus bas.',
+publie: 'Post publié (simulation). Reporte ses chiffres plus bas.', voirVitrine: 'Voir ma vitrine',
 perfTitle: 'Ce que tes posts t’ont rapporté', perfSub: 'Tu reportes tes chiffres LinkedIn après publication, le comptoir fait les totaux.',
 perfVide: 'Rien de publié pour l’instant. Tes posts publiés apparaîtront ici.',
 publieLe: 'Publié le {d}', pasDeChiffres: 'Chiffres pas encore reportés.',
@@ -223,7 +306,42 @@ formTitle: 'Reporter les chiffres', formLabel: 'Chiffres du post : {t}',
 champs: { impressions: 'Impressions', reactions: 'Réactions', republications: 'Republications', commentaires: 'Commentaires', contacts: 'Prises de contact' },
 erreurs: { requis: 'Indique un nombre (0 si aucun).', entier: 'Nombre entier positif ou nul, sans virgule.' },
 save: 'Enregistrer', enregistre: 'Chiffres enregistrés',
-apiNote: 'En V1, la saisie est manuelle. La lecture automatique des statistiques passe par l’API Community Management de LinkedIn, accessible sur demande et après validation.'
+apiNote: 'Une fois ton compte connecté et l’accès aux statistiques accordé par LinkedIn, les posts publiés depuis le fournil se remplissent en un clic. Les prises de contact restent à reporter à la main.',
+voirPost: 'Voir le post sur LinkedIn', voirPostDe: 'Voir sur LinkedIn le post : {t} (nouvel onglet)',
+publieLi: 'Post publié sur ton LinkedIn.',
+modaleReel: 'Publication réelle : ce post part sur le profil LinkedIn de {nom}.',
+modaleConnecter: 'Connecte ton compte LinkedIn (plus bas dans la page) pour publier pour de vrai.',
+modaleSansDroit: 'Ton compte est connecté, mais sans le droit de publier : active « Share on LinkedIn » sur ton application.',
+confirmerReel: 'Publier sur LinkedIn', envoi: 'Publication en cours…',
+visibiliteLabel: 'Visible par', visibilites: { PUBLIC: 'Tout le monde', CONNECTIONS: 'Mes relations uniquement' },
+erreursPub: { expire: 'Ta connexion LinkedIn a expiré : reconnecte-toi, puis réessaie.', droits: 'LinkedIn refuse la publication : vérifie que « Share on LinkedIn » est activé sur ton application.', texte: 'Le texte est vide ou dépasse 3 000 caractères.', reseau: 'LinkedIn ne répond pas. Réessaie dans un instant.', linkedin: 'LinkedIn a refusé la publication. Réessaie, ou copie le texte pour le publier à la main.' },
+li_ok: 'Compte LinkedIn connecté.', li_annule: 'Connexion LinkedIn annulée.', li_refuse: 'LinkedIn a refusé la connexion.',
+li_scope: 'LinkedIn refuse un des droits demandés : vérifie les produits activés sur ton application (ou LINKEDIN_SCOPES).',
+li_erreur: 'La connexion LinkedIn a échoué. Réessaie.', li_nonConfigure: 'LinkedIn n’est pas encore configuré sur ce serveur.', li_deconnecte: 'Compte LinkedIn déconnecté.',
+li: {
+titre: 'Ton compte LinkedIn',
+sousTitre: 'Connecte ton compte pour publier depuis le fournil et suivre tes chiffres. Rien ne part sans ta confirmation.',
+sousTitreCo: 'Tes chiffres LinkedIn, relus à chaque visite du fournil.',
+chargement: 'Lecture de ton compte LinkedIn…',
+invite: 'Ton compte LinkedIn n’est pas encore connecté.',
+inviteExpire: 'Ta connexion LinkedIn a expiré (elle dure 60 jours). Reconnecte-toi pour retrouver tes chiffres.',
+inviteConfig: 'LinkedIn n’est pas encore branché sur ce serveur : renseigne LINKEDIN_CLIENT_ID et LINKEDIN_CLIENT_SECRET dans .env.local, puis clique sur Réessayer.',
+inviteErreur: 'Impossible de lire ton compte LinkedIn pour l’instant.',
+connecter: 'Connecter LinkedIn', reconnecter: 'Reconnecter LinkedIn', reessayer: 'Réessayer', actualiser: 'Actualiser', deconnecter: 'Déconnecter',
+connecte: 'Connecté · encore {n} jours avant de te reconnecter', connecte1: 'Connecté · dernier jour avant de te reconnecter',
+sansNom: 'Compte LinkedIn', emailVerifie: 'vérifié',
+droitsLabel: 'Droits accordés par LinkedIn', actif: 'actif', enAttente: 'en attente de LinkedIn',
+droits: { profil: 'Profil et photo', email: 'E-mail', publier: 'Publier des posts', statsPosts: 'Statistiques des posts', abonnes: 'Nombre d’abonnés' },
+sourceLinkedIn: 'Données LinkedIn', sourceExemple: 'Exemple',
+m: { impressions: 'Impressions', membresAtteints: 'Membres touchés', reactions: 'Réactions', commentaires: 'Commentaires', republications: 'Republications', engagement: 'Taux d’engagement', abonnes: 'Abonnés' },
+tousPosts: 'tous tes posts', aujourdhui: 'aujourd’hui', exemple: 'exemple',
+noteReel: 'Chiffres lus en direct sur LinkedIn.',
+noteExemple: 'Connexion, profil et publication fonctionnent. Les statistiques demandent l’accès « Community Management API », que LinkedIn accorde après validation : en attendant, les chiffres ci-dessous sont un exemple.',
+noteMixte: 'Une partie des chiffres vient de LinkedIn, le reste est un exemple : le droit correspondant n’est pas encore accordé.',
+noteErreur: 'LinkedIn n’a pas renvoyé les statistiques : chiffres d’exemple affichés. Réessaie avec Actualiser.',
+courbe: 'Impressions, 28 derniers jours', courbeExemple: 'Impressions, 28 derniers jours (exemple)', courbeResume: '{n} impressions sur les 28 derniers jours.',
+remplir: 'Remplir avec les chiffres LinkedIn'
+}
 },
 en: {
 navLabel: 'Main navigation',
@@ -246,7 +364,7 @@ checkTitle: 'Before baking', fait: 'done', aFaire: 'to do',
 checks: { accroche: 'A short hook (120 characters max)', chiffre: 'A verifiable figure or fact', pointDeVue: 'Your point of view, not just the news', question: 'A question to start the comments' },
 copie: 'Text copied', copieKo: 'Could not copy: select the text by hand',
 modaleTitre: 'Post to LinkedIn', modaleDemo: 'Demo: nothing is sent to LinkedIn.', annuler: 'Cancel', confirmer: 'Confirm and post',
-publie: 'Post published (simulation). Enter its numbers below.',
+publie: 'Post published (simulation). Enter its numbers below.', voirVitrine: 'See my showcase',
 perfTitle: 'What your posts brought in', perfSub: 'You enter your LinkedIn numbers after posting, the counter adds them up.',
 perfVide: 'Nothing posted yet. Your published posts will show up here.',
 publieLe: 'Posted on {d}', pasDeChiffres: 'No numbers entered yet.',
@@ -254,17 +372,132 @@ formTitle: 'Enter the numbers', formLabel: 'Post numbers: {t}',
 champs: { impressions: 'Impressions', reactions: 'Reactions', republications: 'Reposts', commentaires: 'Comments', contacts: 'Leads' },
 erreurs: { requis: 'Enter a number (0 if none).', entier: 'Whole number, zero or more, no decimals.' },
 save: 'Save', enregistre: 'Numbers saved',
-apiNote: 'In V1, numbers are entered by hand. Reading stats automatically goes through LinkedIn’s Community Management API, available on application and after approval.'
+apiNote: 'Once your account is connected and LinkedIn grants access to statistics, posts published from the kitchen fill in with one click. Leads still have to be entered by hand.',
+voirPost: 'See the post on LinkedIn', voirPostDe: 'See this post on LinkedIn: {t} (new tab)',
+publieLi: 'Post published on your LinkedIn.',
+modaleReel: 'Real post: this goes to {nom}’s LinkedIn profile.',
+modaleConnecter: 'Connect your LinkedIn account (further down the page) to post for real.',
+modaleSansDroit: 'Your account is connected, but without posting rights: enable “Share on LinkedIn” on your app.',
+confirmerReel: 'Post on LinkedIn', envoi: 'Posting…',
+visibiliteLabel: 'Visible to', visibilites: { PUBLIC: 'Anyone', CONNECTIONS: 'My connections only' },
+erreursPub: { expire: 'Your LinkedIn connection has expired: reconnect, then try again.', droits: 'LinkedIn refused the post: check that “Share on LinkedIn” is enabled on your app.', texte: 'The text is empty or longer than 3,000 characters.', reseau: 'LinkedIn is not answering. Try again in a moment.', linkedin: 'LinkedIn refused the post. Try again, or copy the text and post it by hand.' },
+li_ok: 'LinkedIn account connected.', li_annule: 'LinkedIn connection cancelled.', li_refuse: 'LinkedIn refused the connection.',
+li_scope: 'LinkedIn refuses one of the requested permissions: check the products enabled on your app (or LINKEDIN_SCOPES).',
+li_erreur: 'The LinkedIn connection failed. Try again.', li_nonConfigure: 'LinkedIn is not set up on this server yet.', li_deconnecte: 'LinkedIn account disconnected.',
+li: {
+titre: 'Your LinkedIn account',
+sousTitre: 'Connect your account to post from the kitchen and follow your numbers. Nothing goes out without your confirmation.',
+sousTitreCo: 'Your LinkedIn numbers, read again on every visit.',
+chargement: 'Reading your LinkedIn account…',
+invite: 'Your LinkedIn account is not connected yet.',
+inviteExpire: 'Your LinkedIn connection has expired (it lasts 60 days). Reconnect to get your numbers back.',
+inviteConfig: 'LinkedIn is not plugged into this server yet: fill in LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET in .env.local, then click Try again.',
+inviteErreur: 'Your LinkedIn account cannot be read right now.',
+connecter: 'Connect LinkedIn', reconnecter: 'Reconnect LinkedIn', reessayer: 'Try again', actualiser: 'Refresh', deconnecter: 'Disconnect',
+connecte: 'Connected · {n} days left before reconnecting', connecte1: 'Connected · last day before reconnecting',
+sansNom: 'LinkedIn account', emailVerifie: 'verified',
+droitsLabel: 'Permissions granted by LinkedIn', actif: 'active', enAttente: 'waiting for LinkedIn',
+droits: { profil: 'Profile and photo', email: 'Email', publier: 'Publish posts', statsPosts: 'Post statistics', abonnes: 'Follower count' },
+sourceLinkedIn: 'LinkedIn data', sourceExemple: 'Example',
+m: { impressions: 'Impressions', membresAtteints: 'Members reached', reactions: 'Reactions', commentaires: 'Comments', republications: 'Reposts', engagement: 'Engagement rate', abonnes: 'Followers' },
+tousPosts: 'all your posts', aujourdhui: 'today', exemple: 'example',
+noteReel: 'Numbers read live from LinkedIn.',
+noteExemple: 'Connection, profile and posting work. Statistics need the “Community Management API”, which LinkedIn grants after review: until then, the numbers below are an example.',
+noteMixte: 'Some numbers come from LinkedIn, the rest is an example: the matching permission is not granted yet.',
+noteErreur: 'LinkedIn did not return the statistics: example numbers shown. Try again with Refresh.',
+courbe: 'Impressions, last 28 days', courbeExemple: 'Impressions, last 28 days (example)', courbeResume: '{n} impressions over the last 28 days.',
+remplir: 'Fill in with LinkedIn numbers'
+}
 }
 };
 var STOCKAGE_VIDE = { getItem: function () { return null; }, setItem: function () { throw new Error('stockage indisponible'); } };
 function stockage() { try { return window.localStorage || STOCKAGE_VIDE; } catch (e) { return STOCKAGE_VIDE; } }
-function focalisables(el) { return Array.prototype.filter.call(el.querySelectorAll('a[href],button:not([disabled])'), function (x) { return x.offsetParent !== null; }); }
+function focalisables(el) { return Array.prototype.filter.call(el.querySelectorAll('a[href],button:not([disabled]),select'), function (x) { return x.offsetParent !== null; }); }
 function nombre(n, lang) { return Number(n).toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR'); }
 function dateLisible(iso, lang) {
 var d = new Date(iso);
 if (isNaN(d.getTime())) return '';
 return d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+var NOTE_DEMO = 'margin: 0; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 12px; background: var(--miel); color: var(--brun-fonce)';
+var NOTE_REEL = 'margin: 0; font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 12px; background: var(--linkedin-fond); color: var(--linkedin-texte)';
+var AVATAR = 'flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; background: var(--cuivre); color: var(--sur-plein); display: inline-flex; align-items: center; justify-content: center; font-weight: 700';
+var AVATAR_PHOTO = 'flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; object-fit: cover';
+var RETOURS_LI = { ok: 'li_ok', annule: 'li_annule', refuse: 'li_refuse', scope: 'li_scope', erreur: 'li_erreur', 'non-configure': 'li_nonConfigure' };
+function paramLinkedIn() {
+try {
+var u = new URL(window.location.href);
+var v = u.searchParams.get('linkedin');
+if (v === null) return null;
+u.searchParams.delete('linkedin');
+window.history.replaceState(null, '', u.pathname + u.search + u.hash);
+return RETOURS_LI[v] || 'li_erreur';
+} catch (e) { return null; }
+}
+function retourIci() { try { var u = new URL(window.location.href); u.searchParams.delete('linkedin'); return u.pathname + u.search; } catch (e) { return '/fournil'; } }
+function joursRestants(iso) { var n = Math.ceil((new Date(iso).getTime() - Date.now()) / 864e5); return isNaN(n) ? 0 : Math.max(0, n); }
+function dateCourte(iso, lang) { var d = new Date(iso + 'T12:00:00'); return isNaN(d.getTime()) ? iso : d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'short' }); }
+// Bloc « Ton compte LinkedIn » : état de connexion, profil, droits, chiffres (réels, sinon exemple) et courbe.
+function vueLinkedIn(st, t, lang) {
+var L = t.li, li = st.li || { etat: 'chargement' };
+var etat = li.etat, co = etat === 'connecte', d = co && li.d ? li.d : {}, ex = li.exemple || null;
+var p = d.profil || {};
+var nom = p.nomComplet || [p.prenom, p.nom].filter(Boolean).join(' ') || L.sansNom;
+var stats = d.statistiques || {};
+var postsReels = co && stats.posts && stats.posts.statut === 'ok';
+var aboReels = co && stats.abonnes && stats.abonnes.statut === 'ok';
+var tot = postsReels ? stats.posts.totaux || {} : (ex && ex.posts && ex.posts.totaux) || {};
+var abo = aboReels ? stats.abonnes.total : (ex && ex.abonnes ? ex.abonnes.total : null);
+var sep = lang === 'en' ? ': ' : ' : ';
+function val(n) { return typeof n === 'number' ? nombre(n, lang) : '—'; }
+var dp = postsReels ? L.tousPosts : L.exemple;
+var inter = (Number(tot.reactions) || 0) + (Number(tot.commentaires) || 0) + (Number(tot.republications) || 0);
+var engage = typeof tot.impressions === 'number' && tot.impressions > 0 ? (inter / tot.impressions * 100).toLocaleString(lang === 'en' ? 'en-GB' : 'fr-FR', { maximumFractionDigits: 1 }) + (lang === 'en' ? '%' : ' %') : '—';
+var tuiles = ['impressions', 'membresAtteints', 'reactions', 'commentaires', 'republications'].map(function (k) { return { label: L.m[k], valeur: val(tot[k]), detail: dp }; });
+tuiles.push({ label: L.m.engagement, valeur: engage, detail: dp });
+tuiles.push({ label: L.m.abonnes, valeur: val(abo), detail: aboReels ? L.aujourdhui : L.exemple });
+var jours = postsReels && stats.posts.jours && stats.posts.jours.length
+? stats.posts.jours.map(function (j) { return { date: j.date, n: Number(j.impressions) || 0 }; })
+: (ex && ex.posts && Array.isArray(ex.posts.jours) ? ex.posts.jours.map(function (n, i, a) { return { date: new Date(Date.now() - (a.length - 1 - i) * 864e5).toISOString().slice(0, 10), n: Number(n) || 0 }; }) : []);
+var max = Math.max.apply(null, jours.map(function (j) { return j.n; }).concat([1]));
+var totalJours = jours.reduce(function (s, j) { return s + j.n; }, 0);
+var courbeReelle = postsReels && stats.posts.jours && stats.posts.jours.length;
+var dr = d.droits || {};
+var reste = joursRestants(d.expireLe);
+var note = postsReels && aboReels ? L.noteReel : (stats.posts && stats.posts.statut === 'erreur') ? L.noteErreur : (postsReels || aboReels) ? L.noteMixte : L.noteExemple;
+var reel = postsReels || aboReels;
+var invite = { deconnecte: L.invite, expire: L.inviteExpire, 'non-configure': L.inviteConfig, erreur: L.inviteErreur }[etat];
+return {
+vue: {
+occupe: String(etat === 'chargement'),
+sousTitre: co ? L.sousTitreCo : L.sousTitre,
+source: reel ? 'linkedin' : 'exemple', sourceTexte: reel ? L.sourceLinkedIn : L.sourceExemple, sourceStyle: co ? '' : HIDE,
+squeletteStyle: etat === 'chargement' ? 'display: flex; flex-direction: column; gap: 12px' : HIDE,
+chargementStyle: etat === 'chargement' ? 'margin: 0; font-size: 13px; color: var(--doux); font-weight: 600' : HIDE,
+inviteStyle: invite ? '' : HIDE, inviteTexte: invite || '',
+connexionHref: '/api/linkedin/login?retour=' + encodeURIComponent(retourIci()),
+connexionStyle: etat === 'deconnecte' || etat === 'expire' ? '' : HIDE,
+connexionTexte: etat === 'expire' ? L.reconnecter : L.connecter,
+reessayerStyle: etat === 'erreur' || etat === 'non-configure' ? '' : HIDE,
+profilStyle: co ? '' : HIDE,
+photo: co && p.photo ? p.photo : '', photoStyle: co && p.photo ? '' : HIDE,
+initiale: nom.charAt(0).toUpperCase(), initialeStyle: co && !p.photo ? '' : HIDE,
+nom: nom, email: p.email ? p.email + (p.emailVerifie ? ' · ' + L.emailVerifie : '') : '',
+connexion: reste <= 1 ? L.connecte1 : L.connecte.replace('{n}', reste),
+droitsStyle: co ? '' : HIDE,
+chiffresStyle: co ? 'display: flex; flex-direction: column; gap: 14px' : HIDE,
+note: note, noteStyle: reel && note === L.noteReel ? 'margin: 0; font-size: 13px; color: var(--doux)' : NOTE_DEMO,
+courbeStyle: co && jours.length ? '' : HIDE,
+courbeTitre: courbeReelle ? L.courbe : L.courbeExemple,
+courbeResume: L.courbeResume.replace('{n}', nombre(totalJours, lang))
+},
+droits: [['profil', dr.profil], ['email', dr.email], ['publier', dr.publier], ['statsPosts', dr.statsPosts], ['abonnes', dr.abonnes]].map(function (x) {
+return { ok: String(!!x[1]), mark: x[1] ? '✓' : '…', label: L.droits[x[0]], etat: ' (' + (x[1] ? L.actif : L.enAttente) + ')' };
+}),
+tuiles: tuiles,
+jours: jours.map(function (j) { return { style: 'height: ' + Math.max(3, Math.round(j.n / max * 100)) + '%', titre: dateCourte(j.date, lang) + sep + nombre(j.n, lang) }; }),
+co: co, nom: nom, photo: co && p.photo ? p.photo : '', publier: co && !!dr.publier, parPost: d.parPost || {}
+};
 }
 function refDemandee() { try { return new URLSearchParams(window.location.search).get('ref'); } catch (e) { return null; } }
 class Component extends DCLogic {
@@ -273,8 +506,11 @@ super(props);
 var u = null;
 try { u = Auth.utilisateurCourant(); } catch (e) {}
 this.state = { lang: 'fr', chargement: true, ref: refDemandee(), articles: [], ecrits: {}, store: Store.charger(stockage()), utilisateur: u,
-sujet: null, ton: 'expert', langue: 'fr', n: 0, texte: '', propose: '', attente: null, apercuOuvert: false, modale: false, saisies: {}, erreurs: {}, toast: null };
+sujet: null, ton: 'expert', langue: 'fr', n: 0, texte: '', propose: '', attente: null, apercuOuvert: false, modale: false, saisies: {}, erreurs: {}, toast: null,
+li: { etat: 'chargement', d: null, exemple: null }, visibilite: 'PUBLIC', envoi: false, erreurPublication: '' };
+this.retourLi = paramLinkedIn();
 this.charger();
+this.chargerLinkedIn();
 }
 charger() {
 var self = this;
@@ -299,6 +535,45 @@ maj.propose = Fournil.proposerVariante(a, choix.ton, choix.langue, choix.n, ecri
 maj.texte = typeof enregistre === 'string' ? enregistre : maj.propose;
 }
 this.setState(maj);
+}
+// Compte LinkedIn (fonctions serveur /api/linkedin/*) et chiffres d'exemple, lus en parallèle.
+// Aucun setState synchrone ici : appelé depuis le constructeur.
+chargerLinkedIn() {
+var self = this;
+var urns = (Store.charger(stockage()).publies || []).filter(function (p) { return p.linkedin && p.linkedin.urn; }).slice(-5).map(function (p) { return p.linkedin.urn; });
+var exemple = this.state.li && this.state.li.exemple ? Promise.resolve(this.state.li.exemple) : Api.exempleLinkedIn().catch(function () { return null; });
+Promise.all([Api.lireLinkedIn(urns), exemple]).then(function (r) {
+var d = r[0] || {};
+self.majLinkedIn({ etat: !d.configure ? 'non-configure' : d.connecte ? 'connecte' : d.expire ? 'expire' : 'deconnecte', d: d, exemple: r[1] });
+}, function () {
+exemple.then(function (ex) { self.majLinkedIn({ etat: 'erreur', d: null, exemple: ex }); });
+});
+}
+majLinkedIn(li) {
+var retour = this.retourLi;
+this.retourLi = null;
+if (this.focusLi) { this.pendingFocus = this.focusLi; this.focusLi = null; }
+this.setState({ li: li });
+if (retour) this.annoncer(retour);
+}
+relireLinkedIn(focus) {
+this.focusLi = focus;
+this.setState({ li: { etat: 'chargement', d: null, exemple: this.state.li ? this.state.li.exemple : null } });
+this.chargerLinkedIn();
+}
+deconnecterLinkedIn() {
+var self = this;
+Api.deconnecterLinkedIn().catch(function () {}).then(function () { self.retourLi = 'li_deconnecte'; self.relireLinkedIn('li-connecter'); });
+}
+peutPublier() { var li = this.state.li; return !!(li && li.etat === 'connecte' && li.d && li.d.droits && li.d.droits.publier); }
+remplirDepuisLinkedIn(i) {
+var post = (this.state.store.publies || [])[i];
+var pp = post && post.linkedin && this.state.li.d && this.state.li.d.parPost ? this.state.li.d.parPost[post.linkedin.urn] : null;
+if (!pp) return;
+var saisies = Object.assign({}, this.state.saisies);
+saisies[i] = Object.assign({}, this.saisiesDe(i), { impressions: String(pp.impressions), reactions: String(pp.reactions), republications: String(pp.republications), commentaires: String(pp.commentaires) });
+this.pendingFocus = '#ch-' + i + '-contacts';
+this.setState({ saisies: saisies });
 }
 // Avant chaque rendu : défilement interne et hauteur (redimensionnée à la main) de la zone de texte.
 setState(s) {
@@ -346,18 +621,37 @@ self.annoncer(ok ? 'copie' : 'copieKo');
 if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texte).then(function () { self.annoncer('copie'); }, repli);
 else repli();
 }
-annoncer(cle, cuisson) {
+annoncer(cle, cuisson, lienPost) {
 var self = this;
 clearTimeout(this.toastTimer);
 this.toastN = (this.toastN || 0) + 1;
-this.toastTimer = setTimeout(function () { self.setState({ toast: null }); }, 5000);
-this.setState({ toast: { cle: cle, n: this.toastN, cuisson: cuisson || null } });
+// Avec un nouveau titre, le message reste plus longtemps : il porte le lien « Voir ma vitrine ».
+var titreNeuf = cuisson && cuisson.nouveauxTitres && cuisson.nouveauxTitres.length;
+this.toastTimer = setTimeout(function () { self.setState({ toast: null }); }, titreNeuf || lienPost ? 12000 : 5000);
+this.setState({ toast: { cle: cle, n: this.toastN, cuisson: cuisson || null, lienPost: lienPost || null } });
 }
-fermerModale() { this.pendingFocus = 'publier'; this.setState({ modale: false }); }
+fermerModale() { if (this.state.envoi) return; this.pendingFocus = 'publier'; this.setState({ modale: false, erreurPublication: '' }); }
+// Compte LinkedIn connecté avec le droit de publier : vrai post via /api/linkedin/publier ; sinon simulation.
 confirmerPublication() {
+if (!this.peutPublier()) { this.enregistrerPublication(null); return; }
+if (this.state.envoi) return;
+var self = this;
+this.setState({ envoi: true, erreurPublication: '' });
+Api.publierLinkedIn(String(this.state.texte).trim(), this.state.visibilite).then(function (r) {
+self.state.envoi = false;
+self.enregistrerPublication({ urn: r.urn || '', url: r.url || '' });
+}, function (e) {
+var code = e && e.code ? e.code : 'reseau';
+if (code === 'expire') self.state.li = { etat: 'expire', d: { configure: true }, exemple: self.state.li.exemple };
+self.pendingFocus = 'modale-confirmer';
+self.setState({ envoi: false, erreurPublication: code });
+});
+}
+enregistrerPublication(lien) {
 var sujet = this.state.sujet;
 var a = sujet.article;
 var store = Store.publier(Store.charger(stockage()), { ref: a.ref, titre: a.titre }, this.maintenant());
+if (lien) store.publies[store.publies.length - 1].linkedin = lien;
 Store.enregistrer(stockage(), store);
 // Lot 33 : la carte de même ref cuit (une seule fois), selon sa fraîcheur au moment de la cuisson.
 var cuisson = null;
@@ -368,7 +662,8 @@ cuisson = Jeu.cuire(stockage(), Jeu.cleDuCompte(Auth.utilisateurCourant()), a, J
 this.pendingFocus = 'publier';
 this.state.store = store;
 this.state.modale = false;
-this.annoncer('publie', cuisson);
+this.state.erreurPublication = '';
+this.annoncer(lien ? 'publieLi' : 'publie', cuisson, lien && lien.url ? lien.url : null);
 }
 enregistrerChiffres(form) {
 var i = form.getAttribute('data-index');
@@ -399,7 +694,9 @@ return Object.assign(base, this.state.saisies[i] || {});
 afterRender(root) {
 var lang = this.state.lang || 'fr';
 var toast = this.state.toast;
-BentoUI.toast(document.getElementById('pq-toast'), toast ? { cle: toast.n + '-' + lang, texte: T[lang][toast.cle] + (toast.cuisson && Jeu.messageCuisson(toast.cuisson, lang) ? ' ' + Jeu.messageCuisson(toast.cuisson, lang) : ''), annuler: '' } : null, function () {});
+// Lot 35 : nouveau titre franchi à la cuisson : le message le dit (Jeu.messageCuisson) et propose la vitrine.
+var titreNeuf = toast && toast.cuisson && toast.cuisson.nouveauxTitres && toast.cuisson.nouveauxTitres.length;
+BentoUI.toast(document.getElementById('pq-toast'), toast ? { cle: toast.n + '-' + lang, texte: T[lang][toast.cle] + (toast.cuisson && Jeu.messageCuisson(toast.cuisson, lang) ? ' ' + Jeu.messageCuisson(toast.cuisson, lang) : ''), annuler: '', lien: titreNeuf ? { href: '/vitrine', texte: T[lang].voirVitrine } : toast.lienPost ? { href: toast.lienPost, texte: T[lang].voirPost, externe: true } : null } : null, function () {});
 var z = root.querySelector('#brouillon');
 if (z && this.zone) { z.style.height = this.zone.hauteur; z.scrollTop = this.zone.haut; }
 if (this.state.modale && this.pendingFocus === 'modale') {
@@ -413,6 +710,7 @@ if (!f) return;
 var el = f.charAt(0) === '#' ? root.querySelector(f) : root.querySelector('[data-focus="' + f + '"]');
 if (f === 'ton') el = root.querySelector('#sel-ton');
 if (f === 'langue') el = root.querySelector('#sel-langue');
+if (f === 'visibilite') el = root.querySelector('#sel-visibilite');
 if (el) Parcours.focaliser(el);
 }
 renderVals() {
@@ -444,6 +742,10 @@ var vide = !String(st.texte || '').trim();
 var att = st.attente;
 var attenteTexte = '';
 if (att) attenteTexte = att.origine === 'repetrir' ? t.attenteAutre : t.attente.replace('{v}', t.tons[att.ton] + ' · ' + t.languesPost[att.langue]);
+var vl = vueLinkedIn(st, t, lang);
+var reel = vl.publier;
+var erreurPub = st.erreurPublication ? (t.erreursPub[st.erreurPublication] || t.erreursPub.linkedin) : '';
+var auteurNom = vl.co ? vl.nom : prenom;
 var publies = (st.store.publies || []).map(function (p, i) { return { p: p, i: i }; })
 .sort(function (x, y) { return String(y.p.publieLe).localeCompare(String(x.p.publieLe)); });
 return {
@@ -470,7 +772,18 @@ desactive: vide ? 'disabled' : '',
 checks: ['accroche', 'chiffre', 'pointDeVue', 'question'].map(function (k) {
 return { box: c[k] ? BOX_ON : BOX_OFF, mark: c[k] ? '✓' : '', label: t.checks[k], etat: ' (' + (c[k] ? t.fait : t.aFaire) + ')' };
 }),
-auteur: { initiale: prenom.charAt(0).toUpperCase(), prenom: prenom, role: metiers },
+auteur: { initiale: auteurNom.charAt(0).toUpperCase(), prenom: auteurNom, role: metiers, photo: vl.photo, photoStyle: vl.photo ? AVATAR_PHOTO : HIDE, initialeStyle: vl.photo ? HIDE : AVATAR },
+li: vl.vue, liDroits: vl.droits, liTuiles: vl.tuiles, liJours: vl.jours,
+modale: {
+note: reel ? t.modaleReel.replace('{nom}', vl.nom) : t.modaleDemo + ' ' + (vl.co ? t.modaleSansDroit : t.modaleConnecter),
+noteStyle: reel ? NOTE_REEL : NOTE_DEMO,
+visibiliteStyle: reel ? 'display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600; color: var(--texte-2)' : HIDE,
+erreur: erreurPub, erreurStyle: erreurPub ? 'margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--erreur-fond); color: var(--erreur); font-weight: 600; font-size: 14px' : HIDE,
+confirmer: st.envoi ? t.envoi : reel ? t.confirmerReel : t.confirmer,
+confirmerClasse: reel ? 'fo-btn-linkedin' : 'fo-btn-plein',
+desactive: st.envoi ? 'disabled' : ''
+},
+visibilites: ['PUBLIC', 'CONNECTIONS'].map(function (v) { return { v: v, label: t.visibilites[v], sel: v === st.visibilite ? 'selected' : '' }; }),
 apercu: { texte: ouvert ? String(st.texte).trim() : ap.texte, ouvert: String(!!ouvert), bouton: ouvert ? t.less : t.more, boutonStyle: ap.coupe ? '' : HIDE },
 modaleStyle: st.modale ? '' : HIDE,
 perfVideStyle: publies.length ? HIDE : 'margin: 0; padding: 18px 20px; border: 1.5px dashed var(--bord-fort); border-radius: 16px; color: var(--doux); font-weight: 600',
@@ -480,6 +793,12 @@ var s = self.saisiesDe(i);
 var e = st.erreurs[i] || {};
 var v = { i: i, id: p.id, titre: p.titre || '', date: t.publieLe.replace('{d}', dateLisible(p.publieLe, lang)), formLabel: t.formLabel.replace('{t}', p.titre || ''), idBouton: 'ch-' + i + '-ok',
 resume: p.chiffres ? Fournil.CHAMPS.map(function (k) { return t.champs[k] + sep + nombre(p.chiffres[k], lang); }).join(' · ') : t.pasDeChiffres };
+var lk = p.linkedin && p.linkedin.url ? p.linkedin : null;
+v.liStyle = lk ? 'display: flex; flex-wrap: wrap; align-items: center; gap: 0 16px' : HIDE;
+v.liHref = lk ? lk.url : '';
+v.liLabel = t.voirPostDe.replace('{t}', p.titre || '');
+v.remplirStyle = lk && vl.parPost[lk.urn] ? '' : HIDE;
+v.remplirFocus = 'remplir-' + i;
 Fournil.CHAMPS.forEach(function (k) {
 var M = CHAMP_MAJ[k];
 v['id' + M] = 'ch-' + i + '-' + k;
@@ -497,7 +816,12 @@ garder: function () { self.pendingFocus = self.state.attente ? self.state.attent
 saisir: function (e) { self.saisir(e); },
 copier: function () { self.copier(); },
 basculerApercu: function () { self.setState({ apercuOuvert: !self.state.apercuOuvert }); },
-ouvrirModale: function () { if (!String(self.state.texte).trim()) return; self.pendingFocus = 'modale'; self.setState({ modale: true }); },
+ouvrirModale: function () { if (!String(self.state.texte).trim()) return; self.pendingFocus = 'modale'; self.setState({ modale: true, erreurPublication: '' }); },
+choisirVisibilite: function (e) { self.pendingFocus = 'visibilite'; self.setState({ visibilite: e.target.value === 'CONNECTIONS' ? 'CONNECTIONS' : 'PUBLIC' }); },
+reessayerLinkedIn: function () { self.relireLinkedIn('li-reessayer'); },
+actualiserLinkedIn: function () { self.relireLinkedIn('li-actualiser'); },
+deconnecterLinkedIn: function () { self.deconnecterLinkedIn(); },
+remplirDepuisLinkedIn: function (e) { self.remplirDepuisLinkedIn(e.currentTarget.getAttribute('data-index')); },
 fermerModale: function () { self.fermerModale(); },
 confirmerPublication: function () { self.confirmerPublication(); },
 clicVoile: function (e) { if (e.target === e.currentTarget) self.fermerModale(); },

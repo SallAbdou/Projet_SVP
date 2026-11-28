@@ -98,7 +98,41 @@
     });
   }
 
-  var Api = { estReponseValide: estReponseValide, postExempleValide: postExempleValide, chargerFournee: chargerFournee, chargerFourneeReelle: chargerFourneeReelle, chargerPosts: chargerPosts };
+  /* LinkedIn : les fonctions serveur /api/linkedin/* gardent le jeton (cookie HttpOnly) ;
+     la page ne voit que l'état de la connexion, le profil et les chiffres. */
+  function reponseJson(res) {
+    return res.json().catch(function () { return {}; }).then(function (j) {
+      if (!res.ok) { var e = new Error(j.erreur || 'HTTP ' + res.status); e.code = j.erreur || 'reseau'; throw e; }
+      return j;
+    });
+  }
+
+  // Pas de fonction serveur (site statique, autre serveur) : 404, on dit « non configuré ».
+  // urns : posts publiés depuis le fournil dont on veut les chiffres.
+  function lireLinkedIn(urns) {
+    var q = urns && urns.length ? '?posts=' + encodeURIComponent(urns.join(',')) : '';
+    return fetch('/api/linkedin/session' + q, { credentials: 'same-origin', headers: { Accept: 'application/json' } }).then(function (res) {
+      if (res.status === 404) return { configure: false, connecte: false };
+      return reponseJson(res);
+    });
+  }
+
+  function exempleLinkedIn() { return lireJson('/data/linkedin.json'); }
+
+  function publierLinkedIn(texte, visibilite) {
+    return fetch('/api/linkedin/publier', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ texte: texte, visibilite: visibilite })
+    }).then(reponseJson);
+  }
+
+  function deconnecterLinkedIn() {
+    return fetch('/api/linkedin/deconnexion', { method: 'POST', credentials: 'same-origin' }).then(reponseJson);
+  }
+
+  var Api = { estReponseValide: estReponseValide, postExempleValide: postExempleValide, chargerFournee: chargerFournee, chargerFourneeReelle: chargerFourneeReelle, chargerPosts: chargerPosts,
+    lireLinkedIn: lireLinkedIn, exempleLinkedIn: exempleLinkedIn, publierLinkedIn: publierLinkedIn, deconnecterLinkedIn: deconnecterLinkedIn };
 
   if (typeof module === 'object' && module.exports) module.exports = Api;
   else root.Api = Api;
